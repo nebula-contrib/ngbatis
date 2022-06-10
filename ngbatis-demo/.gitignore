@@ -1,5 +1,6 @@
 HELP.md
 target/
+src/main/resources/application-ye.yml
 
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/

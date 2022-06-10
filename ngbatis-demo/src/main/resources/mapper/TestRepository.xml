@@ -1,0 +1,44 @@
+<!--
+    Copyright 2022-present Weicheng Ye. All rights reserved.
+    Use of this source code is governed by a MIT-style license that can be
+    found in the LICENSE file.
+-->
+<mapper
+    namespace=
+    "ye.weicheng.ngbatis.demo.repository.TestRepository"
+>
+
+    <select id="selectPersonMap">
+        match (v:person) return v.person.name as name, v.person.age as age limit 1
+    </select>
+
+    <select id="selectPerson" resultType="ye.weicheng.ngbatis.demo.pojo.Person">
+        match (v:person) return v.person.name as name, v.person.age as age limit 1
+    </select>
+
+    <select id="selectListString" resultType="java.lang.String">
+        match (v:person) return v.person.name as name limit 100
+    </select>
+
+    <select id="selectPersonsMap" resultType="java.util.Map">
+        match (v:person) return v.person.name as name, v.person.age  as age limit 100
+    </select>
+
+    <select id="selectPersons" resultType="ye.weicheng.ngbatis.demo.pojo.Person">
+        match (v:person) return v.person.name as name, v.person.age  as age limit 100
+    </select>
+
+    <select id="selectPersonsSet" resultType="java.util.Map">
+        match (v:person) return v.person.name as name, v.person.age  as age limit 100
+    </select>
+
+    <select id="selectInt">
+        return 1
+    </select>
+
+    <select id="selectString">
+        match (v:person) return v.person.name as name limit 1
+    </select>
+
+</mapper>
+
