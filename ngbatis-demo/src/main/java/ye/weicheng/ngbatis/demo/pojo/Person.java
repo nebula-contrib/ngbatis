@@ -3,14 +3,21 @@
 // found in the LICENSE file.
 package ye.weicheng.ngbatis.demo.pojo;
 
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * @author yeweicheng
  * @since 2022-06-10 22:10
  * <br>Now is history!
  */
+@Table(name = "person")
 public class Person {
+
+    @Id
     private String name;
-    private long age;
+
+    private Integer age;
 
     public String getName() {
         return name;
@@ -20,11 +27,11 @@ public class Person {
         this.name = name;
     }
 
-    public long getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 }

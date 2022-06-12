@@ -5,6 +5,7 @@ package ye.weicheng.ngbatis;
 
 import com.vesoft.nebula.client.graph.net.NebulaPool;
 import com.vesoft.nebula.client.graph.net.Session;
+import org.springframework.core.annotation.Order;
 import ye.weicheng.ngbatis.annotations.TimeLog;
 import ye.weicheng.ngbatis.config.ParseCfgProps;
 import ye.weicheng.ngbatis.models.ClassModel;
@@ -31,6 +32,7 @@ import static ye.weicheng.ngbatis.models.ClassModel.PROXY_SUFFIX;
  * <br>Now is history!
  */
 @Component
+@Order(0)
 public class Env {
 
     public static ClassLoader classLoader;

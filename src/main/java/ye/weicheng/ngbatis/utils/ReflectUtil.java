@@ -3,6 +3,8 @@
 // found in the LICENSE file.
 package ye.weicheng.ngbatis.utils;
 
+import ye.weicheng.ngbatis.exception.ParseException;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -32,6 +34,17 @@ public class ReflectUtil {
         declaredField.setAccessible( true );
         declaredField.set( o, value );
         declaredField.setAccessible( false );
+    }
+
+    public static Object getValue(Object o, Field field) {
+        try {
+            field.setAccessible( true );
+            Object value = field.get(o);
+            field.setAccessible( false );
+            return value;
+        } catch (IllegalAccessException e) {
+            throw new ParseException( e.getMessage() );
+        }
     }
 
     public static String getMethodSignature( Method method ) {

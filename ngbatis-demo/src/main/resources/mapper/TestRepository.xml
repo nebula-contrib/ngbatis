@@ -36,6 +36,10 @@
         return 1
     </select>
 
+    <select id="selectV">
+        match (v:person) return v limit 1
+    </select>
+
     <select id="selectString">
         match (v:person) return v.person.name as name limit 1
     </select>

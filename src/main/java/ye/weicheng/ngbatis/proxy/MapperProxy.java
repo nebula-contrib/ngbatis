@@ -13,6 +13,7 @@ import ye.weicheng.ngbatis.ResultResolver;
 import ye.weicheng.ngbatis.annotations.UseKeyArgReplace;
 import ye.weicheng.ngbatis.config.ParseCfgProps;
 import ye.weicheng.ngbatis.exception.QueryException;
+import ye.weicheng.ngbatis.exception.StmtException;
 import ye.weicheng.ngbatis.models.ClassModel;
 import ye.weicheng.ngbatis.models.MapperContext;
 import ye.weicheng.ngbatis.models.MethodModel;
@@ -37,7 +38,6 @@ import static ye.weicheng.ngbatis.models.ClassModel.PROXY_SUFFIX;
 public class MapperProxy {
 
     private static Logger log = LoggerFactory.getLogger( MapperProxy.class );
-    static Session session = null;
     @Autowired
     private ParseCfgProps props;
 
@@ -84,7 +84,7 @@ public class MapperProxy {
     public Object invoke(Method method, Object... args)  {
         MethodModel methodModel = null;
         ResultSet query = null;
-        try {
+
             methodModel = methodCache.get(method);
             methodModel.setMethod( method );
             // 参数格式转换
@@ -92,24 +92,41 @@ public class MapperProxy {
             // beetl 渲染模板
             String textTpl = methodModel.getText();
             log.debug( JSON.toJSONString( argMap ) );
-            String cql = ENV.getTextResolver().resolve( textTpl, argMap );
-            session = ENV.openSession();
+            String nGQL = ENV.getTextResolver().resolve( textTpl, argMap );
+            Map<String, Object> params = null;
             if( method.isAnnotationPresent( UseKeyArgReplace.class ) ) {
-                ArgNameFormatter.CqlAndArgs format = ENV.getArgNameFormatter().format(cql, argMap);
-                cql = format.getCql();
-                query = session.executeWithParameter(cql, format.getArgs());
+                ArgNameFormatter.CqlAndArgs format = ENV.getArgNameFormatter().format(nGQL, argMap);
+                nGQL = format.getCql();
+                params = format.getArgs();
                 log.debug( JSON.toJSONString( format ) );
             } else {
-                // 执行渲染后的 cql，同时传入格式化后的数据;
-                query = session.executeWithParameter("USE " + ENV.getSpace()+";" + cql,argMap);
-                log.debug( cql );
+                params = argMap;
             }
-        } catch (IOErrorException e) {
-            throw new QueryException( "数据查询失败：" + e.getMessage() );
-        }
+            query = executeWithParameter( nGQL, params );
+            if (!query.isSucceeded()) {
+                throw new QueryException( "数据查询失败：" + query.getErrorMessage() );
+            }
+
         ResultResolver resultResolver = ENV.getResultResolver();
         Object resolve = resultResolver.resolve(methodModel, query);
         return resolve;
+    }
+
+
+    public static  ResultSet executeWithParameter( String nGQL, Map<String, Object> params )  {
+        try {
+            nGQL = "USE " + ENV.getSpace()+";" + nGQL;
+            log.debug( nGQL );
+            Session session = ENV.openSession();
+            ResultSet result = session.executeWithParameter( nGQL, params );
+            if( result.isSucceeded() ) {
+                return result;
+            } else {
+                throw new QueryException( " 数据查询失败" + result.getErrorMessage() );
+            }
+        } catch (IOErrorException e) {
+            throw new QueryException(  "数据查询失败："  + e.getMessage() );
+        }
     }
 
     public static Logger getLog() {

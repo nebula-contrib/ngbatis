@@ -73,4 +73,12 @@ class NgbatisDemoApplicationTests {
 		System.out.println( str );
 	}
 
+	@Test
+	void selectV() {
+		Person str = repository.selectV();
+		System.out.println( str );
+	}
+
+
+
 }

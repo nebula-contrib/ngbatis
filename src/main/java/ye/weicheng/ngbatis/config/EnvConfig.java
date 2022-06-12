@@ -4,6 +4,7 @@
 package ye.weicheng.ngbatis.config;
 
 import com.vesoft.nebula.client.graph.net.NebulaPool;
+import org.springframework.context.annotation.Primary;
 import ye.weicheng.ngbatis.*;
 import ye.weicheng.ngbatis.models.MapperContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,8 @@ public class EnvConfig {
     private NebulaJdbcProperties properties;
 
     @Bean
-    public Env getEnv() throws NoSuchFieldException, IllegalAccessException {
+    @Primary
+    public Env getEnv() {
         return new Env(
                 resourceLoader,
                 nebulaPool(),

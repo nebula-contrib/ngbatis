@@ -58,7 +58,7 @@ public class ASMBeanFactory implements BeanFactory {
         byte[] code = cw.toByteArray();
         cm.setClassByte( code );
 
-//        writeFile( cm );
+        writeFile( cm );
 
         return code;
     }
