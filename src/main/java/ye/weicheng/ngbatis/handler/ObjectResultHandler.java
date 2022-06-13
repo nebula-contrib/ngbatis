@@ -30,6 +30,7 @@ import static ye.weicheng.ngbatis.utils.ResultSetUtil.nodeToResultType;
 public class ObjectResultHandler extends AbstractResultHandler<Object, Object> {
     @Override
     public Object handle(Object newResult, ResultSet result, Class resultType) throws NoSuchFieldException, IllegalAccessException {
+        if(result.rowsSize() == 0) return null;
         List<String> columnNames = result.getColumnNames();
         ResultSet.Record record = result.rowValues(0);
         for (int i = 0; i < columnNames.size(); i++) {

@@ -4,7 +4,9 @@
 package ye.weicheng.ngbatis.proxy;
 
 import com.alibaba.fastjson.JSON;
+import com.vesoft.nebula.Value;
 import com.vesoft.nebula.client.graph.data.ResultSet;
+import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.net.Session;
 import ye.weicheng.ngbatis.ArgNameFormatter;
@@ -91,14 +93,12 @@ public class MapperProxy {
             Map<String, Object> argMap = ENV.getArgsResolver().resolve( methodModel, args );
             // beetl 渲染模板
             String textTpl = methodModel.getText();
-            log.debug( JSON.toJSONString( argMap ) );
             String nGQL = ENV.getTextResolver().resolve( textTpl, argMap );
             Map<String, Object> params = null;
             if( method.isAnnotationPresent( UseKeyArgReplace.class ) ) {
                 ArgNameFormatter.CqlAndArgs format = ENV.getArgNameFormatter().format(nGQL, argMap);
                 nGQL = format.getCql();
                 params = format.getArgs();
-                log.debug( JSON.toJSONString( format ) );
             } else {
                 params = argMap;
             }
@@ -114,10 +114,12 @@ public class MapperProxy {
 
 
     public static  ResultSet executeWithParameter( String nGQL, Map<String, Object> params )  {
+        Session session = null;
         try {
-            nGQL = "USE " + ENV.getSpace()+";" + nGQL;
-            log.debug("\n\t{}", nGQL );
-            Session session = ENV.openSession();
+            nGQL = "USE " + ENV.getSpace()+";" + nGQL.trim();
+            log.debug("nGql：{}", nGQL);
+            log.debug("params：{}", JSON.toJSONString( params ));
+            session = ENV.openSession();
             ResultSet result = session.executeWithParameter( nGQL, params );
             if( result.isSucceeded() ) {
                 return result;
@@ -126,6 +128,8 @@ public class MapperProxy {
             }
         } catch (IOErrorException e) {
             throw new QueryException(  "数据查询失败："  + e.getMessage() );
+        } finally {
+            if (session != null ) session.release();
         }
     }
 

@@ -52,7 +52,7 @@ public class Env {
 
     private String username;
     private String password;
-    private boolean reconnect = true;
+    private boolean reconnect = false;
     private String space;
 
 

@@ -87,8 +87,7 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
             }
             if( name != null ) {
                 columns.add( name );
-                String formatter = field.getType() == String.class ? "\"$%s\"" : "$%s";
-//                String formatter = "\"$%s\"";
+                String formatter ="$%s";
                 valueNames.add( String.format( formatter, name ));
             }
         }
@@ -101,7 +100,7 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
         builder.append( " ) ");
         builder.append( " VALUES ");
         Object id = ReflectUtil.getValue( record, idField );
-        builder.append( idField.getType() == String.class ? String.format( "'%s'", id) : id );
+        builder.append( idField.getType() == String.class ? String.format( "\"%s\"", id) :  id );
         builder.append( ":");
         builder.append( " ( ");
         builder.append( Strings.join( valueNames, ',' ) );
@@ -170,7 +169,7 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
 
     /**
      * <p>通过 map 存放查询参数，查询多条记录并映射成实体类</p>
-     * <p>通常与 {@link DaoBasic#countByMap(Map) countByMap} 联合使用，以实现分页数据获取功能</p>
+     * <p>通常与 {@link #countByMap(Map) countByMap} 联合使用，以实现分页数据获取功能</p>
      *
      * @param param
      * @return
@@ -182,7 +181,7 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
 
     /**
      * <p>统计符合条件的记录数</p>
-     * <p>通常与 {@link DaoBasic#selectByMap(Map) selectByMap} 联合使用，以实现分页数据获取功能</p>
+     * <p>通常与 {@link #selectByMap(Map) selectByMap} 联合使用，以实现分页数据获取功能</p>
      *
      * @param param 查询条件
      * @return

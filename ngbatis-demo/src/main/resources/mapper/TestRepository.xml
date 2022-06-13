@@ -48,5 +48,17 @@
         match (v:person) return v.person.name as name limit 1
     </select>
 
+    <select id="selectStringParam">
+        return $p0
+    </select>
+
+    <select id="selectIntParam">
+        return $p0
+    </select>
+
+    <select id="selectBoolParam">
+        return $p0
+    </select>
+
 </mapper>
 

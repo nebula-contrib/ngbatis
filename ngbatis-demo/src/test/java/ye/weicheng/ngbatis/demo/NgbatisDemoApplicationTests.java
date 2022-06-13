@@ -87,5 +87,24 @@ class NgbatisDemoApplicationTests {
 	}
 
 
+	@Test
+	void selectStringParam() {
+		String name = repository.selectStringParam( "经由数据库传输中文" );
+		System.out.println( name );
+	}
+
+	@Test
+	void selectIntParam() {
+		Integer name = repository.selectIntParam( 12 );
+		System.out.println( name );
+	}
+
+	@Test
+	void selectBoolParam() {
+		Boolean name = repository.selectBoolParam( false );
+		System.out.println( name );
+	}
+
+
 
 }

@@ -39,7 +39,7 @@ public class DefaultResultResolver implements ResultResolver {
                 ReflectUtil.sealingBasicType(returnType),
                 ReflectUtil.sealingBasicType(resultType)
         );
-        log.info( "针对java返回类型 {} 与 xml 返回类型 {} 的结果集处理器为：{}", returnType.getName(), resultType.getName(), handler );
+        log.debug( "针对java返回类型 {} 与 xml 返回类型 {} 的结果集处理器为：{}", returnType.getName(), resultType.getName(), handler );
 
         if( handler == null ) {
             return result;

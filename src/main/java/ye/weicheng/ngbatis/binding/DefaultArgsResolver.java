@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,7 +48,9 @@ public class DefaultArgsResolver implements ArgsResolver {
             if( notFoundParamAnno ) {
                 Class<?> paramClass = args[i].getClass();
                 if( isBaseType(paramClass))
-                    result.put( "_" + i,  JSON.toJSON(args[ i ] ) );
+                    result.put( "p" + i,  JSON.toJSON(args[ i ] ) );
+                else if ( args[i] instanceof Collection)
+                    result.put( "p" + i, args[i] );
                 else
                     result.putAll( (Map<String,Object>)JSON.toJSON( args[i] ) );
             }
