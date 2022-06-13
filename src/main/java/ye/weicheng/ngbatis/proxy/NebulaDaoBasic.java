@@ -6,6 +6,7 @@ import com.vesoft.nebula.client.graph.data.ResultSet;
 import org.apache.logging.log4j.util.Strings;
 import ye.weicheng.ngbatis.exception.ParseException;
 import ye.weicheng.ngbatis.exception.QueryException;
+import ye.weicheng.ngbatis.models.MethodModel;
 import ye.weicheng.ngbatis.utils.ReflectUtil;
 import ye.weicheng.ngbatis.utils.StringUtil;
 
@@ -13,7 +14,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
+
+import static ye.weicheng.ngbatis.proxy.NebulaDaoBasicExt.proxy;
+import static ye.weicheng.ngbatis.proxy.NebulaDaoBasicExt.recordToQL;
 
 /**
  * @author yeweicheng
@@ -49,66 +54,9 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
      */
     default int insert(T record) {
         String nGQL = recordToQL( record, false );
-        JSONObject jsonObject = (JSONObject) JSON.toJSON(record);
-        ResultSet resultSet = MapperProxy.executeWithParameter(nGQL, jsonObject);
-
-        return 1;
+        ResultSet resultSet = (ResultSet)proxy( this.getClass(), ResultSet.class,  nGQL, new Class[] { Object.class }, record );
+        return resultSet.isSucceeded() ? 1: 0;
     }
-
-    default String recordToQL(T record, boolean selective ) {
-        Class<?> type = record.getClass();
-        Table tableAnno = type.getAnnotation( Table.class );
-        String x_x = StringUtil.xX2x_x(type.getName());
-        String tagName = tableAnno == null ? x_x : tableAnno.name();
-        StringBuilder builder = new StringBuilder("INSERT VERTEX ");
-        builder.append( tagName );
-        String propsWithValues = columnsToQL( record, type, selective );
-        builder.append( propsWithValues );
-        return builder.toString();
-    }
-
-    default String columnsToQL(T record, Class<?> type, boolean selective ) {
-        Field[] fields = type.getDeclaredFields();
-        List<String> columns = new ArrayList<>();
-        List<String> valueNames = new ArrayList<>();
-        Field idField = null;
-        for (Field field : fields) {
-            if (field.isAnnotationPresent(Id.class)) {
-                idField = field;
-            }
-            String name = null;
-            if( selective ) {
-                Object value = ReflectUtil.getValue(record, field);
-                if( value != null ) {
-                    name = field.getName();
-                }
-            } else {
-                name = field.getName();
-            }
-            if( name != null ) {
-                columns.add( name );
-                String formatter ="$%s";
-                valueNames.add( String.format( formatter, name ));
-            }
-        }
-        if (idField == null) {
-            throw new ParseException( String.format( "%s 必须有一个属性用 @Id 注解。（javax.persistence.Id）", type ));
-        }
-        // INSERT VERTEX IF NOT EXISTS  tag [tag_props, [tag_props] ...] VALUES <vid>: ([prop_value_list])
-        StringBuilder builder = new StringBuilder( " (  ");
-        builder.append( Strings.join( columns, ',' ) );
-        builder.append( " ) ");
-        builder.append( " VALUES ");
-        Object id = ReflectUtil.getValue( record, idField );
-        builder.append( idField.getType() == String.class ? String.format( "\"%s\"", id) :  id );
-        builder.append( ":");
-        builder.append( " ( ");
-        builder.append( Strings.join( valueNames, ',' ) );
-        builder.append( " ) ");
-        return builder.toString();
-    }
-
-
 
     /**
      * <p>插入非空字段。</p>
@@ -116,13 +64,12 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
      * @param record
      * @return
      */
-    default int insertSelective(T record) {
+    default Integer insertSelective(T record) {
         String nGQL = recordToQL( record, true );
-        JSONObject jsonObject = (JSONObject) JSON.toJSON(record);
-        ResultSet resultSet = MapperProxy.executeWithParameter(nGQL, jsonObject);
-
-        return 1;
+        ResultSet resultSet = (ResultSet)proxy(this.getClass(),  ResultSet.class,  nGQL, new Class[] { Object.class }, record );
+        return resultSet.isSucceeded() ? 1: 0;
     }
+
 
     /**
      * <p>通过主键查询对应表的单条记录</p>
