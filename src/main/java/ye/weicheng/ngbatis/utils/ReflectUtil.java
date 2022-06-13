@@ -29,11 +29,34 @@ public class ReflectUtil {
         return null;
     }
 
+    public static List<Class<?>> NUMBER_TYPES = Arrays.asList(
+            int.class, Integer.class,
+            long.class, Long.class,
+            float.class, Float.class,
+            double.class, Double.class,
+            byte.class, Byte.class,
+            short.class, Short.class
+    );
+
     public static void setValue(Object o, String prop, Object value) throws NoSuchFieldException, IllegalAccessException {
         Field declaredField = o.getClass().getDeclaredField(prop);
+        if ( NUMBER_TYPES.contains( declaredField.getType() )) {
+            value = castNumber( (Number) value, declaredField.getType() );
+        }
         declaredField.setAccessible( true );
         declaredField.set( o, value );
         declaredField.setAccessible( false );
+    }
+
+    public static Number castNumber(Number n, Class resultType) {
+        if( n == null) return null;
+        return (resultType == Integer.class || resultType == int.class) ? n.intValue()
+                : (resultType == Long.class || resultType == long.class) ? n.longValue()
+                : (resultType == Float.class || resultType == float.class) ? n.floatValue()
+                : (resultType == Double.class || resultType == double.class) ? n.doubleValue()
+                : (resultType == Byte.class || resultType == byte.class) ? n.byteValue()
+                : (resultType == Short.class || resultType == short.class) ? n.shortValue()
+                : n;
     }
 
     public static Object getValue(Object o, Field field) {

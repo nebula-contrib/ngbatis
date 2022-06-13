@@ -32,7 +32,7 @@
         match (v:person) return v.person.name as name, v.person.age  as age limit 100
     </select>
 
-    <select id="selectInt">
+    <select id="selectInt" >
         return 1
     </select>
 

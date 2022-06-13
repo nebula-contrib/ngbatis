@@ -7,6 +7,8 @@ import com.vesoft.nebula.client.graph.data.ValueWrapper;
 
 import java.io.UnsupportedEncodingException;
 
+import static ye.weicheng.ngbatis.utils.ReflectUtil.castNumber;
+
 /**
  * 结果集基础类型处理的工具类
  *
@@ -37,4 +39,14 @@ public class ResultSetUtil {
            throw new RuntimeException( e );
         }
     }
+
+    public static <T> T getValue(ValueWrapper valueWrapper, Class<T> resultType) {
+        T value = getValue( valueWrapper );
+        if (value instanceof  Number ) {
+            value = (T) castNumber( (Number) value, resultType );
+        }
+        return value;
+    }
+
+
 }

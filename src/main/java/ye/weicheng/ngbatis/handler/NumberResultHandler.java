@@ -8,6 +8,8 @@ import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import org.springframework.stereotype.Component;
 import ye.weicheng.ngbatis.utils.ResultSetUtil;
 
+import static ye.weicheng.ngbatis.utils.ReflectUtil.castNumber;
+
 /**
  * 结果集数据类型转换器
  * <p> ResultSet -> Number </p>
@@ -23,13 +25,8 @@ public class NumberResultHandler extends AbstractResultHandler<Number, Number> {
     public Number handle(Number newResult, ResultSet result, Class resultType) throws NoSuchFieldException, IllegalAccessException, InstantiationException {
         ResultSet.Record record = result.rowValues(0);
         ValueWrapper valueWrapper = record.values().get(0);
-        Number n = ResultSetUtil.getValue( valueWrapper );
-        return (resultType == Integer.class || resultType == int.class) ? n.intValue()
-                : (resultType == Long.class || resultType == long.class) ? n.longValue()
-                : (resultType == Float.class || resultType == float.class) ? n.floatValue()
-                : (resultType == Double.class || resultType == double.class) ? n.doubleValue()
-                : (resultType == Byte.class || resultType == byte.class) ? n.byteValue()
-                : (resultType == Short.class || resultType == short.class) ? n.shortValue()
-                : n;
+        Number value = ResultSetUtil.getValue( valueWrapper );
+        return castNumber( value, resultType );
     }
+
 }
