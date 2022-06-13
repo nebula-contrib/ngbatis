@@ -35,6 +35,8 @@ public interface TestRepository extends NebulaDaoBasic<Person, Long> {
 
     Person selectV();
 
+    List<Person> selectListV();
+
     String selectString();
 
 }

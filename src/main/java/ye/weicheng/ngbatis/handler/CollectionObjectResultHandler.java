@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 package ye.weicheng.ngbatis.handler;
 
+import com.vesoft.nebula.client.graph.data.Node;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,8 @@ import ye.weicheng.ngbatis.utils.ReflectUtil;
 import ye.weicheng.ngbatis.utils.ResultSetUtil;
 
 import java.util.*;
+
+import static ye.weicheng.ngbatis.utils.ResultSetUtil.nodeToResultType;
 
 /**
  * 结果集数据类型转换器
@@ -31,7 +34,12 @@ public class CollectionObjectResultHandler extends AbstractResultHandler<Collect
             ResultSet.Record record = result.rowValues(i);
             for (int j = 0; j < columnNames.size(); j++) {
                 ValueWrapper valueWrapper = record.values().get(j);
-                ReflectUtil.setValue( o, columnNames.get(j), ResultSetUtil.getValue( valueWrapper ));
+                Object v = ResultSetUtil.getValue( valueWrapper );
+                if ( columnNames.size() == 1 && v instanceof Node) {
+                    o = nodeToResultType( (Node)v, resultType );
+                } else {
+                    ReflectUtil.setValue( o, columnNames.get(j), ResultSetUtil.getValue( valueWrapper ));
+                }
             }
             newResult.add( o );
         }

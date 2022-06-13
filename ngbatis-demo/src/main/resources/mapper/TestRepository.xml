@@ -40,6 +40,10 @@
         match (v:person) return v limit 1
     </select>
 
+    <select id="selectListV" resultType="ye.weicheng.ngbatis.demo.pojo.Person">
+        match (v:person) return v limit 3
+    </select>
+
     <select id="selectString">
         match (v:person) return v.person.name as name limit 1
     </select>

@@ -3,9 +3,12 @@
 // found in the LICENSE file.
 package ye.weicheng.ngbatis.utils;
 
+import com.vesoft.nebula.client.graph.data.Node;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
+import ye.weicheng.ngbatis.exception.ResultHandleException;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import static ye.weicheng.ngbatis.utils.ReflectUtil.castNumber;
 
@@ -48,5 +51,21 @@ public class ResultSetUtil {
         return value;
     }
 
+
+    public static <T> T nodeToResultType(Node v, Class<T> resultType) {
+        T t = null;
+        try {
+            List<ValueWrapper> values = v.values(v.tagNames().get(0));
+            List<String> keys = v.keys(v.tagNames().get(0));
+            t = resultType.newInstance();
+            for (int i = 0; i < keys.size(); i++) {
+                String prop = keys.get( i );
+                ReflectUtil.setValue( t, prop, ResultSetUtil.getValue( values.get( i ) ));
+            }
+        } catch (UnsupportedEncodingException | InstantiationException | IllegalAccessException | NoSuchFieldException e) {
+            throw new ResultHandleException( String.format( "%s : %s", e.getClass().toString(), e.getMessage() ) );
+        }
+        return t;
+    }
 
 }

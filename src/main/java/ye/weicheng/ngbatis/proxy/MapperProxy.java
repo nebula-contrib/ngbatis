@@ -116,7 +116,7 @@ public class MapperProxy {
     public static  ResultSet executeWithParameter( String nGQL, Map<String, Object> params )  {
         try {
             nGQL = "USE " + ENV.getSpace()+";" + nGQL;
-            log.debug( nGQL );
+            log.debug("\n\t{}", nGQL );
             Session session = ENV.openSession();
             ResultSet result = session.executeWithParameter( nGQL, params );
             if( result.isSucceeded() ) {

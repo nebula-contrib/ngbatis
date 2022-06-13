@@ -80,5 +80,12 @@ class NgbatisDemoApplicationTests {
 	}
 
 
+	@Test
+	void selectListV() {
+		List<Person> str = repository.selectListV();
+		System.out.println( str );
+	}
+
+
 
 }
