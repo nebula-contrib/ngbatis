@@ -3,7 +3,7 @@
 
 ## NGBATIS是什么？
 
-**NGBATIS** 是一款针对 [Nebula Graph]() + Springboot 的数据库 ORM 框架。借鉴于 [MyBatis](https://github.com/mybatis/mybatis-3) 的使用习惯进行开发。
+**NGBATIS** 是一款针对 [Nebula Graph](https://github.com/vesoft-inc/nebula) + Springboot 的数据库 ORM 框架。借鉴于 [MyBatis](https://github.com/mybatis/mybatis-3) 的使用习惯进行开发。
 
 ## 项目要求
 - Springboot
@@ -98,5 +98,6 @@ resource/mapper/TestRepository.xml
 
 ## TODOLIST
 - 对更多返回值类型进行支持
+- 提供主键生成策略选择
 - 使用连接池的方式，让多次访问数据库使用的 Session 进行共享。提高访问性能
 - 处理 Springboot jar 命令启动时的 ClassLoader 问题
