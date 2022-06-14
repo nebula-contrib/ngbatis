@@ -3,17 +3,13 @@
 // found in the LICENSE file.
 package ye.weicheng.ngbatis.handler;
 
-import com.vesoft.nebula.Value;
 import com.vesoft.nebula.client.graph.data.Node;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import org.springframework.stereotype.Component;
-import ye.weicheng.ngbatis.exception.QueryException;
-import ye.weicheng.ngbatis.exception.ResultHandleException;
 import ye.weicheng.ngbatis.utils.ReflectUtil;
 import ye.weicheng.ngbatis.utils.ResultSetUtil;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import static ye.weicheng.ngbatis.utils.ResultSetUtil.nodeToResultType;

@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 package ye.weicheng.ngbatis.io;
 
-import org.springframework.core.annotation.Order;
 import ye.weicheng.ngbatis.ResourceLoader;
 import ye.weicheng.ngbatis.annotations.TimeLog;
 import ye.weicheng.ngbatis.config.ParseCfgProps;
