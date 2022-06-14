@@ -97,7 +97,24 @@ resource/mapper/TestRepository.xml
 ```
 
 ## TODOLIST
-- 对更多返回值类型进行支持
-- 提供主键生成策略选择
-- 使用连接池的方式，让多次访问数据库使用的 Session 进行共享。提高访问性能
-- 处理 Springboot jar 命令启动时的 ClassLoader 问题
+- [ ] 对更多返回值类型进行支持
+  - [x] 基本类型
+    - [x] String
+    - [x] Boolean
+    - [x] Number （Integer、Long、Float、Double、Byte、Short）。**暂时只支持包装类**
+  - [ ] 对象类型
+    - [x]  Object
+      - [x] 多列return值转换成 Map
+      - [x] 多列return值转换成 pojo
+      - [x] 支持Vertex类型转换成 pojo
+      - [ ]  支持Edge类型转换成 pojo
+  - [x] 集合类型
+      - [x]  Collection<基本类型>
+      - [x]  Collection<对象类型> `Object类型参考下述Object的支持`
+  - [x] ResultSet 如不需要使用框架自带的结果处理，可直接在接口声明返回值 ResultSet 并自行处理
+
+- [x] 提供主键生成策略选择
+  - [x] 提供接口
+  - [ ] 提供默认实现
+- [ ] 使用连接池的方式，让多次访问数据库使用的 Session 进行共享。提高访问性能
+- [ ] 处理 Springboot jar 命令启动时的 ClassLoader 问题

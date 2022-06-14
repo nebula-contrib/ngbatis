@@ -54,6 +54,7 @@ public class Env {
     private String password;
     private boolean reconnect = false;
     private String space;
+    private PkGenerator pkGenerator;
 
 
     public Env() {}
@@ -64,7 +65,8 @@ public class Env {
             ResourceLoader resourceLoader, NebulaPool nebulaPool, TextResolver textResolver,
             ResultResolver resultResolver, ArgsResolver argsResolver, BeanFactory beanFactory,
             ArgNameFormatter argNameFormatter, ParseCfgProps cfgProps, ApplicationContext applicationContext,
-            String username, String password, boolean reconnect, String space
+            String username, String password, boolean reconnect, String space,
+            PkGenerator pkGenerator
     ) {
         this.resourceLoader = resourceLoader;
         this.nebulaPool = nebulaPool;
@@ -80,6 +82,7 @@ public class Env {
         this.password = password;
         this.reconnect = reconnect;
         this.space = space;
+        this.pkGenerator = pkGenerator;
         log.debug( " Env constructor ");
     }
 
@@ -256,5 +259,13 @@ public class Env {
 
     public void setMapperContext(MapperContext mapperContext) {
         this.mapperContext = mapperContext;
+    }
+
+    public PkGenerator getPkGenerator() {
+        return pkGenerator;
+    }
+
+    public void setPkGenerator(PkGenerator pkGenerator) {
+        this.pkGenerator = pkGenerator;
     }
 }

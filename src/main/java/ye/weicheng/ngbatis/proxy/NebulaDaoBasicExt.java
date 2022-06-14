@@ -1,6 +1,9 @@
 package ye.weicheng.ngbatis.proxy;
 
 import org.apache.logging.log4j.util.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ye.weicheng.ngbatis.PkGenerator;
 import ye.weicheng.ngbatis.exception.ParseException;
 import ye.weicheng.ngbatis.models.MethodModel;
 import ye.weicheng.ngbatis.utils.ReflectUtil;
@@ -22,6 +25,8 @@ import java.util.Map;
  */
 public class NebulaDaoBasicExt {
 
+    private static Logger log = LoggerFactory.getLogger( NebulaDaoBasicExt.class );
+
     public static String recordToQL(Object record, boolean selective ) {
         Class<?> type = record.getClass();
         Table tableAnno = type.getAnnotation( Table.class );
@@ -29,19 +34,20 @@ public class NebulaDaoBasicExt {
         String tagName = tableAnno == null ? x_x : tableAnno.name();
         StringBuilder builder = new StringBuilder("INSERT VERTEX ");
         builder.append( tagName );
-        String propsWithValues = columnsToQL( record, type, selective );
+        String propsWithValues = columnsToQL( record, type, selective,  tagName );
         builder.append( propsWithValues );
         return builder.toString();
     }
 
-    public static String columnsToQL(Object record, Class<?> type, boolean selective ) {
+
+    public static String columnsToQL(Object record, Class<?> type, boolean selective, String tagName) {
         Field[] fields = type.getDeclaredFields();
         List<String> columns = new ArrayList<>();
         List<String> valueNames = new ArrayList<>();
-        Field idField = null;
+        Field pkField = null;
         for (Field field : fields) {
             if (field.isAnnotationPresent(Id.class)) {
-                idField = field;
+                pkField = field;
             }
             String name = null;
             if( selective ) {
@@ -60,21 +66,39 @@ public class NebulaDaoBasicExt {
                 valueNames.add( String.valueOf( o ) );
             }
         }
-        if (idField == null) {
+        if (pkField == null) {
             throw new ParseException( String.format( "%s 必须有一个属性用 @Id 注解。（javax.persistence.Id）", type ));
         }
+
+        Object id = setId( record, pkField, tagName );
+        assert id != null;
         // INSERT VERTEX IF NOT EXISTS  tag [tag_props, [tag_props] ...] VALUES <vid>: ([prop_value_list])
         StringBuilder builder = new StringBuilder( " (  ");
         builder.append( Strings.join( columns, ',' ) );
         builder.append( " ) ");
         builder.append( " VALUES ");
-        Object id = ReflectUtil.getValue( record, idField );
-        builder.append( valueFormat( idField, id ) );
+        builder.append( valueFormat( pkField, id ) );
         builder.append( ":");
         builder.append( " ( ");
         builder.append( Strings.join( valueNames, ',' ) );
         builder.append( " ) ");
         return builder.toString();
+    }
+
+
+    public static Object setId(Object record, Field pkField, String tagName) {
+        try {
+            PkGenerator pkGenerator = MapperProxy.ENV.getPkGenerator();
+            Object id = ReflectUtil.getValue( record, pkField );
+            if(id == null && pkGenerator != null) {
+                id = pkGenerator.generate( tagName, pkField.getType() );
+                ReflectUtil.setValue( record, pkField, id );
+            }
+            return id;
+        } catch (IllegalAccessException e) {
+            log.error( e.getMessage() );
+            return null;
+        }
     }
 
    static  Map<Class<?>, String> valueFormat = new HashMap<Class<?>, String>() {{

@@ -1,5 +1,6 @@
 package ye.weicheng.ngbatis.demo;
 
+import com.alibaba.fastjson.JSON;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,5 +36,14 @@ public class AbstractBasicDaoTests {
         person.setName( "取名有点难2");
         repository.insertSelective(person);
     }
+
+    @Test
+    public void pkGeneratorTest() {
+        Person person = new Person();
+        repository.insertSelective(person);
+        System.out.println(JSON.toJSONString( person ) );
+    }
+
+
 
 }

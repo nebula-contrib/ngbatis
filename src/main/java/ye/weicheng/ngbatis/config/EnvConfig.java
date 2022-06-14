@@ -41,6 +41,8 @@ public class EnvConfig {
     private ApplicationContext context;
     @Autowired
     private NebulaJdbcProperties properties;
+    @Autowired(required = false)
+    private PkGenerator pkGenerator;
 
     @Bean
     @Primary
@@ -58,7 +60,8 @@ public class EnvConfig {
                 properties.getUsername(),
                 properties.getPassword(),
                 false,
-                properties.getSpace()
+                properties.getSpace(),
+                pkGenerator
         );
     }
 

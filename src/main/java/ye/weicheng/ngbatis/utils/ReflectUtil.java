@@ -40,13 +40,18 @@ public class ReflectUtil {
 
     public static void setValue(Object o, String prop, Object value) throws NoSuchFieldException, IllegalAccessException {
         Field declaredField = o.getClass().getDeclaredField(prop);
-        if ( NUMBER_TYPES.contains( declaredField.getType() )) {
-            value = castNumber( (Number) value, declaredField.getType() );
-        }
-        declaredField.setAccessible( true );
-        declaredField.set( o, value );
-        declaredField.setAccessible( false );
+        setValue( o, declaredField, value );
     }
+
+    public static void setValue( Object o, Field field, Object value ) throws IllegalAccessException {
+        if ( NUMBER_TYPES.contains( field.getType() )) {
+            value = castNumber( (Number) value, field.getType() );
+        }
+        field.setAccessible( true );
+        field.set( o, value );
+        field.setAccessible( false );
+    }
+
 
     public static Number castNumber(Number n, Class resultType) {
         if( n == null) return null;

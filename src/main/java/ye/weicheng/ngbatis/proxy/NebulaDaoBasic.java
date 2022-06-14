@@ -1,20 +1,8 @@
 package ye.weicheng.ngbatis.proxy;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.vesoft.nebula.client.graph.data.ResultSet;
-import org.apache.logging.log4j.util.Strings;
-import ye.weicheng.ngbatis.exception.ParseException;
 import ye.weicheng.ngbatis.exception.QueryException;
-import ye.weicheng.ngbatis.models.MethodModel;
-import ye.weicheng.ngbatis.utils.ReflectUtil;
-import ye.weicheng.ngbatis.utils.StringUtil;
-
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.*;
 
 import static ye.weicheng.ngbatis.proxy.NebulaDaoBasicExt.proxy;
