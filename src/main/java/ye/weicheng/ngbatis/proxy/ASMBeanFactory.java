@@ -199,7 +199,7 @@ public class ASMBeanFactory implements BeanFactory {
 
     private void writeFile( ClassModel cm ) {
         try {
-            File file = new File("D:\\asm-debug\\mapper\\" + getFullNameType(cm) + ".class");
+            File file = new File("asm-debug\\" + getFullNameType(cm) + ".class");
             File dir = new File(file.getParent());
             if (!dir.exists()) {
                 dir.mkdirs();
