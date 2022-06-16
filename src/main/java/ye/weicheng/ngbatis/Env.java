@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 package ye.weicheng.ngbatis;
 
+import com.alibaba.fastjson.parser.ParserConfig;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
 import com.vesoft.nebula.client.graph.net.Session;
 import org.springframework.core.annotation.Order;
@@ -34,6 +35,11 @@ import static ye.weicheng.ngbatis.models.ClassModel.PROXY_SUFFIX;
 @Component
 @Order(0)
 public class Env {
+
+    // 使用 fastjson 安全模式，规避任意代码执行风险
+    static {
+        ParserConfig.getGlobalInstance().setSafeMode(true);
+    }
 
     public static ClassLoader classLoader;
 

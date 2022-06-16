@@ -1,12 +1,12 @@
 package ye.weicheng.proxy;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import ye.weicheng.ngbatis.Env;
 import ye.weicheng.ngbatis.models.ClassModel;
 import ye.weicheng.ngbatis.models.MethodModel;
 import ye.weicheng.ngbatis.proxy.ASMBeanFactory;
 import ye.weicheng.repository.NativeRepository;
-import org.junit.Before;
-import org.junit.Test;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,7 +20,7 @@ public class ASMBeanFactoryTest {
 
     private ClassModel cm;
 
-    @Before
+    @BeforeAll
     public void init() {
         ClassModel classModel = new ClassModel();
         classModel.setNamespace(NativeRepository.class);
