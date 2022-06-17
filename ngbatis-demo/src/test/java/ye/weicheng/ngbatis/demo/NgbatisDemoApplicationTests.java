@@ -21,10 +21,6 @@ class NgbatisDemoApplicationTests {
 	@Autowired
 	private TestRepository repository;
 
-	static {
-		Env.classLoader = Person.class.getClassLoader();
-	}
-
 	@Test
 	void selectPerson()  {
 		Object person = repository.selectPerson();

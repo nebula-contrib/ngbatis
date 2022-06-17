@@ -3,13 +3,12 @@
 // found in the LICENSE file.
 package ye.weicheng.ngbatis.proxy;
 
-import ye.weicheng.ngbatis.BeanFactory;
+import org.objectweb.asm.Opcodes;
 import ye.weicheng.ngbatis.models.ClassModel;
 import ye.weicheng.ngbatis.models.MethodModel;
 import ye.weicheng.ngbatis.utils.ReflectUtil;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,8 +24,7 @@ import static ye.weicheng.ngbatis.utils.ReflectUtil.NEED_SEALING_TYPES;
  * @author yeweicheng
  * <br>Now is history!
  */
-@Component
-public class ASMBeanFactory implements BeanFactory {
+public class MapperProxyClassGenerator implements Opcodes {
 
     private String getFullNameType( ClassModel cm ) {
         return getFullNameType( (cm.getNamespace().getName() + PROXY_SUFFIX) );

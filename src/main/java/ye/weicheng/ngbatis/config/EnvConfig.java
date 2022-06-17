@@ -3,16 +3,12 @@
 // found in the LICENSE file.
 package ye.weicheng.ngbatis.config;
 
-import com.vesoft.nebula.client.graph.net.NebulaPool;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Configuration;
 import ye.weicheng.ngbatis.*;
-import ye.weicheng.ngbatis.models.MapperContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-import java.net.UnknownHostException;
 
 /**
  * 环境配置类，用于存放框架的配置信息
@@ -24,15 +20,11 @@ import java.net.UnknownHostException;
 public class EnvConfig {
 
     @Autowired
-    private ResourceLoader resourceLoader;
-    @Autowired
     private TextResolver textResolver;
     @Autowired
     private ResultResolver resultResolver;
     @Autowired
     private ArgsResolver argsResolver;
-    @Autowired
-    private BeanFactory beanFactory;
     @Autowired
     private ArgNameFormatter argNameFormatter;
     @Autowired
@@ -44,16 +36,13 @@ public class EnvConfig {
     @Autowired(required = false)
     private PkGenerator pkGenerator;
 
+
     @Bean
-    @Primary
     public Env getEnv() {
         return new Env(
-                resourceLoader,
-                nebulaPool(),
                 textResolver,
                 resultResolver,
                 argsResolver,
-                beanFactory,
                 argNameFormatter,
                 cfgProps,
                 context,
@@ -65,31 +54,6 @@ public class EnvConfig {
         );
     }
 
-    @Bean
-    public NebulaPool nebulaPool() {
-        NebulaPool pool = new NebulaPool();
-        try {
-            pool.init(properties.getHostAddresses(), properties.getPoolConfig());
-        } catch (UnknownHostException e) {
-            throw new RuntimeException("Can not connect to Nebula Graph");
-        }
-        return pool;
-    }
-
-
-    @Bean
-    public MapperContext mapperContext(Env env ) {
-        return env.getMapperContext();
-    }
-
-
-    public ResourceLoader getResourceLoader() {
-        return resourceLoader;
-    }
-
-    public void setResourceLoader(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
-    }
 
     public TextResolver getTextResolver() {
         return textResolver;
@@ -113,14 +77,6 @@ public class EnvConfig {
 
     public void setArgsResolver(ArgsResolver argsResolver) {
         this.argsResolver = argsResolver;
-    }
-
-    public BeanFactory getBeanFactory() {
-        return beanFactory;
-    }
-
-    public void setBeanFactory(BeanFactory beanFactory) {
-        this.beanFactory = beanFactory;
     }
 
     public ArgNameFormatter getArgNameFormatter() {

@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 package ye.weicheng.ngbatis.io;
 
-import ye.weicheng.ngbatis.ResourceLoader;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import ye.weicheng.ngbatis.annotations.TimeLog;
 import ye.weicheng.ngbatis.config.ParseCfgProps;
 import ye.weicheng.ngbatis.exception.ParseException;
@@ -16,10 +16,7 @@ import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
@@ -44,12 +41,18 @@ import static ye.weicheng.ngbatis.utils.ReflectUtil.getNameUniqueMethod;
  * @author yeweicheng
  * <br>Now is history!
  */
-@Component
-public class MapperResourceLoader implements ResourceLoader {
+public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
 
     private static Logger log = LoggerFactory.getLogger( MapperResourceLoader.class );
 
-    @Autowired
+    private MapperResourceLoader() {
+        super();
+    }
+
+    public MapperResourceLoader( ParseCfgProps parseConfig ) {
+        this.parseConfig = parseConfig;
+    }
+
     private ParseCfgProps parseConfig;
 
     @TimeLog( name = "xml-load", explain = "mappers xml load completed : {} ms")
@@ -74,7 +77,7 @@ public class MapperResourceLoader implements ResourceLoader {
         Elements elementsByTag = doc.getElementsByTag(parseConfig.getMapper());
         for( Element element : elementsByTag ) {
             ClassModel cm = new ClassModel();
-            cm.setResourceLoader( this );
+//            cm.setResourceLoader( this );
             cm.setResource( resource );
             // 获取 namespace
             match( cm, element, "namespace", parseConfig.getNamespace() );
@@ -157,15 +160,4 @@ public class MapperResourceLoader implements ResourceLoader {
         }
     }
 
-    @Autowired
-    private GenericApplicationContext context;
-
-    private Resource[] getResources(String location) {
-        try {
-            return context.getResources(location);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new Resource[0];
-        }
-    }
 }

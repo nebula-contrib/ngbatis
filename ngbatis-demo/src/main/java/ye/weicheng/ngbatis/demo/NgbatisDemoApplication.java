@@ -6,15 +6,15 @@ package ye.weicheng.ngbatis.demo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import ye.weicheng.ngbatis.Env;
+import org.springframework.cache.annotation.EnableCaching;
 
 @SpringBootApplication(exclude={DataSourceAutoConfiguration.class}, scanBasePackages = "ye.weicheng")
 //@EnableAutoConfiguration
+@EnableCaching
 public class NgbatisDemoApplication {
 
 	public static void main(String[] args) {
 		SpringApplication app = new SpringApplication(NgbatisDemoApplication.class);
-		Env.classLoader = app.getClassLoader();
 		app.run(args);
 	}
 

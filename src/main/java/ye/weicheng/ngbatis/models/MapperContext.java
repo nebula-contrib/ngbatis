@@ -16,14 +16,16 @@ import java.util.Map;
  */
 public class MapperContext {
 
-    public MapperContext() {
+    private static MapperContext INSTANCE;
+
+    private MapperContext() {
     }
 
-    public MapperContext(Map<String, ClassModel> interfaces, DataSource dataSource, NebulaPool nebulaPool, boolean resourceRefresh) {
-        this.interfaces = interfaces;
-        this.dataSource = dataSource;
-        this.nebulaPool = nebulaPool;
-        this.resourceRefresh = resourceRefresh;
+    public static MapperContext newInstance() {
+        if( INSTANCE == null ) {
+            INSTANCE = new MapperContext();
+        }
+        return INSTANCE;
     }
 
     Map<String, ClassModel> interfaces;

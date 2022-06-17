@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.apache.commons.lang3.ObjectUtils.isEmpty;
+
 /**
  * xml 相关的配置参数
  *
@@ -21,7 +23,7 @@ import java.util.Set;
 @ConfigurationProperties( prefix="cql.parser")
 public class ParseCfgProps {
 
-    private String mapperLocations = "classpath:mapper/*.xml";
+    private String mapperLocations = "mapper/**/*.xml";
 
     private String id = "id";
 
@@ -37,84 +39,100 @@ public class ParseCfgProps {
 
     private String statementEnd = null;
 
-    private String logShow = "";
+    private String logShow = "xml-load,env-init,query";
 
     private Set<String> logShowTypes = null;
 
     private boolean resourceRefresh = false;
 
     public ParseCfgProps() {
-        setLogShow( "xml-load,env-init,query");
     }
 
-    public void setLogShow( String logShow ) {
-        if(Strings.isBlank( logShow ) ) return;
+    public ParseCfgProps setLogShow( String logShow ) {
+        if(Strings.isBlank( logShow ) ) return this;
         this.logShow = logShow;
         logShowTypes = new HashSet<>(Arrays.asList(logShow.split( ",")));
+        return this;
     }
 
     public String getMapperLocations() {
         return mapperLocations;
     }
 
-    public void setMapperLocations(String mapperLocations) {
+    public ParseCfgProps setMapperLocations(String mapperLocations) {
+        if(Strings.isBlank( mapperLocations ) ) return this;
         this.mapperLocations = mapperLocations;
+        return this;
     }
 
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public ParseCfgProps setId(String id) {
+        if(Strings.isBlank( id ) ) return this;
         this.id = id;
+        return this;
     }
 
     public String getNamespace() {
         return namespace;
     }
 
-    public void setNamespace(String namespace) {
+    public ParseCfgProps setNamespace(String namespace) {
+        if(Strings.isBlank( namespace ) ) return this;
         this.namespace = namespace;
+        return this;
     }
 
     public String getResultType() {
         return resultType;
     }
 
-    public void setResultType(String resultType) {
+    public ParseCfgProps setResultType(String resultType) {
+        if(Strings.isBlank( resultType ) ) return this;
         this.resultType = resultType;
+        return this;
     }
 
     public String getParameterType() {
         return parameterType;
     }
 
-    public void setParameterType(String parameterType) {
+    public ParseCfgProps setParameterType(String parameterType) {
+        if(Strings.isBlank( parameterType ) ) return this;
         this.parameterType = parameterType;
+        return this;
     }
 
     public String getMapper() {
         return mapper;
     }
 
-    public void setMapper(String mapper) {
+    public ParseCfgProps setMapper(String mapper) {
+        if(Strings.isBlank( mapper ) ) return this;
         this.mapper = mapper;
+        return this;
     }
 
     public String getStatementStart() {
         return statementStart;
     }
 
-    public void setStatementStart(String statementStart) {
+    public ParseCfgProps setStatementStart(String statementStart) {
+        if(Strings.isBlank( statementStart ) ) return this;
         this.statementStart = statementStart;
+        return this;
     }
 
     public String getStatementEnd() {
         return statementEnd;
     }
 
-    public void setStatementEnd(String statementEnd) {
+    public ParseCfgProps setStatementEnd(String statementEnd) {
+        if(Strings.isBlank( statementEnd ) ) return this;
         this.statementEnd = statementEnd;
+        return this;
     }
 
     public String getLogShow() {
@@ -125,15 +143,19 @@ public class ParseCfgProps {
         return logShowTypes;
     }
 
-    public void setLogShowTypes(Set<String> logShowTypes) {
+    public ParseCfgProps setLogShowTypes(Set<String> logShowTypes) {
+        if( isEmpty( logShowTypes ) ) return this;
         this.logShowTypes = logShowTypes;
+        return this;
     }
 
     public boolean isResourceRefresh() {
         return resourceRefresh;
     }
 
-    public void setResourceRefresh(boolean resourceRefresh) {
+    public ParseCfgProps setResourceRefresh(Boolean resourceRefresh) {
+        if( resourceRefresh == null ) return this;
         this.resourceRefresh = resourceRefresh;
+        return this;
     }
 }

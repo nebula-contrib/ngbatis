@@ -1,0 +1,7 @@
+<mapper namespace="ye.weicheng.ngbatis.demo.repository.TestChildPackageRepository">
+
+    <select id="select1">
+        RETURN 1
+    </select>
+
+</mapper>

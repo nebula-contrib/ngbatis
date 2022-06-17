@@ -1,9 +1,8 @@
 // Copyright 2022-present Weicheng Ye. All rights reserved.
 // Use of this source code is governed by a MIT-style license that can be
 // found in the LICENSE file.
-package ye.weicheng.ngbatis.demo.config;
+package ye.weicheng.ngbatis.binding;
 
-import org.springframework.stereotype.Component;
 import ye.weicheng.ngbatis.PkGenerator;
 
 /**
@@ -13,8 +12,7 @@ import ye.weicheng.ngbatis.PkGenerator;
  * @since 2022-06-14 12:32
  * <br>Now is history!
  */
-@Component
-public class PkGeneratorDemo implements PkGenerator {
+public class TimestampPkGenerator implements PkGenerator {
 
     @Override
     public <T> T generate(String tagName, Class<T> pkType) {

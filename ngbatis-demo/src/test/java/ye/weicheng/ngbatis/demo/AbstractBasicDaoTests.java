@@ -21,10 +21,6 @@ public class AbstractBasicDaoTests {
     @Autowired
     private TestRepository repository;
 
-    static {
-        Env.classLoader = Person.class.getClassLoader();
-    }
-
     @Test
     public void insert() {
         Person person = new Person();

@@ -115,6 +115,6 @@ resource/mapper/TestRepository.xml
 
 - [x] 提供主键生成策略选择
   - [x] 提供接口
-  - [ ] 提供默认实现
+  - [x] 提供默认实现
 - [ ] 使用连接池的方式，让多次访问数据库使用的 Session 进行共享。提高访问性能
-- [ ] 处理 Springboot jar 命令启动时的 ClassLoader 问题
+- [x] 处理 Springboot jar 命令启动时的 ClassLoader 问题

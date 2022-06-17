@@ -4,9 +4,7 @@
 package ye.weicheng.ngbatis.proxy;
 
 import com.alibaba.fastjson.JSON;
-import com.vesoft.nebula.Value;
 import com.vesoft.nebula.client.graph.data.ResultSet;
-import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.net.Session;
 import ye.weicheng.ngbatis.ArgNameFormatter;
@@ -15,7 +13,6 @@ import ye.weicheng.ngbatis.ResultResolver;
 import ye.weicheng.ngbatis.annotations.UseKeyArgReplace;
 import ye.weicheng.ngbatis.config.ParseCfgProps;
 import ye.weicheng.ngbatis.exception.QueryException;
-import ye.weicheng.ngbatis.exception.StmtException;
 import ye.weicheng.ngbatis.models.ClassModel;
 import ye.weicheng.ngbatis.models.MapperContext;
 import ye.weicheng.ngbatis.models.MethodModel;

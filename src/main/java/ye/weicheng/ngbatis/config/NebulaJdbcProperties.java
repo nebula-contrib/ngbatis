@@ -6,12 +6,8 @@ package ye.weicheng.ngbatis.config;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +23,6 @@ import java.util.List;
         prefix = "nebula"
 )
 public class NebulaJdbcProperties {
-    private static final ResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver();
 
     public NebulaJdbcProperties() {
     }
@@ -49,7 +44,7 @@ public class NebulaJdbcProperties {
         return hosts;
     }
 
-    public void setHosts(String hosts) {
+    public NebulaJdbcProperties setHosts(String hosts) {
         String[] hostArr = hosts.split(",");
         hostAddresses = new ArrayList<HostAddress>();
         for (int i = 0; i < hostArr.length; i++) {
@@ -58,46 +53,44 @@ public class NebulaJdbcProperties {
             hostAddresses.add(new HostAddress(iandp[0].trim(), Integer.parseInt(iandp[1].trim())));
         }
         this.hosts = hosts;
+        return this;
     }
 
     public NebulaPoolConfig getPoolConfig() {
         return poolConfig;
     }
 
-    public void setPoolConfig(NebulaPoolConfig poolConfig) {
+    public NebulaJdbcProperties setPoolConfig(NebulaPoolConfig poolConfig) {
         this.poolConfig = poolConfig;
+        return this;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
+    public NebulaJdbcProperties setUsername(String username) {
         this.username = username;
+        return this;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public NebulaJdbcProperties setPassword(String password) {
         this.password = password;
+        return this;
     }
 
     public String getSpace() {
         return space;
     }
 
-    public void setSpace(String space) {
+    public NebulaJdbcProperties setSpace(String space) {
         this.space = space;
+        return this;
     }
 
-    private Resource[] getResources(String location) {
-        try {
-            return resourceResolver.getResources(location);
-        } catch (IOException var3) {
-            return new Resource[0];
-        }
-    }
 }
 

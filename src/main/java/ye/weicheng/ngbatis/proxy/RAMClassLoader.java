@@ -11,14 +11,14 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 /**
- *将 {@link ASMBeanFactory} 所代理生成的字节码，加载到内存的类加载器
+ *将 {@link MapperProxyClassGenerator} 所代理生成的字节码，加载到内存的类加载器
  *
  * @author yeweicheng
  * <br>Now is history!
  */
 public class RAMClassLoader extends ClassLoader {
 
-    private Logger log = LoggerFactory.getLogger( Env.class );
+    private Logger log = LoggerFactory.getLogger( RAMClassLoader.class );
     //记录需要让当前类加载器加载的类
     private Map<String, ClassModel> classModelMap;
 
@@ -38,7 +38,7 @@ public class RAMClassLoader extends ClassLoader {
     private void loadClassCode(Map.Entry<String, ClassModel> entry) {
         String className = entry.getKey();
         byte[] classByte = entry.getValue().getClassByte();
-        System.out.println( className );
+        log.info( "Proxy class had been load (代理类被加载): {}", className );
         defineClass( className , classByte, 0, classByte.length);
     }
 
@@ -48,13 +48,13 @@ public class RAMClassLoader extends ClassLoader {
         synchronized ( lock ) {
             if (c == null) {
                 // 不需要我们加载
-                if (!classModelMap.keySet().contains(name)) {
+                if (!classModelMap.containsKey(name)) {
                     c = Env.classLoader.loadClass(name);
+                    log.info( "Class had been loaded: {}", name );
                 } else {
                     throw new ClassNotFoundException("找不到该class");
                 }
             }
-            log.info( "class had been loaded: {}", name );
             return c;
         }
     }
