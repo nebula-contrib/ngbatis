@@ -20,8 +20,6 @@ import org.springframework.stereotype.Component;
  * @author yeweicheng
  * <br>Now is history!
  */
-@Component
-@Order(0)
 public class Env {
 
     // 使用 fastjson 安全模式，规避任意代码执行风险
