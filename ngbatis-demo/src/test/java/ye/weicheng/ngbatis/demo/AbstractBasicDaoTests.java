@@ -37,6 +37,13 @@ public class AbstractBasicDaoTests {
     }
 
     @Test
+    public void selectById() {
+        String id = "取名有点难2";
+        Person person = repository.selectById(id);
+        System.out.println( JSON.toJSONString( person ) );
+    }
+
+    @Test
     public void pkGeneratorTest() {
         Person person = new Person();
         repository.insertSelective(person);

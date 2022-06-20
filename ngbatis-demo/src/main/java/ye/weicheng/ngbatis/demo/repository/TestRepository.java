@@ -19,7 +19,7 @@ import java.util.Set;
  * @author yeweicheng
  * <br>Now is history!
  */
-public interface TestRepository extends NebulaDaoBasic<Person, Long> {
+public interface TestRepository extends NebulaDaoBasic<Person, String> {
 
     Person selectPerson();
 

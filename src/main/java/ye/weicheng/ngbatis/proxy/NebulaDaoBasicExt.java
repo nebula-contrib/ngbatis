@@ -6,6 +6,7 @@ package ye.weicheng.ngbatis.proxy;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 import ye.weicheng.ngbatis.PkGenerator;
 import ye.weicheng.ngbatis.exception.ParseException;
 import ye.weicheng.ngbatis.models.MethodModel;
@@ -16,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,14 +34,18 @@ public class NebulaDaoBasicExt {
 
     public static String recordToQL(Object record, boolean selective ) {
         Class<?> type = record.getClass();
-        Table tableAnno = type.getAnnotation( Table.class );
-        String x_x = StringUtil.xX2x_x(type.getName());
-        String tagName = tableAnno == null ? x_x : tableAnno.name();
+        String vertexName = vertexName(type);
         StringBuilder builder = new StringBuilder("INSERT VERTEX ");
-        builder.append( tagName );
-        String propsWithValues = columnsToQL( record, type, selective,  tagName );
+        builder.append( vertexName );
+        String propsWithValues = columnsToQL( record, type, selective,  vertexName );
         builder.append( propsWithValues );
         return builder.toString();
+    }
+
+    public static String vertexName( Class<?> entityType ) {
+        Table tableAnno = entityType.getAnnotation( Table.class );
+        String x_x = StringUtil.xX2x_x(entityType.getName());
+        return tableAnno == null ? x_x : tableAnno.name();
     }
 
 
@@ -122,6 +128,23 @@ public class NebulaDaoBasicExt {
     static String keyFormat( Field field, String name, boolean asStmt ) {
         String format = asStmt ? "${ %s }" : "$%s";
         return valueFormat(field, String.format( format, name ) ).toString();
+    }
+
+    public static Class<?>[] entityTypeAndIdType(Class<?> currentType) {
+        Class<?>[] result = null;
+        Type[] genericInterfaces = currentType.getGenericInterfaces();
+        for (Type genericInterface : genericInterfaces) {
+            if( genericInterface.getClass() == ParameterizedTypeImpl.class ) {
+                Type[] actualTypeArguments = ((ParameterizedTypeImpl) genericInterface).getActualTypeArguments();
+                result = new Class<?>[] {
+                        (Class<?>) actualTypeArguments[0], // T {@link NebulaDaoBasic }
+                        (Class<?>) actualTypeArguments[1]  // ID {@link NebulaDaoBasic }
+                };
+            } else if ( genericInterface instanceof Class ){
+                result = entityTypeAndIdType( (Class)genericInterface );
+            }
+        }
+        return result;
     }
 
     public static Object proxy (Class<?> currentType, Class<?> returnType, String nGQL, Class<?>[] argTypes, Object ... args) {

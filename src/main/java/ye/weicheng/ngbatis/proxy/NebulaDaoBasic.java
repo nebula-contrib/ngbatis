@@ -8,8 +8,7 @@ import ye.weicheng.ngbatis.exception.QueryException;
 import java.io.Serializable;
 import java.util.*;
 
-import static ye.weicheng.ngbatis.proxy.NebulaDaoBasicExt.proxy;
-import static ye.weicheng.ngbatis.proxy.NebulaDaoBasicExt.recordToQL;
+import static ye.weicheng.ngbatis.proxy.NebulaDaoBasicExt.*;
 
 /**
  * @author yeweicheng
@@ -23,7 +22,7 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
      * @param id 表记录主键
      * @return
      */
-    default int deleteLogicByPrimaryKey(ID id) {
+    default int deleteLogicById(ID id) {
         throw new QueryException("No implements");
     }
 
@@ -33,7 +32,7 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
      * @param id 表记录主键
      * @return
      */
-    default int deleteByPrimaryKey(ID id) {
+    default int deleteById(ID id) {
         throw new QueryException("No implements");
     }
 
@@ -68,8 +67,12 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
      * @param id 记录主键
      * @return 表中的记录对应的实体对象
      */
-    default T selectByPrimaryKey(ID id) {
-        throw new QueryException("No implements");
+    default T selectById(ID id) {
+        Class[] classes = entityTypeAndIdType(this.getClass());
+        Class<T> entityType = classes[0];
+        String vertexName = vertexName(entityType);
+        String nGQL = "MATCH ( n: " + vertexName + " ) WHERE id(n) == $p0 RETURN n LIMIT 2 "; // limit 2 to check the data error, when there is 2 rows record has same id;
+        return (T)proxy( this.getClass(), entityType, nGQL, new Class[] {Serializable.class}, id );
     }
 
     /**
@@ -146,17 +149,17 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
      * @param record
      * @return
      */
-    default int updateByPrimaryKeySelective(T record) {
+    default int updateByIdSelective(T record) {
 
         throw new QueryException("No implements");
     }
 
-    default int updateByPrimaryKeyWithBLOBs(T record) {
+    default int updateByIdWithBLOBs(T record) {
 
         throw new QueryException("No implements");
     }
 
-    default int updateByPrimaryKey(T record) {
+    default int updateById(T record) {
 
         throw new QueryException("No implements");
     }
