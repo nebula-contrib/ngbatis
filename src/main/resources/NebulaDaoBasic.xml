@@ -1,0 +1,49 @@
+<mapper namespace="ye.weicheng.ngbatis.proxy.NebulaDaoBasic">
+
+    <select id="selectBySelective">
+        MATCH (n:${ tag })
+        @if ( isNotEmpty(columns) ) {
+            WHERE
+            @for ( col in columns ) {
+                n.${ tag }.${ col } == ${ @valueColumns.get( colLP.index - 1 ) }
+                @if (!colLP.last) {
+                    and
+                @}
+            @}
+        @}
+        RETURN n, id( n ) as n.id
+        LIMIT 4000
+    </select>
+
+    <delete id="deleteLogicById">
+        DELETE VERTEX ${ id } WITH EDGE
+    </delete>
+
+    <delete id="deleteById"></delete>
+
+    <insert id="insert"></insert>
+
+    <insert id="insertSelective"></insert>
+
+    <select id="selectById"></select>
+
+    <select id="selectByIds"></select>
+
+    <select id="selectBySelective"></select>
+
+    <select id="selectBySelectivePrecise"/>
+    <select id="selectByMap"/>
+    <select id="countByMap"/>
+    <select id="selectIdBySelective"/>
+    <select id="updateByIdSelective"/>
+    <select id="updateByIdWithBLOBs"/>
+    <select id="updateById"/>
+    <select id="insertBatch"/>
+    <select id="countGridByMap"/>
+    <select id="selectGridByMap"/>
+    <select id="updateSelective"/>
+    <select id="selectPageByMap"/>
+    <select id="updateBatch"/>
+
+
+</mapper>

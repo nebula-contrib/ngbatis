@@ -32,6 +32,11 @@ public class NebulaDaoBasicExt {
 
     private static Logger log = LoggerFactory.getLogger( NebulaDaoBasicExt.class );
 
+    public static class KV {
+        public final List<String> columns = new ArrayList<>();
+        public final List<String> valueNames = new ArrayList<>();
+    }
+
     public static String recordToQL(Object record, boolean selective ) {
         Class<?> type = record.getClass();
         String vertexName = vertexName(type);
@@ -51,49 +56,23 @@ public class NebulaDaoBasicExt {
 
     public static String columnsToQL(Object record, Class<?> type, boolean selective, String tagName) {
         Field[] fields = type.getDeclaredFields();
-        List<String> columns = new ArrayList<>();
-        List<String> valueNames = new ArrayList<>();
-        Field pkField = null;
-        for (Field field : fields) {
-            if (field.isAnnotationPresent(Id.class)) {
-                pkField = field;
-            }
-        }
-        if (pkField == null) {
-            throw new ParseException( String.format( "%s 必须有一个属性用 @Id 注解。（javax.persistence.Id）", type ));
-        }
+
+        Field pkField = getPkField( fields, type );
 
         Object id = setId( record, pkField, tagName );
 
-        for (Field field: fields) {
-            String name = null;
-            if( selective ) {
-                Object value = ReflectUtil.getValue(record, field);
-                if( value != null ) {
-                    name = field.getName();
-                }
-            } else {
-                name = field.getName();
-            }
-            if( name != null ) {
-                columns.add( name );
-                // FIXME 使用 stmt 的方式，将实际值写入 nGQL 当中。
-                //  在找到 executeWithParameter 通过参数替换的方法之后修改成 pstmt 的形式
-                Object o = keyFormat( field, name, true);
-                valueNames.add( String.valueOf( o ) );
-            }
-        }
+        KV kv = recordToKV(record, fields, selective);
 
         assert id != null;
         // INSERT VERTEX IF NOT EXISTS  tag [tag_props, [tag_props] ...] VALUES <vid>: ([prop_value_list])
         StringBuilder builder = new StringBuilder( " (  ");
-        builder.append( Strings.join( columns, ',' ) );
+        builder.append( Strings.join( kv.columns, ',' ) );
         builder.append( " ) ");
         builder.append( " VALUES ");
         builder.append( valueFormat( pkField, id ) );
         builder.append( ":");
         builder.append( " ( ");
-        builder.append( Strings.join( valueNames, ',' ) );
+        builder.append( Strings.join( kv.valueNames, ',' ) );
         builder.append( " ) ");
         return builder.toString();
     }
@@ -148,10 +127,9 @@ public class NebulaDaoBasicExt {
     }
 
     public static Object proxy (Class<?> currentType, Class<?> returnType, String nGQL, Class<?>[] argTypes, Object ... args) {
-        StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[2];
         Method method = null;
-        String methodName = stackTraceElement.getMethodName();
         try {
+            String methodName = getMethodName();
             method = currentType.getMethod( methodName, argTypes );
         } catch (NoSuchMethodException ignored) {}
 
@@ -160,5 +138,56 @@ public class NebulaDaoBasicExt {
         methodModel.setResultType( returnType );
         methodModel.setText( nGQL );
         return MapperProxy.invoke( methodModel, args );
+    }
+
+    public static KV notNullFields( Object record ) {
+        Field[] fields = record.getClass().getDeclaredFields();
+        return recordToKV(record, fields, true);
+    }
+
+    public static Field getPkField(Field[] fields, Class<?> type ) {
+        Field pkField = null;
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(Id.class)) {
+                pkField = field;
+            }
+        }
+        if (pkField == null) {
+            throw new ParseException( String.format( "%s 必须有一个属性用 @Id 注解。（javax.persistence.Id）", type ));
+        }
+        return pkField;
+    }
+
+    public static String getCqlTpl() {
+        Map<String, String> daoBasicTpl = MapperProxy.ENV.getMapperContext().getDaoBasicTpl();
+        return daoBasicTpl.get(getMethodName());
+    }
+
+    public static KV recordToKV(Object record, Field[] fields, boolean selective) {
+        KV kv = new KV();
+        for (Field field: fields) {
+            String name = null;
+            if( selective ) {
+                Object value = ReflectUtil.getValue(record, field);
+                if( value != null ) {
+                    name = field.getName();
+                }
+            } else {
+                name = field.getName();
+            }
+            if( name != null ) {
+                kv.columns.add( name );
+                // FIXME 使用 stmt 的方式，将实际值写入 nGQL 当中。
+                //  在找到 executeWithParameter 通过参数替换的方法之后修改成 pstmt 的形式
+                Object o = keyFormat( field, name, true);
+                kv.valueNames.add( String.valueOf( o ) );
+            }
+        }
+        return kv;
+    }
+
+    public static String getMethodName() {
+        StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[3];
+        return stackTraceElement.getMethodName();
     }
 }

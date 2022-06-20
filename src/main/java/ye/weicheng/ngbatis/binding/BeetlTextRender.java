@@ -52,4 +52,12 @@ public class BeetlTextRender implements TextResolver {
         }
     }
 
+    public ParseCfgProps getProps() {
+        return props;
+    }
+
+    public void setProps(ParseCfgProps props) {
+        this.props = props;
+    }
+
 }

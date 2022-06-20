@@ -11,6 +11,8 @@ import ye.weicheng.ngbatis.Env;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 import ye.weicheng.ngbatis.demo.repository.TestRepository;
 
+import java.util.List;
+
 /**
  * @author yeweicheng
  * @since 2022-06-13 0:47
@@ -48,6 +50,21 @@ public class AbstractBasicDaoTests {
         Person person = new Person();
         repository.insertSelective(person);
         System.out.println(JSON.toJSONString( person ) );
+    }
+
+    @Test
+    public void selectBySelective() {
+        Person person = new Person();
+        person.setName( "取名有点难2" );
+        person.setAge( 18 );
+        List<Person> people = repository.selectBySelective(person);
+        System.out.println(JSON.toJSONString( people ) );
+    }
+
+    @Test
+    public void deleteLogicById () {
+        int row = repository.deleteLogicById("取名有点难2");
+        System.out.println( row );
     }
 
 

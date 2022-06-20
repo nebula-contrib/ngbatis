@@ -4,8 +4,16 @@
 package ye.weicheng.ngbatis.proxy;
 
 import com.vesoft.nebula.client.graph.data.ResultSet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ResourceUtils;
+import ye.weicheng.ngbatis.TextResolver;
+import ye.weicheng.ngbatis.binding.BeetlTextRender;
 import ye.weicheng.ngbatis.exception.QueryException;
+import ye.weicheng.ngbatis.models.MapperContext;
+
+import java.io.InputStream;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.*;
 
 import static ye.weicheng.ngbatis.proxy.NebulaDaoBasicExt.*;
@@ -23,7 +31,20 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
      * @return
      */
     default int deleteLogicById(ID id) {
-        throw new QueryException("No implements");
+        String cqlTpl = getCqlTpl();
+        Class<?>[] classes = entityTypeAndIdType(this.getClass());
+        TextResolver textResolver = MapperProxy.ENV.getTextResolver();
+        Field pkField = getPkField(classes[0].getDeclaredFields(), classes[0]);
+        String pstm = keyFormat(pkField, pkField.getName(), true);
+        Map<String, Object> tplParam = new HashMap<String, Object>() {{
+            put("id", pstm);
+        }};
+        Map<String, Object> queryParam = new HashMap<String, Object>() {{
+            put( pkField.getName(), id);
+        }};
+        String cql = textResolver.resolve(cqlTpl, tplParam);
+        ResultSet resultSet = (ResultSet)proxy(this.getClass(), ResultSet.class, cql, new Class<?>[]{Serializable.class}, queryParam);
+        return resultSet.isSucceeded() ? 1 : 0;
     }
 
     /**
@@ -93,8 +114,20 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
      * @return
      */
     default List<T> selectBySelective(T record){
-
-        throw new QueryException("No implements");
+        KV kv = notNullFields(record);
+        TextResolver textResolver = MapperProxy.ENV.getTextResolver();
+        String cqlTpl = getCqlTpl();
+        Class<?> entityType = record.getClass();
+        String vertexName = vertexName(entityType);
+        String nGQL = textResolver.resolve(
+                cqlTpl,
+                new HashMap<String, Object>() {{
+                    put( "columns", kv.columns );
+                    put( "valueColumns", kv.valueNames );
+                    put( "tag", vertexName);
+                }}
+        );
+        return (List<T>)proxy( this.getClass(), entityType, nGQL, new Class[] {Object.class}, record );
     }
 
     /**

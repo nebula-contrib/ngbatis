@@ -20,7 +20,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.stereotype.Component;
 import ye.weicheng.ngbatis.config.NebulaJdbcProperties;
 import ye.weicheng.ngbatis.config.ParseCfgProps;
-import ye.weicheng.ngbatis.io.MapperResourceLoader;
+import ye.weicheng.ngbatis.io.DaoResourceLoader;
 import ye.weicheng.ngbatis.models.ClassModel;
 import ye.weicheng.ngbatis.models.MapperContext;
 import ye.weicheng.ngbatis.proxy.MapperProxyClassGenerator;
@@ -115,10 +115,12 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor , Orde
     }
 
     public MapperContext mapperContext( NebulaPool nebulaPool ) {
-        MapperResourceLoader mapperResourceLoader = new MapperResourceLoader( parseCfgProps );
+        DaoResourceLoader daoBasicResourceLoader = new DaoResourceLoader( parseCfgProps );
         MapperContext context =  MapperContext.newInstance();
         context.setResourceRefresh( parseCfgProps.isResourceRefresh() );
-        Map<String, ClassModel> interfaces = mapperResourceLoader.load();
+        Map<String, ClassModel> interfaces = daoBasicResourceLoader.load();
+        Map<String, String> daoBasicTpl = daoBasicResourceLoader.loadTpl();
+        context.setDaoBasicTpl( daoBasicTpl );
         context.setNebulaPool( nebulaPool );
         context.setInterfaces( interfaces );
         registerBean( context );

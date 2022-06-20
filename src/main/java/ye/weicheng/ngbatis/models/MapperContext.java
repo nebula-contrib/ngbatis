@@ -30,6 +30,8 @@ public class MapperContext {
 
     Map<String, ClassModel> interfaces;
 
+    Map<String, String> daoBasicTpl;
+
     DataSource dataSource;
 
     NebulaPool nebulaPool;
@@ -42,6 +44,14 @@ public class MapperContext {
 
     public void setInterfaces(Map<String, ClassModel> interfaces) {
         this.interfaces = interfaces;
+    }
+
+    public Map<String, String> getDaoBasicTpl() {
+        return daoBasicTpl;
+    }
+
+    public void setDaoBasicTpl(Map<String, String> daoBasicTpl) {
+        this.daoBasicTpl = daoBasicTpl;
     }
 
     public DataSource getDataSource() {

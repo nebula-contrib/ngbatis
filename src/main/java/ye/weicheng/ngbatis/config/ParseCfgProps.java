@@ -23,6 +23,8 @@ import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 @ConfigurationProperties( prefix="cql.parser")
 public class ParseCfgProps {
 
+    private String mapperTplLocation = "NebulaDaoBasic.xml";
+
     private String mapperLocations = "mapper/**/*.xml";
 
     private String id = "id";
@@ -52,6 +54,15 @@ public class ParseCfgProps {
         if(Strings.isBlank( logShow ) ) return this;
         this.logShow = logShow;
         logShowTypes = new HashSet<>(Arrays.asList(logShow.split( ",")));
+        return this;
+    }
+
+    public String getMapperTplLocation() {
+        return mapperTplLocation;
+    }
+
+    public ParseCfgProps setMapperTplLocation(String mapperTplLocation) {
+        this.mapperTplLocation = mapperTplLocation;
         return this;
     }
 

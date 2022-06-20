@@ -53,7 +53,7 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
         this.parseConfig = parseConfig;
     }
 
-    private ParseCfgProps parseConfig;
+    protected ParseCfgProps parseConfig;
 
     @TimeLog( name = "xml-load", explain = "mappers xml load completed : {} ms")
     public Map<String, ClassModel> load() {
@@ -114,7 +114,7 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
     }
 
 
-    private MethodModel parseMethodModel( Node node ) {
+    protected MethodModel parseMethodModel( Node node ) {
         MethodModel model = new MethodModel();
         match( model, node, "id", parseConfig.getId() );
         match( model, node, "parameterType", parseConfig.getParameterType() );
@@ -125,7 +125,7 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
         return model;
     }
 
-    private String nodesToString( List<Node> nodes ) {
+    protected String nodesToString( List<? extends Node> nodes ) {
         StringBuilder builder = new StringBuilder();
         for( Node node : nodes ) {
             if( node instanceof TextNode ) {
