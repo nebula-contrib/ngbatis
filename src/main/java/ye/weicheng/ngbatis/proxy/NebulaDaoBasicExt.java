@@ -52,6 +52,14 @@ public class NebulaDaoBasicExt {
             if (field.isAnnotationPresent(Id.class)) {
                 pkField = field;
             }
+        }
+        if (pkField == null) {
+            throw new ParseException( String.format( "%s 必须有一个属性用 @Id 注解。（javax.persistence.Id）", type ));
+        }
+
+        Object id = setId( record, pkField, tagName );
+
+        for (Field field: fields) {
             String name = null;
             if( selective ) {
                 Object value = ReflectUtil.getValue(record, field);
@@ -69,11 +77,7 @@ public class NebulaDaoBasicExt {
                 valueNames.add( String.valueOf( o ) );
             }
         }
-        if (pkField == null) {
-            throw new ParseException( String.format( "%s 必须有一个属性用 @Id 注解。（javax.persistence.Id）", type ));
-        }
 
-        Object id = setId( record, pkField, tagName );
         assert id != null;
         // INSERT VERTEX IF NOT EXISTS  tag [tag_props, [tag_props] ...] VALUES <vid>: ([prop_value_list])
         StringBuilder builder = new StringBuilder( " (  ");
