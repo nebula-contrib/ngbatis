@@ -62,6 +62,7 @@ public class ParseCfgProps {
     }
 
     public ParseCfgProps setMapperTplLocation(String mapperTplLocation) {
+        if(Strings.isBlank( mapperTplLocation ) ) return this;
         this.mapperTplLocation = mapperTplLocation;
         return this;
     }
