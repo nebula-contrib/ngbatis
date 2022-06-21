@@ -11,7 +11,7 @@
                 @}
             @}
         @}
-        RETURN n, id( n ) as n.id
+        RETURN n
         LIMIT 4000
     </select>
 

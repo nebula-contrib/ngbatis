@@ -6,10 +6,13 @@ package ye.weicheng.ngbatis.utils;
 import com.vesoft.nebula.client.graph.data.Node;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import ye.weicheng.ngbatis.exception.ResultHandleException;
+import ye.weicheng.ngbatis.proxy.NebulaDaoBasicExt;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.util.List;
 
+import static ye.weicheng.ngbatis.proxy.NebulaDaoBasicExt.getPkField;
 import static ye.weicheng.ngbatis.utils.ReflectUtil.castNumber;
 
 /**
@@ -62,10 +65,18 @@ public class ResultSetUtil {
                 String prop = keys.get( i );
                 ReflectUtil.setValue( t, prop, ResultSetUtil.getValue( values.get( i ) ));
             }
+            setId( t, resultType, v);
         } catch (UnsupportedEncodingException | InstantiationException | IllegalAccessException | NoSuchFieldException e) {
             throw new ResultHandleException( String.format( "%s : %s", e.getClass().toString(), e.getMessage() ) );
         }
         return t;
+    }
+
+    public static void setId( Object obj, Class<?> resultType, Node v ) {
+        Field pkField = getPkField( resultType );
+        ValueWrapper idWrapper = v.getId();
+        String id = ResultSetUtil.getValue(idWrapper);
+        NebulaDaoBasicExt.setId( obj, pkField, id );
     }
 
 }
