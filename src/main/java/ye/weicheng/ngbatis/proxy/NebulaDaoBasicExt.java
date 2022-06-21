@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
 /**
  * @author yeweicheng
  * @since 2022-06-14 4:25
@@ -51,6 +53,10 @@ public class NebulaDaoBasicExt {
         Table tableAnno = entityType.getAnnotation( Table.class );
         String x_x = StringUtil.xX2x_x(entityType.getName());
         return tableAnno == null ? x_x : tableAnno.name();
+    }
+
+    public static String edgeName( Class<?> edgeType ) {
+        return vertexName( edgeType );
     }
 
 
@@ -109,6 +115,14 @@ public class NebulaDaoBasicExt {
         return valueFormat(field, String.format( format, name ) ).toString();
     }
 
+    static  String keyFormat( Field field, String name, boolean asStmt, String prefix ) {
+        if( isNotEmpty(prefix) ) {
+            String format = asStmt ? "${ %s.%s }" : "$%s.%s";
+            return valueFormat(field, String.format( format, prefix, name ) ).toString();
+        }
+        return keyFormat( field, name, asStmt );
+    }
+
     public static Class<?>[] entityTypeAndIdType(Class<?> currentType) {
         Class<?>[] result = null;
         Type[] genericInterfaces = currentType.getGenericInterfaces();
@@ -141,8 +155,12 @@ public class NebulaDaoBasicExt {
     }
 
     public static KV notNullFields( Object record ) {
+        return notNullFields( record, null );
+    }
+
+    public static KV notNullFields( Object record, String prefix ) {
         Field[] fields = record.getClass().getDeclaredFields();
-        return recordToKV(record, fields, true);
+        return recordToKV(record, fields, true, prefix);
     }
 
     public static Field getPkField( Class<?> type ) {
@@ -169,6 +187,10 @@ public class NebulaDaoBasicExt {
     }
 
     public static KV recordToKV(Object record, Field[] fields, boolean selective) {
+        return recordToKV( record, fields, selective, null );
+    }
+
+    public static KV recordToKV(Object record, Field[] fields, boolean selective, String prefix) {
         KV kv = new KV();
         for (Field field: fields) {
             String name = null;
@@ -184,7 +206,7 @@ public class NebulaDaoBasicExt {
                 kv.columns.add( name );
                 // FIXME 使用 stmt 的方式，将实际值写入 nGQL 当中。
                 //  在找到 executeWithParameter 通过参数替换的方法之后修改成 pstmt 的形式
-                Object o = keyFormat( field, name, true);
+                Object o = keyFormat( field, name, true, prefix);
                 kv.valueNames.add( String.valueOf( o ) );
             }
         }

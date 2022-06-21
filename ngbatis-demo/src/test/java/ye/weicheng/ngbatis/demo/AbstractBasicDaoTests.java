@@ -7,7 +7,7 @@ import com.alibaba.fastjson.JSON;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ye.weicheng.ngbatis.Env;
+import ye.weicheng.ngbatis.demo.pojo.Like;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 import ye.weicheng.ngbatis.demo.repository.TestRepository;
 
@@ -65,6 +65,36 @@ public class AbstractBasicDaoTests {
     public void deleteLogicById () {
         int row = repository.deleteLogicById("取名有点难2");
         System.out.println( row );
+    }
+
+    @Test
+    public void insertEdge() {
+        Person person1 = new Person();
+        person1.setName( "测试" );
+        repository.insertSelective( person1 );
+
+        Person person2 = new Person();
+        repository.insertSelective( person2 );
+
+        Like like = new Like();
+
+        repository.insertEdge( person1, like , person2 );
+    }
+
+    @Test
+    public void insertEdgeWithProps() {
+        Person person1 = new Person();
+        person1.setName( "edgeDemoV1" );
+        repository.insertSelective( person1 );
+
+        Person person2 = new Person();
+        person2.setName( "edgeDemoV2" );
+        repository.insertSelective( person2 );
+
+        Like like = new Like();
+        like.setLikeness( 0.7 );
+
+        repository.insertEdge( person1, like , person2 );
     }
 
 

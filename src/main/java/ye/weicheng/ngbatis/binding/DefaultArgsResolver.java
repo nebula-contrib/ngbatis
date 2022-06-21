@@ -51,8 +51,13 @@ public class DefaultArgsResolver implements ArgsResolver {
                     result.put( "p" + i,  JSON.toJSON(args[ i ] ) );
                 else if ( args[i] instanceof Collection)
                     result.put( "p" + i, args[i] );
-                else
-                    result.putAll( (Map<String,Object>)JSON.toJSON( args[i] ) );
+                else {
+                    if( len == 1 ) {
+                        result = (Map<String,Object>)JSON.toJSON( args[0] );
+                    } else {
+                        result.put( "p" + i, JSON.toJSON( args[i] ) );
+                    }
+                }
             }
         }
         return result;

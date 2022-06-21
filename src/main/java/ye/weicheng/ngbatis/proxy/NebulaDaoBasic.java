@@ -4,14 +4,9 @@
 package ye.weicheng.ngbatis.proxy;
 
 import com.vesoft.nebula.client.graph.data.ResultSet;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ResourceUtils;
 import ye.weicheng.ngbatis.TextResolver;
-import ye.weicheng.ngbatis.binding.BeetlTextRender;
 import ye.weicheng.ngbatis.exception.QueryException;
-import ye.weicheng.ngbatis.models.MapperContext;
 
-import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -225,6 +220,32 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
     default int updateBatch(List<T> ts) {
 
         throw new QueryException("No implements");
+    }
+
+    default void insertEdge(Object v1, Object e, Object v2) {
+        TextResolver textResolver = MapperProxy.ENV.getTextResolver();
+
+        KV kv = notNullFields(e, "p1");
+        String cqlTpl = getCqlTpl();
+        Class<?> edgeType = e.getClass();
+        String edgeName = edgeName(edgeType);
+
+        Field v1PkField = getPkField(v1.getClass());
+        Field v2PkField = getPkField(v2.getClass());
+        String eId1 = keyFormat(v1PkField, v1PkField.getName(), true, "p0");
+        String eId2 = keyFormat(v2PkField, v2PkField.getName(), true, "p2");
+
+        String nGQL = textResolver.resolve(
+                cqlTpl,
+                new HashMap<String, Object>() {{
+                    put( "columns", kv.columns );
+                    put( "valueColumns", kv.valueNames );
+                    put( "e", edgeName);
+                    put( "eId1", eId1);
+                    put( "eId2", eId2);
+                }}
+        );
+        proxy( this.getClass(), edgeType, nGQL, new Class[] { Object.class, Object.class, Object.class }, v1, e, v2 );
     }
 }
 

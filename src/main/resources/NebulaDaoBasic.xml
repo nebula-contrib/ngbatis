@@ -45,5 +45,23 @@
     <select id="selectPageByMap"/>
     <select id="updateBatch"/>
 
+    <insert id="insertEdge">
+        INSERT EDGE `${ e }` (
+        @for ( col in columns ) {
+            ${ col }
+            @if (!colLP.last) {
+                ,
+            @}
+        @}
+        )
+        VALUES ${ eId1 }-> ${ eId2 } :(
+        @for ( val in valueColumns ) {
+            ${ val }
+            @if (!valLP.last) {
+            ,
+            @}
+        @}
+        );
+    </insert>
 
 </mapper>
