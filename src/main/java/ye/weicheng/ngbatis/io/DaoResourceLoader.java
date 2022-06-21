@@ -1,3 +1,6 @@
+// Copyright 2022-present Weicheng Ye. All rights reserved.
+// Use of this source code is governed by a MIT-style license that can be
+// found in the LICENSE file.
 package ye.weicheng.ngbatis.io;
 
 import org.jsoup.Jsoup;
@@ -5,11 +8,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import ye.weicheng.ngbatis.config.ParseCfgProps;
 import ye.weicheng.ngbatis.exception.ResourceLoadException;
-import ye.weicheng.ngbatis.models.ClassModel;
-import ye.weicheng.ngbatis.models.MethodModel;
 import ye.weicheng.ngbatis.proxy.NebulaDaoBasic;
 
 import java.io.IOException;

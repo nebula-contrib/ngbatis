@@ -1,18 +1,14 @@
+// Copyright 2022-present Weicheng Ye. All rights reserved.
+// Use of this source code is governed by a MIT-style license that can be
+// found in the LICENSE file.
 package ye.weicheng.ngbatis.binding;
 
-import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
 import ye.weicheng.ngbatis.config.ParseCfgProps;
 
 import java.util.Arrays;
 import java.util.HashMap;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author yeweicheng
