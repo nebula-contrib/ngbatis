@@ -3,8 +3,6 @@
 // found in the LICENSE file.
 package ye.weicheng.ngbatis.proxy;
 
-import com.vesoft.nebula.client.graph.data.Node;
-import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +11,6 @@ import ye.weicheng.ngbatis.PkGenerator;
 import ye.weicheng.ngbatis.exception.ParseException;
 import ye.weicheng.ngbatis.models.MethodModel;
 import ye.weicheng.ngbatis.utils.ReflectUtil;
-import ye.weicheng.ngbatis.utils.ResultSetUtil;
 import ye.weicheng.ngbatis.utils.StringUtil;
 
 import javax.persistence.Id;

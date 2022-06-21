@@ -6,7 +6,6 @@ package ye.weicheng.ngbatis.utils;
 import com.vesoft.nebula.client.graph.data.Node;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import ye.weicheng.ngbatis.exception.ResultHandleException;
-import ye.weicheng.ngbatis.proxy.NebulaDaoBasicExt;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
@@ -72,11 +71,11 @@ public class ResultSetUtil {
         return t;
     }
 
-    public static void setId( Object obj, Class<?> resultType, Node v ) {
+    public static void setId( Object obj, Class<?> resultType, Node v ) throws IllegalAccessException {
         Field pkField = getPkField( resultType );
         ValueWrapper idWrapper = v.getId();
-        String id = ResultSetUtil.getValue(idWrapper);
-        NebulaDaoBasicExt.setId( obj, pkField, id );
+        Object id = ResultSetUtil.getValue(idWrapper);
+        ReflectUtil.setValue( obj, pkField, id );
     }
 
 }
