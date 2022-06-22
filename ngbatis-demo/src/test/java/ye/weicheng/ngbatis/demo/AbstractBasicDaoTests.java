@@ -11,6 +11,7 @@ import ye.weicheng.ngbatis.demo.pojo.Like;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 import ye.weicheng.ngbatis.demo.repository.TestRepository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -98,5 +99,12 @@ public class AbstractBasicDaoTests {
     }
 
 
+    @Test
+    public void insertSelectiveWithDate() {
+        Person person = new Person();
+        person.setBirthday( new Date() );
+        person.setName( "取名有点难2");
+        repository.insertSelective(person);
+    }
 
 }

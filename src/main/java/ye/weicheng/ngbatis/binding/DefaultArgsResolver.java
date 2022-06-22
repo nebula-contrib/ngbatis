@@ -4,17 +4,19 @@
 package ye.weicheng.ngbatis.binding;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import ye.weicheng.ngbatis.ArgsResolver;
 import ye.weicheng.ngbatis.models.MethodModel;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 默认的参数解析器
@@ -53,14 +55,33 @@ public class DefaultArgsResolver implements ArgsResolver {
                     result.put( "p" + i, args[i] );
                 else {
                     if( len == 1 ) {
-                        result = (Map<String,Object>)JSON.toJSON( args[0] );
+                        result = (Map<String,Object>)customToJSON( args[0] );
                     } else {
-                        result.put( "p" + i, JSON.toJSON( args[i] ) );
+                        result.put( "p" + i, customToJSON( args[i] ) );
                     }
                 }
             }
         }
         return result;
+    }
+
+
+
+    public Object customToJSON( Object o ) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            SerializeConfig parserConfig = new SerializeConfig();
+            parserConfig.put( Date.class, new DateDeserializer() );
+            parserConfig.put( java.sql.Date.class, new DateDeserializer() );
+            parserConfig.put( java.sql.Time.class, new DateDeserializer() );
+            String text = JSON.toJSONString(o, parserConfig, SerializerFeature.WriteMapNullValue);
+            Map map = objectMapper.readValue(text, Map.class);
+            return map;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+//        return JSON.parseObject(text, Feature.AllowArbitraryCommas);
     }
 
     private boolean isBaseType( Class clazz ) {
@@ -75,4 +96,25 @@ public class DefaultArgsResolver implements ArgsResolver {
                 clazz == String.class;
     }
 
+}
+
+
+class DateDeserializer implements ObjectSerializer {
+
+    @Override
+    public void write(JSONSerializer serializer, Object object, Object fieldName, Type type, int i) {
+        SerializeWriter out = serializer.getWriter();
+        if (object == null) {
+            out.writeNull();
+            return;
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
+        String fn = "datetime";
+        Class<?> objClass = object.getClass();
+        fn = objClass == java.util.Date.class ? "datetime"
+                : objClass == java.sql.Date.class ? "date"
+                : objClass == java.sql.Time.class ? "time"
+                : fn;
+        out.write("\"" +String.format( "%s('%s')" ,fn,sdf.format( object ) ) + "\"");
+    }
 }

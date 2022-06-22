@@ -5,6 +5,7 @@ package ye.weicheng.ngbatis.demo.pojo;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Date;
 
 /**
  * @author yeweicheng
@@ -18,6 +19,8 @@ public class Person {
     private String name;
 
     private Integer age;
+
+    private Date birthday;
 
     public String getName() {
         return name;
@@ -33,6 +36,14 @@ public class Person {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
     }
 
     @Override
