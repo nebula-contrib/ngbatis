@@ -48,7 +48,7 @@
     <insert id="insertEdge">
         INSERT EDGE `${ e }` (
         @for ( col in columns ) {
-            ${ col }
+            `${ col }`
             @if (!colLP.last) {
                 ,
             @}
