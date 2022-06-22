@@ -43,6 +43,20 @@ class BeetlTextRenderTest {
         );
         System.out.println( cql );
     }
+
+
+    @Test
+    public void testNull() {
+        String text = "${ nvl( name, 'null' ) }";
+        String cql = render.resolve(
+                text,
+                new HashMap<String, Object>() {{
+                    put( "name", null);
+                }}
+        );
+        System.out.println( cql );
+    }
+
     @Test
     public void test2() {
         String text =

@@ -18,10 +18,7 @@ import javax.persistence.Table;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
@@ -111,13 +108,13 @@ public class NebulaDaoBasicExt {
     }
 
     static String keyFormat( Field field, String name, boolean asStmt ) {
-        String format = asStmt ? "${ %s }" : "$%s";
+        String format = asStmt ? "${ nvl( %s, 'null' ) }" : "$%s";
         return valueFormat(field, String.format( format, name ) ).toString();
     }
 
     static  String keyFormat( Field field, String name, boolean asStmt, String prefix ) {
         if( isNotEmpty(prefix) ) {
-            String format = asStmt ? "${ %s.%s }" : "$%s.%s";
+            String format = asStmt ? "${ nvl( %s.%s, 'null' ) }" : "$%s.%s";
             return valueFormat(field, String.format( format, prefix, name ) ).toString();
         }
         return keyFormat( field, name, asStmt );
@@ -211,6 +208,12 @@ public class NebulaDaoBasicExt {
             }
         }
         return kv;
+    }
+
+    public static void main(String[] args) {
+        String format = String.format("%s", null);
+        List<String> strings = Arrays.asList("dd", format, "ees");
+        System.out.println( String.join( ",", strings ));
     }
 
     public static String getMethodName() {
