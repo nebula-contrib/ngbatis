@@ -6,6 +6,7 @@ package ye.weicheng.ngbatis.proxy;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import ye.weicheng.ngbatis.TextResolver;
 import ye.weicheng.ngbatis.exception.QueryException;
+import ye.weicheng.ngbatis.utils.Page;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -257,9 +258,57 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
         throw new QueryException("No implements");
     }
 
-    default List<Map> selectPageByMap(Map<String, Object> param) {
+    default Long countPage(Page<T> page ) {
+        TextResolver textResolver = MapperProxy.ENV.getTextResolver();
+        String countTpl = getCqlTpl();
 
-        throw new QueryException("No implements");
+        Class<? extends NebulaDaoBasic> daoClass = this.getClass();
+
+        Class[] classes = entityTypeAndIdType(daoClass);
+        Class<T> entityType = classes[0];
+        String vertexName = vertexName(entityType);
+
+        KV kv = notNullFields(page.entity, "entity");
+        HashMap<String, Object> param = new HashMap<String, Object>() {{
+            put("columns", kv.columns);
+            put("valueColumns", kv.valueNames);
+            put("tag", vertexName);
+            put("pageSize", page.pageSize);
+            put("startRow", page.startRow);
+        }};
+        String countNGql = textResolver.resolve( countTpl, param );
+
+        return (Long) proxy(daoClass, Long.class, countNGql, new Class[]{Page.class}, page);
+    }
+
+    default  List<T> selectPage(Page<T> page) {
+        Long total = countPage(page);
+        page.setTotal( total );
+        if (total == 0) return Collections.EMPTY_LIST;
+
+        TextResolver textResolver = MapperProxy.ENV.getTextResolver();
+
+        Class<? extends NebulaDaoBasic> daoClass = this.getClass();
+
+        Class[] classes = entityTypeAndIdType(daoClass);
+        Class<T> entityType = classes[0];
+        String vertexName = vertexName(entityType);
+
+        KV kv = notNullFields(page.entity, "entity");
+        HashMap<String, Object> param = new HashMap<String, Object>() {{
+            put("columns", kv.columns);
+            put("valueColumns", kv.valueNames);
+            put("tag", vertexName);
+            put("pageSize", page.pageSize);
+            put("startRow", page.startRow);
+        }};
+
+        String cqlTpl = getCqlTpl();
+        String nGql = textResolver.resolve( cqlTpl, param );
+
+        List<T> proxy = (List<T>) proxy(daoClass, entityType, nGql, new Class[]{Page.class}, page);
+        page.setRows( proxy );
+        return proxy;
     }
 
     default int updateBatch(List<T> ts) {

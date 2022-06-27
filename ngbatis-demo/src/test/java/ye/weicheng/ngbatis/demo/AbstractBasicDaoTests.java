@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ye.weicheng.ngbatis.demo.pojo.Like;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 import ye.weicheng.ngbatis.demo.repository.TestRepository;
+import ye.weicheng.ngbatis.utils.Page;
 
 import java.util.Date;
 import java.util.List;
@@ -105,6 +106,19 @@ public class AbstractBasicDaoTests {
         person.setBirthday( new Date() );
         person.setName( "取名有点难2");
         repository.insertSelective(person);
+    }
+
+    @Test
+    public void selectPage() {
+        Page<Person> page = new Page<>();
+        page.setPageNo( 2 );
+        page.setPageSize( 30 );
+        Person entity = new Person();
+        entity.setName( "1655802721996" );
+        entity.setAge( 18 );
+        page.entity = entity;
+        repository.selectPage( page );
+        System.out.println( JSON.toJSONString( page ) );
     }
 
 }

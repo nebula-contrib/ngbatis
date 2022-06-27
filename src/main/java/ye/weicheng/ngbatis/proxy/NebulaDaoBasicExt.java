@@ -122,6 +122,7 @@ public class NebulaDaoBasicExt {
     }
 
     public static KV notNullFields( Object record, String prefix ) {
+        if( record == null ) return new KV();
         Field[] fields = record.getClass().getDeclaredFields();
         return recordToKV(record, fields, true, prefix);
     }

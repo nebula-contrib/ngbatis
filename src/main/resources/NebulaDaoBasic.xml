@@ -64,7 +64,28 @@
     <select id="countGridByMap"/>
     <select id="selectGridByMap"/>
     <select id="updateSelective"/>
-    <select id="selectPageByMap"/>
+    <select id="selectPage">
+        MATCH (n:${ tag })
+        @if ( isNotEmpty(columns) ) {
+            WHERE
+            @for ( col in columns ) {
+                n.${ tag }.${ col } == ${ @valueColumns.get( colLP.index - 1 ) } ${ !colLP.last ? 'and' : '' }
+            @}
+        @}
+        RETURN n skip $startRow limit $pageSize
+    </select>
+
+    <select id="countPage">
+        MATCH (n:${ tag })
+        @if ( isNotEmpty(columns) ) {
+        WHERE
+            @for ( col in columns ) {
+                n.${ tag }.${ col } == ${ @valueColumns.get( colLP.index - 1 ) } ${ !colLP.last ? 'and' : '' }
+            @}
+        @}
+        RETURN count(n)
+    </select>
+
     <select id="updateBatch"/>
 
     <insert id="insertEdge">
