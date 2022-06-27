@@ -34,7 +34,18 @@
             );
     </insert>
 
-    <insert id="insertSelective"></insert>
+    <insert id="insertSelective">
+        INSERT VERTEX `${ table }` (
+            @for ( col in columns ) {
+                `${ col }`  ${ colLP.last ? '' : ',' }
+            @}
+        )
+        VALUES ${ vId } : (
+            @for ( val in valueColumns ) {
+                ${ val } ${ valLP.last ? '' : ',' }
+            @}
+        );
+    </insert>
 
     <select id="selectById"></select>
 

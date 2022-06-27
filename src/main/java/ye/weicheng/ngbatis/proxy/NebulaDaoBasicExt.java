@@ -36,15 +36,6 @@ public class NebulaDaoBasicExt {
         public final List<String> valueNames = new ArrayList<>();
     }
 
-    public static String recordToQL(Object record, boolean selective ) {
-        Class<?> type = record.getClass();
-        String vertexName = vertexName(type);
-        StringBuilder builder = new StringBuilder("INSERT VERTEX ");
-        builder.append( vertexName );
-        String propsWithValues = columnsToQL( record, type, selective,  vertexName );
-        builder.append( propsWithValues );
-        return builder.toString();
-    }
 
     public static String vertexName( Class<?> entityType ) {
         Table tableAnno = entityType.getAnnotation( Table.class );
@@ -55,31 +46,6 @@ public class NebulaDaoBasicExt {
     public static String edgeName( Class<?> edgeType ) {
         return vertexName( edgeType );
     }
-
-
-    public static String columnsToQL(Object record, Class<?> type, boolean selective, String tagName) {
-        Field[] fields = type.getDeclaredFields();
-
-        Field pkField = getPkField( fields, type );
-
-        Object id = setId( record, pkField, tagName );
-
-        KV kv = recordToKV(record, fields, selective);
-
-        assert id != null;
-        // INSERT VERTEX IF NOT EXISTS  tag [tag_props, [tag_props] ...] VALUES <vid>: ([prop_value_list])
-        StringBuilder builder = new StringBuilder( " (  ");
-        builder.append( Strings.join( kv.columns, ',' ) );
-        builder.append( " ) ");
-        builder.append( " VALUES ");
-        builder.append( valueFormat( pkField, id ) );
-        builder.append( ":");
-        builder.append( " ( ");
-        builder.append( Strings.join( kv.valueNames, ',' ) );
-        builder.append( " ) ");
-        return builder.toString();
-    }
-
 
     public static Object setId(Object record, Field pkField, String tagName) {
         try {
@@ -189,10 +155,6 @@ public class NebulaDaoBasicExt {
     public static String getCqlTpl() {
         Map<String, String> daoBasicTpl = MapperProxy.ENV.getMapperContext().getDaoBasicTpl();
         return daoBasicTpl.get(getMethodName());
-    }
-
-    public static KV recordToKV(Object record, Field[] fields, boolean selective) {
-        return recordToKV( record, fields, selective, null );
     }
 
     public static KV recordToKV(Object record, Field[] fields, boolean selective, String prefix) {
