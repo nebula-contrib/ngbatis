@@ -21,7 +21,18 @@
 
     <delete id="deleteById"></delete>
 
-    <insert id="insert"></insert>
+    <insert id="insert">
+        INSERT VERTEX `${ table }` (
+                @for ( col in columns ) {
+                    `${ col }`  ${ colLP.last ? '' : ',' }
+                @}
+            )
+            VALUES ${ vId } : (
+                @for ( val in valueColumns ) {
+                    ${ val } ${ valLP.last ? '' : ',' }
+                @}
+            );
+    </insert>
 
     <insert id="insertSelective"></insert>
 

@@ -160,6 +160,14 @@ public class NebulaDaoBasicExt {
         return recordToKV(record, fields, true, prefix);
     }
 
+    public static KV allFields( Object record ) {
+        return allFields( record, null );
+    }
+    public static KV allFields( Object record, String prefix ) {
+        Field[] fields = record.getClass().getDeclaredFields();
+        return recordToKV( record,  fields, false, prefix );
+    }
+
     public static Field getPkField( Class<?> type ) {
         Field[] declaredFields = type.getDeclaredFields();
         return getPkField( declaredFields, type );

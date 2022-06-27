@@ -59,7 +59,30 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
      * @return
      */
     default int insert(T record) {
-        String nGQL = recordToQL( record, false );
+
+        TextResolver textResolver = MapperProxy.ENV.getTextResolver();
+
+        KV kv = allFields(record);
+        String cqlTpl = getCqlTpl();
+        Class<?> vertexType = record.getClass();
+        String vertexName = vertexName(vertexType);
+
+        Field[] fields = vertexType.getDeclaredFields();
+
+        Field pkField = getPkField( fields, vertexType );
+
+        String vId = keyFormat(pkField, pkField.getName(), true);
+
+        Object id = setId( record, pkField, vertexName );
+        String nGQL = textResolver.resolve(
+                cqlTpl,
+                new HashMap<String, Object>() {{
+                    put( "columns", kv.columns );
+                    put( "valueColumns", kv.valueNames );
+                    put( "table", vertexName);
+                    put( "vId", vId );
+                }}
+        );
         ResultSet resultSet = (ResultSet)proxy( this.getClass(), ResultSet.class,  nGQL, new Class[] { Object.class }, record );
         return resultSet.isSucceeded() ? 1: 0;
     }
