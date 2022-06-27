@@ -147,7 +147,7 @@ public class MapperProxy {
         } catch (IOErrorException e) {
             throw new QueryException(  "数据查询失败："  + e.getMessage() );
         } finally {
-            if (session != null ) session.release();
+//            if (session != null ) session.release();
         }
     }
 

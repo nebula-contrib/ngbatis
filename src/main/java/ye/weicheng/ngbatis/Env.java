@@ -73,9 +73,17 @@ public class Env {
         log.debug( " Env constructor ");
     }
 
+    // FIXME 使用连接池替换 THREAD_LOCAL 的实现方式
+    static final ThreadLocal<Session> SESSION_CACHE = new ThreadLocal<>();
+
     public Session openSession() {
         try {
-            return mapperContext.getNebulaPool().getSession( username, password, reconnect );
+            Session sessionCache = SESSION_CACHE.get();
+            if( sessionCache != null && sessionCache.ping() ) return sessionCache;
+            Session session = mapperContext.getNebulaPool().getSession(username, password, reconnect);
+            SESSION_CACHE.set( session );
+            log.info( "Nebula Graph sessionId: {}", session );
+            return session;
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }

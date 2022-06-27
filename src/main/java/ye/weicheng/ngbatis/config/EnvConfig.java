@@ -48,7 +48,7 @@ public class EnvConfig {
                 context,
                 properties.getUsername(),
                 properties.getPassword(),
-                false,
+                true,
                 properties.getSpace(),
                 pkGenerator
         );
