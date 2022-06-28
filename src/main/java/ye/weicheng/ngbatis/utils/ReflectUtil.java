@@ -4,6 +4,7 @@
 package ye.weicheng.ngbatis.utils;
 
 import ye.weicheng.ngbatis.exception.ParseException;
+import ye.weicheng.ngbatis.models.MethodModel;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -75,11 +76,19 @@ public class ReflectUtil {
         }
     }
 
-    public static String getMethodSignature( Method method ) {
+    public static String getMethodSignature( MethodModel methodModel ) {
         StringBuilder builder = new StringBuilder( "(");
-        Class<?> returnType = method.getReturnType();
-//        returnType = sealingBasicType(returnType);
-        Class<?>[] parameterTypes = method.getParameterTypes();
+        Method method = methodModel.getMethod();
+        Class<?> returnType;
+        Class<?>[] parameterTypes ;
+        if ( method == null) {
+            returnType = methodModel.getReturnType();
+            parameterTypes =  methodModel.getParameterTypes();
+        } else {
+            returnType = method.getReturnType();
+            parameterTypes = method.getParameterTypes();
+        }
+
         int len = parameterTypes.length;
         for(int i = 0; i < len ; i ++ ) {
             Class<?> parameterType = parameterTypes[i];
@@ -100,6 +109,10 @@ public class ReflectUtil {
         return string;
     }
 
+    public static int containsType( Method method, Class<?> parameterType ) {
+        List<Class<?>> classes = Arrays.asList(method.getParameterTypes());
+        return classes.indexOf( parameterType );
+    }
 
     public final static Set<Class<?>> NEED_SEALING_TYPES = new HashSet<Class<?>>() {{
         add( short.class );

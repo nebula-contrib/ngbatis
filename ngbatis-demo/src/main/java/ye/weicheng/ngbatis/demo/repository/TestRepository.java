@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import ye.weicheng.ngbatis.annotations.UseKeyArgReplace;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 import ye.weicheng.ngbatis.proxy.NebulaDaoBasic;
+import ye.weicheng.ngbatis.utils.Page;
 
 import java.util.List;
 import java.util.Map;
@@ -44,5 +45,9 @@ public interface TestRepository extends NebulaDaoBasic<Person, String> {
     String selectStringParam(String name);
     Integer selectIntParam(Integer age);
     Boolean selectBoolParam(Boolean finish);
+
+    List<Person> selectCustomPage(Page<Person> page);
+
+    List<Person> selectCustomPageAndName(Page<Person> page, String name);
 
 }

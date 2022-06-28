@@ -75,7 +75,7 @@ public class MapperProxyClassGenerator implements Opcodes {
         MethodModel mm = mmEntry.getValue();
         /* return Mapper.invoke( "接口名 namespace", "方法名 method", new Object[]{ arg1, arg2, ... } );    ----- start */
         Method method = mm.getMethod();
-        String methodSignature = ReflectUtil.getMethodSignature(method);
+        String methodSignature = ReflectUtil.getMethodSignature(mm);
         MethodVisitor mapper =
                 cw.visitMethod(
                     ACC_PUBLIC,
@@ -88,8 +88,8 @@ public class MapperProxyClassGenerator implements Opcodes {
         mapper.visitCode();
         String className = cm.getNamespace().getName();
         mapper.visitLdcInsn( className );
-        mapper.visitLdcInsn( method.getName() );
-        int parameterCount = addParams( mapper, method );
+        mapper.visitLdcInsn( mm.getId() );
+        int parameterCount = addParams( mapper, mm.getParameterCount() );
         mapper.visitMethodInsn(
                 INVOKESTATIC,
                 getFullNameType( MapperProxy.class.getName() ),
@@ -105,7 +105,7 @@ public class MapperProxyClassGenerator implements Opcodes {
         mapper.visitMaxs(Integer.MAX_VALUE , Integer.MAX_VALUE );
 
         // 检查类型转换
-        Class<?> returnType = method.getReturnType();
+        Class<?> returnType = mm.getReturnType();
         mapper.visitTypeInsn(CHECKCAST, getFullNameType( returnType.getTypeName() ) );
 
         // 基本类型封箱
@@ -150,11 +150,9 @@ public class MapperProxyClassGenerator implements Opcodes {
      * Object[] args3 = new Object[] { arg1, arg2, arg3... }
      *
      * @param mv
-     * @param method
+     * @param parameterCount
      */
-    private int addParams(MethodVisitor mv, Method method) {
-        int parameterCount = method.getParameterCount();
-        Class<?>[] parameterTypes = method.getParameterTypes();
+    private int addParams(MethodVisitor mv, int parameterCount) {
         // 获取被代理方法的参数个数，当前变量的栈中位置后推一位
         int varLocation = parameterCount + 1;
         // Object[] argN = new Object[ parameterCount ]     --------- start

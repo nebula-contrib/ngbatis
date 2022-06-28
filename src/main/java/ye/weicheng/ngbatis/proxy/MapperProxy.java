@@ -19,10 +19,13 @@ import ye.weicheng.ngbatis.models.MethodModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import ye.weicheng.ngbatis.utils.Page;
+import ye.weicheng.ngbatis.utils.ReflectUtil;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static ye.weicheng.ngbatis.models.ClassModel.PROXY_SUFFIX;
@@ -44,7 +47,7 @@ public class MapperProxy {
 
     private ClassModel classModel;
 
-    private Map<Method, MethodModel> methodCache = new HashMap<>();
+    private Map<String, MethodModel> methodCache = new HashMap<>();
 
 
     public MapperProxy(ClassModel classModel) {
@@ -54,11 +57,12 @@ public class MapperProxy {
 
     private void methods( ClassModel classModel ) {
         methodCache.clear();
-        Method[] declaredMethods = classModel.getNamespace().getDeclaredMethods();
+//        Method[] declaredMethods = classModel.getNamespace().getDeclaredMethods();
         Map<String, MethodModel> methods = classModel.getMethods();
-        for( Method method : declaredMethods ) {
-            methodCache.put( method, methods.get( method.getName() ) );
-        }
+        methodCache.putAll( methods );
+//        for( Method method : declaredMethods ) {
+//            methodCache.put( method, methods.get( method.getName() ) );
+//        }
     };
 
     /**
@@ -84,8 +88,27 @@ public class MapperProxy {
         } else {
             method = classModel.getMethod(methodName).getMethod();
         }
+        return pageSupport( classModel, method, args );
+    }
+
+    private static Object pageSupport(ClassModel classModel, Method method, Object[] args) {
+        int pageParamIndex = ReflectUtil.containsType(method, Page.class);
+
         MapperProxy mapperProxy = new MapperProxy(classModel);
-        return mapperProxy.invoke( method, args );
+        if( pageParamIndex < 0 ) {
+            return mapperProxy.invoke( method, args );
+        }
+
+        String countMethodName = method.getName() + "$Count";
+        String pageMethodName = method.getName() + "$Page";
+
+        Long count = (Long)mapperProxy.invoke( classModel.getMethods().get(countMethodName), args );
+        List rows = (List)mapperProxy.invoke( classModel.getMethods().get(pageMethodName), args );
+
+        Page page = (Page)args[pageParamIndex];
+        page.setTotal( count );
+        page.setRows( rows );
+        return rows;
     }
 
     /**
@@ -104,7 +127,7 @@ public class MapperProxy {
         String textTpl = methodModel.getText();
         String nGQL = ENV.getTextResolver().resolve( textTpl, argMap );
         Map<String, Object> params = null;
-        if( method.isAnnotationPresent( UseKeyArgReplace.class ) ) {
+        if( method != null &&  method.isAnnotationPresent( UseKeyArgReplace.class ) ) {
             ArgNameFormatter.CqlAndArgs format = ENV.getArgNameFormatter().format(nGQL, argMap);
             nGQL = format.getCql();
             params = format.getArgs();
@@ -124,7 +147,7 @@ public class MapperProxy {
     }
 
     public Object invoke(Method method, Object... args)  {
-        MethodModel methodModel = methodCache.get(method);
+        MethodModel methodModel = methodCache.get(method.getName());
         methodModel.setMethod( method );
 
         return invoke(methodModel, args);
@@ -175,11 +198,11 @@ public class MapperProxy {
         this.classModel = classModel;
     }
 
-    public Map<Method, MethodModel> getMethodCache() {
+    public Map<String, MethodModel> getMethodCache() {
         return methodCache;
     }
 
-    public void setMethodCache(Map<Method, MethodModel> methodCache) {
+    public void setMethodCache(Map<String, MethodModel> methodCache) {
         this.methodCache = methodCache;
     }
 }

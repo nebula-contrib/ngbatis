@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 import ye.weicheng.ngbatis.demo.repository.TestRepository;
 import ye.weicheng.ngbatis.Env;
+import ye.weicheng.ngbatis.utils.Page;
 
 import java.util.List;
 import java.util.Map;
@@ -99,6 +100,27 @@ class NgbatisDemoApplicationTests {
 	void selectBoolParam() {
 		Boolean name = repository.selectBoolParam( false );
 		System.out.println( name );
+	}
+
+
+	@Test
+	void selectCustomPage() {
+		Page<Person> page = new Page<>();
+		page.setPageSize( 3 );
+		page.setPageNo(1);
+		List<Person> name = repository.selectCustomPage( page );
+		System.out.println( JSON.toJSONString( name ));
+		System.out.println( JSON.toJSONString( page ));
+	}
+
+	@Test
+	void selectCustomPageAndName() {
+		Page<Person> page = new Page<>();
+		page.setPageSize( 3 );
+		page.setPageNo(1);
+		List<Person> name = repository.selectCustomPageAndName( page , "取名有点难2" );
+		System.out.println( JSON.toJSONString( name ));
+		System.out.println( JSON.toJSONString( page ));
 	}
 
 

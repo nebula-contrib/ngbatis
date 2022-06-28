@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 package ye.weicheng.ngbatis.io;
 
+import jdk.nashorn.internal.runtime.regexp.RegExp;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import ye.weicheng.ngbatis.annotations.TimeLog;
 import ye.weicheng.ngbatis.config.ParseCfgProps;
@@ -18,13 +19,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
+import ye.weicheng.ngbatis.utils.Page;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static ye.weicheng.ngbatis.models.ClassModel.PROXY_SUFFIX;
 import static ye.weicheng.ngbatis.utils.ReflectUtil.NEED_SEALING_TYPES;
@@ -93,6 +97,7 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
 
     private Map<String, MethodModel> parseMethodModel( Class namespace, List<Node> nodes ) {
         Map<String, MethodModel> methods = new HashMap<>();
+        List<String> methodNames = getMethodNames( nodes );
         for( Node methodNode : nodes ) {
             if( methodNode instanceof Element ) {
                 MethodModel methodModel = parseMethodModel(methodNode);
@@ -100,10 +105,72 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
                 methodModel.setMethod(method);
                 Assert.notNull( method, "接口 " + namespace.getName() +" 中，未声明 xml 中的出现的方法：" + methodModel.getId() );
                 checkReturnType(method, namespace);
+                pageSupport( method, methodModel, methodNames, methods );
                 methods.put( methodModel.getId(), methodModel );
             }
         }
         return methods;
+    }
+
+    private void pageSupport(Method method, MethodModel methodModel, List<String> methodNames, Map<String, MethodModel> methods) {
+        Class<?>[] parameterTypes = method.getParameterTypes();
+        List<Class<?>> parameterTypeList = Arrays.asList(parameterTypes);
+        if( parameterTypeList.contains(Page.class) ) {
+            int pageParamIndex = parameterTypeList.indexOf(Page.class);
+            MethodModel pageMethod = createPageMethod(methodModel, methodNames, parameterTypes, pageParamIndex);
+            methods.put( pageMethod.getId(), pageMethod );
+
+            MethodModel countMethod = createCountMethod( methodModel, methodNames, parameterTypes);
+            methods.put( countMethod.getId(), countMethod );
+        }
+    }
+
+    private MethodModel createCountMethod(MethodModel methodModel, List<String> methodNames, Class<?>[] parameterTypes) {
+        String methodName = methodModel.getId();
+        String countMethodName = String.format("%s$Count", methodName);
+        Assert.isTrue( !methodNames.contains( countMethodName ), "There is a method name conflicts with " + countMethodName );
+        MethodModel countMethodModel = new MethodModel();
+        countMethodModel.setParameterTypes( parameterTypes );
+        countMethodModel.setId(countMethodName);
+        String cql = methodModel.getText();
+
+        String with = cql.replaceAll("(RETURN)|(return)", "WITH");
+
+        cql = String.format( "%s\t\tRETURN count(*);", with );
+
+        countMethodModel.setText(cql);
+        countMethodModel.setReturnType( Long.class );
+        return countMethodModel;
+    }
+
+    private MethodModel createPageMethod(MethodModel methodModel, List<String> methodNames, Class<?>[] parameterTypes, int pageParamIndex) {
+        String methodName = methodModel.getId();
+        String pageMethodName = String.format("%s$Page", methodName);
+        Assert.isTrue( !methodNames.contains( pageMethodName ), "There is a method name conflicts with " + pageMethodName );
+        MethodModel pageMethodModel = new MethodModel();
+        pageMethodModel.setParameterTypes( parameterTypes );
+        pageMethodModel.setId(pageMethodName);
+        String cql = methodModel.getText();
+        if( parameterTypes.length > 1) {
+            String format = "%s\t\tSKIP $p%d.startRow LIMIT $p%d.pageSize";
+            cql = String.format(format, cql, pageParamIndex, pageParamIndex );
+        } else {
+            String format = "%s\t\tSKIP $startRow LIMIT $pageSize";
+            cql = String.format( format, cql );
+        }
+        pageMethodModel.setText(cql);
+        pageMethodModel.setResultType( methodModel.getResultType() );
+        pageMethodModel.setReturnType( methodModel.getMethod().getReturnType() );
+        return pageMethodModel;
+    }
+
+    private List<String> getMethodNames(List<Node> nodes) {
+        return nodes.stream().map(node -> {
+            if (node instanceof Element) {
+                return ((Element) node).id();
+            }
+            return null;
+        }).collect(Collectors.toList());
     }
 
     private void checkReturnType(Method method, Class namespace) {

@@ -60,5 +60,15 @@
         return $p0
     </select>
 
+    <select id="selectCustomPage" resultType="ye.weicheng.ngbatis.demo.pojo.Person">
+        MATCH (n: person)
+        RETURN n
+    </select>
+
+    <select id="selectCustomPageAndName" resultType="ye.weicheng.ngbatis.demo.pojo.Person">
+        MATCH (n: person{ name: $p1 })
+        RETURN n
+    </select>
+
 </mapper>
 

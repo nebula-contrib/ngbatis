@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 package ye.weicheng.ngbatis.models;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 /**
@@ -22,7 +23,11 @@ public class MethodModel {
 
     private Class resultType;
 
+    private Class returnType;
+
     private Method method;
+
+    private Class<?>[] parameterTypes;
 
     // ---------------- info in interface start ---------------------
     private String signature;
@@ -74,5 +79,30 @@ public class MethodModel {
 
     public void setSignature(String signature) {
         this.signature = signature;
+    }
+
+    public Class<?>[] getParameterTypes() {
+        return method == null ? parameterTypes : method.getParameterTypes();
+    }
+
+    public int getParameterCount() {
+        return method == null ? parameterTypes.length : method.getParameterCount();
+    }
+
+    public void setParameterTypes(Class<?>[] parameterTypes) {
+        this.parameterTypes = parameterTypes;
+    }
+
+    public Class getReturnType() {
+        return method == null ? returnType : method.getReturnType();
+    }
+
+    public void setReturnType(Class returnType) {
+        this.returnType = returnType;
+    }
+
+    public Annotation[][] getParameterAnnotations() {
+        if( method != null ) return method.getParameterAnnotations();
+        return new Annotation[getParameterCount()][];
     }
 }

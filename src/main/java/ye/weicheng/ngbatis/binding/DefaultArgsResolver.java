@@ -32,12 +32,12 @@ public class DefaultArgsResolver implements ArgsResolver {
         if( args.length == 0 ) {
             return Collections.emptyMap();
         }
-        int len = method.getParameterCount();
+        int len = methodModel.getParameterCount();
         Map<String, Object> result = new HashMap<>();
-        Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+        Annotation[][] parameterAnnotations = methodModel.getParameterAnnotations();
         for( int i = 0 ; i < len ; i ++ ) {
             Annotation[] annotationArgIndex = parameterAnnotations[i];
-            int annoLen = annotationArgIndex.length;
+            int annoLen = annotationArgIndex == null ? 0 : annotationArgIndex.length;
             boolean notFoundParamAnno = true;
             for( int j = 0 ; j < annoLen ; j ++ ) {
                 if( annotationArgIndex[j] instanceof Param ) {

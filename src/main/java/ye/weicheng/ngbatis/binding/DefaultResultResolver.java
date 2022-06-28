@@ -27,8 +27,7 @@ public class DefaultResultResolver implements ResultResolver {
 
     @Override
     public Object resolve(MethodModel methodModel, ResultSet result) {
-        Method method = methodModel.getMethod();
-        Class returnType = method.getReturnType();
+        Class returnType = methodModel.getReturnType();
         Class resultType = methodModel.getResultType();
 
         if( resultType == null ) resultType = returnType;

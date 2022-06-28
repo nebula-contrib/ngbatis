@@ -17,8 +17,6 @@ public class Page<T> {
     public int  pageSize = 100;
     public int  startRow = 0;
     public int  endRow = 15;
-    public String sort = "id";
-    public String order = "desc";
     public long    total;
     public int     pages;
     public List<T> rows;
@@ -101,22 +99,6 @@ public class Page<T> {
     public void setTotal(long total) {
         this.total = total;
         this.setPages();;
-    }
-
-    public String getSort() {
-        return sort;
-    }
-
-    public void setSort(String sort) {
-        this.sort = sort;
-    }
-
-    public String getOrder() {
-        return order;
-    }
-
-    public void setOrder(String order) {
-        this.order = order;
     }
 
     public Map<String, Object> getQ() {
