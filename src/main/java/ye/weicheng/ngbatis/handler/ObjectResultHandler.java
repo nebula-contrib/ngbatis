@@ -32,8 +32,7 @@ public class ObjectResultHandler extends AbstractResultHandler<Object, Object> {
         if (result.rowsSize() == 0) return null;
         List<String> columnNames = result.getColumnNames();
         ResultSet.Record record = result.rowValues(0);
-        handle(newResult, record, columnNames, resultType );
-        return newResult;
+        return handle(newResult, record, columnNames, resultType );
     }
 
     public Object handle(
