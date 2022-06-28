@@ -10,9 +10,11 @@ import ye.weicheng.ngbatis.exception.ResultHandleException;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static ye.weicheng.ngbatis.proxy.NebulaDaoBasicExt.getPkField;
 import static ye.weicheng.ngbatis.utils.ReflectUtil.castNumber;
@@ -37,15 +39,29 @@ public class ResultSetUtil {
                     : value.isVertex() ? value.asNode()
                     : value.isEdge() ? value.asRelationship()
                     : value.isPath() ? value.asPath()
-                    : value.isList() ? value.asList()
-                    : value.isSet() ? value.asList()
-                    : value.isMap() ? value.asMap()
+                    : value.isList() ? transformList( value.asList() )
+                    : value.isSet() ? transformList( value.asList() )
+                    : value.isMap() ? transformMap( value.asMap() )
                     : null;
 
             return (T)o;
         } catch (UnsupportedEncodingException e) {
            throw new RuntimeException( e );
         }
+    }
+
+    private static Object transformMap(HashMap<String, ValueWrapper> map) {
+        HashMap<Object, Object> javaResult = new HashMap<>();
+        for (Map.Entry<String, ValueWrapper> entry : map.entrySet()) {
+            String k = entry.getKey();
+            ValueWrapper v = entry.getValue();
+            javaResult.put( k, getValue( v ));
+        }
+        return javaResult;
+    }
+
+    private static Object transformList(ArrayList<ValueWrapper> list) {
+        return list.stream().map(ResultSetUtil::getValue).collect(Collectors.toList());
     }
 
     public static <T> T getValue(ValueWrapper valueWrapper, Class<T> resultType) {
