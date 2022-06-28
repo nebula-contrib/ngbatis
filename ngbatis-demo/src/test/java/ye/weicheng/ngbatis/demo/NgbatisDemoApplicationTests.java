@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import ye.weicheng.ngbatis.demo.pojo.NRN2;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 import ye.weicheng.ngbatis.demo.repository.TestRepository;
 import ye.weicheng.ngbatis.Env;
@@ -124,5 +125,16 @@ class NgbatisDemoApplicationTests {
 	}
 
 
+	@Test
+	public void selectNRN2() {
+		List<NRN2> nrn2s = repository.selectNRN2();
+		System.out.println( JSON.toJSONString( nrn2s ));
+	}
+
+	@Test
+	public void selectNRN2Limit1() {
+		NRN2 nrn2 = repository.selectNRN2Limit1();
+		System.out.println( JSON.toJSONString( nrn2 ));
+	}
 
 }

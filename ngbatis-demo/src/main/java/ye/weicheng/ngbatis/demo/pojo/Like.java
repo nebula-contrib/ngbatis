@@ -12,7 +12,7 @@ import javax.persistence.Table;
  */
 @Table(name = "like")
 public class Like {
-    Double likeness;
+    private Double likeness;
 
     public Double getLikeness() {
         return likeness;

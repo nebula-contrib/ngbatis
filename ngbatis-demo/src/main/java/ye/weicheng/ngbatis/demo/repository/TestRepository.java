@@ -3,9 +3,7 @@
 // found in the LICENSE file.
 package ye.weicheng.ngbatis.demo.repository;
 
-
-import org.springframework.data.repository.query.Param;
-import ye.weicheng.ngbatis.annotations.UseKeyArgReplace;
+import ye.weicheng.ngbatis.demo.pojo.NRN2;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 import ye.weicheng.ngbatis.proxy.NebulaDaoBasic;
 import ye.weicheng.ngbatis.utils.Page;
@@ -49,5 +47,9 @@ public interface TestRepository extends NebulaDaoBasic<Person, String> {
     List<Person> selectCustomPage(Page<Person> page);
 
     List<Person> selectCustomPageAndName(Page<Person> page, String name);
+
+    List<NRN2> selectNRN2();
+
+    NRN2 selectNRN2Limit1();
 
 }

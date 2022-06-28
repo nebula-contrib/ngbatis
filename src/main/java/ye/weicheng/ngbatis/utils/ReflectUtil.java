@@ -8,7 +8,6 @@ import ye.weicheng.ngbatis.models.MethodModel;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -23,12 +22,6 @@ import static org.springframework.util.ObjectUtils.nullSafeEquals;
  * <br>Now is history!
  */
 public class ReflectUtil {
-
-    public static String getReturnTypeGenType(Method method) {
-        Type genericReturnType = method.getGenericReturnType();
-        System.out.println( genericReturnType.getTypeName() );
-        return null;
-    }
 
     public static List<Class<?>> NUMBER_TYPES = Arrays.asList(
             int.class, Integer.class,
@@ -190,5 +183,15 @@ public class ReflectUtil {
 
     public static boolean isBasicType( Class clazz ) {
         return CLASSES.contains(clazz);
+    }
+
+    public static Class<?> fieldType(Object o, String fieldName) {
+        try {
+            Field field = o.getClass().getDeclaredField(fieldName);
+            return field.getType();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

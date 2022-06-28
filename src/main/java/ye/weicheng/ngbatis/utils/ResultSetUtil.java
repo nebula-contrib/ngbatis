@@ -4,12 +4,15 @@
 package ye.weicheng.ngbatis.utils;
 
 import com.vesoft.nebula.client.graph.data.Node;
+import com.vesoft.nebula.client.graph.data.Relationship;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import ye.weicheng.ngbatis.exception.ResultHandleException;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static ye.weicheng.ngbatis.proxy.NebulaDaoBasicExt.getPkField;
 import static ye.weicheng.ngbatis.utils.ReflectUtil.castNumber;
@@ -53,7 +56,6 @@ public class ResultSetUtil {
         return value;
     }
 
-
     public static <T> T nodeToResultType(Node v, Class<T> resultType) {
         T t = null;
         try {
@@ -69,6 +71,44 @@ public class ResultSetUtil {
             throw new ResultHandleException( String.format( "%s : %s", e.getClass().toString(), e.getMessage() ) );
         }
         return t;
+    }
+
+    public static void nodeToResultType(Object o, String fieldName, Node node) {
+        Class<?> fieldType = ReflectUtil.fieldType( o, fieldName );
+        if( fieldType != null ) {
+            Object fieldValue = nodeToResultType(node, fieldType);
+            try {
+                ReflectUtil.setValue( o, fieldName, fieldValue );
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static <T> T relationshipToResultType(Relationship  r, Class<T> resultType) {
+        T t = null;
+        try {
+            t = resultType.newInstance();
+            HashMap<String, ValueWrapper> properties = r.properties();
+            for (Map.Entry<String, ValueWrapper> entry : properties.entrySet()) {
+                ReflectUtil.setValue( t, entry.getKey(), ResultSetUtil.getValue( entry.getValue() ));
+            }
+        } catch (UnsupportedEncodingException | InstantiationException | NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return t;
+    }
+
+    public static void relationshipToResultType(Object o, String fieldName, Relationship relationship) {
+        Class<?> fieldType = ReflectUtil.fieldType( o, fieldName );
+        if( fieldType != null ) {
+            Object fieldValue = relationshipToResultType(relationship, fieldType);
+            try {
+                ReflectUtil.setValue( o, fieldName, fieldValue );
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static void setId( Object obj, Class<?> resultType, Node v ) throws IllegalAccessException {
