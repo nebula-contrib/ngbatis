@@ -122,6 +122,7 @@ public class MapperProxy {
         Method method = methodModel.getMethod();
         ResultSet query = null;
         // 参数格式转换
+        long step0 = System.currentTimeMillis();
         Map<String, Object> argMap = ENV.getArgsResolver().resolve( methodModel, args );
         // beetl 渲染模板
         String textTpl = methodModel.getText();
@@ -134,7 +135,11 @@ public class MapperProxy {
         } else {
             params = argMap;
         }
+
+        long step1 = System.currentTimeMillis();
         query = executeWithParameter( nGQL, params );
+
+        long step2 = System.currentTimeMillis();
         if (!query.isSucceeded()) {
             throw new QueryException( "数据查询失败：" + query.getErrorMessage() );
         }
@@ -143,6 +148,9 @@ public class MapperProxy {
 
         ResultResolver resultResolver = ENV.getResultResolver();
         Object resolve = resultResolver.resolve(methodModel, query);
+        long step3 = System.currentTimeMillis();
+
+        log.debug( "nGql make up const {}ms, query const {}ms, result handle const {}ms ", step1 - step0, step2 - step1, step3 - step2 );
         return resolve;
     }
 
