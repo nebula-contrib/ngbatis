@@ -56,7 +56,7 @@ public abstract class AbstractResultHandler<T, Z> implements ResultHandler<T, Z>
         try {
             return handle(newResult, result, resultType);
         } catch (Exception e) {
-            throw new ResultHandleException( e.getClass().getName() + ": " + e.getMessage() );
+            throw new ResultHandleException( e );
         }
     }
 

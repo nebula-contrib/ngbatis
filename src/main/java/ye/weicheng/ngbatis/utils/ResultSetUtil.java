@@ -6,7 +6,11 @@ package ye.weicheng.ngbatis.utils;
 import com.vesoft.nebula.client.graph.data.Node;
 import com.vesoft.nebula.client.graph.data.Relationship;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ye.weicheng.ngbatis.exception.ResultHandleException;
+import ye.weicheng.ngbatis.models.MapperContext;
+import ye.weicheng.ngbatis.proxy.MapperProxy;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
@@ -27,6 +31,8 @@ import static ye.weicheng.ngbatis.utils.ReflectUtil.castNumber;
  */
 public class ResultSetUtil {
 
+    private static Logger log = LoggerFactory.getLogger( ResultSetUtil.class );
+
     public  static <T> T getValue(ValueWrapper value) {
         try {
             Object o = value.isLong() ? value.asLong()
@@ -36,7 +42,7 @@ public class ResultSetUtil {
                     : value.isTime() ? value.asTime()
                     : value.isDate() ? value.asDate()
                     : value.isDateTime() ? value.asDateTime()
-                    : value.isVertex() ? value.asNode()
+                    : value.isVertex() ? transformNode( value.asNode() )
                     : value.isEdge() ? value.asRelationship()
                     : value.isPath() ? value.asPath()
                     : value.isList() ? transformList( value.asList() )
@@ -48,6 +54,25 @@ public class ResultSetUtil {
         } catch (UnsupportedEncodingException e) {
            throw new RuntimeException( e );
         }
+    }
+
+    private static Object transformNode(Node node) {
+        List<String> tagNames = node.tagNames();
+        if ( tagNames.size() != 1 ) {
+            log.warn( "Sorry there is no parse implements for multi tags node: {}", node );
+            return node;
+        }
+
+        String tagName = tagNames.get(0);
+
+        MapperContext mapperContext = MapperProxy.ENV.getMapperContext();
+        Map<String, Class<?>> tagTypeMapping = mapperContext.getTagTypeMapping();
+
+        Class<?> nodeType = tagTypeMapping.get(tagName);
+        if( nodeType != null ) {
+            return nodeToResultType( node, nodeType );
+        }
+        return node;
     }
 
     private static Object transformMap(HashMap<String, ValueWrapper> map) {

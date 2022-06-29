@@ -15,4 +15,8 @@ public class ResultHandleException extends RuntimeException {
         super( "返回结果处理异常：" + msg );
     }
 
+    public ResultHandleException( Throwable cause ) {
+        super( "返回结果处理异常：" + cause.getMessage() , cause );
+    }
+
 }

@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 package ye.weicheng.ngbatis.proxy;
 
-import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;

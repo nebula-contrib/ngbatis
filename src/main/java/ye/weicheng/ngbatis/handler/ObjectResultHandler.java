@@ -53,7 +53,9 @@ public class ObjectResultHandler extends AbstractResultHandler<Object, Object> {
     private Object fillResult(Object v, Object newResult, List<String> columnNames, Class resultType, int i)
             throws NoSuchFieldException, IllegalAccessException {
         String columnName = columnNames.get(i);
-        if (v instanceof Node) {
+        if ( vIsResultType( v, resultType ) ) {
+            newResult = v;
+        } else if (v instanceof Node) {
             newResult = fillResultByNode(
                     (Node) v,
                     newResult,
@@ -73,6 +75,10 @@ public class ObjectResultHandler extends AbstractResultHandler<Object, Object> {
             ReflectUtil.setValue(newResult, columnName, v);
         }
         return newResult;
+    }
+
+    private boolean vIsResultType(Object v, Class resultType) {
+        return v != null && v.getClass() == resultType;
     }
 
     private Object fillResultByNode(

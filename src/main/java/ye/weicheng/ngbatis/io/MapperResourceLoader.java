@@ -81,7 +81,6 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
         Elements elementsByTag = doc.getElementsByTag(parseConfig.getMapper());
         for( Element element : elementsByTag ) {
             ClassModel cm = new ClassModel();
-//            cm.setResourceLoader( this );
             cm.setResource( resource );
             // 获取 namespace
             match( cm, element, "namespace", parseConfig.getNamespace() );

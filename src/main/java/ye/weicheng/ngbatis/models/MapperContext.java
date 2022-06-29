@@ -6,6 +6,7 @@ package ye.weicheng.ngbatis.models;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -29,6 +30,8 @@ public class MapperContext {
     }
 
     Map<String, ClassModel> interfaces;
+
+    final Map<String, Class<?>> tagTypeMapping = new HashMap<>();
 
     Map<String, String> daoBasicTpl;
 
@@ -77,4 +80,9 @@ public class MapperContext {
     public void setResourceRefresh(boolean resourceRefresh) {
         this.resourceRefresh = resourceRefresh;
     }
+
+    public Map<String, Class<?>> getTagTypeMapping() {
+        return tagTypeMapping;
+    }
+
 }

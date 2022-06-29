@@ -28,10 +28,12 @@ import ye.weicheng.ngbatis.proxy.RAMClassLoader;
 
 import java.lang.annotation.Annotation;
 import java.net.UnknownHostException;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 
 import static ye.weicheng.ngbatis.models.ClassModel.PROXY_SUFFIX;
+import static ye.weicheng.ngbatis.proxy.NebulaDaoBasicExt.*;
 
 /**
  * @author yeweicheng
@@ -124,8 +126,25 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor , Orde
         context.setDaoBasicTpl( daoBasicTpl );
         context.setNebulaPool( nebulaPool );
         context.setInterfaces( interfaces );
+        figureTagTypeMapping(  interfaces.values() , context.getTagTypeMapping() );
+
         registerBean( context );
         return context;
+    }
+
+    private void figureTagTypeMapping(
+            Collection<ClassModel> classModels,
+            Map<String, Class<?>> tagTypeMapping ) {
+
+        for (ClassModel classModel : classModels) {
+            Class<?>[] entityTypeAndIdType = entityTypeAndIdType(classModel.getNamespace());
+            if( entityTypeAndIdType != null ) {
+                Class<?> entityType = entityTypeAndIdType[0];
+                String vertexName = vertexName(entityType);
+                tagTypeMapping.putIfAbsent( vertexName, entityType );
+            }
+        }
+
     }
 
 
