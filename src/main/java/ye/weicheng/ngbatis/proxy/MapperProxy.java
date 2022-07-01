@@ -150,7 +150,7 @@ public class MapperProxy {
         Object resolve = resultResolver.resolve(methodModel, query);
         long step3 = System.currentTimeMillis();
 
-        log.debug( "nGql make up const {}ms, query const {}ms, result handle const {}ms ", step1 - step0, step2 - step1, step3 - step2 );
+        log.debug( "nGql make up costs {}ms, query costs {}ms, result handle costs {}ms ", step1 - step0, step2 - step1, step3 - step2 );
         return resolve;
     }
 

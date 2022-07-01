@@ -38,8 +38,9 @@ public class NebulaDaoBasicExt {
 
     public static String vertexName( Class<?> entityType ) {
         Table tableAnno = entityType.getAnnotation( Table.class );
-        String x_x = StringUtil.xX2x_x(entityType.getName());
-        return tableAnno == null ? x_x : tableAnno.name();
+        return tableAnno != null
+                ? tableAnno.name()
+                : StringUtil.xX2x_x(entityType.getSimpleName());
     }
 
     public static String edgeName( Class<?> edgeType ) {
