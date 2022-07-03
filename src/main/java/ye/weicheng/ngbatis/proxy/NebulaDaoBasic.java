@@ -349,12 +349,13 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
         return (Boolean) proxy( this.getClass(), Boolean.class, cqlTpl, new Class[] { Serializable.class, Class.class, Serializable.class }, startId, edgeName, endId );
     };
 
-    default List<T> listStartNodes(Class<?> edgeType, ID id) {
+    default List<T> listStartNodes(Class<?> startType, Class<?> edgeType, ID endId) {
         String cqlTpl = getCqlTpl();
+        String startVertexName = vertexName( startType );
         String edgeName = edgeName( edgeType );
         Class<? extends NebulaDaoBasic> daoType = this.getClass();
         Class<?> returnType = entityType(daoType);
-        return (List<T>) proxy(daoType, returnType, cqlTpl, new Class[] { Class.class, Serializable.class }, edgeName, id );
+        return (List<T>) proxy(daoType, returnType, cqlTpl, new Class[] {Class.class, Class.class, Serializable.class }, startVertexName, edgeName, endId );
     };
 }
 

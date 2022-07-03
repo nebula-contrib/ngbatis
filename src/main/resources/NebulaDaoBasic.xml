@@ -114,8 +114,8 @@
     </select>
 
     <select id="listStartNodes">
-        MATCH (n)-[r: ${ p0 }]->(n2)
-        WHERE id(n2) == $p1
+        MATCH (n: `${ p0 }`)-[r: `${ p1 }`]->(n2)
+        WHERE id(n2) == $p2
         RETURN n
     </select>
 

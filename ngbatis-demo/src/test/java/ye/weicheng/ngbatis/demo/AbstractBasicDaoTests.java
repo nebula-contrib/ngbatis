@@ -129,7 +129,7 @@ public class AbstractBasicDaoTests {
 
     @Test
     public void listStartNodes() {
-        List<Person> personList = repository.listStartNodes(Like.class, "测试");
+        List<Person> personList = repository.listStartNodes(Person.class, Like.class, "测试");
         System.out.println( JSON.toJSONString( personList ) );
     }
 
