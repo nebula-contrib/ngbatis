@@ -23,7 +23,8 @@ public class StringResultHandler extends AbstractResultHandler<String, String> {
     public String handle(String newResult, ResultSet result, Class resultType) throws NoSuchFieldException, IllegalAccessException, InstantiationException {
         ResultSet.Record record = result.rowValues(0);
         ValueWrapper valueWrapper = record.values().get(0);
-        return ResultSetUtil.getValue( valueWrapper ).toString();
+        Object value = ResultSetUtil.getValue(valueWrapper);
+        return value == null ? null : value.toString();
     }
 
 }
