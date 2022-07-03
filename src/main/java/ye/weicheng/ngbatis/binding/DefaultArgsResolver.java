@@ -5,18 +5,26 @@ package ye.weicheng.ngbatis.binding;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.*;
+import com.facebook.thrift.meta_data.FieldMetaData;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vesoft.nebula.*;
 import ye.weicheng.ngbatis.ArgsResolver;
 import ye.weicheng.ngbatis.models.MethodModel;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
+import ye.weicheng.ngbatis.utils.ReflectUtil;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
+
+import static ye.weicheng.ngbatis.utils.ReflectUtil.isCurrentTypeOrParentType;
 
 /**
  * 默认的参数解析器
@@ -65,6 +73,90 @@ public class DefaultArgsResolver implements ArgsResolver {
         return result;
     }
 
+    public static Map<Class<?>, Setter> LEAF_TYPE_AND_SETTER = new HashMap<Class<?>, Setter>() {{
+        put(Boolean.class, (Setter<Boolean>) Value::bVal);
+        put(Long.class, (Setter<Long>) Value::iVal);
+        put(Integer.class, (Setter<Integer>) Value::iVal);
+        put(Short.class, (Setter<Short>) Value::iVal);
+        put(Double.class, (Setter<Double>) Value::fVal);
+        put(Float.class, (Setter<Float>) Value::fVal);
+        put(String.class, (Setter<String>) (param) -> Value.sVal( param.getBytes() ));
+        put(byte[].class, (Setter<byte[]>) Value::sVal);
+        put(com.vesoft.nebula.Date.class, (Setter<com.vesoft.nebula.Date>) Value::dVal);
+        put(Time.class, (Setter<Time>) Value::tVal);
+        put(DateTime.class, (Setter<DateTime>) Value::dtVal);
+        put(Vertex.class, (Setter<Vertex>) Value::vVal);
+        put(Edge.class, (Setter<Edge>) Value::eVal);
+        put(Path.class, (Setter<Path>) Value::pVal);
+        put(NList.class, (Setter<NList>) Value::lVal);
+        put(NMap.class, (Setter<NMap>) Value::mVal);
+        put(NSet.class, (Setter<NSet>) Value::uVal);
+        put(DataSet.class, (Setter<DataSet>) Value::gVal);
+        put(Geography.class, (Setter<Geography>) Value::ggVal);
+        put(Duration.class, (Setter<Duration>) Value::duVal);
+    }};
+
+    public static Map<Class<?>, Setter> COMPLEX_TYPE_AND_SETTER = new LinkedHashMap<Class<?>, Setter>() {{
+        put( Set.class, (Setter<Set>) (set) -> {
+            HashSet<Object> values = new HashSet<>();
+            set.forEach( el -> values.add( toNebulaValueType( el )));
+            return values;
+        });
+
+        put( Collection.class, (Setter<Collection>) (collection) -> {
+            List<Object> list = new ArrayList<>();
+            collection.forEach(el -> list.add( toNebulaValueType( el )));
+            return list;
+        });
+
+        put( Map.class , (Setter<Map>) (map) -> {
+            Map<Object, Object> valueMap = new HashMap<>();
+            map.forEach( ( k, v ) -> {
+                valueMap.put( toNebulaValueType( k ), toNebulaValueType( v ));
+            });
+            return valueMap;
+        });
+
+        put( Date.class, (Setter<Date>) (date) -> {
+            Calendar calendar = new Calendar.Builder().setInstant(date).build();
+            return Value.dtVal( new DateTime(
+                    new Short(String.valueOf( calendar.get( Calendar.YEAR  ) ) ),
+                    new Byte(String.valueOf( calendar.get( Calendar.MONTH ) ) ),
+                    new Byte(String.valueOf( calendar.get( Calendar.DATE ) ) ),
+                    new Byte(String.valueOf( calendar.get( Calendar.HOUR ) ) ),
+                    new Byte(String.valueOf( calendar.get( Calendar.MINUTE ) ) ),
+                    new Byte(String.valueOf( calendar.get( Calendar.SECOND ) ) ),
+                    new Short(String.valueOf( calendar.get( Calendar.MILLISECOND )))
+            ));
+        });
+
+        put ( Object.class, (Setter<Object>) (obj) -> {
+            Map<String, Object> pojoFields =  new HashMap<>();
+            Class<?> paramType = obj.getClass();
+            Field[] declaredFields = paramType.getDeclaredFields();
+            for (Field declaredField : declaredFields) {
+                pojoFields.put( declaredField.getName(), toNebulaValueType( ReflectUtil.getValue( obj, declaredField ) ) );
+            }
+            return  pojoFields;
+        });
+    }};
+
+    public static <T> T toNebulaValueType( Object param ) {
+        if( param == null ) {
+            return null;
+        }
+        Class<?> paramType = param.getClass();
+        Setter setter = LEAF_TYPE_AND_SETTER.get(paramType);
+        if( setter != null ) return (T)setter.set( param );
+        for (Class<?> pType : COMPLEX_TYPE_AND_SETTER.keySet()) {
+            if( isCurrentTypeOrParentType( paramType, pType )  )  {
+                return (T)COMPLEX_TYPE_AND_SETTER.get( pType ).set( param );
+            }
+        }
+        return  (T)param;
+    }
+
+
 
 
     public Object customToJSON( Object o ) {
@@ -85,17 +177,21 @@ public class DefaultArgsResolver implements ArgsResolver {
     }
 
     private boolean isBaseType( Class clazz ) {
-        return  clazz == Character.class ||
-                clazz == Byte.class ||
-                clazz == Short.class ||
-                clazz == Integer.class ||
-                clazz == Long.class ||
-                clazz == Float.class ||
-                clazz == Double.class ||
-                clazz == Boolean.class ||
+        return  clazz == Character.class || clazz == char.class ||
+                clazz == Byte.class || clazz == byte.class ||
+                clazz == Short.class || clazz == short.class ||
+                clazz == Integer.class || clazz == int.class ||
+                clazz == Long.class || clazz == long.class ||
+                clazz == Float.class || clazz == float.class ||
+                clazz == Double.class || clazz == double.class ||
+                clazz == Boolean.class || clazz == boolean.class ||
                 clazz == String.class;
     }
 
+}
+
+interface Setter<T> {
+    Object set( T param );
 }
 
 
