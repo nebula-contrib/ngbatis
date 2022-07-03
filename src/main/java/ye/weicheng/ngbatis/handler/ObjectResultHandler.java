@@ -13,6 +13,7 @@ import ye.weicheng.ngbatis.utils.ResultSetUtil;
 
 import java.util.List;
 
+import static ye.weicheng.ngbatis.utils.ReflectUtil.isCurrentTypeOrParentType;
 import static ye.weicheng.ngbatis.utils.ResultSetUtil.nodeToResultType;
 import static ye.weicheng.ngbatis.utils.ResultSetUtil.relationshipToResultType;
 
@@ -78,7 +79,7 @@ public class ObjectResultHandler extends AbstractResultHandler<Object, Object> {
     }
 
     private boolean vIsResultType(Object v, Class resultType) {
-        return v != null && v.getClass() == resultType;
+        return v != null && isCurrentTypeOrParentType( v.getClass(), resultType );
     }
 
     private Object fillResultByNode(
