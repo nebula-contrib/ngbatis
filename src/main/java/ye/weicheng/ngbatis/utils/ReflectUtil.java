@@ -8,10 +8,7 @@ import ye.weicheng.ngbatis.models.MethodModel;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.springframework.util.ObjectUtils.nullSafeEquals;
 
@@ -193,5 +190,26 @@ public class ReflectUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static boolean isCurrentTypeOrParentType(Class<?> paramType, Class<?> pType) {
+        if( paramType == pType ) return true;
+        Set<Class<?>> parentTypes = getParentTypes( paramType );
+        return parentTypes.contains( pType );
+    }
+
+    public static Set<Class<?>> getParentTypes(Class<?> paramType) {
+        if( paramType == null ) return Collections.EMPTY_SET;
+        List<Class<?>> interfaces = Arrays.asList(paramType.getInterfaces());
+        Set<Class<?>> parents = new HashSet<>(interfaces);
+
+        for (Class<?> anInterface : interfaces) {
+            parents.addAll( getParentTypes( anInterface ));
+        }
+
+        Class<?> superclass = paramType.getSuperclass();
+        parents.add(superclass);
+        parents.addAll( getParentTypes( superclass ) );
+        return parents;
     }
 }

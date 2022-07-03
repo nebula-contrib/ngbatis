@@ -317,6 +317,7 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
     }
 
     default void insertEdge(Object v1, Object e, Object v2) {
+        if( v2 == null || v1 == null || e == null ) return;
         TextResolver textResolver = MapperProxy.ENV.getTextResolver();
 
         KV kv = notNullFields(e, "p1");
@@ -341,6 +342,20 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
         );
         proxy( this.getClass(), edgeType, nGQL, new Class[] { Object.class, Object.class, Object.class }, v1, e, v2 );
     }
+
+    default Boolean existsEdge(ID startId, Class<?> edgeType, ID endId) {
+        String cqlTpl = getCqlTpl();
+        String edgeName = edgeName(edgeType);
+        return (Boolean) proxy( this.getClass(), Boolean.class, cqlTpl, new Class[] { Serializable.class, Class.class, Serializable.class }, startId, edgeName, endId );
+    };
+
+    default List<T> listStartNodes(Class<?> edgeType, ID id) {
+        String cqlTpl = getCqlTpl();
+        String edgeName = edgeName( edgeType );
+        Class<? extends NebulaDaoBasic> daoType = this.getClass();
+        Class<?> returnType = entityType(daoType);
+        return (List<T>) proxy(daoType, returnType, cqlTpl, new Class[] { Class.class, Serializable.class }, edgeName, id );
+    };
 }
 
 

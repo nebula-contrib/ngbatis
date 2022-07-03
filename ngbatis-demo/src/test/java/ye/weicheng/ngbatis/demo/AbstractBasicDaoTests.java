@@ -121,4 +121,16 @@ public class AbstractBasicDaoTests {
         System.out.println( JSON.toJSONString( page ) );
     }
 
+    @Test
+    public void existsEdge() {
+        Boolean existsEdge = repository.existsEdge("测试", Like.class, "测试");
+        System.out.println( existsEdge );
+    }
+
+    @Test
+    public void listStartNodes() {
+        List<Person> personList = repository.listStartNodes(Like.class, "测试");
+        System.out.println( JSON.toJSONString( personList ) );
+    }
+
 }

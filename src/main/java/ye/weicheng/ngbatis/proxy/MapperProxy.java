@@ -167,7 +167,7 @@ public class MapperProxy {
             nGQL = "USE " + ENV.getSpace()+";" + nGQL.trim();
             session = ENV.openSession();
             log.debug("nGql：{}", nGQL);
-            log.debug("params：{}", JSON.toJSONString( params ));
+            log.debug("params：{}", params);
             ResultSet result = session.executeWithParameter( nGQL, params );
             log.debug("result：{}", result);
             if( result.isSucceeded() ) {

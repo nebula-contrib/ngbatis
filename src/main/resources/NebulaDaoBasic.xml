@@ -107,4 +107,16 @@
         );
     </insert>
 
+    <select id="existsEdge">
+        MATCH (n)-[r: ${ p1 }]-(n2)
+        WHERE id(n) == $p0 AND id(n2) == $p2
+        RETURN count(*) > 0
+    </select>
+
+    <select id="listStartNodes">
+        MATCH (n)-[r: ${ p0 }]->(n2)
+        WHERE id(n2) == $p1
+        RETURN n
+    </select>
+
 </mapper>

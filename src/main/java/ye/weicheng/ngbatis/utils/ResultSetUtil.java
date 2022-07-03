@@ -3,9 +3,7 @@
 // found in the LICENSE file.
 package ye.weicheng.ngbatis.utils;
 
-import com.vesoft.nebula.client.graph.data.Node;
-import com.vesoft.nebula.client.graph.data.Relationship;
-import com.vesoft.nebula.client.graph.data.ValueWrapper;
+import com.vesoft.nebula.client.graph.data.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ye.weicheng.ngbatis.exception.ResultHandleException;
@@ -14,10 +12,7 @@ import ye.weicheng.ngbatis.proxy.MapperProxy;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ye.weicheng.ngbatis.proxy.NebulaDaoBasicExt.getPkField;
@@ -40,8 +35,8 @@ public class ResultSetUtil {
                     : value.isDouble() ? value.asDouble()
                     : value.isString() ? value.asString()
                     : value.isTime() ? value.asTime()
-                    : value.isDate() ? value.asDate()
-                    : value.isDateTime() ? value.asDateTime()
+                    : value.isDate() ? transformDate( value.asDate() )
+                    : value.isDateTime() ? transformDateTime( value.asDateTime() )
                     : value.isVertex() ? transformNode( value.asNode() )
                     : value.isEdge() ? value.asRelationship()
                     : value.isPath() ? value.asPath()
@@ -55,6 +50,22 @@ public class ResultSetUtil {
            throw new RuntimeException( e );
         }
     }
+
+    private static Object transformDateTime(DateTimeWrapper dateTime) {
+        return new GregorianCalendar(
+                dateTime.getYear(),
+                dateTime.getMonth(),
+                dateTime.getDay(),
+                dateTime.getHour(),
+                dateTime.getMinute(),
+                dateTime.getSecond()
+        ).getTime();
+    }
+
+    private static Object transformDate(DateWrapper date ) {
+        return new GregorianCalendar(date.getYear() + 1900, date.getMonth(), date.getDay()).getTime();
+    }
+
 
     private static Object transformNode(Node node) {
         List<String> tagNames = node.tagNames();

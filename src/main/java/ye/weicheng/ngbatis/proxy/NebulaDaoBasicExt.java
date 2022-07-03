@@ -103,6 +103,14 @@ public class NebulaDaoBasicExt {
         return result;
     }
 
+    public static Class<?> entityType( Class<?> currentType ) {
+        Class<?>[] entityTypeAndIdType = entityTypeAndIdType(currentType);
+        if( entityTypeAndIdType != null && entityTypeAndIdType.length > 0) {
+            return entityTypeAndIdType[0];
+        }
+        return null;
+    }
+
     public static Object proxy (Class<?> currentType, Class<?> returnType, String nGQL, Class<?>[] argTypes, Object ... args) {
         Method method = null;
         try {
