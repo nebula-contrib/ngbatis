@@ -148,14 +148,23 @@ public class NebulaDaoBasicExt {
         return getPkField( declaredFields, type );
     }
 
-    public static Field getPkField(Field[] fields, Class<?> type ) {
+    public static Field getRankField( Class<?> type ) {
+        Field[] declaredFields = type.getDeclaredFields();
+        return getPkField( declaredFields, type, false );
+    }
+
+    public static Field getPkField(Field[] fields, Class<?> type) {
+        return getPkField( fields, type, true );
+    }
+
+   public static Field getPkField(Field[] fields, Class<?> type, boolean canNotNull ) {
         Field pkField = null;
         for (Field field : fields) {
             if (field.isAnnotationPresent(Id.class)) {
                 pkField = field;
             }
         }
-        if (pkField == null) {
+        if (canNotNull && pkField == null) {
             throw new ParseException( String.format( "%s 必须有一个属性用 @Id 注解。（javax.persistence.Id）", type ));
         }
         return pkField;

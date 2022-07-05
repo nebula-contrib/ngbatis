@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ye.weicheng.ngbatis.demo.pojo.Like;
+import ye.weicheng.ngbatis.demo.pojo.LikeWithRank;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 import ye.weicheng.ngbatis.demo.repository.TestRepository;
 import ye.weicheng.ngbatis.utils.Page;
@@ -84,6 +85,20 @@ public class AbstractBasicDaoTests {
     }
 
     @Test
+    public void insertEdgeWithRank() {
+        Person person1 = new Person();
+        person1.setName( "测试" );
+        repository.insertSelective( person1 );
+
+        Person person2 = new Person();
+        repository.insertSelective( person2 );
+
+        LikeWithRank like = new LikeWithRank();
+
+        repository.insertEdge( person1, like , person2 );
+    }
+
+    @Test
     public void insertEdgeWithProps() {
         Person person1 = new Person();
         person1.setName( "edgeDemoV1" );
@@ -97,6 +112,22 @@ public class AbstractBasicDaoTests {
         like.setLikeness( 0.7 );
 
         repository.insertEdge( person1, like , person2 );
+    }
+
+    @Test
+    public void insertEdgeWithPropsAndRank() {
+        Person person1 = new Person();
+        person1.setName( "edgeDemoV1" );
+        repository.insertSelective( person1 );
+
+        Person person2 = new Person();
+        person2.setName( "edgeDemoV2" );
+        repository.insertSelective( person2 );
+
+        LikeWithRank likeWithRank = new LikeWithRank();
+        likeWithRank.setLikeness( 0.7 );
+
+        repository.insertEdge( person1, likeWithRank , person2 );
     }
 
 

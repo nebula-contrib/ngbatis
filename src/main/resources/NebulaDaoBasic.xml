@@ -97,7 +97,7 @@
             @}
         @}
         )
-        VALUES ${ eId1 }-> ${ eId2 } :(
+        VALUES ${ eId1 }-> ${ eId2 } ${ isNotEmpty( rank ) ? '\\@' + rank : ''  } :(
         @for ( val in valueColumns ) {
             ${ val }
             @if (!valLP.last) {

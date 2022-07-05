@@ -330,16 +330,22 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
         String eId1 = keyFormat(v1PkField, v1PkField.getName(), true, "p0");
         String eId2 = keyFormat(v2PkField, v2PkField.getName(), true, "p2");
 
-        String nGQL = textResolver.resolve(
-                cqlTpl,
-                new HashMap<String, Object>() {{
-                    put( "columns", kv.columns );
-                    put( "valueColumns", kv.valueNames );
-                    put( "e", edgeName);
-                    put( "eId1", eId1);
-                    put( "eId2", eId2);
-                }}
-        );
+        HashMap<String, Object> tplArgs = new HashMap<String, Object>() {{
+            put("columns", kv.columns);
+            put("valueColumns", kv.valueNames);
+            put("e", edgeName);
+            put("eId1", eId1);
+            put("eId2", eId2);
+        }};
+
+        Field rankField = getRankField( e.getClass() );
+        if( rankField != null ) {
+            setId( e, rankField, edgeName );
+            String rank = keyFormat(rankField, rankField.getName(), true, "p1");
+            tplArgs.put( "rank", rank );
+        }
+
+        String nGQL = textResolver.resolve( cqlTpl, tplArgs );
         proxy( this.getClass(), edgeType, nGQL, new Class[] { Object.class, Object.class, Object.class }, v1, e, v2 );
     }
 
