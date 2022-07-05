@@ -38,9 +38,14 @@ public class ReflectUtil {
         if ( NUMBER_TYPES.contains( field.getType() )) {
             value = castNumber( (Number) value, field.getType() );
         }
-        field.setAccessible( true );
-        field.set( o, value );
-        field.setAccessible( false );
+        boolean accessible = field.isAccessible();
+        if( accessible ) {
+            field.set( o, value );
+        } else {
+            field.setAccessible( true );
+            field.set( o, value );
+            field.setAccessible( false );
+        }
     }
 
 
@@ -57,10 +62,15 @@ public class ReflectUtil {
 
     public static Object getValue(Object o, Field field) {
         try {
-            field.setAccessible( true );
-            Object value = field.get(o);
-            field.setAccessible( false );
-            return value;
+            boolean accessible = field.isAccessible();
+            if( accessible ) {
+                return field.get(o);
+            } else {
+                field.setAccessible( true );
+                Object value = field.get(o);
+                field.setAccessible( false );
+                return value;
+            }
         } catch (IllegalAccessException e) {
             throw new ParseException( e.getMessage() );
         }

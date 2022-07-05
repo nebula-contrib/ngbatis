@@ -5,7 +5,6 @@ package ye.weicheng.ngbatis.binding;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.*;
-import com.facebook.thrift.meta_data.FieldMetaData;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vesoft.nebula.*;
 import ye.weicheng.ngbatis.ArgsResolver;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Component;
 import ye.weicheng.ngbatis.utils.ReflectUtil;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -74,14 +72,22 @@ public class DefaultArgsResolver implements ArgsResolver {
     }
 
     public static Map<Class<?>, Setter> LEAF_TYPE_AND_SETTER = new HashMap<Class<?>, Setter>() {{
+        put(boolean.class, (Setter<Boolean>) Value::bVal);
         put(Boolean.class, (Setter<Boolean>) Value::bVal);
-        put(Long.class, (Setter<Long>) Value::iVal);
+        put(int.class, (Setter<Integer>) Value::iVal);
         put(Integer.class, (Setter<Integer>) Value::iVal);
+        put(short.class, (Setter<Short>) Value::iVal);
         put(Short.class, (Setter<Short>) Value::iVal);
-        put(Double.class, (Setter<Double>) Value::fVal);
+        put(byte.class, (Setter<Short>) Value::iVal);
+        put(Byte.class, (Setter<Short>) Value::iVal);
+        put(long.class, (Setter<Long>) Value::iVal);
+        put(Long.class, (Setter<Long>) Value::iVal);
+        put(float.class, (Setter<Float>) Value::fVal);
         put(Float.class, (Setter<Float>) Value::fVal);
-        put(String.class, (Setter<String>) (param) -> Value.sVal( param.getBytes() ));
+        put(double.class, (Setter<Double>) Value::fVal);
+        put(Double.class, (Setter<Double>) Value::fVal);
         put(byte[].class, (Setter<byte[]>) Value::sVal);
+        put(String.class, (Setter<String>) (param) -> Value.sVal( param.getBytes() ));
         put(com.vesoft.nebula.Date.class, (Setter<com.vesoft.nebula.Date>) Value::dVal);
         put(Time.class, (Setter<Time>) Value::tVal);
         put(DateTime.class, (Setter<DateTime>) Value::dtVal);
