@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 package ye.weicheng.ngbatis.demo.repository;
 
+import com.vesoft.nebula.client.graph.data.ResultSet;
 import ye.weicheng.ngbatis.demo.pojo.NRN2;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 import ye.weicheng.ngbatis.proxy.NebulaDaoBasic;
@@ -51,5 +52,7 @@ public interface TestRepository extends NebulaDaoBasic<Person, String> {
     List<NRN2> selectNRN2();
 
     NRN2 selectNRN2Limit1();
+
+    ResultSet testMulti();
 
 }

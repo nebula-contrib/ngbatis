@@ -83,5 +83,10 @@
         LIMIT 1
     </select>
 
+    <select id="testMulti">
+        return "1111";
+        return "222";
+    </select>
+
 </mapper>
 

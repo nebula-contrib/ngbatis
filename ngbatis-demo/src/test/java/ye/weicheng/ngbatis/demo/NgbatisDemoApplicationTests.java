@@ -4,6 +4,7 @@
 package ye.weicheng.ngbatis.demo;
 
 import com.alibaba.fastjson.JSON;
+import com.vesoft.nebula.client.graph.data.ResultSet;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -135,6 +136,12 @@ class NgbatisDemoApplicationTests {
 	public void selectNRN2Limit1() {
 		NRN2 nrn2 = repository.selectNRN2Limit1();
 		System.out.println( JSON.toJSONString( nrn2 ));
+	}
+
+	@Test
+	public void testMulti() {
+		ResultSet resultSet = repository.testMulti();
+		System.out.println( resultSet );
 	}
 
 }
