@@ -163,13 +163,19 @@ public class MapperProxy {
 
     public static  ResultSet executeWithParameter( String nGQL, Map<String, Object> params )  {
         Session session = null;
+        ResultSet result = null;
+        String proxyClass = null;
+        String proxyMethod = null;
         try {
-            nGQL = "USE " + ENV.getSpace()+";" + nGQL.trim();
+            if(log.isDebugEnabled()) {
+                StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[6];
+                proxyClass = stackTraceElement.getClassName();
+                proxyMethod = stackTraceElement.getMethodName();
+            }
+
+            nGQL = "USE " + ENV.getSpace()+";\n\t\t" + nGQL.trim();
             session = ENV.openSession();
-            log.debug("nGql：{}", nGQL);
-            log.debug("params：{}", params);
-            ResultSet result = session.executeWithParameter( nGQL, params );
-            log.debug("result：{}", result);
+            result = session.executeWithParameter( nGQL, params );
             if( result.isSucceeded() ) {
                 return result;
             } else {
@@ -178,6 +184,7 @@ public class MapperProxy {
         } catch (IOErrorException e) {
             throw new QueryException(  "数据查询失败："  + e.getMessage() );
         } finally {
+            log.debug("\n\t- proxyMethod: {}#{} \n\t- nGql：{} \n\t - params: {}\n\t - result：{}", proxyClass, proxyMethod, nGQL, params, result);
 //            if (session != null ) session.release();
         }
     }
