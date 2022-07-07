@@ -355,14 +355,34 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
         return (Boolean) proxy( this.getClass(), Boolean.class, cqlTpl, new Class[] { Serializable.class, Class.class, Serializable.class }, startId, edgeName, endId );
     };
 
-    default List<T> listStartNodes(Class<?> startType, Class<?> edgeType, ID endId) {
+    default List<T> listStartNodes(Class<?> edgeType, ID endId) {
+        Class<?> startType = entityType( this.getClass() );
+        return (List<T>) listStartNodes( startType, edgeType, endId );
+    }
+
+    default List<?> listStartNodes(Class<?> startType, Class<?> edgeType, ID endId) {
         String cqlTpl = getCqlTpl();
         String startVertexName = vertexName( startType );
         String edgeName = edgeName( edgeType );
         Class<? extends NebulaDaoBasic> daoType = this.getClass();
         Class<?> returnType = entityType(daoType);
-        return (List<T>) proxy(daoType, returnType, cqlTpl, new Class[] {Class.class, Class.class, Serializable.class }, startVertexName, edgeName, endId );
-    };
+        return (List<?>) proxy(daoType, returnType, cqlTpl, new Class[] {Class.class, Class.class, Serializable.class }, startVertexName, edgeName, endId );
+    }
+
+    default T startNode(Class<?> edgeType, ID endId ) {
+        Class<?> startType = entityType( this.getClass() );
+        return (T) startNode(startType, edgeType, endId);
+    }
+
+    default <E> E startNode( Class<E> startType, Class<?> edgeType, ID endId ) {
+        String cqlTpl = getCqlTpl();
+        String startVertexName = vertexName( startType );
+        String edgeName = edgeName( edgeType );
+        Class<? extends NebulaDaoBasic> daoType = this.getClass();
+        Class<?> returnType = entityType(daoType);
+        return (E) proxy(daoType, returnType, cqlTpl, new Class[] {Class.class, Class.class, Serializable.class }, startVertexName, edgeName, endId );
+    }
+
 }
 
 
