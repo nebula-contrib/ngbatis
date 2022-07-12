@@ -5,10 +5,10 @@
 3. 初始化过程
     1. 从springboot配置文件中读取NebulaPoolConfig连接信息
     2. 创建全局上下文：[MapperContext](./src/main/java/ye/weicheng/ngbatis/proxy/MapperContext.java)
-    3. 读取 NebulaDaoBasic 的模板文件并解析，存入上下文
-        1. 读取由 cql.parser.mapper-tpl-location 指定的文件。执行方：[DaoResourceLoader](./src/main/java/ye/weicheng/ngbatis/io/DaoResourceLoader.java)
-        2. 由 jsoup 完成 xml 解析（方法名、nGQL模板）。执行方：[MapperResourceLoader](./src/main/java/ye/weicheng/ngbatis/io/MapperResourceLoader.java)
-    4. 读取用户创建的 XXXDao.xml 并解析，存入上下文
+    3. 读取 NebulaDaoBasic 的模板文件并解析，存入上下文。执行方：[DaoResourceLoader](./src/main/java/ye/weicheng/ngbatis/io/DaoResourceLoader.java)
+        1. 读取由 cql.parser.mapper-tpl-location 指定的文件
+        2. 由 jsoup 完成 xml 解析（方法名、nGQL模板）
+    4. 读取用户创建的 XXXDao.xml 并解析，存入上下文。执行方：[MapperResourceLoader](./src/main/java/ye/weicheng/ngbatis/io/MapperResourceLoader.java)
         1. 读取由 cql.parser.mapper-locations 指定的所有 xml 文件
         2. 使用 jsoup 逐个文件解析
             1. 解析xml文件，获取对应接口，并存成一个类模型：[ClassModel](./src/main/java/ye/weicheng/ngbatis/models/ClassModel.java)
