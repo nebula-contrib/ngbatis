@@ -26,14 +26,33 @@ import static ye.weicheng.ngbatis.utils.ReflectUtil.NEED_SEALING_TYPES;
  */
 public class MapperProxyClassGenerator implements Opcodes {
 
+    /**
+     * 获取DAO接口对应的动态代理类名称
+     *
+     * @param cm 已经扫描的类模型
+     * @return
+     */
     private String getFullNameType( ClassModel cm ) {
         return getFullNameType( (cm.getNamespace().getName() + PROXY_SUFFIX) );
     }
 
+    /**
+     * 通过类的全限定名，获取类在JVM中的类名
+     *
+     * @param className 接口全限定名
+     * @return
+     */
     private String getFullNameType( String className ) {
         return className.replace( ".", "/");
     }
 
+    /**
+     * 根据 ClassModel 对象中扫描得到的信息，<br/>
+     * 生成代理类，并将字节码设置到 ClassModel 对象中<br/>
+     *
+     * @param cm DAO 类模型
+     * @return DAO 接口对应的字节码
+     */
     public byte[] setClassCode(ClassModel cm) {
         String fullNameType = getFullNameType( cm );
 
@@ -61,6 +80,12 @@ public class MapperProxyClassGenerator implements Opcodes {
         return code;
     }
 
+    /**
+     * 根据扫描得到的类模型获取方法，并让类访问器进行访问
+     *
+     * @param cw asm 的类访问器
+     * @param cm DAO 接口类模型
+     */
     private void methods(ClassWriter cw, ClassModel cm ) {
         // 读取配置，并根据配置向 class 文件写人代理方法
         Map<String, MethodModel> methods = cm.getMethods();
@@ -69,7 +94,13 @@ public class MapperProxyClassGenerator implements Opcodes {
         }
     }
 
-
+    /**
+     * 生成代理方法
+     *
+     * @param cw asm 类访问器
+     * @param cm 扫描所得类模型
+     * @param mmEntry 方法名与方法模型映射
+     */
     private void method(ClassWriter cw, ClassModel cm, Map.Entry<String, MethodModel> mmEntry) {
         String methodName = mmEntry.getKey();
         MethodModel mm = mmEntry.getValue();
@@ -176,6 +207,7 @@ public class MapperProxyClassGenerator implements Opcodes {
     }
 
     /**
+     * 空参构造函数生成方法
      * public XXX() {
      *
      * }
@@ -193,6 +225,10 @@ public class MapperProxyClassGenerator implements Opcodes {
         constructor.visitEnd();
     }
 
+    /**
+     * 将生成的字节码，写入本地文件，形成 .class 文件供调试时使用
+     * @param cm
+     */
     private void writeFile( ClassModel cm ) {
         try {
             File file = new File("asm-debug\\" + getFullNameType(cm) + ".class");

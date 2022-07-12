@@ -4,6 +4,7 @@
 package ye.weicheng.ngbatis.proxy;
 
 import ye.weicheng.ngbatis.Env;
+import ye.weicheng.ngbatis.NgbatisContextInitializer;
 import ye.weicheng.ngbatis.models.ClassModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,9 @@ public class RAMClassLoader extends ClassLoader {
     private Map<String, ClassModel> classModelMap;
 
     /**
+     * 对扫描xml所得的多个类模型信息进行处理。
+     * 将所有涉及的类事先加载到 jvm 中
+     *
      * @param classModelMap 某个路径下
      */
     public RAMClassLoader(Map<String, ClassModel> classModelMap) {
@@ -35,6 +39,10 @@ public class RAMClassLoader extends ClassLoader {
 
     private final Object lock = new Object();
 
+    /**
+     * 加载单个类模型，并将其涉及的类事先加载到 jvm 中
+     * @param entry 接口全限定名与类模型的键值对
+     */
     private void loadClassCode(Map.Entry<String, ClassModel> entry) {
         String className = entry.getKey();
         byte[] classByte = entry.getValue().getClassByte();
@@ -42,6 +50,13 @@ public class RAMClassLoader extends ClassLoader {
         defineClass( className , classByte, 0, classByte.length);
     }
 
+    /**
+     * 被 {@link NgbatisContextInitializer NgbatisContextInitializer} 所调用，<br/>
+     * 在 spring bean容器注册bean前，把待注册的 bean 对应的类型加载到 jvm 中
+     * @param name 动态代理类的全限定名
+     * @return 动态代理类
+     * @throws ClassNotFoundException 当代理类或者其方法涉及的类型不存在于当前加载链中时抛出
+     */
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
         Class<?> c = findLoadedClass(name);

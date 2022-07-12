@@ -15,6 +15,9 @@ import java.util.*;
 import static ye.weicheng.ngbatis.proxy.NebulaDaoBasicExt.*;
 
 /**
+ * 数据访问的基类，用于提供单表 CRUD 与基本的节点关系操作<br/>
+ * <strong>以下在方法注释中所说的“对应类型” 均指的是 泛 型T</strong>
+ *
  * @author yeweicheng
  * @since 2022-06-12 12:21
  * <br>Now is history!
@@ -281,6 +284,12 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
         return (Long) proxy(daoClass, Long.class, countNGql, new Class[]{Page.class}, page);
     }
 
+    /**
+     * 查询对应类型的数据并分页<br/>
+     *
+     * @param page
+     * @return
+     */
     default  List<T> selectPage(Page<T> page) {
         Long total = countPage(page);
         page.setTotal( total );
@@ -316,6 +325,13 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
         throw new QueryException("No implements");
     }
 
+    /**
+     *  根据三元组值，插入关系
+     *
+     * @param v1 开始节点值
+     * @param e 关系值
+     * @param v2 结束节点值
+     */
     default void insertEdge(Object v1, Object e, Object v2) {
         if( v2 == null || v1 == null || e == null ) return;
         TextResolver textResolver = MapperProxy.ENV.getTextResolver();
@@ -349,17 +365,41 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
         proxy( this.getClass(), edgeType, nGQL, new Class[] { Object.class, Object.class, Object.class }, v1, e, v2 );
     }
 
+    /**
+     * 提供开始节点的id、结束节点的id 与 关系名，判断是否已经建立关系
+     *
+     * @param startId 开始节点的 id
+     * @param edgeType 关系类型
+     * @param endId 结束节点的 id
+     * @return
+     */
     default Boolean existsEdge(ID startId, Class<?> edgeType, ID endId) {
         String cqlTpl = getCqlTpl();
         String edgeName = edgeName(edgeType);
         return (Boolean) proxy( this.getClass(), Boolean.class, cqlTpl, new Class[] { Serializable.class, Class.class, Serializable.class }, startId, edgeName, endId );
     };
 
+    /**
+     * 通过结束节点id与关系类型获取所有开始节点，<br/>
+     * 开始节点类型为当前接口实现类所管理的实体对应的类型
+     *
+     * @param edgeType 关系类型
+     * @param endId 结束节点的 id
+     * @return 开始节点
+     */
     default List<T> listStartNodes(Class<?> edgeType, ID endId) {
         Class<?> startType = entityType( this.getClass() );
         return (List<T>) listStartNodes( startType, edgeType, endId );
     }
 
+    /**
+     * 指定开始节点类型，并通过结束节点id与关系类型获取所有开始节点
+     *
+     * @param startType 开始节点的类型
+     * @param edgeType 关系类型
+     * @param endId 结束节点的 id
+     * @return 开始节点
+     */
     default List<?> listStartNodes(Class<?> startType, Class<?> edgeType, ID endId) {
         String cqlTpl = getCqlTpl();
         String startVertexName = vertexName( startType );
@@ -369,11 +409,28 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
         return (List<?>) proxy(daoType, returnType, cqlTpl, new Class[] {Class.class, Class.class, Serializable.class }, startVertexName, edgeName, endId );
     }
 
+    /**
+     * 通过结束节点id与关系类型获取第一个开始节点，<br/>
+     * 开始节点类型为当前接口实现类所管理的实体对应的类型 （对应类型）
+     *
+     * @param edgeType 关系类型
+     * @param endId 结束节点的 id
+     * @return 开始节点
+     */
     default T startNode(Class<?> edgeType, ID endId ) {
         Class<?> startType = entityType( this.getClass() );
         return (T) startNode(startType, edgeType, endId);
     }
 
+    /**
+     * 指定开始节点类型，并通过结束节点id与关系类型获取第一个开始节点
+     *
+     * @param startType 开始节点的类型
+     * @param edgeType 关系类型
+     * @param endId 结束节点的 id
+     * @param <E> 开始节点的类型
+     * @return 开始节点
+     */
     default <E> E startNode( Class<E> startType, Class<?> edgeType, ID endId ) {
         String cqlTpl = getCqlTpl();
         String startVertexName = vertexName( startType );

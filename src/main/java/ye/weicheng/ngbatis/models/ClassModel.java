@@ -9,6 +9,7 @@ import org.springframework.core.io.Resource;
 import java.util.Map;
 
 /**
+ * 类模型信息<br/>
  * xml 中 mapper 标签所声明的信息（类），包含属性与子标签（方法）
  *
  * @author yeweicheng

@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 package ye.weicheng.ngbatis.proxy;
 
-import com.alibaba.fastjson.JSON;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.net.Session;
@@ -57,20 +56,18 @@ public class MapperProxy {
 
     private void methods( ClassModel classModel ) {
         methodCache.clear();
-//        Method[] declaredMethods = classModel.getNamespace().getDeclaredMethods();
         Map<String, MethodModel> methods = classModel.getMethods();
         methodCache.putAll( methods );
-//        for( Method method : declaredMethods ) {
-//            methodCache.put( method, methods.get( method.getName() ) );
-//        }
     };
 
     /**
+     * <strong>框架中极其重要的方法，被动态代理类所执行。是动态代理的入口方法{@link MapperProxyClassGenerator#method}</strong>
      * 提供给代理类所调用
-     * @param className
-     * @param methodName
-     * @param args
-     * @return
+     *
+     * @param className 访问数据库的接口
+     * @param methodName 执行数据库操作的方法名
+     * @param args 执行数据库操作的参数
+     * @return 结果对象映射的 java 对象
      */
     public static Object invoke(String className, String methodName, Object... args ) {
         MapperContext mapperContext = ENV.getMapperContext();
@@ -91,6 +88,15 @@ public class MapperProxy {
         return pageSupport( classModel, method, args );
     }
 
+    /**
+     * 自动对该分页的接口进行分页操作<br/>
+     * 该分页：接口参数中有 {@link Page Page} 对象
+     *
+     * @param classModel 应用初始化后，数据访问接口对应的类模型
+     * @param method 执行数据库操作的方法
+     * @param args 执行数据库操作的参数
+     * @return 结果对象映射的 java 对象
+     */
     private static Object pageSupport(ClassModel classModel, Method method, Object[] args) {
         int pageParamIndex = ReflectUtil.containsType(method, Page.class);
 
@@ -112,7 +118,14 @@ public class MapperProxy {
     }
 
     /**
-     * 提供给基类所调用
+     * 提供给基类所调用，完整描述整个 orm 流程的核心方法。
+     * <ol>
+     *     <li>获取方法具体信息，主要包括返回值类型与查询脚本(nGQL)</li>
+     *     <li>对上一步获取到的 nGQL 中，参数占位符替换成实际参数值</li>
+     *     <li>执行数据库访问</li>
+     *     <li>按返回值类型获取对应结果集处理器</li>
+     *     <li>完成数据库数据类型向 javaa 对象类型的转化</li>
+     * </ol>
      *
      * @param methodModel
      * @param args
@@ -161,6 +174,12 @@ public class MapperProxy {
         return invoke(methodModel, args);
     }
 
+    /**
+     * 通过 nebula-graph 客户端执行数据库访问。被 invoke 所调用，间接为动态代理类服务
+     * @param nGQL 待执行的查询脚本（模板）
+     * @param params 待执行脚本的参数所需的参数
+     * @return nebula-graph 的未被 orm 操作的原始结果集
+     */
     public static  ResultSet executeWithParameter( String nGQL, Map<String, Object> params )  {
         Session session = null;
         ResultSet result = null;
