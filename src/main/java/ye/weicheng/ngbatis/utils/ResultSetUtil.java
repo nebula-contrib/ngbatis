@@ -54,7 +54,7 @@ public class ResultSetUtil {
     private static Object transformDateTime(DateTimeWrapper dateTime) {
         return new GregorianCalendar(
                 dateTime.getYear(),
-                dateTime.getMonth(),
+                dateTime.getMonth() - 1,
                 dateTime.getDay(),
                 dateTime.getHour(),
                 dateTime.getMinute(),
@@ -63,7 +63,7 @@ public class ResultSetUtil {
     }
 
     private static Object transformDate(DateWrapper date ) {
-        return new GregorianCalendar(date.getYear() + 1900, date.getMonth(), date.getDay()).getTime();
+        return new GregorianCalendar(date.getYear() + 1900, date.getMonth() - 1, date.getDay()).getTime();
     }
 
 
