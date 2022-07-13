@@ -20,6 +20,7 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static ye.weicheng.ngbatis.utils.ReflectUtil.getAllColumnFields;
 
 /**
  * @author yeweicheng
@@ -206,7 +207,7 @@ public class NebulaDaoBasicExt {
      */
     public static KV notNullFields( Object record, String prefix ) {
         if( record == null ) return new KV();
-        Field[] fields = record.getClass().getDeclaredFields();
+        Field[] fields = getAllColumnFields( record.getClass() );
         return recordToKV(record, fields, true, prefix);
     }
 

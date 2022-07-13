@@ -3,9 +3,11 @@
 // found in the LICENSE file.
 package ye.weicheng.ngbatis.utils;
 
+import org.apache.commons.lang3.ArrayUtils;
 import ye.weicheng.ngbatis.exception.ParseException;
 import ye.weicheng.ngbatis.models.MethodModel;
 
+import javax.persistence.Column;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -221,5 +223,30 @@ public class ReflectUtil {
         parents.add(superclass);
         parents.addAll( getParentTypes( superclass ) );
         return parents;
+    }
+
+    /**
+     * 实体类获取全部属性，对父类获取 带 @Column 的属性
+     * @param clazz
+     * @return
+     */
+    public static Field[] getAllColumnFields( Class<?> clazz ) {
+        Set<Field> fields = new HashSet<>();
+        boolean leaf = true;
+        do {
+            Field[] declaredFields = clazz.getDeclaredFields();
+            if( leaf ) {
+                fields.addAll( Arrays.asList( declaredFields ) );
+            } else {
+                for (Field declaredField : declaredFields) {
+                    if( declaredField.isAnnotationPresent(Column.class)) {
+                        fields.add( declaredField );
+                    }
+                }
+            }
+            clazz = clazz.getSuperclass();
+            leaf = false;
+        } while ( clazz != null );
+        return fields.toArray(new Field[0]);
     }
 }

@@ -68,7 +68,7 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
 
         KV kv = allFields(record);
         String cqlTpl = getCqlTpl();
-        Class<?> vertexType = record.getClass();
+        Class<?> vertexType = entityType( this.getClass() );
         String vertexName = vertexName(vertexType);
 
         Field[] fields = vertexType.getDeclaredFields();

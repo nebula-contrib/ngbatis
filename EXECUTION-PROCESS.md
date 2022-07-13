@@ -4,7 +4,7 @@
 2. 启动类为：[NgbatisContextInitialize](./src/main/java/ye/weicheng/ngbatis/NgbatisContextInitializer.java)
 3. 初始化过程
     1. 从springboot配置文件中读取NebulaPoolConfig连接信息
-    2. 创建全局上下文：[MapperContext](./src/main/java/ye/weicheng/ngbatis/proxy/MapperContext.java)
+    2. 创建全局上下文：[MapperContext](./src/main/java/ye/weicheng/ngbatis/proxy/MapperContext.java)<!-- @IGNORE PREVIOUS: link -->
     3. 读取 NebulaDaoBasic 的模板文件并解析，存入上下文。执行方：[DaoResourceLoader](./src/main/java/ye/weicheng/ngbatis/io/DaoResourceLoader.java)
         1. 读取由 cql.parser.mapper-tpl-location 指定的文件
         2. 由 jsoup 完成 xml 解析（方法名、nGQL模板）
