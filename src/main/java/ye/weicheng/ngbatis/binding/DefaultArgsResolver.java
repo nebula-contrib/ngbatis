@@ -58,7 +58,7 @@ public class DefaultArgsResolver implements ArgsResolver {
                 if( isBaseType(paramClass))
                     result.put( "p" + i,  JSON.toJSON(args[ i ] ) );
                 else if ( args[i] instanceof Collection)
-                    result.put( "p" + i, args[i] );
+                    result.put( "p" + i, customToJSON(args[i]) );
                 else {
                     if( len == 1 ) {
                         result = (Map<String,Object>)customToJSON( args[0] );
@@ -173,6 +173,7 @@ public class DefaultArgsResolver implements ArgsResolver {
             parserConfig.put( java.sql.Date.class, new DateDeserializer() );
             parserConfig.put( java.sql.Time.class, new DateDeserializer() );
             String text = JSON.toJSONString(o, parserConfig, SerializerFeature.WriteMapNullValue);
+            text = text.replaceAll("\\\\n", "\\\\\\\\n");
             Map map = objectMapper.readValue(text, Map.class);
             return map;
         } catch (IOException e) {
