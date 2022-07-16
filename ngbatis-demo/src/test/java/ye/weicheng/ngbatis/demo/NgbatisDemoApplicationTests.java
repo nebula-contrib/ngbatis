@@ -144,4 +144,15 @@ class NgbatisDemoApplicationTests {
 		System.out.println( resultSet );
 	}
 
+	@Test
+	public void testStringPropNull_insert() {
+		Person person = new Person();
+		String genderNullTest = "genderNullTest";
+		person.setName(genderNullTest);
+		repository.insert( person );
+		Person personDb = repository.selectById(genderNullTest);
+		System.out.println( JSON.toJSONString( personDb ) );
+		assert personDb.getGender() == null;
+	}
+
 }

@@ -7,6 +7,7 @@ import com.vesoft.nebula.client.graph.data.ResultSet;
 import ye.weicheng.ngbatis.TextResolver;
 import ye.weicheng.ngbatis.exception.QueryException;
 import ye.weicheng.ngbatis.utils.Page;
+import ye.weicheng.ngbatis.utils.ReflectUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -34,7 +35,7 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
         Class<?>[] classes = entityTypeAndIdType(this.getClass());
         TextResolver textResolver = MapperProxy.ENV.getTextResolver();
         Field pkField = getPkField(classes[0].getDeclaredFields(), classes[0]);
-        String pstm = keyFormat(pkField, pkField.getName(), true);
+        String pstm = keyFormat( id, pkField.getName(), true);
         Map<String, Object> tplParam = new HashMap<String, Object>() {{
             put("id", pstm);
         }};
@@ -75,9 +76,10 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
 
         Field pkField = getPkField( fields, vertexType );
 
-        String vId = keyFormat(pkField, pkField.getName(), true);
-
         Object id = setId( record, pkField, vertexName );
+
+        String vId = keyFormat( id, pkField.getName(), true);
+
         String nGQL = textResolver.resolve(
                 cqlTpl,
                 new HashMap<String, Object>() {{
@@ -109,9 +111,10 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
 
         Field pkField = getPkField( fields, vertexType );
 
-        String vId = keyFormat(pkField, pkField.getName(), true);
-
         Object id = setId( record, pkField, vertexName );
+
+        String vId = keyFormat(id, pkField.getName(), true);
+
         String nGQL = textResolver.resolve(
                 cqlTpl,
                 new HashMap<String, Object>() {{
@@ -343,8 +346,8 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
 
         Field v1PkField = getPkField(v1.getClass());
         Field v2PkField = getPkField(v2.getClass());
-        String eId1 = keyFormat(v1PkField, v1PkField.getName(), true, "p0");
-        String eId2 = keyFormat(v2PkField, v2PkField.getName(), true, "p2");
+        String eId1 = keyFormat( ReflectUtil.getValue( v1, v1PkField ), v1PkField.getName(), true, "p0");
+        String eId2 = keyFormat( ReflectUtil.getValue( v2, v2PkField ), v2PkField.getName(), true, "p2");
 
         HashMap<String, Object> tplArgs = new HashMap<String, Object>() {{
             put("columns", kv.columns);
@@ -357,7 +360,7 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
         Field rankField = getRankField( e.getClass() );
         if( rankField != null ) {
             setId( e, rankField, edgeName );
-            String rank = keyFormat(rankField, rankField.getName(), true, "p1");
+            String rank = keyFormat( ReflectUtil.getValue( e, rankField ), rankField.getName(), true, "p1");
             tplArgs.put( "rank", rank );
         }
 

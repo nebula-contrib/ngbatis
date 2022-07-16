@@ -87,12 +87,12 @@ public class NebulaDaoBasicExt {
     /**
      * 值格式化，将实体的属性转换成占位符字符串
      *
-     * @param field 实体属性
+     * @param value 实体属性值
      * @param name 属性名
      * @return 占位符自负串
      */
-    static Object valueFormat( Field field, Object name ) {
-        Class<?> fieldType = field.getType();
+    static Object valueFormat( Object value, Object name ) {
+        Class<?> fieldType = value.getClass();
         return valueFormat.containsKey(fieldType) ?
                 String.format( valueFormat.get(fieldType) , name )
                 : name;
@@ -100,30 +100,31 @@ public class NebulaDaoBasicExt {
 
     /**
      * 主键格式化：将主键属性转换成占位符或者实际值形式的字符串
-     * @param field 主键
+     * @param value 主键值
      * @param name 属性名
      * @param asStmt 是否使用住形式。 即： statement 与 prepare-statement 之间的选择
      * @return 用于给主键值提供占位的占位字符串
      */
-    static String keyFormat( Field field, String name, boolean asStmt ) {
+    static String keyFormat( Object value, String name, boolean asStmt ) {
         String format = asStmt ? "${ nvl( %s, 'null' ) }" : "$%s";
-        return valueFormat(field, String.format( format, name ) ).toString();
+        return valueFormat(value, String.format( format, name ) ).toString();
     }
 
     /**
      * 主键格式化：将主键属性转换成占位符或者实际值形式的字符串
-     * @param field 主键
+     * @param value 主键值
      * @param name 属性名
      * @param asStmt 是否使用住形式。 即： statement 与 prepare-statement 之间的选择
      * @param prefix 参数前缀。如果输入dao接口的参数是对象类型，则需要使用前缀来拼接出实际的占位参数符
      * @return 主键占位符
      */
-    static  String keyFormat( Field field, String name, boolean asStmt, String prefix ) {
+    static  String keyFormat( Object value, String name, boolean asStmt, String prefix ) {
+        if ( value == null ) return "null";
         if( isNotEmpty(prefix) ) {
             String format = asStmt ? "${ nvl( %s.%s, 'null' ) }" : "$%s.%s";
-            return valueFormat(field, String.format( format, prefix, name ) ).toString();
+            return valueFormat(value, String.format( format, prefix, name ) ).toString();
         }
-        return keyFormat( field, name, asStmt );
+        return keyFormat( value, name, asStmt );
     }
 
     /**
@@ -322,7 +323,7 @@ public class NebulaDaoBasicExt {
                 kv.columns.add( name );
                 // FIXME 使用 stmt 的方式，将实际值写入 nGQL 当中。
                 //  在找到 executeWithParameter 通过参数替换的方法之后修改成 pstmt 的形式
-                Object o = keyFormat( field, name, true, prefix);
+                Object o = keyFormat( ReflectUtil.getValue( record, field ), name, true, prefix);
                 kv.valueNames.add( String.valueOf( o ) );
             }
         }

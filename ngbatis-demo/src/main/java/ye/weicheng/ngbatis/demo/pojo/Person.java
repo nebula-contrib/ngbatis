@@ -18,6 +18,8 @@ public class Person {
     @Id
     private String name;
 
+    private String gender;
+
     private Integer age;
 
     private Date birthday;
@@ -44,6 +46,14 @@ public class Person {
 
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     @Override
