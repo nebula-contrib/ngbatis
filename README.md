@@ -5,11 +5,12 @@
 
 **NGBATIS** 是一款针对 [Nebula Graph](https://github.com/vesoft-inc/nebula) + Springboot 的数据库 ORM 框架。借鉴于 [MyBatis](https://github.com/mybatis/mybatis-3) 的使用习惯进行开发。
 
-## NGBATIS 是怎么运行的？请看设计文档 [EXECUTION-PROCESS.md](./blob/master/EXECUTION-PROCESS.md)
+## NGBATIS 是怎么运行的？请看设计文档 [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
 
 ## 项目要求
 - Springboot
 - Maven
+- Java 8
 
 ## 如何使用（可在克隆代码后，参考 ngbatis-demo 项目）
 ### 在项目引入
@@ -39,7 +40,7 @@
 在 application.yml 中添加配置 **将数据源修改成可访问到的NebulaGraph**
 ```yml
 nebula:
-  hosts: 127.0.0.1:19669
+  hosts: 127.0.0.1:19669, 127.0.0.1:9669
   username: root
   password: nebula
   space: test
@@ -52,6 +53,15 @@ nebula:
     wait-time: 0
     min-cluster-health-rate: 1.0
     enable-ssl: false
+```
+### 扫描动态代理的 bean
+```java
+@SpringBootApplication(scanBasePackages = "ye.weicheng")
+public class YourApplication {
+    public static void main(String[] args) {
+        new SpringApplication(NgbatisDemoApplication.class).run(args);
+    }
+}
 ```
 
 ## 日常开发示例
@@ -94,9 +104,16 @@ resource/mapper/TestRepository.xml
     </select>
 
     <select id="selectTriple" resultType="java.util.Map">
-        match (n: person)-[r: like]->(n2: person)
-        return n, r, n2
+        MATCH (n: person)-[r: like]->(n2: person)
+        RETURN n, r, n2
+        LIMIT 100
     </select>
+
+    <!-- 
+        更多复杂的 nGQL 可能还需要充分的测试，
+        目前我自己在用的项目两层对象的数据结构也是可以满足的。
+        Path 因为开发中基本都可以用 n, r, n2 的结构处理，便还没来得及支持。
+    -->
 
 </mapper>
 ```
@@ -168,7 +185,7 @@ public class PersonServiceImpl {
 
     @Autowired private PersonDao dao;
 
-    public Person demos() {
+    public void demos() {
         // 实现 两个节点插入
         Person tom = new Person();
         tom.setName("Tom")
@@ -179,7 +196,8 @@ public class PersonServiceImpl {
         dao.insert( jerry );
 
         // 建立两个节点的关系
-        dao.insert( tom, new Like( 0.99999 ), jerry );
+        Like like = new Like( 0.99999 );
+        dao.insertEdge( tom, like, jerry );
 
         // 查找喜欢 jerry 的人
         String jerryId = jerry.getName();
@@ -202,6 +220,8 @@ public class PersonServiceImpl {
         List<Person> personPage = dao.selectPage( page );
         page.getTotal(); // 2 rows， Tom and Jerry
         Boolean theyAreFamily = page.getRows() == personPage; // true
+
+        // 更多 基类的操作还在开发中。期待
     }
 
 
