@@ -5,35 +5,35 @@
 
 **NGBATIS** 是一款针对 [Nebula Graph](https://github.com/vesoft-inc/nebula) + Springboot 的数据库 ORM 框架。借鉴于 [MyBatis](https://github.com/mybatis/mybatis-3) 的使用习惯进行开发。
 
+## NGBATIS 是怎么运行的？请看设计文档 [EXECUTION-PROCESS.md](./blob/master/EXECUTION-PROCESS.md)
+
 ## 项目要求
 - Springboot
 - Maven
 
 ## 如何使用（可在克隆代码后，参考 ngbatis-demo 项目）
-### 克隆代码到本地
-#### [gitee](https://gitee.com/CorvusY/ngbatis.git)
-```shell
-git clone https://gitee.com/CorvusY/ngbatis.git
-```
-#### [github](https://github.com/CorvusYe/ngbatis.git)
-```shell
-git clone https://github.com/CorvusYe/ngbatis.git
-```
-
-### 本地生成 jar 包到 maven 仓库
-```shell
-cd ngbatis
-mvn -DskipTests=true  install
-```
-
 ### 在项目引入
 ```xml
-  <dependency>
-    <groupId>ye.weicheng</groupId>
-    <artifactId>ngbatis</artifactId>
-    <version>1.1-SNAPSHOT</version>
-  </dependency>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 ```
+```xml
+    <dependency>
+      <groupId>io.github.CorvusYe</groupId>
+      <artifactId>ngbatis</artifactId>
+      <version>1.1-SNAPSHOT</version>
+    </dependency>
+```
+### 参考 demo [gitee](https://gitee.com/CorvusY/ngbatis.git)  [github](https://github.com/CorvusYe/ngbatis.git) 中的 ngbatis-demo 目录下的 test，当中有比较全的 api 样例
+
 
 ### 配置数据库
 在 application.yml 中添加配置 **将数据源修改成可访问到的NebulaGraph**
@@ -55,7 +55,8 @@ nebula:
 ```
 
 ## 日常开发示例
-### 声明数据访问接口
+### 自己编写 nGQL (MyBatis的思路)
+#### 声明数据访问接口
 ```java
 package ye.weicheng.ngbatis.demo.repository;
 
@@ -66,14 +67,13 @@ import java.util.Set;
 
 public interface TestRepository {
     Person selectPerson();
-
     List<String> selectListString();
-
     List<Map> selectPersonsMap();
+    Map<String, Object> selectTriple();
 }
 
 ```
-### 编写数据访问语句
+#### 编写数据访问语句
 resource/mapper/TestRepository.xml
 ```xml
 <mapper
@@ -93,28 +93,118 @@ resource/mapper/TestRepository.xml
         match (v:person) return v.person.name as name, v.person.age  as age limit 100
     </select>
 
+    <select id="selectTriple" resultType="java.util.Map">
+        match (n: person)-[r: like]->(n2: person)
+        return n, r, n2
+    </select>
+
 </mapper>
 ```
 
-## TODOLIST
-- [ ] 对更多返回值类型进行支持
-  - [x] 基本类型
-    - [x] String
-    - [x] Boolean
-    - [x] Number （Integer、Long、Float、Double、Byte、Short）。**暂时只支持包装类**
-  - [ ] 对象类型
-    - [x]  Object
-      - [x] 多列return值转换成 Map
-      - [x] 多列return值转换成 pojo
-      - [x] 支持Vertex类型转换成 pojo
-      - [ ]  支持Edge类型转换成 pojo
-  - [x] 集合类型
-      - [x]  Collection<基本类型>
-      - [x]  Collection<对象类型> `Object类型参考下述Object的支持`
-  - [x] ResultSet 如不需要使用框架自带的结果处理，可直接在接口声明返回值 ResultSet 并自行处理
+### 使用基类自带的 nGQL 实现图的基本操作（MyBatis-plus）的思路
 
-- [x] 提供主键生成策略选择
-  - [x] 提供接口
-  - [x] 提供默认实现
-- [ ] 使用连接池的方式，让多次访问数据库使用的 Session 进行共享。提高访问性能
-- [x] 处理 Springboot jar 命令启动时的 ClassLoader 问题
+#### model-vertex
+```java
+package com.example.model.vertex.Person;
+
+import lombok.Data;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Data
+@Table(name = "person")
+public class Person {
+    @Id
+    private String name;
+    private Integer age;
+}
+```
+#### model-edge
+```java
+package com.example.model.edge.Like;
+
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Data;
+import javax.persistence.Table;
+
+@Data
+@Table(name = "like")
+@NoArgsConstructor
+@AllArgsConstructor
+public class Like {
+    private Double likeness;
+}
+```
+
+#### dao
+```java
+package com.example.dao;
+
+import ye.weicheng.ngbatis.proxy.NebulaDaoBasic;
+import com.example.model.vertex.Person;
+
+public interface PersonDao extends NebulaDaoBasic<Person, String>{}
+```
+#### xml（不可缺少）
+```xml
+<mapper
+    namespace=
+    "com.example.dao.PersonDao"
+>
+</mapper>
+```
+#### service
+```java
+package com.example.service;
+
+import ye.weicheng.ngbatis.utils.Page;
+import com.example.dao.PersonDao;
+import com.example.model.vertex.Person;
+import com.example.model.edge.Like;
+
+@Service
+public class PersonServiceImpl {
+
+    @Autowired private PersonDao dao;
+
+    public Person demos() {
+        // 实现 两个节点插入
+        Person tom = new Person();
+        tom.setName("Tom")
+        dao.insert( tom ); 
+        
+        Person jerry = new Person();
+        jerry.setName( "Jerry" );
+        dao.insert( jerry );
+
+        // 建立两个节点的关系
+        dao.insert( tom, new Like( 0.99999 ), jerry );
+
+        // 查找喜欢 jerry 的人
+        String jerryId = jerry.getName();
+        List<Person> whoLikeJerry = dao.listStartNodes( Like.class, jerryId );
+
+        // 查找唯一喜欢 jerry 的人。非唯一时报错。（限定在特定关系仅有一个上游的场景）
+        Person tom = dao.startNode( Like.class, jerryId );
+
+        // 查看 Tom 跟 Jerry 之间的 Like关系
+        String tomId = tom.getName();
+        Boolean tomLikeJerry = dao.existsEdge( tomId, Like.class, jerryId ); // true
+        Boolean jerryLikeTome = dao.existsEdge( jerryId, Like.class, tomId ); // false
+        // 可怜的 Tom
+
+        // 根据 Tom 的名字查找全部信息
+        Person tomDb = dao.selectById( "Tom" );
+
+        // 查找分页
+        Page<Person> page = new Page<>();
+        List<Person> personPage = dao.selectPage( page );
+        page.getTotal(); // 2 rows， Tom and Jerry
+        Boolean theyAreFamily = page.getRows() == personPage; // true
+    }
+
+
+}
+
+```
