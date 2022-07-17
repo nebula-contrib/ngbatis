@@ -16,7 +16,7 @@ import java.util.*;
 import static ye.weicheng.ngbatis.proxy.NebulaDaoBasicExt.*;
 
 /**
- * 数据访问的基类，用于提供单表 CRUD 与基本的节点关系操作<br/>
+ * 数据访问的基类，用于提供单表 CRUD 与基本的节点关系操作<br>
  * <strong>以下在方法注释中所说的“对应类型” 均指的是 泛 型T</strong>
  *
  * @author yeweicheng
@@ -28,7 +28,7 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
      * <p>数据操作，逻辑删除接口，前提当前类 有字段 is_del </p>
      *
      * @param id 表记录主键
-     * @return
+     * @return 是否执行成功，成功 1 ，失败 0
      */
     default int deleteLogicById(ID id) {
         String cqlTpl = getCqlTpl();
@@ -51,7 +51,7 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
      * <p>通过 主键删除当前记录</p>
      *
      * @param id 表记录主键
-     * @return
+     * @return 是否删除成功，成功 1，失败 0
      */
     default int deleteById(ID id) {
         throw new QueryException("No implements");
@@ -61,7 +61,7 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
      * <p>插入一条记录，全属性插入</p>
      *
      * @param record 当前表对应的记录数据
-     * @return
+     * @return 是否删除成功，成功 1，失败 0
      */
     default int insert(T record) {
 
@@ -96,8 +96,8 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
     /**
      * <p>插入非空字段。</p>
      *
-     * @param record
-     * @return
+     * @param record 单个顶点
+     * @return 是否删除成功，成功 1，失败 0
      */
     default Integer insertSelective(T record) {
         TextResolver textResolver = MapperProxy.ENV.getTextResolver();
@@ -146,8 +146,8 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
     /**
      * <p>通过多个 id 值查询符合条件的记录</p>
      *
-     * @param ids
-     * @return
+     * @param ids 多个 id
+     * @return 多个 id 对应的节点
      */
     default List<T> selectByIds(Collection<ID> ids) {
 
@@ -157,8 +157,8 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
     /**
      * <p>以实体类为载体，存放查询条件，不为空的属性为查询条件</p>
      *
-     * @param record
-     * @return
+     * @param record 单个节点做为查询条件
+     * @return 符合条件节点的集合
      */
     default List<T> selectBySelective(T record){
         KV kv = notNullFields(record);
@@ -180,8 +180,8 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
     /**
      * <p>以实体类为载体，存放查询条件，不为空的属性为查询条件，String 类型的属性也使用精确查询</p>
      *
-     * @param record
-     * @return
+     * @param record 查询条件
+     * @return 符合条件的节点集合
      */
     default List<T> selectBySelectivePrecise(T record) {
 
@@ -192,8 +192,8 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
      * <p>通过 map 存放查询参数，查询多条记录并映射成实体类</p>
      * <p>通常与 {@link #countByMap(Map) countByMap} 联合使用，以实现分页数据获取功能</p>
      *
-     * @param param
-     * @return
+     * @param param 查询条件
+     * @return 符合查询条件的节点集合
      */
     default List<T> selectByMap(Map<String, Object> param) {
 
@@ -205,7 +205,7 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
      * <p>通常与 {@link #selectByMap(Map) selectByMap} 联合使用，以实现分页数据获取功能</p>
      *
      * @param param 查询条件
-     * @return
+     * @return 统及符合查询条件的总节点数
      */
     default Long countByMap(Map<String, Object> param) {
 
@@ -216,7 +216,7 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
      * <p>按条件查出所有符合条件的记录的 主键 </p>
      *
      * @param record 查询条件
-     * @return
+     * @return 符合查询条件的节点 id
      */
     default List<ID> selectIdBySelective(T record) {
 
@@ -226,8 +226,8 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
     /**
      * <p>更新</p>
      *
-     * @param record
-     * @return
+     * @param record 节点
+     * @return 是否删除成功，成功 1，失败 0
      */
     default int updateByIdSelective(T record) {
 
@@ -288,10 +288,10 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
     }
 
     /**
-     * 查询对应类型的数据并分页<br/>
+     * 查询对应类型的数据并分页
      *
-     * @param page
-     * @return
+     * @param page 分页的参数，与分页结果的容器
+     * @return 分页的结果
      */
     default  List<T> selectPage(Page<T> page) {
         Long total = countPage(page);
@@ -374,7 +374,7 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
      * @param startId 开始节点的 id
      * @param edgeType 关系类型
      * @param endId 结束节点的 id
-     * @return
+     * @return 数据库中，两个 id 的节点是否有关系
      */
     default Boolean existsEdge(ID startId, Class<?> edgeType, ID endId) {
         String cqlTpl = getCqlTpl();
@@ -383,7 +383,7 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
     };
 
     /**
-     * 通过结束节点id与关系类型获取所有开始节点，<br/>
+     * 通过结束节点id与关系类型获取所有开始节点，<br>
      * 开始节点类型为当前接口实现类所管理的实体对应的类型
      *
      * @param edgeType 关系类型
@@ -413,7 +413,7 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
     }
 
     /**
-     * 通过结束节点id与关系类型获取第一个开始节点，<br/>
+     * 通过结束节点id与关系类型获取第一个开始节点，<br>
      * 开始节点类型为当前接口实现类所管理的实体对应的类型 （对应类型）
      *
      * @param edgeType 关系类型

@@ -11,7 +11,7 @@ import ye.weicheng.ngbatis.utils.ResultSetUtil;
 /**
  * 结果集数据类型转换器
  *
- * <p> ResultSet -> Boolean </p>
+ * <p> ResultSet -&gt; Boolean </p>
  *
  * @author yeweicheng
  * @since 2022-06-11 3:04

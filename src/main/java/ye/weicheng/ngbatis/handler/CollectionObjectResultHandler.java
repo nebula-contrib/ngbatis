@@ -11,7 +11,7 @@ import java.util.*;
 
 /**
  * 结果集数据类型转换器
- * <p> ResultSet -> Collection&lt;Object&gt; </p>
+ * <p> ResultSet -&gt; Collection&lt;Object&gt; </p>
  *
  * @author yeweicheng
  * @since 2022-06-10 22:31

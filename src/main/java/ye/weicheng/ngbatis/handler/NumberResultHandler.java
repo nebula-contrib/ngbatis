@@ -12,7 +12,7 @@ import static ye.weicheng.ngbatis.utils.ReflectUtil.castNumber;
 
 /**
  * 结果集数据类型转换器
- * <p> ResultSet -> Number </p>
+ * <p> ResultSet -&gt; Number </p>
  *
  * @author yeweicheng
  * @since 2022-06-11 2:08

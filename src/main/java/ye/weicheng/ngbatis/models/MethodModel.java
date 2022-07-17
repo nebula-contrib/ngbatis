@@ -15,21 +15,45 @@ import java.lang.reflect.Method;
 public class MethodModel {
 
     // ---------------- info in xml start ---------------------
+    /**
+     * 方法名
+     */
     private String id;
 
+    /**
+     * nGQL 模板
+     */
     private String text; // cql
 
+    /**
+     * xml 中配置的参数类型
+     */
     private Class parameterType;
 
+    /**
+     * xml 中子标签所声明的 集合泛型
+     */
     private Class resultType;
 
+    /**
+     * 反射所得的方法返回值
+     */
     private Class returnType;
 
+    /**
+     * XXXDao 的方法对象
+     */
     private Method method;
 
+    /**
+     * {@link #method} 参数列表的参数类型数组
+     */
     private Class<?>[] parameterTypes;
 
     // ---------------- info in interface start ---------------------
+    /**
+     * 用于 asm 的方法签名。
+     */
     private String signature;
 
 

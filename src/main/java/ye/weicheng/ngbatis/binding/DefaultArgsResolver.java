@@ -58,7 +58,7 @@ public class DefaultArgsResolver implements ArgsResolver {
                 if( isBaseType(paramClass))
                     result.put( "p" + i,  JSON.toJSON(args[ i ] ) );
                 else if ( args[i] instanceof Collection)
-                    result.put( "p" + i, customToJSON(args[i]) );
+                    result.put( "p" + i, args[i] );
                 else {
                     if( len == 1 ) {
                         result = (Map<String,Object>)customToJSON( args[0] );

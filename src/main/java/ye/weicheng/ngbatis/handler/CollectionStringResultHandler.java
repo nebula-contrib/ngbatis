@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * 结果集数据类型转换器
- * <p> ResultSet -> Collection&lt;String&gt; </p>
+ * <p> ResultSet -&gt; Collection&lt;String&gt; </p>
  *
  * @author yeweicheng
  * @since 2022-06-10 17:11

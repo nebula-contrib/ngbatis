@@ -127,9 +127,9 @@ public class MapperProxy {
      *     <li>完成数据库数据类型向 javaa 对象类型的转化</li>
      * </ol>
      *
-     * @param methodModel
-     * @param args
-     * @return
+     * @param methodModel 接口方法模型，存放了 dao接口的详细信息（nGQL模板、返回值类型等）
+     * @param args 执行 nGQL 的参数
+     * @return 结果值
      */
     public static Object invoke(MethodModel methodModel, Object... args) {
         Method method = methodModel.getMethod();

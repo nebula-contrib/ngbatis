@@ -19,20 +19,44 @@ import org.springframework.context.annotation.Bean;
 @Configuration
 public class EnvConfig {
 
+    /**
+     * xml 所采用的模板引擎策略
+     */
     @Autowired
     private TextResolver textResolver;
+    /**
+     * 结果处理路由策略
+     */
     @Autowired
     private ResultResolver resultResolver;
+    /**
+     * 执行到数据库前的参数替换策略
+     */
     @Autowired
     private ArgsResolver argsResolver;
+    /**
+     * 复杂对象，转换成 xml 可访问的参数名格式化策略
+     */
     @Autowired
     private ArgNameFormatter argNameFormatter;
+    /**
+     * mapper.xml 解析时的配置，及声明 xml 标签用途跟 xml文件存放位置的配置。
+     */
     @Autowired
     private ParseCfgProps cfgProps;
+    /**
+     * Springboot 应用上下文
+     */
     @Autowired
     private ApplicationContext context;
+    /**
+     * Nebula 连接配置
+     */
     @Autowired
     private NebulaJdbcProperties properties;
+    /**
+     * 主键生成器
+     */
     @Autowired(required = false)
     private PkGenerator pkGenerator;
 

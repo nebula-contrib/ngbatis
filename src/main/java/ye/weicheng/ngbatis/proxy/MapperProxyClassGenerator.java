@@ -47,8 +47,8 @@ public class MapperProxyClassGenerator implements Opcodes {
     }
 
     /**
-     * 根据 ClassModel 对象中扫描得到的信息，<br/>
-     * 生成代理类，并将字节码设置到 ClassModel 对象中<br/>
+     * 根据 ClassModel 对象中扫描得到的信息，<br>
+     * 生成代理类，并将字节码设置到 ClassModel 对象中<br>
      *
      * @param cm DAO 类模型
      * @return DAO 接口对应的字节码

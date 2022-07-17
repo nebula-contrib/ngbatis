@@ -27,13 +27,31 @@ public class NebulaJdbcProperties {
     public NebulaJdbcProperties() {
     }
 
+    /**
+     * Nebula 地址。由 hosts 切割而来
+     */
     private List<HostAddress> hostAddresses;
 
+    /**
+     * Nebula 多个库的地址。格式：ip:port, ip:port, ip:port, ....
+     */
     private String hosts;
 
+    /**
+     * Nebula 连接配置
+     */
     private NebulaPoolConfig poolConfig;
+    /**
+     * 数据库用户名
+     */
     private String username;
+    /**
+     * 数据库密码
+     */
     private String password;
+    /**
+     * 当前所有的数据库空间
+     */
     private String space;
 
     public List<HostAddress> getHostAddresses() {
@@ -44,6 +62,11 @@ public class NebulaJdbcProperties {
         return hosts;
     }
 
+    /**
+     * 对 hosts 进行切割
+     * @param hosts ip:port, ip:port, ....
+     * @return 当前对象，方便链式调用
+     */
     public NebulaJdbcProperties setHosts(String hosts) {
         String[] hostArr = hosts.split(",");
         hostAddresses = new ArrayList<HostAddress>();

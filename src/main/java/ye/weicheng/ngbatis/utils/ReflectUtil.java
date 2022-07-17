@@ -227,8 +227,8 @@ public class ReflectUtil {
 
     /**
      * 实体类获取全部属性，对父类获取 带 @Column 的属性
-     * @param clazz
-     * @return
+     * @param clazz 实体类
+     * @return 当前类的属性及其父类中，带@Column注解的属性
      */
     public static Field[] getAllColumnFields( Class<?> clazz ) {
         Set<Field> fields = new HashSet<>();

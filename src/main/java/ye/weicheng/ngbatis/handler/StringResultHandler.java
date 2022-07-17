@@ -10,7 +10,7 @@ import ye.weicheng.ngbatis.utils.ResultSetUtil;
 
 /**
  * 结果集数据类型转换器
- * <p> ResultSet -> String</p>
+ * <p> ResultSet -&gt;  String</p>
  *
  * @author yeweicheng
  * @since 2022-06-11 2:29

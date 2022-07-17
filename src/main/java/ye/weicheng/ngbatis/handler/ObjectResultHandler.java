@@ -19,7 +19,7 @@ import static ye.weicheng.ngbatis.utils.ResultSetUtil.relationshipToResultType;
 
 /**
  * 结果集数据类型转换器
- * <p> ResultSet -> Object </p>
+ * <p> ResultSet -&gt;  Object </p>
  *
  * @author yeweicheng
  * @since 2022-06-10 22:53

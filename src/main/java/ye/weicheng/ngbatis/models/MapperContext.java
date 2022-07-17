@@ -29,14 +29,24 @@ public class MapperContext {
         return INSTANCE;
     }
 
+    /**
+     * 当前应用中，在 xml 中 namespace 所声明的所有 XXXDao 及其 类模型
+     */
     Map<String, ClassModel> interfaces;
 
+    /**
+     * 标签名与实体的映射。（除了根据 {@link ye.weicheng.ngbatis.proxy.NebulaDaoBasic } 中 泛型 T 所自动识别的外，还可以自行补充）
+     */
     final Map<String, Class<?>> tagTypeMapping = new HashMap<>();
 
+    /**
+     * 基类所有的 nGQL模板
+     */
     Map<String, String> daoBasicTpl;
 
-    DataSource dataSource;
-
+    /**
+     * Nebula 连接池
+     */
     NebulaPool nebulaPool;
 
     boolean resourceRefresh = false;
@@ -55,14 +65,6 @@ public class MapperContext {
 
     public void setDaoBasicTpl(Map<String, String> daoBasicTpl) {
         this.daoBasicTpl = daoBasicTpl;
-    }
-
-    public DataSource getDataSource() {
-        return dataSource;
-    }
-
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
     }
 
     public NebulaPool getNebulaPool() {

@@ -15,7 +15,7 @@ import ye.weicheng.ngbatis.utils.ReflectUtil;
 import java.lang.reflect.Method;
 
 /**
- * 默认的结果集处理入口
+ * 默认的结果集处理入口（承担根据不同数据类型与接口返回值类型之间的【路由】角色）
  *
  * @author yeweicheng
  * <br>Now is history!
@@ -34,6 +34,7 @@ public class DefaultResultResolver implements ResultResolver {
 
         if( returnType == void.class ) return null;
 
+        // 核心方法。获取真正执行结果集类型转换的结果处理执行者
         ResultHandler<Object, Object> handler = ResultHandler.getHandler(
                 ReflectUtil.sealingBasicType(returnType),
                 ReflectUtil.sealingBasicType(resultType)

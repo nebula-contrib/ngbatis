@@ -12,7 +12,7 @@ import java.util.*;
 
 /**
  * 结果集数据类型转换器
- * <p> ResultSet -> Collection&lt;Map&gt; </p>
+ * <p> ResultSet -&gt; Collection&lt;Map&gt; </p>
  *
  * @author yeweicheng
  * @since 2022-06-11 3:04

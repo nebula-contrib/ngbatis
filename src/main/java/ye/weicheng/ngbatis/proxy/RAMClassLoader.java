@@ -51,7 +51,7 @@ public class RAMClassLoader extends ClassLoader {
     }
 
     /**
-     * 被 {@link NgbatisContextInitializer NgbatisContextInitializer} 所调用，<br/>
+     * 被 {@link NgbatisContextInitializer} 所调用，<br>
      * 在 spring bean容器注册bean前，把待注册的 bean 对应的类型加载到 jvm 中
      * @param name 动态代理类的全限定名
      * @return 动态代理类

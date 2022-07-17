@@ -163,7 +163,7 @@ public class NebulaDaoBasicExt {
     }
 
     /**
-     * <strong>基类访问数据库的调用入口。</strong><br/>
+     * <strong>基类访问数据库的调用入口。</strong><br>
      * 调用入口与 xml 形式的动态代理类一致，均使用了
      * {@link MapperProxy#invoke(ye.weicheng.ngbatis.models.MethodModel, java.lang.Object...) MapperProxy.proxy}
      *
@@ -259,7 +259,7 @@ public class NebulaDaoBasicExt {
      * 传入多个属性对象，获取其中带有 @Id 注解（有且仅有一个）的属性
      * @param fields 属性数组。
      * @param type 属性数组归属的类
-     * @return
+     * @return 众多属性中，带 @Id 注解的属性（唯一）
      */
     public static Field getPkField(Field[] fields, Class<?> type) {
         return getPkField( fields, type, true );

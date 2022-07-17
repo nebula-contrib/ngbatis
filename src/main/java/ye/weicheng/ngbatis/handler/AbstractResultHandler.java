@@ -34,6 +34,13 @@ public abstract class AbstractResultHandler<T, Z> implements ResultHandler<T, Z>
         return returnType.isInterface();
     }
 
+    /**
+     * 进入按不同数据类型处理前的基本处理。包括 期望得到原始结果集、期望单行却返回多行、期望单列却返回多列
+     * @param returnType 接口的返回值类型
+     * @param result 实际查得的 Nebula结果集
+     * @param resultType xml 中声明的返回值类型。通常用于集合泛型
+     * @return ORM 之后的 java对象结果
+     */
     public T handle(Class returnType, ResultSet result, Class resultType) {
         if( returnType == ResultSet.class ) {
             return (T)result;
@@ -60,7 +67,12 @@ public abstract class AbstractResultHandler<T, Z> implements ResultHandler<T, Z>
         }
     }
 
-
+    /**
+     * 根据返回值类型创建的 返回值容器。用于放置转换后的值
+     * @param returnType 接口的返回值类型
+     * @param resultType xml 中声明的返回值类型。通常用于集合泛型
+     * @return 与预期返回值相符的空属性对象。
+     */
     protected T newInstance(Class<T> returnType, Class resultType) {
         if( isReturnTypeInterface( returnType ) ) {
             return this.defaultInstance( returnType );
@@ -75,6 +87,11 @@ public abstract class AbstractResultHandler<T, Z> implements ResultHandler<T, Z>
         }
     }
 
+    /**
+     * 为不同集合类型创建 0元素对象
+     * @param returnType
+     * @return
+     */
     protected T defaultInstance( Class returnType ) {
         Object o = returnType == List.class ? new ArrayList()
                 : returnType == Set.class ? new  HashSet()
@@ -84,6 +101,9 @@ public abstract class AbstractResultHandler<T, Z> implements ResultHandler<T, Z>
         return (T)o;
     }
 
+    /**
+     * 不同数据类型的结果处理类创建时，需要将自身所处理的类型注册到全局变量中。
+     */
     public AbstractResultHandler() {
         Type[] typeParameters = ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments();
         if( typeParameters != null && typeParameters.length == 2 ) {
@@ -98,6 +118,11 @@ public abstract class AbstractResultHandler<T, Z> implements ResultHandler<T, Z>
         }
     }
 
+    /**
+     * 注册类型处理类
+     * @param returnType 接口的返回值类型
+     * @param resultType xml 中声明的返回值类型。通常用于集合泛型
+     */
     void addHandler( Class returnType, Class resultType ) {
         ResultHandler bean = this;
         DIFF_TYPE_RESULT_HANDLER.put(returnType, resultType, bean);

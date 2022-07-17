@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * {@link NebulaDaoBasic 常规图操作接口 }所需的资源文件加载器。
  * @author yeweicheng
  * @since 2022-06-21 2:19
  * <br>Now is history!
@@ -29,6 +30,10 @@ public class DaoResourceLoader extends MapperResourceLoader {
         super(parseConfig);
     }
 
+    /**
+     * 加载基类接口所需 nGQL 模板
+     * @return 基类接口方法名 与 nGQL 模板的 Map
+     */
     public Map<String, String> loadTpl() {
         try {
             Resource resource = getResource( parseConfig.getMapperTplLocation() );
@@ -38,6 +43,12 @@ public class DaoResourceLoader extends MapperResourceLoader {
         }
     }
 
+    /**
+     * 资源文件解析方法。用于获取 基类方法与nGQL模板
+     * @param resource 资源文件
+     * @return 基类接口方法名 与 nGQL 模板的 Map
+     * @throws IOException
+     */
     private Map<String, String> parse(Resource resource) throws IOException {
         Document doc = Jsoup.parse(resource.getInputStream(), "UTF-8", "http://example.com/");
         Map<String, String> result = new HashMap<>();
