@@ -59,7 +59,7 @@ nebula:
 @SpringBootApplication(scanBasePackages = "ye.weicheng")
 public class YourApplication {
     public static void main(String[] args) {
-        new SpringApplication(NgbatisDemoApplication.class).run(args);
+        new SpringApplication(YourApplication.class).run(args);
     }
 }
 ```
@@ -77,6 +77,8 @@ import java.util.Set;
 
 public interface TestRepository {
     Person selectPerson();
+    Person selectByPerson(Person person);
+    List<Person> selectAgeGt(Integer age);
     List<String> selectListString();
     List<Map> selectPersonsMap();
     Map<String, Object> selectTriple();
@@ -93,6 +95,21 @@ resource/mapper/TestRepository.xml
 
     <select id="selectPerson" resultType="ye.weicheng.ngbatis.demo.pojo.Person">
         match (v:person) return v.person.name as name, v.person.age as age limit 1
+    </select>
+
+    <select id="selectAgeGt" resultType="ye.weicheng.ngbatis.demo.pojo.Person">
+        MATCH (n: person)
+        WHERE n.person.age > $p0
+        RETURN n
+        LIMIT 100
+    </select>
+
+
+    <select id="selectByPerson" resultType="ye.weicheng.ngbatis.demo.pojo.Person">
+        MATCH (n: person)
+        WHERE n.person.name == $p0.name
+        RETURN n
+        LIMIT 100
     </select>
 
     <select id="selectListString" resultType="java.lang.String">
