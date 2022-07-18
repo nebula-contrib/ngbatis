@@ -92,8 +92,8 @@ public class NgbatisContextInitializer implements ApplicationContextInitializer 
                 .setTimeout( environment.getProperty( "nebula.pool-config.timeout", Integer.class, 0 ) )
                 .setIdleTime( environment.getProperty( "nebula.pool-config.idle-time", Integer.class, 0 ) )
                 .setIntervalIdle( environment.getProperty( "nebula.pool-config.interval-idle", Integer.class, -1 ) )
-                .setWaitTime( environment.getProperty( "nebula.pool-config.wait-time", Integer.class, 0 ) )
-                .setMinClusterHealthRate( environment.getProperty( "nebula.pool-config.min-cluster-health-rate", Double.class, 1.0D ) );
+                .setWaitTime( environment.getProperty( "nebula.pool-config.wait-time", Integer.class, 0 ) );
+//                .setMinClusterHealthRate( environment.getProperty( "nebula.pool-config.min-cluster-health-rate", Double.class, 1.0D ) );
         // TODO enable ssl
         return nebulaPoolConfig;
     }
