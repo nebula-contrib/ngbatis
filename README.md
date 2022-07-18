@@ -28,12 +28,12 @@
 ```
 ```xml
     <dependency>
-      <groupId>io.github.CorvusYe</groupId>
+      <groupId>org.nebula-contrib</groupId>
       <artifactId>ngbatis</artifactId>
       <version>1.1-SNAPSHOT</version>
     </dependency>
 ```
-### 参考 demo [gitee](https://gitee.com/CorvusY/ngbatis.git)  [github](https://github.com/CorvusYe/ngbatis.git) 中的 ngbatis-demo 目录下的 test，当中有比较全的 api 样例
+### 参考 demo [gitee](https://gitee.com/CorvusY/ngbatis.git)  [github](https://github.com/nebula-contrib/ngbatis.git) 中的 ngbatis-demo 目录下的 test，当中有比较全的 api 样例
 
 
 ### 配置数据库
