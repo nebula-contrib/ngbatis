@@ -3,7 +3,8 @@
 
 ## NGBATIS是什么？
 
-**NGBATIS** 是一款针对 [Nebula Graph](https://github.com/vesoft-inc/nebula) + Springboot 的数据库 ORM 框架。借鉴于 [MyBatis](https://github.com/mybatis/mybatis-3) 的使用习惯进行开发。
+**NGBATIS** 是一款针对 [Nebula Graph](https://github.com/vesoft-inc/nebula) + Springboot 的数据库 ORM 框架。借鉴于 [MyBatis](https://github.com/mybatis/mybatis-3) 的使用习惯进行开发。包含了一些类似于[mybatis-plus](https://github.com/baomidou/mybatis-plus)的单表操作，另外还有一些图特有的实体-关系基本操作。  
+如果使用上更习惯于JPA的方式，[graph-ocean](https://github.com/nebula-contrib/graph-ocean) 是个不错的选择。
 
 ## NGBATIS 是怎么运行的？请看设计文档 [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
 
@@ -33,7 +34,7 @@
       <version>1.1-SNAPSHOT</version>
     </dependency>
 ```
-### 参考 demo [gitee](https://gitee.com/CorvusY/ngbatis.git)  [github](https://github.com/nebula-contrib/ngbatis.git) 中的 ngbatis-demo 目录下的 test，当中有比较全的 api 样例
+### 参考 [【ngbatis-demo】](./ngbatis-demo)，与springboot无缝集成。在该项目的 test 中还有api的样例。在开发过程中每增加一个特性也都会同步更新ngbatis-demo的用例。
 
 
 ### 配置数据库
@@ -226,7 +227,7 @@ public class PersonServiceImpl {
         // 查看 Tom 跟 Jerry 之间的 Like关系
         String tomId = tom.getName();
         Boolean tomLikeJerry = dao.existsEdge( tomId, Like.class, jerryId ); // true
-        Boolean jerryLikeTome = dao.existsEdge( jerryId, Like.class, tomId ); // false
+        Boolean jerryLikeTom = dao.existsEdge( jerryId, Like.class, tomId ); // false
         // 可怜的 Tom
 
         // 根据 Tom 的名字查找全部信息
@@ -237,6 +238,9 @@ public class PersonServiceImpl {
         List<Person> personPage = dao.selectPage( page );
         page.getTotal(); // 2 rows， Tom and Jerry
         Boolean theyAreFamily = page.getRows() == personPage; // true
+
+        // 故事总想要有个好的结局
+        dao.insertEdge( jerry, like, tom );
 
         // 更多 基类的操作还在开发中。期待
     }
