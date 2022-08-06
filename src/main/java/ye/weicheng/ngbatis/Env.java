@@ -78,12 +78,13 @@ public class Env {
 
     public Session openSession() {
         try {
-            Session sessionCache = SESSION_CACHE.get();
-            if( sessionCache != null && sessionCache.ping() ) return sessionCache;
-            Session session = mapperContext.getNebulaPool().getSession(username, password, reconnect);
-            SESSION_CACHE.set( session );
-            log.info( "Nebula Graph sessionId: {}", session );
-            return session;
+            return mapperContext.getNebulaPool().getSession(username, password, reconnect);
+//            Session sessionCache = SESSION_CACHE.get();
+//            if( sessionCache != null && sessionCache.ping() ) return sessionCache;
+//            Session session = mapperContext.getNebulaPool().getSession(username, password, reconnect);
+//            SESSION_CACHE.set( session );
+//            log.info( "Nebula Graph sessionId: {}", session );
+//            return session;
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }

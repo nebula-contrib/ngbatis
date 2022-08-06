@@ -204,7 +204,7 @@ public class MapperProxy {
             throw new QueryException(  "数据查询失败："  + e.getMessage() );
         } finally {
             log.debug("\n\t- proxyMethod: {}#{} \n\t- nGql：{} \n\t - params: {}\n\t - result：{}", proxyClass, proxyMethod, nGQL, params, result);
-//            if (session != null ) session.release();
+            if (session != null ) session.release();
         }
     }
 
