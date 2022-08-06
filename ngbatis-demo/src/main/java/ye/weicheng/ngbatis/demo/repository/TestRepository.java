@@ -6,8 +6,8 @@ package ye.weicheng.ngbatis.demo.repository;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import ye.weicheng.ngbatis.demo.pojo.NRN2;
 import ye.weicheng.ngbatis.demo.pojo.Person;
-import ye.weicheng.ngbatis.proxy.NebulaDaoBasic;
-import ye.weicheng.ngbatis.utils.Page;
+import org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic;
+import org.nebula.contrib.ngbatis.utils.Page;
 
 import java.util.List;
 import java.util.Map;

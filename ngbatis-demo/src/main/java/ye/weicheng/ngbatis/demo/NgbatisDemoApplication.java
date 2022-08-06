@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
 
-@SpringBootApplication(exclude={DataSourceAutoConfiguration.class}, scanBasePackages = "ye.weicheng")
+@SpringBootApplication(exclude={DataSourceAutoConfiguration.class}, scanBasePackages = { "ye.weicheng", "org.nebula.contrib" })
 //@EnableAutoConfiguration
 @EnableCaching
 public class NgbatisDemoApplication {

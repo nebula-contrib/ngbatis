@@ -5,8 +5,8 @@ package ye.weicheng.ngbatis.demo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ye.weicheng.ngbatis.PkGenerator;
-import ye.weicheng.ngbatis.binding.TimestampPkGenerator;
+import org.nebula.contrib.ngbatis.PkGenerator;
+import org.nebula.contrib.ngbatis.binding.TimestampPkGenerator;
 
 /**
  * 主键生成样例

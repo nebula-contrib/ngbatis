@@ -1,23 +1,15 @@
 package ye.weicheng.ngbatis.demo.repository;
 
-import com.vesoft.nebula.Date;
-import com.vesoft.nebula.Row;
-import com.vesoft.nebula.Value;
-import com.vesoft.nebula.client.graph.NebulaPoolConfig;
-import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
-import com.vesoft.nebula.client.graph.net.NebulaPool;
 import com.vesoft.nebula.client.graph.net.Session;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static ye.weicheng.ngbatis.proxy.MapperProxy.ENV;
+import static org.nebula.contrib.ngbatis.proxy.MapperProxy.ENV;
 
 /**
  * @author yeweicheng

@@ -11,8 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ye.weicheng.ngbatis.demo.pojo.NRN2;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 import ye.weicheng.ngbatis.demo.repository.TestRepository;
-import ye.weicheng.ngbatis.Env;
-import ye.weicheng.ngbatis.utils.Page;
+import org.nebula.contrib.ngbatis.utils.Page;
 
 import java.util.List;
 import java.util.Map;

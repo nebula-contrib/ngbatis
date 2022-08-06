@@ -1,4 +1,4 @@
-<mapper namespace="ye.weicheng.ngbatis.proxy.NebulaDaoBasic">
+<mapper namespace="org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic">
 
     <select id="selectBySelective">
         MATCH (n:${ tag })

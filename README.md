@@ -57,7 +57,7 @@ nebula:
 ```
 ### 扫描动态代理的 bean
 ```java
-@SpringBootApplication(scanBasePackages = "ye.weicheng")
+@SpringBootApplication(scanBasePackages = { "ye.weicheng", "org.nebula" })
 public class YourApplication {
     public static void main(String[] args) {
         new SpringApplication(YourApplication.class).run(args);
@@ -176,7 +176,7 @@ public class Like {
 ```java
 package com.example.dao;
 
-import ye.weicheng.ngbatis.proxy.NebulaDaoBasic;
+import org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic;
 import com.example.model.vertex.Person;
 
 public interface PersonDao extends NebulaDaoBasic<Person, String>{}
@@ -193,7 +193,7 @@ public interface PersonDao extends NebulaDaoBasic<Person, String>{}
 ```java
 package com.example.service;
 
-import ye.weicheng.ngbatis.utils.Page;
+import org.nebula.contrib.ngbatis.utils.Page;
 import com.example.dao.PersonDao;
 import com.example.model.vertex.Person;
 import com.example.model.edge.Like;
@@ -206,7 +206,7 @@ public class PersonServiceImpl {
     public void demos() {
         // 实现 两个节点插入
         Person tom = new Person();
-        tom.setName("Tom")
+        tom.setName("Tom");
         dao.insert( tom ); 
         
         Person jerry = new Person();

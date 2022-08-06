@@ -11,7 +11,7 @@ import ye.weicheng.ngbatis.demo.pojo.Like;
 import ye.weicheng.ngbatis.demo.pojo.LikeWithRank;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 import ye.weicheng.ngbatis.demo.repository.TestRepository;
-import ye.weicheng.ngbatis.utils.Page;
+import org.nebula.contrib.ngbatis.utils.Page;
 
 import java.util.Date;
 import java.util.List;

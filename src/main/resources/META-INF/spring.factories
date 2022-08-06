@@ -1,2 +1,2 @@
 org.springframework.context.ApplicationContextInitializer=\
-    ye.weicheng.ngbatis.NgbatisContextInitializer
+    org.nebula.contrib.ngbatis.NgbatisContextInitializer
