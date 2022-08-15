@@ -1,6 +1,8 @@
 
 # NGBATIS
 
+- [Ngbatis Docs](https://corvusye.github.io/ngbatis-docs/#/)
+
 ## NGBATIS是什么？
 
 **NGBATIS** 是一款针对 [Nebula Graph](https://github.com/vesoft-inc/nebula) + Springboot 的数据库 ORM 框架。借鉴于 [MyBatis](https://github.com/mybatis/mybatis-3) 的使用习惯进行开发。包含了一些类似于[mybatis-plus](https://github.com/baomidou/mybatis-plus)的单表操作，另外还有一些图特有的实体-关系基本操作。  
@@ -11,22 +13,10 @@
 ## 项目要求
 - Springboot
 - Maven
-- Java 8
+- Java 8+
 
 ## 如何使用（可在克隆代码后，参考 ngbatis-demo 项目）
 ### 在项目引入
-```xml
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
-```
 ```xml
     <dependency>
       <groupId>org.nebula-contrib</groupId>
@@ -249,3 +239,6 @@ public class PersonServiceImpl {
 }
 
 ```
+
+## License
+This code is under the [Apache License, Version 2.0, January 2004](https://www.apache.org/licenses/LICENSE-2.0).
