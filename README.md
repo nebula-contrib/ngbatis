@@ -1,4 +1,10 @@
 
+<!--
+Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
+
+This source code is licensed under Apache 2.0 License.
+-->
+
 # NGBATIS
 
 - [Ngbatis Docs](https://corvusye.github.io/ngbatis-docs/#/)
