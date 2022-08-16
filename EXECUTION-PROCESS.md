@@ -1,3 +1,10 @@
+
+<!--
+Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
+
+This source code is licensed under Apache 2.0 License.
+-->
+
 # 框架执行过程详述
 ## 初始化
 1. 交由Springboot启动扫描，入口声明配置为：[spring.factories](./src/main/resources/META-INF/spring.factories) ，

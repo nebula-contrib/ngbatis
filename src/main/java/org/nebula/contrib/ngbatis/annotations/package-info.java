@@ -7,6 +7,6 @@
  */
 package org.nebula.contrib.ngbatis.annotations;
 
-// Copyright (c) 2022 nebula-contrib. All rights reserved.
+// Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
 //
 // This source code is licensed under Apache 2.0 License.
