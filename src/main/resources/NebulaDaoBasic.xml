@@ -1,3 +1,8 @@
+<!--
+    Copyright (c) 2022 nebula-contrib. All rights reserved.
+
+    This source code is licensed under Apache 2.0 License.
+-->
 <mapper namespace="org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic">
 
     <select id="selectBySelective">
