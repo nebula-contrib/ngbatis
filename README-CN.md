@@ -8,32 +8,25 @@ This source code is licensed under Apache 2.0 License.
 # NGBATIS
 
 <p align="center">
-  <br> English | <a href="README-CN.md">中文</a>
+  <br> <a href="README.md">English</a> | 中文
 </p>
 
 - [Ngbatis Docs](https://corvusye.github.io/ngbatis-docs/#/)
 
-## What is NGBATIS
+## NGBATIS是什么？
 
-**NGBATIS** is a database ORM framework base [NebulaGraph](https://github.com/vesoft-inc/nebula) + spring-boot, which takes advantage of the [mybatis’](https://github.com/mybatis/mybatis-3) fashion development, including some de-factor operations in single table and vertex-edge, like [mybatis-plus](https://github.com/baomidou/mybatis-plus).
+**NGBATIS** 是一款针对 [Nebula Graph](https://github.com/vesoft-inc/nebula) + Springboot 的数据库 ORM 框架。借鉴于 [MyBatis](https://github.com/mybatis/mybatis-3) 的使用习惯进行开发。包含了一些类似于[mybatis-plus](https://github.com/baomidou/mybatis-plus)的单表操作，另外还有一些图特有的实体-关系基本操作。  
+如果使用上更习惯于JPA的方式，[graph-ocean](https://github.com/nebula-contrib/graph-ocean) 是个不错的选择。
 
-If you prefer JPA, [graph-ocean](https://github.com/nebula-contrib/graph-ocean) is a good choice.
+## NGBATIS 是怎么运行的？请看设计文档 [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
 
-## How it works
-
-See [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
-
-## Requirements
+## 项目要求
 - Springboot
 - Maven
 - Java 8+
 
-## How to use
-
-> You could refer to ngbatis-demo in this repo.
-
-- Include in your `pom.xml`
-
+## 如何使用（可在克隆代码后，参考 ngbatis-demo 项目）
+### 在项目引入
 ```xml
     <dependency>
       <groupId>org.nebula-contrib</groupId>
@@ -41,12 +34,11 @@ See [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
       <version>1.1.0-beta</version>
     </dependency>
 ```
-- Referring to [ngbatis-demo](./ngbatis-demo), which was smoothly integrated with spring-boot. The API examples could be found under the test of it for all features of ngbatis.
+### 参考 [【ngbatis-demo】](./ngbatis-demo)，与springboot无缝集成。在该项目的 test 中还有api的样例。在开发过程中每增加一个特性也都会同步更新ngbatis-demo的用例。
 
-- Configure the NebulaGraph Database
 
-  Configure `application.yml` with the host and credential to enable access to the NebulaGraph Cluster.
-
+### 配置数据库
+在 application.yml 中添加配置 **将数据源修改成可访问到的NebulaGraph**
 ```yml
 nebula:
   hosts: 127.0.0.1:19669, 127.0.0.1:9669
@@ -63,8 +55,7 @@ nebula:
     min-cluster-health-rate: 1.0
     enable-ssl: false
 ```
-- Dynamically register beans
-
+### 扫描动态代理的 bean
 ```java
 @SpringBootApplication(scanBasePackages = { "ye.weicheng", "org.nebula" })
 public class YourApplication {
@@ -74,9 +65,9 @@ public class YourApplication {
 }
 ```
 
-## Examples
-### a. The MyBatis fashion(compose nGQL queries)
-#### a.1 Declare the data access interface
+## 日常开发示例
+### 自己编写 nGQL (MyBatis的思路)
+#### 声明数据访问接口
 ```java
 package ye.weicheng.ngbatis.demo.repository;
 
@@ -95,9 +86,8 @@ public interface TestRepository {
 }
 
 ```
-#### a.2 The query statments
-`resource/mapper/TestRepository.xml`
-
+#### 编写数据访问语句
+resource/mapper/TestRepository.xml
 ```xml
 <mapper
     namespace=
@@ -146,9 +136,9 @@ public interface TestRepository {
 </mapper>
 ```
 
-### b. The MyBatis-plus fashion
+### 使用基类自带的 nGQL 实现图的基本操作（MyBatis-plus）的思路
 
-#### b.1 model-vertex
+#### model-vertex
 ```java
 package com.example.model.vertex.Person;
 
@@ -164,7 +154,7 @@ public class Person {
     private Integer age;
 }
 ```
-#### b.2 model-edge
+#### model-edge
 ```java
 package com.example.model.edge.Like;
 
@@ -182,7 +172,7 @@ public class Like {
 }
 ```
 
-#### b.3 dao
+#### dao
 ```java
 package com.example.dao;
 
@@ -191,10 +181,7 @@ import com.example.model.vertex.Person;
 
 public interface PersonDao extends NebulaDaoBasic<Person, String>{}
 ```
-#### b.4 xml
-
-> Note, this is a mandatory requirement.
-
+#### xml（不可缺少）
 ```xml
 <mapper
     namespace=
@@ -202,7 +189,7 @@ public interface PersonDao extends NebulaDaoBasic<Person, String>{}
 >
 </mapper>
 ```
-#### b.5 service
+#### service
 ```java
 package com.example.service;
 
