@@ -103,19 +103,23 @@ public class MapperProxy {
 
         MapperProxy mapperProxy = new MapperProxy(classModel);
         if( pageParamIndex < 0 ) {
-            return mapperProxy.invoke( method, args );
+            return mapperProxy.invoke(classModel, method, args );
         }
 
         String countMethodName = method.getName() + "$Count";
         String pageMethodName = method.getName() + "$Page";
 
-        Long count = (Long)mapperProxy.invoke( classModel.getMethods().get(countMethodName), args );
-        List rows = (List)mapperProxy.invoke( classModel.getMethods().get(pageMethodName), args );
+        Long count = (Long)mapperProxy.invoke(classModel, classModel.getMethods().get(countMethodName), args );
+        List rows = (List)mapperProxy.invoke(classModel, classModel.getMethods().get(pageMethodName), args );
 
         Page page = (Page)args[pageParamIndex];
         page.setTotal( count );
         page.setRows( rows );
         return rows;
+    }
+
+    public static Object invoke(MethodModel methodModel, Object... args) {
+        return invoke(null, methodModel, args);
     }
 
     /**
@@ -128,11 +132,12 @@ public class MapperProxy {
      *     <li>完成数据库数据类型向 javaa 对象类型的转化</li>
      * </ol>
      *
+     * @param classModel mapper 接口类型，存放 mapper 标签的属性
      * @param methodModel 接口方法模型，存放了 dao接口的详细信息（nGQL模板、返回值类型等）
      * @param args 执行 nGQL 的参数
      * @return 结果值
      */
-    public static Object invoke(MethodModel methodModel, Object... args) {
+    public static Object invoke(ClassModel classModel, MethodModel methodModel, Object... args) {
         Method method = methodModel.getMethod();
         ResultSet query = null;
         // 参数格式转换
@@ -151,7 +156,7 @@ public class MapperProxy {
         }
 
         long step1 = System.currentTimeMillis();
-        query = executeWithParameter( nGQL, params );
+        query = executeWithParameter(classModel, methodModel, nGQL, params );
 
         long step2 = System.currentTimeMillis();
         if (!query.isSucceeded()) {
@@ -169,10 +174,14 @@ public class MapperProxy {
     }
 
     public Object invoke(Method method, Object... args)  {
+        return invoke( null, method, args );
+    }
+
+    public Object invoke(ClassModel classModel, Method method, Object... args)  {
         MethodModel methodModel = methodCache.get(method.getName());
         methodModel.setMethod( method );
 
-        return invoke(methodModel, args);
+        return invoke(classModel, methodModel, args);
     }
 
     /**
@@ -181,7 +190,7 @@ public class MapperProxy {
      * @param params 待执行脚本的参数所需的参数
      * @return nebula-graph 的未被 orm 操作的原始结果集
      */
-    public static  ResultSet executeWithParameter( String nGQL, Map<String, Object> params )  {
+    public static  ResultSet executeWithParameter(ClassModel cm, MethodModel mm, String nGQL, Map<String, Object> params )  {
         Session session = null;
         ResultSet result = null;
         String proxyClass = null;
@@ -193,7 +202,7 @@ public class MapperProxy {
                 proxyMethod = stackTraceElement.getMethodName();
             }
 
-            nGQL = "USE " + ENV.getSpace()+";\n\t\t" + nGQL.trim();
+            nGQL = "USE " + getSpace(cm, mm) + ";\n\t\t" + nGQL.trim();
             session = ENV.openSession();
             result = session.executeWithParameter( nGQL, params );
             if( result.isSucceeded() ) {
@@ -207,6 +216,12 @@ public class MapperProxy {
             log.debug("\n\t- proxyMethod: {}#{} \n\t- nGql：{} \n\t - params: {}\n\t - result：{}", proxyClass, proxyMethod, nGQL, params, result);
             if (session != null ) session.release();
         }
+    }
+
+    public static String getSpace(ClassModel cm, MethodModel mm) {
+        return mm != null && mm.getSpace() != null ? mm.getSpace()
+                  : cm != null && cm.getSpace() != null ? cm.getSpace()
+                  : ENV.getSpace();
     }
 
     public static Logger getLog() {

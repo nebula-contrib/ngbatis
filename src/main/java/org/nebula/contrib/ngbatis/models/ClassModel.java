@@ -22,6 +22,8 @@ public class ClassModel {
 
     private Class namespace;
 
+    private String space;
+
     private Map<String, MethodModel> methods;
 
     public MethodModel getMethod( String methodName ) {
@@ -42,6 +44,14 @@ public class ClassModel {
 
     public void setNamespace(Class namespace) {
         this.namespace = namespace;
+    }
+
+    public String getSpace() {
+        return space;
+    }
+
+    public void setSpace(String space) {
+        this.space = space;
     }
 
     public Map<String, MethodModel> getMethods() {

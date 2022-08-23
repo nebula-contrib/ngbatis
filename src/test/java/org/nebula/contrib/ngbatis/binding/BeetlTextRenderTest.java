@@ -250,4 +250,55 @@ class BeetlTextRenderTest {
         System.out.println( cql );
     }
 
+
+    /*
+    https://github.com/nebula-contrib/ngbatis/issues/14
+     */
+    @Test
+    public void textForBatchInsert() {
+        String text =
+                "  INSERT VERTEX ${tagName}\n" +
+                "   (\n" +
+                "      @for ( param in params ) {\n" +
+                "          ${param} ${ paramLP.last ? '' : ',' }\n" +
+                "      @}\n" +
+                "   )\n" +
+                "  VALUES\n" +
+                "  @for ( datas in dataList ) {\n" +
+                "      ${ type.name( @datas.get(vidKey) ) == 'String' ? (\"'\" + @datas.get(vidKey) + \"'\") : @datas.get(vidKey) } : (\n" +
+                "      @for ( param in params ) {\n" +
+                "          $dataList[${datasLP.dataIndex}].${ param }\n" +
+                "          ${ paramLP.last ? '' : ',' }\n" +
+                "      @}\n" +
+                "      )  ${ datasLP.last ? '' : ',' }\n" +
+                "  @}\n" +
+                "  ;";
+
+        List<HashMap<String, Object>> personList = Arrays.asList(
+                new HashMap<String, Object>() {{
+                    put("name", "张三");
+                    put("gender", "F");
+                }},
+                new HashMap<String, Object>() {{
+                    put("name", "王五");
+                    put("gender", "M");
+                }},
+                new HashMap<String, Object>() {{
+                    put("name", "赵六");
+                    put("gender", "F");
+                }}
+        );
+        System.out.println(JSON.toJSONString( personList ));
+        String cql = render.resolve(
+                text,
+                new HashMap<String, Object>() {{
+                    put("tagName", "PERSON");
+                    put("vidKey", "name");
+                    put("params", Arrays.asList( "name", "gender"));
+                    put( "dataList", personList );
+                }}
+        );
+        System.out.println( cql );
+    }
+
 }
