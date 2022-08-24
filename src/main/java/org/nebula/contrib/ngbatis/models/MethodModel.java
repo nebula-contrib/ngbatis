@@ -27,6 +27,11 @@ public class MethodModel {
     private String text; // cql
 
     /**
+     * 在方法中指定使用的 space
+     */
+    private String space;
+
+    /**
      * xml 中配置的参数类型
      */
     private Class parameterType;
@@ -72,6 +77,14 @@ public class MethodModel {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getSpace() {
+        return space;
+    }
+
+    public void setSpace(String space) {
+        this.space = space;
     }
 
     public Class getParameterType() {

@@ -94,6 +94,7 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
             cm.setResource( resource );
             // 获取 namespace
             match( cm, element, "namespace", parseConfig.getNamespace() );
+            match( cm, element, "space", parseConfig.getSpace() );
             // 获取 子节点
             List<Node> nodes = element.childNodes();
             // 便历子节点，获取 MethodModel
@@ -237,6 +238,7 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
         match( model, node, "id", parseConfig.getId() );
         match( model, node, "parameterType", parseConfig.getParameterType() );
         match( model, node, "resultType", parseConfig.getResultType() );
+        match( model, node, "space", parseConfig.getSpace() );
 
         List<Node> nodes = node.childNodes();
         model.setText( nodesToString( nodes ) );
