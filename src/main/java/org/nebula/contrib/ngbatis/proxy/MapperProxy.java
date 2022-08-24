@@ -5,7 +5,6 @@ package org.nebula.contrib.ngbatis.proxy;
 // This source code is licensed under Apache 2.0 License.
 
 import com.vesoft.nebula.client.graph.data.ResultSet;
-import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.net.Session;
 import org.nebula.contrib.ngbatis.ArgNameFormatter;
 import org.nebula.contrib.ngbatis.Env;
@@ -16,11 +15,11 @@ import org.nebula.contrib.ngbatis.exception.QueryException;
 import org.nebula.contrib.ngbatis.models.ClassModel;
 import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.nebula.contrib.ngbatis.models.MethodModel;
+import org.nebula.contrib.ngbatis.utils.Page;
+import org.nebula.contrib.ngbatis.utils.ReflectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.nebula.contrib.ngbatis.utils.Page;
-import org.nebula.contrib.ngbatis.utils.ReflectUtil;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -210,7 +209,7 @@ public class MapperProxy {
             } else {
                 throw new QueryException( " 数据查询失败" + result.getErrorMessage() );
             }
-        } catch (IOErrorException e) {
+        } catch (Exception e) {
             throw new QueryException(  "数据查询失败："  + e.getMessage() );
         } finally {
             log.debug("\n\t- proxyMethod: {}#{} \n\t- nGql：{} \n\t - params: {}\n\t - result：{}", proxyClass, proxyMethod, nGQL, params, result);
