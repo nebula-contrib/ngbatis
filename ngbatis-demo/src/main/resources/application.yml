@@ -9,9 +9,9 @@ nebula:
   pool-config:
     min-conns-size: 0
     max-conns-size: 10
-    timeout: 0
+    timeout: 6000
     idle-time: 0
     interval-idle: -1
-    wait-time: 0
+    wait-time: 6000
     min-cluster-health-rate: 1.0
     enable-ssl: false

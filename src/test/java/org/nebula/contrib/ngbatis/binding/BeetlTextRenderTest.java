@@ -252,7 +252,7 @@ class BeetlTextRenderTest {
 
 
     /*
-    https://github.com/nebula-contrib/ngbatis/issues/14
+     * https://github.com/nebula-contrib/ngbatis/issues/14
      */
     @Test
     public void textForBatchInsert() {
@@ -265,15 +265,17 @@ class BeetlTextRenderTest {
                 "   )\n" +
                 "  VALUES\n" +
                 "  @for ( datas in dataList ) {\n" +
-                "      ${ type.name( @datas.get(vidKey) ) == 'String' ? (\"'\" + @datas.get(vidKey) + \"'\") : @datas.get(vidKey) } : (\n" +
+                "      @var id = @datas.get(vidKey); \n" +
+                "      ${ type.name( id ) == 'String' ? (\"'\" + id + \"'\") : id } : (\n" +
                 "      @for ( param in params ) {\n" +
-                "          $dataList[${datasLP.dataIndex}].${ param }\n" +
-                "          ${ paramLP.last ? '' : ',' }\n" +
+                "          @var col = @datas.get(param); \n" +
+                "          @var colFmt = type.name( col ) == 'String' ? (\"'\" + col+ \"'\") : col; \n" +
+                "          @var colNullable = isNotEmpty( colFmt ) ? colFmt : 'null'; \n" +
+                "          ${ colNullable } ${ paramLP.last ? '' : ',' }\n" +
                 "      @}\n" +
                 "      )  ${ datasLP.last ? '' : ',' }\n" +
-                "  @}\n" +
-                "  ;";
-
+                "  @}\n;";
+        System.out.println( text );
         List<HashMap<String, Object>> personList = Arrays.asList(
                 new HashMap<String, Object>() {{
                     put("name", "张三");
@@ -282,19 +284,20 @@ class BeetlTextRenderTest {
                 new HashMap<String, Object>() {{
                     put("name", "王五");
                     put("gender", "M");
+                    put("age", 18);
                 }},
                 new HashMap<String, Object>() {{
                     put("name", "赵六");
-                    put("gender", "F");
+                    put("age", 32);
                 }}
         );
         System.out.println(JSON.toJSONString( personList ));
         String cql = render.resolve(
                 text,
                 new HashMap<String, Object>() {{
-                    put("tagName", "PERSON");
+                    put("tagName", "person");
                     put("vidKey", "name");
-                    put("params", Arrays.asList( "name", "gender"));
+                    put("params", Arrays.asList( "name", "gender", "age"));
                     put( "dataList", personList );
                 }}
         );
