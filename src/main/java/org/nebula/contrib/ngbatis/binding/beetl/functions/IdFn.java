@@ -24,7 +24,7 @@ import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getPkField;
  */
 public class IdFn  extends AbstractFunction<Object, Boolean, Void, Void, Void, Void> {
 
-    private static Logger log = LoggerFactory.getLogger( NebulaDaoBasicExt.class );
+    private static Logger log = LoggerFactory.getLogger( IdFn.class );
 
     @Override
     public Object call( Object entity, Boolean canNotNull ) {

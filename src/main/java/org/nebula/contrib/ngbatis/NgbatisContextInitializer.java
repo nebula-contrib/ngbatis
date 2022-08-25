@@ -137,6 +137,7 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor , Orde
         context.setDaoBasicTpl( daoBasicTpl );
         context.setNebulaPool( nebulaPool );
         context.setInterfaces( interfaces );
+        context.setNebulaPoolConfig( nebulaJdbcProperties.getPoolConfig() );
         figureTagTypeMapping(  interfaces.values() , context.getTagTypeMapping() );
 
         registerBean( context );
