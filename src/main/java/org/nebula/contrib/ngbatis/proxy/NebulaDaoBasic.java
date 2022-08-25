@@ -5,14 +5,15 @@ package org.nebula.contrib.ngbatis.proxy;
 // This source code is licensed under Apache 2.0 License.
 
 import com.vesoft.nebula.client.graph.data.ResultSet;
-import org.nebula.contrib.ngbatis.TextResolver;
 import org.nebula.contrib.ngbatis.exception.QueryException;
+import org.nebula.contrib.ngbatis.models.MethodModel;
 import org.nebula.contrib.ngbatis.utils.Page;
-import org.nebula.contrib.ngbatis.utils.ReflectUtil;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.*;
 
@@ -31,21 +32,12 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
      * @param id 表记录主键
      * @return 是否执行成功，成功 1 ，失败 0
      */
-    default int deleteLogicById(ID id) {
-        String cqlTpl = getCqlTpl();
-        Class<?>[] classes = entityTypeAndIdType(this.getClass());
-        TextResolver textResolver = MapperProxy.ENV.getTextResolver();
-        Field pkField = getPkField(classes[0].getDeclaredFields(), classes[0]);
-        String pstm = keyFormat( id, pkField.getName(), true);
-        Map<String, Object> tplParam = new HashMap<String, Object>() {{
-            put("id", pstm);
-        }};
-        Map<String, Object> queryParam = new HashMap<String, Object>() {{
-            put( pkField.getName(), id);
-        }};
-        String cql = textResolver.resolve(cqlTpl, tplParam);
-        ResultSet resultSet = (ResultSet)proxy(this.getClass(), ResultSet.class, cql, new Class<?>[]{Serializable.class}, queryParam);
-        return resultSet.isSucceeded() ? 1 : 0;
+    default int deleteWithEdgeById(ID id) {
+        MethodModel methodModel = getMethodModel();
+        methodModel.setReturnType(ResultSet.class);
+        methodModel.setResultType(ResultSet.class);
+        ResultSet resultSet = (ResultSet) MapperProxy.invoke( methodModel, id );
+        return resultSet.isSucceeded() ? 1: 0;
     }
 
     /**
@@ -64,33 +56,11 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
      * @param record 当前表对应的记录数据
      * @return 是否删除成功，成功 1，失败 0
      */
-    default int insert(T record) {
-
-        TextResolver textResolver = MapperProxy.ENV.getTextResolver();
-
-        KV kv = allFields(record);
-        String cqlTpl = getCqlTpl();
-        Class<?> vertexType = entityType( this.getClass() );
-        String vertexName = vertexName(vertexType);
-
-        Field[] fields = vertexType.getDeclaredFields();
-
-        Field pkField = getPkField( fields, vertexType );
-
-        Object id = setId( record, pkField, vertexName );
-
-        String vId = keyFormat( id, pkField.getName(), true);
-
-        String nGQL = textResolver.resolve(
-                cqlTpl,
-                new HashMap<String, Object>() {{
-                    put( "columns", kv.columns );
-                    put( "valueColumns", kv.valueNames );
-                    put( "table", vertexName);
-                    put( "vId", vId );
-                }}
-        );
-        ResultSet resultSet = (ResultSet)proxy( this.getClass(), ResultSet.class,  nGQL, new Class[] { Object.class }, record );
+    default Integer insert(T record) {
+        MethodModel methodModel = getMethodModel();
+        methodModel.setReturnType(ResultSet.class);
+        methodModel.setResultType(ResultSet.class);
+        ResultSet resultSet = (ResultSet) MapperProxy.invoke( methodModel, record );
         return resultSet.isSucceeded() ? 1: 0;
     }
 
@@ -101,31 +71,10 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
      * @return 是否删除成功，成功 1，失败 0
      */
     default Integer insertSelective(T record) {
-        TextResolver textResolver = MapperProxy.ENV.getTextResolver();
-
-        KV kv = notNullFields(record);
-        String cqlTpl = getCqlTpl();
-        Class<?> vertexType = record.getClass();
-        String vertexName = vertexName(vertexType);
-
-        Field[] fields = vertexType.getDeclaredFields();
-
-        Field pkField = getPkField( fields, vertexType );
-
-        Object id = setId( record, pkField, vertexName );
-
-        String vId = keyFormat(id, pkField.getName(), true);
-
-        String nGQL = textResolver.resolve(
-                cqlTpl,
-                new HashMap<String, Object>() {{
-                    put( "columns", kv.columns );
-                    put( "valueColumns", kv.valueNames );
-                    put( "table", vertexName);
-                    put( "vId", vId );
-                }}
-        );
-        ResultSet resultSet = (ResultSet)proxy( this.getClass(), ResultSet.class,  nGQL, new Class[] { Object.class }, record );
+        MethodModel methodModel = getMethodModel();
+        methodModel.setReturnType(ResultSet.class);
+        methodModel.setResultType(ResultSet.class);
+        ResultSet resultSet = (ResultSet) MapperProxy.invoke( methodModel, record );
         return resultSet.isSucceeded() ? 1: 0;
     }
 
@@ -137,11 +86,11 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
      * @return 表中的记录对应的实体对象
      */
     default T selectById(ID id) {
-        Class[] classes = entityTypeAndIdType(this.getClass());
-        Class<T> entityType = classes[0];
-        String vertexName = vertexName(entityType);
-        String nGQL = "MATCH ( n: " + vertexName + " ) WHERE id(n) == $p0 RETURN n LIMIT 2 "; // limit 2 to check the data error, when there is 2 rows record has same id;
-        return (T)proxy( this.getClass(), entityType, nGQL, new Class[] {Serializable.class}, id );
+        MethodModel methodModel = getMethodModel();
+        Class<?> currentType = this.getClass();
+        methodModel.setReturnType( Collection.class );
+        methodModel.setResultType( entityType( currentType ) );
+        return (T)MapperProxy.invoke( methodModel, id );
     }
 
     /**
@@ -162,20 +111,10 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
      * @return 符合条件节点的集合
      */
     default List<T> selectBySelective(T record){
-        KV kv = notNullFields(record);
-        TextResolver textResolver = MapperProxy.ENV.getTextResolver();
-        String cqlTpl = getCqlTpl();
-        Class<?> entityType = record.getClass();
-        String vertexName = vertexName(entityType);
-        String nGQL = textResolver.resolve(
-                cqlTpl,
-                new HashMap<String, Object>() {{
-                    put( "columns", kv.columns );
-                    put( "valueColumns", kv.valueNames );
-                    put( "tag", vertexName);
-                }}
-        );
-        return (List<T>)proxy( this.getClass(), entityType, nGQL, new Class[] {Object.class}, record );
+        MethodModel methodModel = getMethodModel();
+        methodModel.setReturnType( List.class );
+        methodModel.setResultType( entityType( this.getClass() ) );
+        return (List<T>)MapperProxy.invoke( methodModel, record );
     }
 
     /**
@@ -266,26 +205,8 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
     }
 
     default Long countPage(Page<T> page ) {
-        TextResolver textResolver = MapperProxy.ENV.getTextResolver();
-        String countTpl = getCqlTpl();
-
-        Class<? extends NebulaDaoBasic> daoClass = this.getClass();
-
-        Class[] classes = entityTypeAndIdType(daoClass);
-        Class<T> entityType = classes[0];
-        String vertexName = vertexName(entityType);
-
-        KV kv = notNullFields(page.entity, "entity");
-        HashMap<String, Object> param = new HashMap<String, Object>() {{
-            put("columns", kv.columns);
-            put("valueColumns", kv.valueNames);
-            put("tag", vertexName);
-            put("pageSize", page.pageSize);
-            put("startRow", page.startRow);
-        }};
-        String countNGql = textResolver.resolve( countTpl, param );
-
-        return (Long) proxy(daoClass, Long.class, countNGql, new Class[]{Page.class}, page);
+        MethodModel methodModel = getMethodModel();
+        return (Long)MapperProxy.invoke( methodModel, page );
     }
 
     /**
@@ -295,31 +216,13 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
      * @return 分页的结果
      */
     default  List<T> selectPage(Page<T> page) {
+        MethodModel methodModel = getMethodModel();
         Long total = countPage(page);
         page.setTotal( total );
-        if (total == 0) return Collections.EMPTY_LIST;
-
-        TextResolver textResolver = MapperProxy.ENV.getTextResolver();
-
-        Class<? extends NebulaDaoBasic> daoClass = this.getClass();
-
-        Class[] classes = entityTypeAndIdType(daoClass);
-        Class<T> entityType = classes[0];
-        String vertexName = vertexName(entityType);
-
-        KV kv = notNullFields(page.entity, "entity");
-        HashMap<String, Object> param = new HashMap<String, Object>() {{
-            put("columns", kv.columns);
-            put("valueColumns", kv.valueNames);
-            put("tag", vertexName);
-            put("pageSize", page.pageSize);
-            put("startRow", page.startRow);
-        }};
-
-        String cqlTpl = getCqlTpl();
-        String nGql = textResolver.resolve( cqlTpl, param );
-
-        List<T> proxy = (List<T>) proxy(daoClass, entityType, nGql, new Class[]{Page.class}, page);
+        if (total == 0) return Collections.EMPTY_LIST;;
+        methodModel.setReturnType( List.class );
+        methodModel.setResultType( entityType( this.getClass() ) );
+        List<T> proxy = (List<T>)MapperProxy.invoke( methodModel, page );
         page.setRows( proxy );
         return proxy;
     }
@@ -338,35 +241,8 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
      */
     default void insertEdge(Object v1, Object e, Object v2) {
         if( v2 == null || v1 == null || e == null ) return;
-        TextResolver textResolver = MapperProxy.ENV.getTextResolver();
-
-        KV kv = notNullFields(e, "p1");
-        String cqlTpl = getCqlTpl();
-        Class<?> edgeType = e.getClass();
-        String edgeName = edgeName(edgeType);
-
-        Field v1PkField = getPkField(v1.getClass());
-        Field v2PkField = getPkField(v2.getClass());
-        String eId1 = keyFormat( ReflectUtil.getValue( v1, v1PkField ), v1PkField.getName(), true, "p0");
-        String eId2 = keyFormat( ReflectUtil.getValue( v2, v2PkField ), v2PkField.getName(), true, "p2");
-
-        HashMap<String, Object> tplArgs = new HashMap<String, Object>() {{
-            put("columns", kv.columns);
-            put("valueColumns", kv.valueNames);
-            put("e", edgeName);
-            put("eId1", eId1);
-            put("eId2", eId2);
-        }};
-
-        Field rankField = getRankField( e.getClass() );
-        if( rankField != null ) {
-            setId( e, rankField, edgeName );
-            String rank = keyFormat( ReflectUtil.getValue( e, rankField ), rankField.getName(), true, "p1");
-            tplArgs.put( "rank", rank );
-        }
-
-        String nGQL = textResolver.resolve( cqlTpl, tplArgs );
-        proxy( this.getClass(), edgeType, nGQL, new Class[] { Object.class, Object.class, Object.class }, v1, e, v2 );
+        MethodModel methodModel = getMethodModel();
+        MapperProxy.invoke( methodModel, v1, e, v2 );
     }
 
     /**

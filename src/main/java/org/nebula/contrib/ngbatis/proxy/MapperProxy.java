@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -142,9 +143,14 @@ public class MapperProxy {
         // 参数格式转换
         long step0 = System.currentTimeMillis();
         Map<String, Object> argMap = ENV.getArgsResolver().resolve( methodModel, args );
+        Map<String, Object> paramWithSchema = new LinkedHashMap<String, Object>( argMap ) {{
+            put( "ng_cm", classModel );
+            put( "ng_mm", methodModel );
+            put( "ng_args", args );
+        }};
         // beetl 渲染模板
         String textTpl = methodModel.getText();
-        String nGQL = ENV.getTextResolver().resolve( textTpl, argMap );
+        String nGQL = ENV.getTextResolver().resolve( textTpl, paramWithSchema );
         Map<String, Object> params = null;
         if( method != null &&  method.isAnnotationPresent( UseKeyArgReplace.class ) ) {
             ArgNameFormatter.CqlAndArgs format = ENV.getArgNameFormatter().format(nGQL, argMap);

@@ -5,19 +5,19 @@ package org.nebula.contrib.ngbatis.utils;
 // This source code is licensed under Apache 2.0 License.
 
 import com.vesoft.nebula.client.graph.data.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.nebula.contrib.ngbatis.exception.ResultHandleException;
 import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.nebula.contrib.ngbatis.proxy.MapperProxy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.getPkField;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.castNumber;
+import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getPkField;
 
 /**
  * 结果集基础类型处理的工具类

@@ -6,11 +6,13 @@
 <mapper namespace="org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic">
 
     <select id="selectBySelective">
-        MATCH (n:${ tag })
-        @if ( isNotEmpty(columns) ) {
+        @var kv = ng.kv( ng_args[0], '', false, true, false );
+        @var tagName = ng.tagName( ng_args[0] );
+        MATCH (n:`${ tagName }`)
+        @if ( isNotEmpty( @kv.columns ) ) {
             WHERE
-            @for ( col in columns ) {
-                n.${ tag }.${ col } == ${ @valueColumns.get( colLP.index - 1 ) }
+            @for ( col in @kv.columns ) {
+                n.`${ tagName }`.${ col } == $${ @kv.valueNames.get( colLP.index - 1 ) }
                 @if (!colLP.last) {
                     and
                 @}
@@ -20,39 +22,39 @@
         LIMIT 4000
     </select>
 
-    <delete id="deleteLogicById">
-        DELETE VERTEX ${ id } WITH EDGE
+    <delete id="deleteWithEdgeById">
+        DELETE VERTEX ${ ng.valueFmt( p0 ) } WITH EDGE
     </delete>
 
     <delete id="deleteById"></delete>
 
     <insert id="insert">
-        INSERT VERTEX `${ table }` (
-                @for ( col in columns ) {
-                    `${ col }`  ${ colLP.last ? '' : ',' }
-                @}
-            )
-            VALUES ${ vId } : (
-                @for ( val in valueColumns ) {
-                    ${ val } ${ valLP.last ? '' : ',' }
-                @}
-            );
-    </insert>
-
-    <insert id="insertSelective">
-        INSERT VERTEX `${ table }` (
-            @for ( col in columns ) {
-                `${ col }`  ${ colLP.last ? '' : ',' }
-            @}
+        @var kv = ng.kv( ng_args[0] );
+        @var id = ng.id( ng_args[0] );
+        @var tagName = ng.tagName( ng_args[0] );
+        INSERT VERTEX `${ tagName }` (
+            ${ ng.join( @kv.columns, ", ", "ng.schemaFmt" ) }
         )
-        VALUES ${ vId } : (
-            @for ( val in valueColumns ) {
-                ${ val } ${ valLP.last ? '' : ',' }
-            @}
+        VALUES ${ id } : (
+            ${ ng.join( @kv.values ) }
         );
     </insert>
 
-    <select id="selectById"></select>
+    <insert id="insertSelective">
+        @var kv = ng.kv( ng_args[0], '', true, true );
+        @var id = ng.id( ng_args[0] );
+        @var tagName = ng.tagName( ng_args[0] );
+        INSERT VERTEX `${ tagName }` (
+            ${ ng.join( @kv.columns, ", ", "ng.schemaFmt" ) }
+        )
+        VALUES ${ id } : (
+            ${ ng.join( @kv.values ) }
+        );
+    </insert>
+
+    <select id="selectById">
+        match (n) where id(n) == $p0 return n
+    </select>
 
     <select id="selectByIds"></select>
 
@@ -70,22 +72,28 @@
     <select id="selectGridByMap"/>
     <select id="updateSelective"/>
     <select id="selectPage">
+        @var query = @ng_args[0].entity;
+        @var kv = ng.kv( query, 'entity', false, true, false );
+        @var tag = ng.tagName( query, ng_cm );
         MATCH (n:${ tag })
-        @if ( isNotEmpty(columns) ) {
+        @if ( isNotEmpty( @kv.columns ) ) {
             WHERE
-            @for ( col in columns ) {
-                n.${ tag }.${ col } == ${ @valueColumns.get( colLP.index - 1 ) } ${ !colLP.last ? 'and' : '' }
+            @for ( col in @kv.columns ) {
+                n.`${ tag }`.${ col } == $${ @kv.valueNames.get( colLP.index - 1 ) } ${ !colLP.last ? 'and' : '' }
             @}
         @}
         RETURN n skip $startRow limit $pageSize
     </select>
 
     <select id="countPage">
+        @var query = @ng_args[0].entity;
+        @var kv = ng.kv( query, 'entity', false, true, false );
+        @var tag = ng.tagName( query, ng_cm );
         MATCH (n:${ tag })
-        @if ( isNotEmpty(columns) ) {
+        @if ( isNotEmpty( @kv.columns ) ) {
         WHERE
-            @for ( col in columns ) {
-                n.${ tag }.${ col } == ${ @valueColumns.get( colLP.index - 1 ) } ${ !colLP.last ? 'and' : '' }
+            @for ( col in @kv.columns ) {
+                n.`${ tag }`.${ col } == $${ @kv.valueNames.get( colLP.index - 1 ) } ${ !colLP.last ? 'and' : '' }
             @}
         @}
         RETURN count(n)
@@ -94,21 +102,16 @@
     <select id="updateBatch"/>
 
     <insert id="insertEdge">
+        @var kv = ng.kv( ng_args[1], '', null, null, false );
+        @var vId1 = ng.id( ng_args[0] );
+        @var rank = ng.id( ng_args[1], false );
+        @var vId2 = ng.id( ng_args[2] );
+        @var e = ng.tagName( ng_args[1] );
         INSERT EDGE `${ e }` (
-        @for ( col in columns ) {
-            `${ col }`
-            @if (!colLP.last) {
-                ,
-            @}
-        @}
+            ${ ng.join( @kv.columns, ", ", "ng.schemaFmt" ) }
         )
-        VALUES ${ eId1 }-> ${ eId2 } ${ isNotEmpty( rank ) ? '\\@' + rank : ''  } :(
-        @for ( val in valueColumns ) {
-            ${ val }
-            @if (!valLP.last) {
-            ,
-            @}
-        @}
+        VALUES ${ vId1 }-> ${ vId2 } ${ isNotEmpty( rank ) ? ('@' + rank) : ''  } :(
+            ${ ng.join( @kv.values ) }
         );
     </insert>
 

@@ -304,4 +304,53 @@ class BeetlTextRenderTest {
         System.out.println( cql );
     }
 
+    @Test
+    public void beetlFnTest() {
+        String text =
+                "  INSERT VERTEX ${tagName}\n" +
+                "   (\n" +
+                "      @for ( param in params ) {\n" +
+                "          ${param} ${ paramLP.last ? '' : ',' }\n" +
+                "      @}\n" +
+                "   )\n" +
+                "  VALUES\n" +
+                "  @for ( datas in dataList ) {\n" +
+                "      @var id = @datas.get(vidKey); \n" +
+                "      ${ type.name( id ) == 'String' ? (\"'\" + id + \"'\") : id } : (\n" +
+                "      @for ( param in params ) {\n" +
+                "          @var col = @datas.get(param); \n" +
+                "          ${ nvl( ng.valueFmt( col ), 'null' ) } ${ paramLP.last ? '' : ',' }\n" +
+                "      @}\n" +
+                "      )  ${ datasLP.last ? '' : ',' }\n" +
+                "  @}\n;";
+        System.out.println( text );
+        List<HashMap<String, Object>> personList = Arrays.asList(
+                new HashMap<String, Object>() {{
+                    put("name", "张三");
+                    put("gender", "F");
+                }},
+                new HashMap<String, Object>() {{
+                    put("name", "王五");
+                    put("gender", "M");
+                    put("age", 18);
+                }},
+                new HashMap<String, Object>() {{
+                    put("name", "赵六");
+                    put("age", 32);
+                }}
+        );
+        System.out.println(JSON.toJSONString( personList ));
+        String cql = render.resolve(
+                text,
+                new HashMap<String, Object>() {{
+                    put("tagName", "person");
+                    put("vidKey", "name");
+                    put("params", Arrays.asList( "name", "gender", "age"));
+                    put( "dataList", personList );
+                }}
+        );
+        System.out.println( cql );
+    }
+
+
 }

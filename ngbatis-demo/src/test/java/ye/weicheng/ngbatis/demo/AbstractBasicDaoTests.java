@@ -65,8 +65,8 @@ public class AbstractBasicDaoTests {
     }
 
     @Test
-    public void deleteLogicById () {
-        int row = repository.deleteLogicById("取名有点难2");
+    public void deleteWithEdgeById () {
+        int row = repository.deleteWithEdgeById("取名有点难2");
         System.out.println( row );
     }
 
@@ -142,10 +142,10 @@ public class AbstractBasicDaoTests {
     @Test
     public void selectPage() {
         Page<Person> page = new Page<>();
-        page.setPageNo( 2 );
+        page.setPageNo( 1 );
         page.setPageSize( 30 );
         Person entity = new Person();
-        entity.setName( "1655802721996" );
+//        entity.setName( "1655802721996" );
         entity.setAge( 18 );
         page.entity = entity;
         repository.selectPage( page );

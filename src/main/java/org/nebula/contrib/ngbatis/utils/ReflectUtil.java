@@ -8,6 +8,7 @@ import org.nebula.contrib.ngbatis.exception.ParseException;
 import org.nebula.contrib.ngbatis.models.MethodModel;
 
 import javax.persistence.Column;
+import javax.persistence.Id;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -249,4 +250,53 @@ public class ReflectUtil {
         } while ( clazz != null );
         return fields.toArray(new Field[0]);
     }
+
+    /**
+     * 根据实体类类型，获取其带有 @Id 注解（有且仅有一个）的属性。
+     * @param type 实体类型
+     * @return 节点的主键属性
+     */
+    public static Field getPkField(Class<?> type ) {
+        return getPkField( type, true );
+    }
+
+    public static Field getPkField(Class<?> type, boolean canNotNull ) {
+        Field[] declaredFields = type.getDeclaredFields();
+        return getPkField( declaredFields, type, canNotNull );
+    }
+
+    /**
+     * 传入多个属性对象，获取其中带有 @Id 注解（有且仅有一个）的属性
+     * @param fields 属性数组。
+     * @param type 属性数组归属的类
+     * @return 众多属性中，带 @Id 注解的属性（唯一）
+     */
+    public static Field getPkField(Field[] fields, Class<?> type) {
+        return getPkField( fields, type, true );
+    }
+
+    /**
+     *
+     * @param fields 属性数组。
+     * @param type 属性数组归属的类
+     * @param canNotNull 是否不为空。
+     *                   <ol>
+     *                      <li>为 true 时：用于获取vertex类型主键，因数据库vertex单值主键的要求</li>
+     *                      <li>为 false 时：用于获取 edge类型主键用，因数据库edge中，rank 值的要求为 可以有可以没有。</li>
+     *                   </ol>
+     * @return 主键属性
+     */
+    public static Field getPkField(Field[] fields, Class<?> type, boolean canNotNull ) {
+        Field pkField = null;
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(Id.class)) {
+                pkField = field;
+            }
+        }
+        if (canNotNull && pkField == null) {
+            throw new ParseException( String.format( "%s 必须有一个属性用 @Id 注解。（javax.persistence.Id）", type ));
+        }
+        return pkField;
+    }
+
 }
