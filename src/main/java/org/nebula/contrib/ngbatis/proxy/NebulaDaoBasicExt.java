@@ -6,6 +6,7 @@ package org.nebula.contrib.ngbatis.proxy;
 
 import org.nebula.contrib.ngbatis.models.MethodModel;
 import org.nebula.contrib.ngbatis.utils.StringUtil;
+import org.springframework.util.Assert;
 
 import javax.persistence.Table;
 import java.lang.reflect.Method;
@@ -138,7 +139,7 @@ public class NebulaDaoBasicExt {
         String methodName = stackTraceElement.getMethodName();
         Class<?>  dao = getClassFromStack( stackTraceElement );
 
-        assert dao != null;
+        Assert.notNull( dao,"Please check the invoke stack." );
         Method[] methods = dao.getMethods();
         Method method = null;
         for (Method m : methods ) {
@@ -147,7 +148,7 @@ public class NebulaDaoBasicExt {
                 break;
             }
         }
-        assert method != null;
+        Assert.notNull( method, "Please check the invoke stack." );
         methodModel.setMethod( method );
         methodModel.setId( methodName );
         methodModel.setReturnType( method.getReturnType() );

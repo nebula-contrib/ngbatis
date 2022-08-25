@@ -7,6 +7,7 @@ package org.nebula.contrib.ngbatis.binding.beetl.functions;
 import org.apache.commons.lang3.NotImplementedException;
 import org.beetl.core.Context;
 import org.beetl.core.Function;
+import org.springframework.util.Assert;
 
 /**
  * @author yeweicheng
@@ -34,7 +35,11 @@ public abstract class AbstractFunction<A, B, C, D, E, F> implements Function {
     @SuppressWarnings("unchecked")
     public Object call(Object[] paras ) {
         int len = paras.length;
-        assert len <= 6; // 限制 nGQL 使用 ng 函数时的长度，避免参数过长影响编写体验
+
+        // 限制 nGQL 使用 ng 函数时的长度，避免参数过长影响编写体验
+        Assert.isTrue( len <= 6,
+                "ng-function cannot have more than 6 parameters" );
+
         return call(
                 len > 0 ? (A)paras[0] : null,
                 len > 1 ? (B)paras[1] : null,

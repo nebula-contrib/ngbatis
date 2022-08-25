@@ -119,7 +119,7 @@ class NgbatisDemoApplicationTests {
 		Page<Person> page = new Page<>();
 		page.setPageSize( 3 );
 		page.setPageNo(1);
-		List<Person> name = repository.selectCustomPageAndName( page , "取名有点难2" );
+		List<Person> name = repository.selectCustomPageAndName( page , "丁小碧" );
 		System.out.println( JSON.toJSONString( name ));
 		System.out.println( JSON.toJSONString( page ));
 	}
