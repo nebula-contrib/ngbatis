@@ -11,12 +11,8 @@ import javax.persistence.Table;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.isCurrentTypeOrParentType;
 
 /**
@@ -45,54 +41,6 @@ public class NebulaDaoBasicExt {
      */
     public static String edgeName( Class<?> edgeType ) {
         return vertexName( edgeType );
-    }
-
-
-   static  Map<Class<?>, String> valueFormat = new HashMap<Class<?>, String>() {{
-        put( String.class , "'%s'");
-    }};
-
-    /**
-     * 值格式化，将实体的属性转换成占位符字符串
-     *
-     * @param value 实体属性值
-     * @param name 属性名
-     * @return 占位符自负串
-     */
-    static Object valueFormat( Object value, Object name ) {
-        Class<?> fieldType = value.getClass();
-        return valueFormat.containsKey(fieldType) ?
-                String.format( valueFormat.get(fieldType) , name )
-                : name;
-    }
-
-    /**
-     * 主键格式化：将主键属性转换成占位符或者实际值形式的字符串
-     * @param value 主键值
-     * @param name 属性名
-     * @param asStmt 是否使用住形式。 即： statement 与 prepare-statement 之间的选择
-     * @return 用于给主键值提供占位的占位字符串
-     */
-    static String keyFormat( Object value, String name, boolean asStmt ) {
-        String format = asStmt ? "${ nvl( %s, 'null' ) }" : "$%s";
-        return valueFormat(value, String.format( format, name ) ).toString();
-    }
-
-    /**
-     * 主键格式化：将主键属性转换成占位符或者实际值形式的字符串
-     * @param value 主键值
-     * @param name 属性名
-     * @param asStmt 是否使用住形式。 即： statement 与 prepare-statement 之间的选择
-     * @param prefix 参数前缀。如果输入dao接口的参数是对象类型，则需要使用前缀来拼接出实际的占位参数符
-     * @return 主键占位符
-     */
-    static  String keyFormat( Object value, String name, boolean asStmt, String prefix ) {
-        if ( value == null ) return "null";
-        if( isNotEmpty(prefix) ) {
-            String format = asStmt ? "${ nvl( %s.%s, 'null' ) }" : "$%s.%s";
-            return valueFormat(value, String.format( format, prefix, name ) ).toString();
-        }
-        return keyFormat( value, name, asStmt );
     }
 
     /**
@@ -206,12 +154,6 @@ public class NebulaDaoBasicExt {
         Map<String, String> daoBasicTpl = MapperProxy.ENV.getMapperContext().getDaoBasicTpl();
         methodModel.setText( daoBasicTpl.get( methodName ) );
         return methodModel;
-    }
-
-    public static void main(String[] args) {
-        String format = String.format("%s", null);
-        List<String> strings = Arrays.asList("dd", format, "ees");
-        System.out.println( String.join( ",", strings ));
     }
 
     /**
