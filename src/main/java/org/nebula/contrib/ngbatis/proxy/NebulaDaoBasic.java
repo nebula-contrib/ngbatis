@@ -32,6 +32,16 @@ public interface NebulaDaoBasic<T ,ID extends Serializable> {
      * @param id 表记录主键
      * @return 是否执行成功，成功 1 ，失败 0
      */
+    default int deleteLogicById(ID id) {
+        throw new QueryException("No implements");
+    }
+
+    /**
+     * <p>数据操作，根据节点 id 将节点连同其连接的关系一同物理删除</p>
+     *
+     * @param id 表记录主键
+     * @return 是否执行成功，成功 1 ，失败 0
+     */
     default int deleteWithEdgeById(ID id) {
         MethodModel methodModel = getMethodModel();
         methodModel.setReturnType(ResultSet.class);

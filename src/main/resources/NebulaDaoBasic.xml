@@ -22,6 +22,8 @@
         LIMIT 4000
     </select>
 
+    <delete id="deleteLogicById"></delete>
+
     <delete id="deleteWithEdgeById">
         DELETE VERTEX ${ ng.valueFmt( p0 ) } WITH EDGE
     </delete>
