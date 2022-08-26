@@ -133,7 +133,7 @@ public class NebulaDaoBasicExt {
    * @return 数据库执行脚本.
   .*/
   public static String getCqlTpl() {
-    Map<String, String> daoBasicTpl = MapperProxy.ENV.getMapperContext(
+    Map<String, String> daoBasicTpl = MapperProxy.env.getMapperContext(
       ).getDaoBasicTpl();
     return daoBasicTpl.get(getMethodName());
   }
@@ -169,7 +169,7 @@ public class NebulaDaoBasicExt {
     methodModel.setMethod(method);
     methodModel.setId(methodName);
     methodModel.setReturnType(method.getReturnType());
-    Map<String, String> daoBasicTpl = MapperProxy.ENV.getMapperContext(
+    Map<String, String> daoBasicTpl = MapperProxy.env.getMapperContext(
       ).getDaoBasicTpl();
     methodModel.setText(daoBasicTpl.get(methodName));
     return methodModel;

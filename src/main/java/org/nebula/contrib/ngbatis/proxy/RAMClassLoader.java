@@ -5,7 +5,6 @@ package org.nebula.contrib.ngbatis.proxy;
 // This source code is licensed under Apache 2.0 License.
 import java.util.Map;
 import org.nebula.contrib.ngbatis.Env;
-import org.nebula.contrib.ngbatis.NgbatisContextInitializer;
 import org.nebula.contrib.ngbatis.models.ClassModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

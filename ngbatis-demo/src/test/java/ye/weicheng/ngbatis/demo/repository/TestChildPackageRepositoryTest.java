@@ -1,6 +1,6 @@
 package ye.weicheng.ngbatis.demo.repository;
 
-import static org.nebula.contrib.ngbatis.proxy.MapperProxy.ENV;
+import static org.nebula.contrib.ngbatis.proxy.MapperProxy.env;
 
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
@@ -27,7 +27,7 @@ class TestChildPackageRepositoryTest {
 
   @Test
   public void testExecuteWithParameter() throws IOErrorException {
-    Session session1 = ENV.openSession();
+    Session session1 = env.openSession();
     ResultSet resultSet =
         session1.executeWithParameter(
             "USE test;"

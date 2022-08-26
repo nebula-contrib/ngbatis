@@ -17,40 +17,46 @@ import org.nebula.contrib.ngbatis.proxy.MapperProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**.
- * 结果集基础类型处理的工具类.
- *.
- * @author yeweicheng <br>.
- *     Now is history.
-.*/
+/**
+ * . 结果集基础类型处理的工具类. .
+ *
+ * @author yeweicheng <br>
+ *     . Now is history. .
+ */
 public class ResultSetUtil {
 
   private static Logger log = LoggerFactory.getLogger(ResultSetUtil.class);
 
   public static <T> T getValue(final ValueWrapper value) {
     try {
-      Object o = value.isLong() ? value.asLong()
-          : value.isBoolean() ? value.asBoolean()
-            : value.isDouble() ? value.asDouble()
-              : value.isString() ? value.asString()
-                : value.isTime() ? value.asTime()
-                  : value.isDate() ? transformDate(value.asDate())
+      Object o =
+        value.isLong()
+          ? value.asLong()
+          : value.isBoolean()
+            ? value.asBoolean()
+            : value.isDouble()
+              ? value.asDouble()
+              : value.isString()
+                ? value.asString()
+                : value.isTime()
+                  ? value.asTime()
+                  : value.isDate()
+                    ? transformDate(value.asDate())
                     : value.isDateTime()
                       ? transformDateTime(value.asDateTime())
                       : value.isVertex()
                         ? transformNode(value.asNode())
-                        : value.isEdge() ? value.asRelationship()
-                          : value.isPath() ? value.asPath()
+                        : value.isEdge()
+                          ? value.asRelationship()
+                          : value.isPath()
+                            ? value.asPath()
                             : value.isList()
-                              ? transformList(
-                                  value.asList())
+                              ? transformList(value.asList())
                               : value.isSet()
-                                ? transformList(
-                                    value.asList())
+                                ? transformList(value.asList())
                                 : value.isMap()
-                                    ? transformMap(
-                                        value.asMap())
-                                    : null;
+                                  ? transformMap(value.asMap())
+                                  : null;
 
       return (T) o;
     } catch (UnsupportedEncodingException e) {
@@ -71,22 +77,21 @@ public class ResultSetUtil {
 
   private static Object transformDate(final DateWrapper date) {
     return new GregorianCalendar(
-        date.getYear() + 1900, date.getMonth() - 1, date.getDay())
-      .getTime();
+      date.getYear() + 1900, date.getMonth() - 1, date.getDay())
+        .getTime();
   }
 
   private static Object transformNode(final Node node) {
     List<String> tagNames = node.tagNames();
     if (tagNames.size() != 1) {
-        log.warn(
-          "Sorry there is no parse implements for multi tags node: {}",
-          node);
+      log.warn(
+        "Sorry there is no parse implements for multi tags node: {}", node);
       return node;
     }
 
     String tagName = tagNames.get(0);
 
-    MapperContext mapperContext = MapperProxy.ENV.getMapperContext();
+    MapperContext mapperContext = MapperProxy.env.getMapperContext();
     Map<String, Class<?>> tagTypeMapping = mapperContext.getTagTypeMapping();
 
     Class<?> nodeType = tagTypeMapping.get(tagName);
@@ -107,18 +112,18 @@ public class ResultSetUtil {
   }
 
   private static Object transformList(final ArrayList<ValueWrapper> list) {
-    return list.stream().map(ResultSetUtil::getValue).collect(
-      Collectors.toList());
+    return list.stream().map(
+      ResultSetUtil::getValue).collect(Collectors.toList());
   }
 
   public static <T> T getValue(
-      final ValueWrapper valueWrapper, final Class<T> resultType) {
-    T value = getValue(valueWrapper);
-    if (value instanceof Number) {
-      value = (T) castNumber((Number) value, resultType);
+    final ValueWrapper valueWrapper, final Class<T> resultType) {
+      T value = getValue(valueWrapper);
+      if (value instanceof Number) {
+        value = (T) castNumber((Number) value, resultType);
+      }
+      return value;
     }
-    return value;
-  }
 
   public static <T> T nodeToResultType(
     final Node v, final Class<T> resultType) {
@@ -129,8 +134,7 @@ public class ResultSetUtil {
         t = resultType.newInstance();
         for (int i = 0; i < keys.size(); i++) {
           String prop = keys.get(i);
-          ReflectUtil.setValue(t, prop, ResultSetUtil.getValue(
-            values.get(i)));
+          ReflectUtil.setValue(t, prop, ResultSetUtil.getValue(values.get(i)));
         }
         setId(t, resultType, v);
       } catch (UnsupportedEncodingException
@@ -163,8 +167,8 @@ public class ResultSetUtil {
         t = resultType.newInstance();
         HashMap<String, ValueWrapper> properties = r.properties();
         for (Map.Entry<String, ValueWrapper> entry : properties.entrySet()) {
-          ReflectUtil.setValue(t, entry.getKey(), ResultSetUtil.getValue(
-            entry.getValue()));
+          ReflectUtil.setValue(
+            t, entry.getKey(), ResultSetUtil.getValue(entry.getValue()));
         }
       } catch (UnsupportedEncodingException
           | InstantiationException
@@ -176,8 +180,7 @@ public class ResultSetUtil {
     }
 
   public static void relationshipToResultType(
-      final Object o, final String fieldName,
-      final Relationship relationship) {
+      final Object o, final String fieldName, final Relationship relationship) {
     Class<?> fieldType = ReflectUtil.fieldType(o, fieldName);
     if (fieldType != null) {
       Object fieldValue = relationshipToResultType(relationship, fieldType);
@@ -191,10 +194,10 @@ public class ResultSetUtil {
 
   public static void setId(
     final Object obj, final Class<?> resultType, final Node v)
-      throws IllegalAccessException {
-        Field pkField = getPkField(resultType);
-        ValueWrapper idWrapper = v.getId();
-        Object id = ResultSetUtil.getValue(idWrapper);
-        ReflectUtil.setValue(obj, pkField, id);
-      }
+    throws IllegalAccessException {
+      Field pkField = getPkField(resultType);
+      ValueWrapper idWrapper = v.getId();
+      Object id = ResultSetUtil.getValue(idWrapper);
+      ReflectUtil.setValue(obj, pkField, id);
+    }
 }
