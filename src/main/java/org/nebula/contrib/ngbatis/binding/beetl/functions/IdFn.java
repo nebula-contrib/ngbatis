@@ -6,7 +6,6 @@ package org.nebula.contrib.ngbatis.binding.beetl.functions;
 
 import org.nebula.contrib.ngbatis.PkGenerator;
 import org.nebula.contrib.ngbatis.proxy.MapperProxy;
-import org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt;
 import org.nebula.contrib.ngbatis.utils.ReflectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,23 +21,23 @@ import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getPkField;
  * @since 2022-08-25 2:58
  * <br>Now is history!
  */
-public class IdFn  extends AbstractFunction<Object, Boolean, Void, Void, Void, Void> {
+public class IdFn extends AbstractFunction<Object, Boolean, Void, Void, Void, Void> {
 
-    private static Logger log = LoggerFactory.getLogger( IdFn.class );
+    private static Logger log = LoggerFactory.getLogger(IdFn.class);
 
     @Override
-    public Object call( Object entity, Boolean canNotNull ) {
+    public Object call(Object entity, Boolean canNotNull) {
         canNotNull = canNotNull == null;
         Class<?> entityType = entity.getClass();
-        Field pkField = getPkField( entityType, canNotNull );
-        String tagName = fnCall( tagNameFn , entity );
-        return setId( entity, pkField, tagName );
+        Field pkField = getPkField(entityType, canNotNull);
+        String tagName = fnCall(tagNameFn, entity);
+        return setId(entity, pkField, tagName);
     }
 
     /**
      * 对实体对象设置 主键值（通过主键生成策略）
      *
-     * @param record 实体类
+     * @param record  实体类
      * @param pkField 主键属性
      * @param tagName 数据库中的模式名（节点类型与关系类型 名称）
      * @return 主键值
@@ -47,16 +46,16 @@ public class IdFn  extends AbstractFunction<Object, Boolean, Void, Void, Void, V
         try {
             PkGenerator pkGenerator = MapperProxy.ENV.getPkGenerator();
             Object id = null;
-            if( pkField != null ) {
-                id = ReflectUtil.getValue( record, pkField );
-                if(id == null && pkGenerator != null) {
-                    id = pkGenerator.generate( tagName, pkField.getType() );
-                    ReflectUtil.setValue( record, pkField, id );
+            if (pkField != null) {
+                id = ReflectUtil.getValue(record, pkField);
+                if (id == null && pkGenerator != null) {
+                    id = pkGenerator.generate(tagName, pkField.getType());
+                    ReflectUtil.setValue(record, pkField, id);
                 }
             }
-            return fnCall( valueFmtFn, id );
+            return fnCall(valueFmtFn, id);
         } catch (IllegalAccessException e) {
-            log.error( e.getMessage() );
+            log.error(e.getMessage());
             return null;
         }
     }

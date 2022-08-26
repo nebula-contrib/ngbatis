@@ -69,7 +69,7 @@ public class IntervalCheckSessionDispatcher implements Runnable, SessionDispatch
     }
 
     @Override
-    public LocalSession poll() {
+    public synchronized LocalSession poll() {
         LocalSession localSession = null;
         if( !EnvConfig.reconnect ) {
             localSession = newLocalSession();
