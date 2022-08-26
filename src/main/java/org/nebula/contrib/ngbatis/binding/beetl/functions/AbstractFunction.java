@@ -48,32 +48,44 @@ public abstract class AbstractFunction<A, B, C, D, E, F> implements Function {
   }
 
   public Object call(A p0, B p1, C p2, D p3, E p4, F p5) {
-    if (p5 == null) return call(p0, p1, p2, p3, p4);
+    if (p5 == null) {
+      return call(p0, p1, p2, p3, p4);
+    }
     throw new NotImplementedException();
   }
 
   public Object call(A p0, B p1, C p2, D p3, E p4) {
-    if (p4 == null) return call(p0, p1, p2, p3);
+    if (p4 == null) {
+      return call(p0, p1, p2, p3);
+    }
     throw new NotImplementedException();
   }
 
   public Object call(A p0, B p1, C p2, D p3) {
-    if (p3 == null) return call(p0, p1, p2);
+    if (p3 == null) {
+      return call(p0, p1, p2);
+    }
     throw new NotImplementedException();
   }
 
   public Object call(A p0, B p1, C p2) {
-    if (p2 == null) return call(p0, p1);
+    if (p2 == null) {
+      return call(p0, p1);
+    }
     throw new NotImplementedException();
   }
 
   public Object call(A p0, B p1) {
-    if (p1 == null) return call(p0);
+    if (p1 == null) {
+      return call(p0);
+    }
     throw new NotImplementedException();
   }
 
   public Object call(A p0) {
-    if (p0 == null) return call();
+    if (p0 == null) {
+      return call();
+    }
     throw new NotImplementedException();
   }
 

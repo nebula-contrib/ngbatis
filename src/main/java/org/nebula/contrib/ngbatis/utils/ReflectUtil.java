@@ -58,7 +58,7 @@ public class ReflectUtil {
   }
 
   public static Number castNumber(Number n, Class resultType) {
-    if (n == null) return null;
+    if (n == null) {return null;}
     return (resultType == Integer.class || resultType == int.class)
       ? n.intValue()
       : (resultType == Long.class || resultType == long.class)
@@ -237,13 +237,15 @@ public class ReflectUtil {
 
   public static boolean isCurrentTypeOrParentType(
       Class<?> paramType, Class<?> pType) {
-    if (paramType == pType) return true;
+    if (paramType == pType) {return true;}
     Set<Class<?>> parentTypes = getParentTypes(paramType);
     return parentTypes.contains(pType);
   }
 
   public static Set<Class<?>> getParentTypes(Class<?> paramType) {
-    if (paramType == null) return Collections.EMPTY_SET;
+    if (paramType == null) {
+      return Collections.EMPTY_SET;
+    }
     List<Class<?>> interfaces = Arrays.asList(paramType.getInterfaces());
     Set<Class<?>> parents = new HashSet<>(interfaces);
 

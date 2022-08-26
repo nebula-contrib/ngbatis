@@ -228,7 +228,9 @@ public interface NebulaDaoBasic<T, ID extends Serializable> {
     MethodModel methodModel = getMethodModel();
     Long total = countPage(page);
     page.setTotal(total);
-    if (total == 0) return Collections.EMPTY_LIST;
+    if (total == 0) {
+      return Collections.EMPTY_LIST;
+    }
     ;
     methodModel.setReturnType(List.class);
     methodModel.setResultType(entityType(this.getClass()));
@@ -250,7 +252,9 @@ public interface NebulaDaoBasic<T, ID extends Serializable> {
    * @param v2 结束节点值.
   .*/
   default void insertEdge(Object v1, Object e, Object v2) {
-    if (v2 == null || v1 == null || e == null) return;
+    if (v2 == null || v1 == null || e == null) {
+      return;
+    }
     MethodModel methodModel = getMethodModel();
     MapperProxy.invoke(methodModel, v1, e, v2);
   }

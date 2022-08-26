@@ -120,7 +120,9 @@ public class MethodModel {
   }
 
   public Annotation[][] getParameterAnnotations() {
-    if (method != null) return method.getParameterAnnotations();
+    if (method != null) {
+      return method.getParameterAnnotations();
+    }
     return new Annotation[getParameterCount()][];
   }
 }

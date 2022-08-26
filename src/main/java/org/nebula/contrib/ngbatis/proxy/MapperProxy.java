@@ -178,7 +178,9 @@ public class MapperProxy {
       throw new QueryException("数据查询失败：" + query.getErrorMessage());
     }
 
-    if (methodModel.getResultType() == ResultSet.class) return query;
+    if (methodModel.getResultType() == ResultSet.class) {
+      return query;
+    }
 
     ResultResolver resultResolver = ENV.getResultResolver();
     Object resolve = resultResolver.resolve(methodModel, query);
@@ -245,7 +247,9 @@ public class MapperProxy {
           nGQL,
           params,
           result);
-      if (localSession != null) ENV.getDispatcher().offer(localSession);
+      if (localSession != null) {
+        ENV.getDispatcher().offer(localSession);
+      }
     }
   }
 

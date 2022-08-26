@@ -28,7 +28,9 @@ public class KvFn extends AbstractFunction
     excludePk = excludePk == null || excludePk;
     selective = selective != null && selective;
     idRequired = idRequired == null;
-    if (entity == null) return new KV();
+    if (entity == null) {
+      return new KV();
+    }
     Class<?> entityType = entity.getClass();
     Field[] fields = getAllColumnFields(entityType);
 
@@ -39,7 +41,9 @@ public class KvFn extends AbstractFunction
     }
 
     for (Field field : fields) {
-      if (pkField != null && pkField.equals(field)) continue;
+      if (pkField != null && pkField.equals(field)) {
+        continue;
+      }
       fieldList.add(field);
     }
 
