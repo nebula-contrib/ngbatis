@@ -31,7 +31,7 @@ public class NebulaDaoBasicExt {
     Table tableAnno = entityType.getAnnotation(Table.class);
     return tableAnno != null
       ? tableAnno.name()
-      : StringUtil.xX2x_x(entityType.getSimpleName());
+      : StringUtil.xX2xUnderscoreX(entityType.getSimpleName());
   }
 
   /**.

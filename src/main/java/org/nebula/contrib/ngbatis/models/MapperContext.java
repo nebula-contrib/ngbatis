@@ -16,15 +16,15 @@ import java.util.Map;
 .*/
 public class MapperContext {
 
-  private static MapperContext INSTANCE;
+  private static MapperContext instance;
 
   private MapperContext() { }
 
   public static MapperContext newInstance() {
-    if (INSTANCE == null) {
-      INSTANCE = new MapperContext();
+    if (instance == null) {
+      instance = new MapperContext();
     }
-    return INSTANCE;
+    return instance;
   }
 
   /** 当前应用中，在 xml 中 namespace 所声明的所有 XXXDao 及其 类模型.*/

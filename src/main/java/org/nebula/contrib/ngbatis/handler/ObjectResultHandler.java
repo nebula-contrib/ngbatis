@@ -81,17 +81,16 @@ public class ObjectResultHandler extends AbstractResultHandler
   }
 
   private Object fillResultByNode(
-        final Node node, Object newResult,
-        final List<String> columnNames, final Class resultType,
-      String columnName) {
-
-    if (columnNames.size() == 1) {
-        newResult = nodeToResultType(node, resultType);
-    } else {
-      nodeToResultType(newResult, columnName, node);
+    final Node node, Object newResult,
+    final List<String> columnNames, final Class resultType,
+    final String columnName) {
+      if (columnNames.size() == 1) {
+          newResult = nodeToResultType(node, resultType);
+      } else {
+        nodeToResultType(newResult, columnName, node);
+      }
+      return newResult;
     }
-    return newResult;
-  }
 
   private Object fillResultByRelationship(
       final Relationship relationship,

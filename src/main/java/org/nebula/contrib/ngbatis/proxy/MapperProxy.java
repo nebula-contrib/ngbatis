@@ -37,7 +37,7 @@ public class MapperProxy {
   private static Logger log = LoggerFactory.getLogger(MapperProxy.class);
   @Autowired private ParseCfgProps props;
 
-  public static Env ENV;
+  public static Env env;
 
   private ClassModel classModel;
 
@@ -66,7 +66,7 @@ public class MapperProxy {
   .*/
   public static Object invoke(
     final String className, final String methodName, final Object... args) {
-      MapperContext mapperContext = ENV.getMapperContext();
+      MapperContext mapperContext = env.getMapperContext();
       String proxyClassName = className + PROXY_SUFFIX;
       ClassModel classModel = mapperContext.getInterfaces().get(proxyClassName);
       Method method = null;
@@ -121,7 +121,7 @@ public class MapperProxy {
   }
 
   public static Object invoke(
-    final MethodModel methodModel,final  Object... args) {
+    final MethodModel methodModel, final  Object... args) {
       return invoke(null, methodModel, args);
     }
 
@@ -148,7 +148,7 @@ public class MapperProxy {
       ResultSet query = null;
       // 参数格式转换
       long step0 = System.currentTimeMillis();
-      Map<String, Object> argMap = ENV.getArgsResolver().resolve(
+      Map<String, Object> argMap = env.getArgsResolver().resolve(
         methodModel, args);
       Map<String, Object> paramWithSchema =
           new LinkedHashMap<String, Object>(argMap) {
@@ -160,11 +160,11 @@ public class MapperProxy {
           };
       // beetl 渲染模板
       String textTpl = methodModel.getText();
-      String nGQL = ENV.getTextResolver().resolve(textTpl, paramWithSchema);
+      String nGQL = env.getTextResolver().resolve(textTpl, paramWithSchema);
       Map<String, Object> params = null;
       if (method != null && method.isAnnotationPresent(
           UseKeyArgReplace.class)) {
-        ArgNameFormatter.CqlAndArgs format = ENV.getArgNameFormatter().format(
+        ArgNameFormatter.CqlAndArgs format = env.getArgNameFormatter().format(
           nGQL, argMap);
         nGQL = format.getCql();
         params = format.getArgs();
@@ -184,7 +184,7 @@ public class MapperProxy {
         return query;
       }
 
-      ResultResolver resultResolver = ENV.getResultResolver();
+      ResultResolver resultResolver = env.getResultResolver();
       Object resolve = resultResolver.resolve(methodModel, query);
       long step3 = System.currentTimeMillis();
 
@@ -231,7 +231,7 @@ public class MapperProxy {
           proxyMethod = stackTraceElement.getMethodName();
         }
 
-        localSession = ENV.getDispatcher().poll();
+        localSession = env.getDispatcher().poll();
         nGQL = qlWithSpace(localSession, nGQL, getSpace(cm, mm));
         session = localSession.getSession();
         result = session.executeWithParameter(nGQL, params);
@@ -251,7 +251,7 @@ public class MapperProxy {
           params,
           result);
         if (localSession != null) {
-          ENV.getDispatcher().offer(localSession);
+          env.getDispatcher().offer(localSession);
         }
       }
     }
@@ -273,7 +273,7 @@ public class MapperProxy {
     final ClassModel cm, final MethodModel mm) {
       return mm != null && mm.getSpace() != null
         ? mm.getSpace()
-        : cm != null && cm.getSpace() != null ? cm.getSpace() : ENV.getSpace();
+        : cm != null && cm.getSpace() != null ? cm.getSpace() : env.getSpace();
     }
 
   public static Logger getLog() {

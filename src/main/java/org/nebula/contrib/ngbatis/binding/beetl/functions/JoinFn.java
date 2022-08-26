@@ -18,16 +18,18 @@ import java.util.List;
 public class JoinFn extends AbstractFunction
     <Iterable<?>, String, String, Void, Void, Void> {
 
-  public String call(final Iterable<?> iterable, final String sep, final String fnName) {
-    List<String> strs = new ArrayList<>();
-    for (Object el : iterable) {
-      String elStr = isEmpty(fnName) ? String.valueOf(el) : fnCall(fnName, el);
-      strs.add(elStr);
+  public String call(
+    final Iterable<?> iterable, final String sep, final String fnName) {
+      List<String> strs = new ArrayList<>();
+      for (Object el : iterable) {
+        String elStr = isEmpty(fnName)
+          ? String.valueOf(el) : fnCall(fnName, el);
+        strs.add(elStr);
+      }
+      if (sep == null) {
+        return String.join(",", strs);
+      } else {
+        return String.join(sep, strs);
+      }
     }
-    if (sep == null) {
-      return String.join(",", strs);
-    } else {
-      return String.join(sep, strs);
-    }
-  }
 }

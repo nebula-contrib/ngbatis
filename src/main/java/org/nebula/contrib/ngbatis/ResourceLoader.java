@@ -6,7 +6,6 @@ package org.nebula.contrib.ngbatis;
 import java.io.IOException;
 import java.util.Map;
 import org.nebula.contrib.ngbatis.models.ClassModel;
-import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.springframework.core.io.Resource;
 
 /**.

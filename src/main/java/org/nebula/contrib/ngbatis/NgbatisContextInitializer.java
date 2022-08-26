@@ -141,7 +141,7 @@ class NgbatisBeanFactoryPostProcessor
   private MapperProxyClassGenerator beanFactory
     = new MapperProxyClassGenerator();
 
-  public NgbatisBeanFactoryPostProcessor(
+  public void ngbatisBeanFactoryPostProcessor(
     final NebulaJdbcProperties nebulaJdbcProperties,
     final ParseCfgProps parseCfgProps,
     final ConfigurableApplicationContext context) {

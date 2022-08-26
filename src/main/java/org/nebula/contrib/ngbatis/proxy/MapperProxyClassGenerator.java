@@ -4,11 +4,9 @@ package org.nebula.contrib.ngbatis.proxy;
 //
 // This source code is licensed under Apache 2.0 License.
 import static org.nebula.contrib.ngbatis.models.ClassModel.PROXY_SUFFIX;
-import static org.nebula.contrib.ngbatis.utils.ReflectUtil.NEED_SEALING_TYPES;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.lang.reflect.Method;
 import java.util.Map;
 import org.nebula.contrib.ngbatis.models.ClassModel;
 import org.nebula.contrib.ngbatis.models.MethodModel;
@@ -136,7 +134,8 @@ public class MapperProxyClassGenerator implements Opcodes {
 
       // 检查类型转换
       Class<?> returnType = mm.getReturnType();
-      mapper.visitTypeInsn(CHECKCAST, getFullNameType(returnType.getTypeName()));
+      mapper.visitTypeInsn(CHECKCAST, getFullNameType(
+        returnType.getTypeName()));
 
       // 基本类型封箱
       // sealingReturnType(mapper, returnType ); // FIXME 处理基本类型的封箱

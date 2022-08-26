@@ -12,7 +12,6 @@ import com.vesoft.nebula.*;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -34,7 +33,7 @@ public class DefaultArgsResolver implements ArgsResolver {
   @Override
   public Map<String, Object> resolve(
       final MethodModel methodModel, final Object... args) {
-    Method method = methodModel.getMethod();
+    // Method method = methodModel.getMethod();
     if (args.length == 0) {
       return Collections.emptyMap();
     }
@@ -72,7 +71,7 @@ public class DefaultArgsResolver implements ArgsResolver {
     return result;
   }
 
-  public static Map<Class<?>, Setter> LEAF_TYPE_AND_SETTER =
+  public static Map<Class<?>, Setter> leafTypeAndSetter =
       new HashMap<Class<?>, Setter>() {
         {
           put(boolean.class, (Setter<Boolean>) Value::bVal);
@@ -108,7 +107,7 @@ public class DefaultArgsResolver implements ArgsResolver {
         }
       };
 
-  public static Map<Class<?>, Setter> COMPLEX_TYPE_AND_SETTER =
+  public static Map<Class<?>, Setter> complexTypeAndSetter =
       new LinkedHashMap<Class<?>, Setter>() {
         {
           put(
@@ -189,13 +188,13 @@ public class DefaultArgsResolver implements ArgsResolver {
       return null;
     }
     Class<?> paramType = param.getClass();
-    Setter setter = LEAF_TYPE_AND_SETTER.get(paramType);
+    Setter setter = leafTypeAndSetter.get(paramType);
     if (setter != null) {
       return (T) setter.set(param);
     }
-    for (Class<?> pType : COMPLEX_TYPE_AND_SETTER.keySet()) {
+    for (Class<?> pType : complexTypeAndSetter.keySet()) {
       if (isCurrentTypeOrParentType(paramType, pType)) {
-        return (T) COMPLEX_TYPE_AND_SETTER.get(pType).set(param);
+        return (T) complexTypeAndSetter.get(pType).set(param);
       }
     }
     return (T) param;

@@ -21,7 +21,7 @@ import org.nebula.contrib.ngbatis.models.MethodModel;
 .*/
 public class ReflectUtil {
 
-  public static List<Class<?>> NUMBER_TYPES =
+  public static List<Class<?>> numberTypes =
       Arrays.asList(
           int.class,
           Integer.class,
@@ -44,9 +44,9 @@ public class ReflectUtil {
   }
 
   public static void setValue(
-    final Object o, final Field field, final Object value)
+    final Object o, final Field field, Object value)
       throws IllegalAccessException {
-    if (NUMBER_TYPES.contains(field.getType())) {
+    if (numberTypes.contains(field.getType())) {
       value = castNumber((Number) value, field.getType());
     }
     boolean accessible = field.isAccessible();
