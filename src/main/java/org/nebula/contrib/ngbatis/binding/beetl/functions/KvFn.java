@@ -78,7 +78,7 @@ public class KvFn extends
             }
             if (name != null) {
                 kv.columns.add(name);
-                Object[] paras = { ReflectUtil.getValue(record, field) };
+                Object[] paras = {ReflectUtil.getValue(record, field)};
                 kv.values.add(fnCall(valueFmtFn, paras));
                 kv.valueNames.add(isEmpty(prefix) ? name
                         : String.format("%s.%s", prefix, name));

@@ -54,7 +54,7 @@ public class MapperProxy {
         methodCache.clear();
         Map<String, MethodModel> methods = classModel.getMethods();
         methodCache.putAll(methods);
-    };
+    }
 
     /**
      * <strong>框架中极其重要的方法，被动态代理类所执行。是动态代理的入口方法{@link MapperProxyClassGenerator#method}</strong>
@@ -257,7 +257,7 @@ public class MapperProxy {
     public static String getSpace(ClassModel cm, MethodModel mm) {
         return mm != null && mm.getSpace() != null ? mm.getSpace()
                 : cm != null && cm.getSpace() != null ? cm.getSpace()
-                        : ENV.getSpace();
+                : ENV.getSpace();
     }
 
     public static Logger getLog() {

@@ -27,7 +27,7 @@ public class ClassModel {
 
     public MethodModel getMethod(String methodName) {
         return methods.get(methodName);
-    };
+    }
 
     private ResourceLoader resourceLoader;
 

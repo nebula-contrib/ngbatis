@@ -300,10 +300,10 @@ public interface NebulaDaoBasic<T, ID extends Serializable> {
         String cqlTpl = getCqlTpl();
         String edgeName = edgeName(edgeType);
         return (Boolean) proxy(
-                this.getClass(), Boolean.class, cqlTpl, new Class[] {
-                        Serializable.class, Class.class, Serializable.class },
+                this.getClass(), Boolean.class, cqlTpl, new Class[]{
+                        Serializable.class, Class.class, Serializable.class},
                 startId, edgeName, endId);
-    };
+    }
 
     /**
      * 通过结束节点id与关系类型获取所有开始节点，<br>
@@ -334,7 +334,7 @@ public interface NebulaDaoBasic<T, ID extends Serializable> {
         Class<? extends NebulaDaoBasic> daoType = this.getClass();
         Class<?> returnType = entityType(daoType);
         return (List<?>) proxy(daoType, returnType, cqlTpl,
-                new Class[] { Class.class, Class.class, Serializable.class },
+                new Class[]{Class.class, Class.class, Serializable.class},
                 startVertexName, edgeName, endId);
     }
 
@@ -367,7 +367,7 @@ public interface NebulaDaoBasic<T, ID extends Serializable> {
         Class<? extends NebulaDaoBasic> daoType = this.getClass();
         Class<?> returnType = entityType(daoType);
         return (E) proxy(daoType, returnType, cqlTpl,
-                new Class[] { Class.class, Class.class, Serializable.class },
+                new Class[]{Class.class, Class.class, Serializable.class},
                 startVertexName, edgeName, endId);
     }
 

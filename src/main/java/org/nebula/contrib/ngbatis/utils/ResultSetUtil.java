@@ -32,32 +32,32 @@ public class ResultSetUtil {
         try {
             Object o = value.isLong() ? value.asLong()
                     : value.isBoolean() ? value.asBoolean()
-                            : value.isDouble() ? value.asDouble()
-                                    : value.isString() ? value.asString()
-                                            : value.isTime() ? value.asTime()
-                                                    : value.isDate()
-                                                            ? transformDate(
-                                                                    value.asDate())
-                                                            : value.isDateTime()
-                                                                    ? transformDateTime(
-                                                                            value.asDateTime())
-                                                                    : value.isVertex()
-                                                                            ? transformNode(
-                                                                                    value.asNode())
-                                                                            : value.isEdge()
-                                                                                    ? value.asRelationship()
-                                                                                    : value.isPath()
-                                                                                            ? value.asPath()
-                                                                                            : value.isList()
-                                                                                                    ? transformList(
-                                                                                                            value.asList())
-                                                                                                    : value.isSet()
-                                                                                                            ? transformList(
-                                                                                                                    value.asList())
-                                                                                                            : value.isMap()
-                                                                                                                    ? transformMap(
-                                                                                                                            value.asMap())
-                                                                                                                    : null;
+                    : value.isDouble() ? value.asDouble()
+                    : value.isString() ? value.asString()
+                    : value.isTime() ? value.asTime()
+                    : value.isDate()
+                    ? transformDate(
+                    value.asDate())
+                    : value.isDateTime()
+                    ? transformDateTime(
+                    value.asDateTime())
+                    : value.isVertex()
+                    ? transformNode(
+                    value.asNode())
+                    : value.isEdge()
+                    ? value.asRelationship()
+                    : value.isPath()
+                    ? value.asPath()
+                    : value.isList()
+                    ? transformList(
+                    value.asList())
+                    : value.isSet()
+                    ? transformList(
+                    value.asList())
+                    : value.isMap()
+                    ? transformMap(
+                    value.asMap())
+                    : null;
 
             return (T) o;
         } catch (UnsupportedEncodingException e) {

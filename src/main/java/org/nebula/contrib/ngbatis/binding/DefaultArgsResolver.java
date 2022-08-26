@@ -227,7 +227,7 @@ class DateDeserializer implements ObjectSerializer {
         Class<?> objClass = object.getClass();
         fn = objClass == java.util.Date.class ? "datetime"
                 : objClass == java.sql.Date.class ? "date"
-                        : objClass == java.sql.Time.class ? "time" : fn;
+                : objClass == java.sql.Time.class ? "time" : fn;
         out.write("\"" + String.format("%s('%s')", fn, sdf.format(object))
                 + "\"");
     }

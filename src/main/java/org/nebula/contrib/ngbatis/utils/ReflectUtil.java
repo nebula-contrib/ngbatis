@@ -54,20 +54,20 @@ public class ReflectUtil {
         return (resultType == Integer.class || resultType == int.class)
                 ? n.intValue()
                 : (resultType == Long.class || resultType == long.class)
-                        ? n.longValue()
-                        : (resultType == Float.class
-                                || resultType == float.class)
-                                        ? n.floatValue()
-                                        : (resultType == Double.class
-                                                || resultType == double.class)
-                                                        ? n.doubleValue()
-                                                        : (resultType == Byte.class
-                                                                || resultType == byte.class)
-                                                                        ? n.byteValue()
-                                                                        : (resultType == Short.class
-                                                                                || resultType == short.class)
-                                                                                        ? n.shortValue()
-                                                                                        : n;
+                ? n.longValue()
+                : (resultType == Float.class
+                || resultType == float.class)
+                ? n.floatValue()
+                : (resultType == Double.class
+                || resultType == double.class)
+                ? n.doubleValue()
+                : (resultType == Byte.class
+                || resultType == byte.class)
+                ? n.byteValue()
+                : (resultType == Short.class
+                || resultType == short.class)
+                ? n.shortValue()
+                : n;
     }
 
     public static Object getValue(Object o, Field field) {
@@ -140,17 +140,17 @@ public class ReflectUtil {
     public static Class<?> sealingBasicType(Class<?> returnType) {
         return returnType == short.class ? Short.class
                 : returnType == int.class ? Integer.class
-                        : returnType == long.class ? Long.class
-                                : returnType == double.class ? Double.class
-                                        : returnType == float.class
-                                                ? Float.class
-                                                : returnType == byte.class
-                                                        ? Byte.class
-                                                        : returnType == char.class
-                                                                ? Character.class
-                                                                : returnType == boolean.class
-                                                                        ? Boolean.class
-                                                                        : returnType;
+                : returnType == long.class ? Long.class
+                : returnType == double.class ? Double.class
+                : returnType == float.class
+                ? Float.class
+                : returnType == byte.class
+                ? Byte.class
+                : returnType == char.class
+                ? Character.class
+                : returnType == boolean.class
+                ? Boolean.class
+                : returnType;
     }
 
     public static String insnType(Class<?> type) {
@@ -190,6 +190,7 @@ public class ReflectUtil {
     }
 
     public final static List<Class> CLASSES;
+
     static {
         CLASSES = Arrays.asList(String.class, Character.class, char.class,
                 Float.class, float.class, Double.class, double.class,

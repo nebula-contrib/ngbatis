@@ -59,7 +59,7 @@ public class MapperProxyClassGenerator implements Opcodes {
         ClassWriter cw = new ClassWriter(0);
         // public class XXX extends Object implement XXX
         cw.visit(V1_8, ACC_PUBLIC, fullNameType, null, "java/lang/Object",
-                new String[] { getFullNameType(cm.getNamespace().getName()) });
+                new String[]{getFullNameType(cm.getNamespace().getName())});
         // 无参构造
         constructor(cw);
         // 生成代理方法
@@ -161,10 +161,10 @@ public class MapperProxyClassGenerator implements Opcodes {
     private int getReturnTypeInsn(Class returnType) {
         return returnType == long.class ? LRETURN
                 : returnType == int.class ? IRETURN
-                        : returnType == double.class ? DRETURN
-                                : returnType == float.class ? FRETURN
-                                        : returnType == void.class ? RETURN
-                                                : ARETURN;
+                : returnType == double.class ? DRETURN
+                : returnType == float.class ? FRETURN
+                : returnType == void.class ? RETURN
+                : ARETURN;
     }
 
     /**

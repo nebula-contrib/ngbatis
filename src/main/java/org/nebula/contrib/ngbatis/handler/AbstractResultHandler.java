@@ -101,10 +101,10 @@ public abstract class AbstractResultHandler<T, Z>
     protected T defaultInstance(Class returnType) {
         Object o = returnType == List.class ? new ArrayList()
                 : returnType == Set.class ? new HashSet()
-                        : returnType == Queue.class
-                                ? new ConcurrentLinkedQueue()
-                                : returnType == Map.class ? new HashMap<>()
-                                        : null;
+                : returnType == Queue.class
+                ? new ConcurrentLinkedQueue()
+                : returnType == Map.class ? new HashMap<>()
+                : null;
         return (T) o;
     }
 

@@ -58,13 +58,13 @@ public class NebulaDaoBasicExt {
                     ParameterizedType.class)) {
                 Type[] actualTypeArguments = ((ParameterizedType) genericInterface)
                         .getActualTypeArguments();
-                result = new Class<?>[] { (Class<?>) actualTypeArguments[0],
-                    // T
-                    // {@link
-                    // NebulaDaoBasic
-                    // }
+                result = new Class<?>[]{(Class<?>) actualTypeArguments[0],
+                        // T
+                        // {@link
+                        // NebulaDaoBasic
+                        // }
                         (Class<?>) actualTypeArguments[1] // ID {@link
-                                                          // NebulaDaoBasic }
+                // NebulaDaoBasic }
                 };
             } else if (genericInterface instanceof Class) {
                 result = entityTypeAndIdType((Class) genericInterface);
