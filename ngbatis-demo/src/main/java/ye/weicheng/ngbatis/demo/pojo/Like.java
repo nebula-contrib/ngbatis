@@ -5,20 +5,20 @@ package ye.weicheng.ngbatis.demo.pojo;
 
 import javax.persistence.Table;
 
-/**
- * @author yeweicheng
- * @since 2022-06-21 17:08
- * <br>Now is history!
- */
+/**.
+ * @author yeweicheng.
+ * @since 2022-06-21 17:08 <br>.
+ *     Now is history.
+.*/
 @Table(name = "like")
 public class Like {
-    private Double likeness;
+  private Double likeness;
 
-    public Double getLikeness() {
-        return likeness;
-    }
+  public Double getLikeness() {
+    return likeness;
+  }
 
-    public void setLikeness(Double likeness) {
-        this.likeness = likeness;
-    }
+  public void setLikeness(Double likeness) {
+    this.likeness = likeness;
+  }
 }

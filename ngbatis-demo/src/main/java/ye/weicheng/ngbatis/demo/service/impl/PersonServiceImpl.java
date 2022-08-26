@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service;
 import ye.weicheng.ngbatis.demo.repository.TestRepository;
 import ye.weicheng.ngbatis.demo.service.PersonService;
 
-/**
- * @author yeweicheng
- * @since 2022-06-17 7:18
- * <br>Now is history!
- */
+/**.
+ * @author yeweicheng.
+ * @since 2022-06-17 7:18 <br>.
+ *     Now is history.
+.*/
 @Service
 public class PersonServiceImpl implements PersonService {
-    @Autowired private TestRepository repository;
+  @Autowired private TestRepository repository;
 }
