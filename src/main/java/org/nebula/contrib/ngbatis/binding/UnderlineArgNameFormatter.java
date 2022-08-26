@@ -21,12 +21,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class UnderlineArgNameFormatter implements ArgNameFormatter {
   @Override
-  public CqlAndArgs format(String oldText, Map<String, Object> obj) {
+  public CqlAndArgs format(final String oldText, final Map<String, Object> obj) {
     String newText = textFormat(oldText, obj);
     return new CqlAndArgs(newText, argObjRename(obj));
   }
 
-  private static String textFormat(String text, Map<String, Object> obj) {
+  private static String textFormat(final String text, final Map<String, Object> obj) {
     Pattern compile = Pattern.compile("\\{\\s{0,}\\w{0,}.\\w{0,}\\s{0,}\\}");
     Matcher matcher = compile.matcher(text);
     Map<String, Integer> elCount = new HashMap<>();
@@ -53,11 +53,11 @@ public class UnderlineArgNameFormatter implements ArgNameFormatter {
     return text;
   }
 
-  public static String replaceRegExpSymbol(String text) {
+  public static String replaceRegExpSymbol(final String text) {
     return text.replace("{", "\\{").replace("}", "\\}");
   }
 
-  public Map<String, Object> argObjRename(Map<String, Object> obj) {
+  public Map<String, Object> argObjRename(final Map<String, Object> obj) {
     return new KeySymbolMap(obj, "_").getOneDMap();
   }
 }

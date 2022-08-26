@@ -53,7 +53,7 @@ public class MapperResourceLoader extends
     super();
   }
 
-  public MapperResourceLoader(ParseCfgProps parseConfig) {
+  public MapperResourceLoader(final ParseCfgProps parseConfig) {
     this.parseConfig = parseConfig;
   }
 
@@ -86,7 +86,7 @@ public class MapperResourceLoader extends
    * @throws IOException.
   .*/
   public Map<String, ClassModel> parseClassModel(
-      Resource resource) throws IOException {
+      final Resource resource) throws IOException {
     Map<String, ClassModel> result = new HashMap<>();
     // 从资源中获取文件信息，IO 读取
     Document doc = Jsoup.parse(
@@ -118,7 +118,7 @@ public class MapperResourceLoader extends
    * @return 返回当前XXXDao类的所有方法信息Map，k: 方法名，v：方法模型（即 xml 里一个方法标签的全部信息）.
   .*/
   private Map<String, MethodModel> parseMethodModel(
-      Class namespace, List<Node> nodes) {
+      final Class namespace, final List<Node> nodes) {
     Map<String, MethodModel> methods = new HashMap<>();
     List<String> methodNames = getMethodNames(nodes);
     for (Node methodNode : nodes) {
@@ -147,10 +147,10 @@ public class MapperResourceLoader extends
    * @param methods 用于将需要分页的接口，自动追加两个接口，用于生成动态代理.
   .*/
   private void pageSupport(
-      Method method,
-      MethodModel methodModel,
-      List<String> methodNames,
-      Map<String, MethodModel> methods) {
+      final Method method,
+      final MethodModel methodModel,
+      final List<String> methodNames,
+      final Map<String, MethodModel> methods) {
     Class<?>[] parameterTypes = method.getParameterTypes();
     List<Class<?>> parameterTypeList = Arrays.asList(parameterTypes);
     if (parameterTypeList.contains(Page.class)) {
@@ -175,8 +175,8 @@ public class MapperResourceLoader extends
    * @return
   .*/
   private MethodModel createCountMethod(
-      MethodModel methodModel, List<String> methodNames,
-      Class<?>[] parameterTypes) {
+      final MethodModel methodModel, final List<String> methodNames,
+      final Class<?>[] parameterTypes) {
     String methodName = methodModel.getId();
     String countMethodName = String.format("%s$Count", methodName);
     Assert.isTrue(
@@ -206,10 +206,10 @@ public class MapperResourceLoader extends
    * @return 查询范围条目方法 的方法模型.
   .*/
   private MethodModel createPageMethod(
-      MethodModel methodModel,
-      List<String> methodNames,
-      Class<?>[] parameterTypes,
-      int pageParamIndex) {
+      final MethodModel methodModel,
+      final List<String> methodNames,
+      final Class<?>[] parameterTypes,
+      final int pageParamIndex) {
     String methodName = methodModel.getId();
     String pageMethodName = String.format("%s$Page", methodName);
     Assert.isTrue(
@@ -238,7 +238,7 @@ public class MapperResourceLoader extends
    * @param nodes xml 中 &lt;mapper&gt; 下的子标签.
    * @return 当前 &lt;mapper&gt; 所声明的所有子标签 id.
   .*/
-  private List<String> getMethodNames(List<Node> nodes) {
+  private List<String> getMethodNames(final List<Node> nodes) {
     return nodes.stream()
         .map(
             node -> {
@@ -256,7 +256,7 @@ public class MapperResourceLoader extends
    * @param method 查询方法.
    * @param namespace 接口类.
   .*/
-  private void checkReturnType(Method method, Class namespace) {
+  private void checkReturnType(final Method method, final Class namespace) {
     Class<?> returnType = method.getReturnType();
     if (NEED_SEALING_TYPES.contains(returnType)) {
       throw new ResourceLoadException(
@@ -271,7 +271,7 @@ public class MapperResourceLoader extends
    * @param node &lt;mapper&gt; 子标签.
    * @return 方法模型.
   .*/
-  protected MethodModel parseMethodModel(Node node) {
+  protected MethodModel parseMethodModel(final Node node) {
     MethodModel model = new MethodModel();
     match(model, node, "id", parseConfig.getId());
     match(model, node, "parameterType", parseConfig.getParameterType());
@@ -289,7 +289,7 @@ public class MapperResourceLoader extends
    * @param nodes.
    * @return
   .*/
-  protected String nodesToString(List<? extends Node> nodes) {
+  protected String nodesToString(final List<? extends Node> nodes) {
     StringBuilder builder = new StringBuilder();
     for (Node node : nodes) {
       if (node instanceof TextNode) {
@@ -310,7 +310,9 @@ public class MapperResourceLoader extends
    * @param javaAttr.
    * @param attr.
   .*/
-  private void match(Object model, Node node, String javaAttr, String attr) {
+  private void match(
+      final Object model, final Node node, final String javaAttr,
+      final String attr) {
     String attrTemp = null;
     try {
       String attrText = node.attr(attr);

@@ -23,7 +23,8 @@ import org.springframework.stereotype.Component;
 public class MapResultHandler extends AbstractResultHandler<Map, Map> {
 
   @Override
-  public Map handle(Map newResult, ResultSet result, Class resultType) {
+  public Map handle(
+      final Map newResult, final ResultSet result, final Class resultType) {
     List<String> columnNames = result.getColumnNames();
     ResultSet.Record record = result.rowValues(0);
     for (int i = 0; i < columnNames.size(); i++) {

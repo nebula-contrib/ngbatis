@@ -31,7 +31,7 @@ public class MapperProxyClassGenerator implements Opcodes {
    * @param cm 已经扫描的类模型.
    * @return
   .*/
-  private String getFullNameType(ClassModel cm) {
+  private String getFullNameType(final ClassModel cm) {
     return getFullNameType((cm.getNamespace().getName() + PROXY_SUFFIX));
   }
 
@@ -41,7 +41,7 @@ public class MapperProxyClassGenerator implements Opcodes {
    * @param className 接口全限定名.
    * @return
   .*/
-  private String getFullNameType(String className) {
+  private String getFullNameType(final String className) {
     return className.replace(".", "/");
   }
 
@@ -52,7 +52,7 @@ public class MapperProxyClassGenerator implements Opcodes {
    * @param cm DAO 类模型.
    * @return DAO 接口对应的字节码.
   .*/
-  public byte[] setClassCode(ClassModel cm) {
+  public byte[] setClassCode(final ClassModel cm) {
     String fullNameType = getFullNameType(cm);
 
     ClassWriter cw = new ClassWriter(0);
@@ -84,7 +84,7 @@ public class MapperProxyClassGenerator implements Opcodes {
    * @param cw asm 的类访问器.
    * @param cm DAO 接口类模型.
   .*/
-  private void methods(ClassWriter cw, ClassModel cm) {
+  private void methods(final ClassWriter cw, final ClassModel cm) {
     // 读取配置，并根据配置向 class 文件写人代理方法
     Map<String, MethodModel> methods = cm.getMethods();
     for (Map.Entry<String, MethodModel> entry : methods.entrySet()) {
@@ -100,60 +100,62 @@ public class MapperProxyClassGenerator implements Opcodes {
    * @param mmEntry 方法名与方法模型映射.
   .*/
   private void method(
-      ClassWriter cw, ClassModel cm, Map.Entry<String, MethodModel> mmEntry) {
-    String methodName = mmEntry.getKey();
-    MethodModel mm = mmEntry.getValue();
-    /*.
-     * return Mapper.invoke( "接口名 namespace", "方法名 method", new Object[]{.
-     * arg1, arg2, ... } ); ----- start.
-    .*/
-    Method method = mm.getMethod();
-    String methodSignature = ReflectUtil.getMethodSignature(mm);
-    MethodVisitor mapper = cw.visitMethod(
-      ACC_PUBLIC, methodName, methodSignature, null, null);
+    final ClassWriter cw, final ClassModel cm,
+    final Map.Entry<String, MethodModel> mmEntry) {
+      String methodName = mmEntry.getKey();
+      MethodModel mm = mmEntry.getValue();
+      /*.
+      * return Mapper.invoke( "接口名 namespace", "方法名 method", new Object[]{.
+      * arg1, arg2, ... } ); ----- start.
+      .*/
+      // Method method = mm.getMethod();
+      String methodSignature = ReflectUtil.getMethodSignature(mm);
+      MethodVisitor mapper = cw.visitMethod(
+        ACC_PUBLIC, methodName, methodSignature, null, null);
 
-    mapper.visitCode();
-    String className = cm.getNamespace().getName();
-    mapper.visitLdcInsn(className);
-    mapper.visitLdcInsn(mm.getId());
-    int parameterCount = addParams(mapper, mm.getParameterCount());
-    mapper.visitMethodInsn(
-        INVOKESTATIC,
-        getFullNameType(MapperProxy.class.getName()),
-        "invoke",
-        "(Ljava/lang/String;Ljava/lang/String;"
-          + "[Ljava/lang/Object;)Ljava/lang/Object;",
-        false);
-
-    /*.
-     * -------------------------------- end --------------------------------.
-    .*/
-
-    // *2，每多一个方法参数，需要多定义 2 个局部变量，下标变量
-    // +3： 3 个固定参数位，namespace、methodName、args
-    mapper.visitMaxs(Integer.MAX_VALUE, Integer.MAX_VALUE);
-
-    // 检查类型转换
-    Class<?> returnType = mm.getReturnType();
-    mapper.visitTypeInsn(CHECKCAST, getFullNameType(returnType.getTypeName()));
-
-    // 基本类型封箱
-    // sealingReturnType(mapper, returnType ); // FIXME 处理基本类型的封箱
-
-    int returnTypeInsn = getReturnTypeInsn(returnType);
-    mapper.visitInsn(returnTypeInsn);
-    mapper.visitEnd();
-  }
-
-  private void sealingReturnType(MethodVisitor mapper, Class<?> returnType) {
-    Class<?> basicReturnType = ReflectUtil.sealingBasicType(returnType);
-    if (NEED_SEALING_TYPES.contains(returnType)) {
-      String typeName = getFullNameType(basicReturnType.getName());
-      String methodName = returnType.getName() + "Value";
+      mapper.visitCode();
+      String className = cm.getNamespace().getName();
+      mapper.visitLdcInsn(className);
+      mapper.visitLdcInsn(mm.getId());
+      // int parameterCount = addParams(mapper, mm.getParameterCount());
       mapper.visitMethodInsn(
-        INVOKEVIRTUAL, typeName, methodName, "()I", false);
+          INVOKESTATIC,
+          getFullNameType(MapperProxy.class.getName()),
+          "invoke",
+          "(Ljava/lang/String;Ljava/lang/String;"
+            + "[Ljava/lang/Object;)Ljava/lang/Object;",
+          false);
+
+      /*.
+      * -------------------------------- end --------------------------------.
+      .*/
+
+      // *2，每多一个方法参数，需要多定义 2 个局部变量，下标变量
+      // +3： 3 个固定参数位，namespace、methodName、args
+      mapper.visitMaxs(Integer.MAX_VALUE, Integer.MAX_VALUE);
+
+      // 检查类型转换
+      Class<?> returnType = mm.getReturnType();
+      mapper.visitTypeInsn(CHECKCAST, getFullNameType(returnType.getTypeName()));
+
+      // 基本类型封箱
+      // sealingReturnType(mapper, returnType ); // FIXME 处理基本类型的封箱
+
+      int returnTypeInsn = getReturnTypeInsn(returnType);
+      mapper.visitInsn(returnTypeInsn);
+      mapper.visitEnd();
     }
-  }
+
+  // private void sealingReturnType(
+  //   final MethodVisitor mapper, final Class<?> returnType) {
+  //     Class<?> basicReturnType = ReflectUtil.sealingBasicType(returnType);
+  //     if (NEED_SEALING_TYPES.contains(returnType)) {
+  //       String typeName = getFullNameType(basicReturnType.getName());
+  //       String methodName = returnType.getName() + "Value";
+  //       mapper.visitMethodInsn(
+  //         INVOKEVIRTUAL, typeName, methodName, "()I", false);
+  //     }
+  //   }
 
   /**.
    * int IRETURN = 172; // visitInsn int LRETURN = 173;.
@@ -163,7 +165,7 @@ public class MapperProxyClassGenerator implements Opcodes {
    * @param returnType
    * @return
   .*/
-  private int getReturnTypeInsn(Class returnType) {
+  private int getReturnTypeInsn(final Class returnType) {
     return returnType == long.class
         ? LRETURN
         : returnType == int.class
@@ -181,35 +183,37 @@ public class MapperProxyClassGenerator implements Opcodes {
    * @param mv.
    * @param parameterCount.
   .*/
-  private int addParams(MethodVisitor mv, int parameterCount) {
-    // 获取被代理方法的参数个数，当前变量的栈中位置后推一位
-    int varLocation = parameterCount + 1;
-    // Object[] argN = new Object[ parameterCount ] --------- start
-    mv.visitLdcInsn(parameterCount);
-    mv.visitTypeInsn(ANEWARRAY, "java/lang/Object");
-    mv.visitVarInsn(ASTORE, varLocation); // 将数组引用存到局部变量栈1号的位置
-    mv.visitVarInsn(ALOAD, varLocation);
-    // ------------------------------------------------------------ end
-    // argN[ i ] = argI
-    for (int i = 0; i < parameterCount; i++) {
-      // 读取变量 argN
-      mv.visitVarInsn(ALOAD, varLocation);
-      // 访问欲赋值的下标
-      mv.visitLdcInsn(i);
-      // 访问值变量
-      mv.visitVarInsn(ALOAD, i + 1); // 方法传入的参数，起始位是 1，第 0 位为 this
-      // 将值变量设置到对应下标中
-      mv.visitInsn(AASTORE);
-    }
-    return parameterCount;
-  }
+  // private int addParams(
+  //   final MethodVisitor mv, final int parameterCount) {
+  //     // 获取被代理方法的参数个数，当前变量的栈中位置后推一位
+  //     int varLocation = parameterCount + 1;
+  //     // Object[] argN = new Object[ parameterCount ] --------- start
+  //     mv.visitLdcInsn(parameterCount);
+  //     mv.visitTypeInsn(ANEWARRAY, "java/lang/Object");
+  //     mv.visitVarInsn(ASTORE, varLocation); // 将数组引用存到局部变量栈1号的位置
+  //     mv.visitVarInsn(ALOAD, varLocation);
+  //     // ------------------------------------------------------------ end
+  //     // argN[ i ] = argI
+  //     for (int i = 0; i < parameterCount; i++) {
+  //       // 读取变量 argN
+  //       mv.visitVarInsn(ALOAD, varLocation);
+  //       // 访问欲赋值的下标
+  //       mv.visitLdcInsn(i);
+  //       // 访问值变量
+  //       mv.visitVarInsn(ALOAD, i + 1); // 方法传入的参数，起始位是 1，第 0 位为 this
+  //       // 将值变量设置到对应下标中
+  //       mv.visitInsn(AASTORE);
+  //     }
+  //     return parameterCount;
+  //   }
 
   /**.
-   * 空参构造函数生成方法 public XXX() {.
-   *.
-   * <p>}.
+   * 空参构造函数生成方法 public
+   * XXX() {
+   *
+   * }
   .*/
-  private void constructor(ClassWriter cw) {
+  private void constructor(final ClassWriter cw) {
     MethodVisitor constructor = cw.visitMethod(
       ACC_PUBLIC, "<init>", "()V", null, null);
     // 将this参数入栈
@@ -229,7 +233,7 @@ public class MapperProxyClassGenerator implements Opcodes {
    *.
    * @param cm.
   .*/
-  private void writeFile(ClassModel cm) {
+  private void writeFile(final ClassModel cm) {
     try {
       File file = new File("asm-debug\\" + getFullNameType(cm) + ".class");
       File dir = new File(file.getParent());

@@ -20,7 +20,7 @@ public class KeySymbolMap extends HashMap<String, Object> {
   private final Map<String, Object> map;
   private String split;
 
-  public KeySymbolMap(Map<String, Object> map, String split) {
+  public KeySymbolMap(final Map<String, Object> map, final String split) {
     if (map == null) {
       throw new IllegalArgumentException("map is null.");
     }
@@ -33,11 +33,12 @@ public class KeySymbolMap extends HashMap<String, Object> {
     return getOneDMap(this.split);
   }
 
-  public Map<String, Object> getOneDMap(String split) {
+  public Map<String, Object> getOneDMap(final String split) {
     return getOneDMap("", split);
   }
 
-  private Map<String, Object> getOneDMap(String prefix, String split) {
+  private Map<String, Object> getOneDMap(
+      final String prefix, final String split) {
     Map<String, Object> oneDMap = new HashMap<>();
     for (Entry<String, Object> entry : this.map.entrySet()) {
       String key = entry.getKey();
@@ -60,7 +61,8 @@ public class KeySymbolMap extends HashMap<String, Object> {
   }
 
   private void putOneDMap(
-      Map<String, Object> result, String prefix, String split) {
+      final Map<String, Object> result, final String prefix,
+      final String split) {
     Map<String, Object> oneDMapInner = this.getOneDMap(prefix, split);
     result.putAll(oneDMapInner);
   }
@@ -84,7 +86,7 @@ public class KeySymbolMap extends HashMap<String, Object> {
     }
   }
 
-  public Object get(Object keyDot) {
+  public Object get(final Object keyDot) {
     if (keyDot == null) { return null; }
     String[] split = keyDot.toString().split(this.split);
     Queue<String> queue = new ConcurrentLinkedQueue(Arrays.asList(split));
@@ -92,7 +94,7 @@ public class KeySymbolMap extends HashMap<String, Object> {
     return o;
   }
 
-  public Object get(Queue<String> queue, String collectionInner) {
+  public Object get(final Queue<String> queue, final String collectionInner) {
     if (queue.size() != 0) {
       String currentKey =
         collectionInner == null ? queue.poll() : collectionInner;
@@ -124,21 +126,21 @@ public class KeySymbolMap extends HashMap<String, Object> {
     return map.get(collectionInner);
   }
 
-  public Object put(String key, Object value) {
+  public Object put(final String key, final Object value) {
     return map.put(key, value);
   }
 
-  public KeySymbolMap fluentPut(String key, Object value) {
+  public KeySymbolMap fluentPut(final String key, final Object value) {
     map.put(key, value);
     return this;
   }
 
-  public void putAll(Map<? extends String, ? extends Object> m) {
+  public void putAll(final Map<? extends String, ? extends Object> m) {
     map.putAll(m);
   }
 
   public KeySymbolMap fluentPutAll(
-      Map<? extends String, ? extends Object> m) {
+      final Map<? extends String, ? extends Object> m) {
     map.putAll(m);
     return this;
   }
@@ -152,20 +154,20 @@ public class KeySymbolMap extends HashMap<String, Object> {
     return this;
   }
 
-  public Object remove(String key) {
+  public Object remove(final String key) {
     return map.remove(key);
   }
 
-  public KeySymbolMap fluentRemove(String key) {
+  public KeySymbolMap fluentRemove(final String key) {
     map.remove(key);
     return this;
   }
 
-  public Object remove(Object key) {
+  public Object remove(final Object key) {
     return map.remove(key);
   }
 
-  public KeySymbolMap fluentRemove(Object key) {
+  public KeySymbolMap fluentRemove(final Object key) {
     map.remove(key);
     return this;
   }
@@ -190,11 +192,11 @@ public class KeySymbolMap extends HashMap<String, Object> {
     return map.isEmpty();
   }
 
-  public boolean containsKey(Object key) {
+  public boolean containsKey(final Object key) {
     return map.containsKey(key);
   }
 
-  public boolean containsValue(Object value) {
+  public boolean containsValue(final Object value) {
     return map.containsValue(value);
   }
 }

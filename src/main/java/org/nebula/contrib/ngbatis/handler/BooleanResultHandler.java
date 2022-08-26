@@ -22,11 +22,13 @@ public class BooleanResultHandler extends AbstractResultHandler
     <Boolean, Boolean> {
 
   @Override
-  public Boolean handle(Boolean newResult, ResultSet result, Class resultType)
-      throws NoSuchFieldException, IllegalAccessException,
-      InstantiationException {
-    ResultSet.Record record = result.rowValues(0);
-    ValueWrapper valueWrapper = record.values().get(0);
-    return ResultSetUtil.getValue(valueWrapper);
+  public Boolean handle(
+      final Boolean newResult, final ResultSet result,
+      final finalClass resultType)
+    throws NoSuchFieldException, IllegalAccessException,
+    InstantiationException {
+      ResultSet.Record record = result.rowValues(0);
+      ValueWrapper valueWrapper = record.values().get(0);
+      return ResultSetUtil.getValue(valueWrapper);
   }
 }

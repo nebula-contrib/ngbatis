@@ -18,15 +18,18 @@ import org.springframework.stereotype.Component;
  *     Now is history.
 .*/
 @Component
-public class StringResultHandler extends AbstractResultHandler<String, String> {
+public class StringResultHandler extends AbstractResultHandler
+    <String, String> {
 
   @Override
-  public String handle(String newResult, ResultSet result, Class resultType)
-      throws NoSuchFieldException, IllegalAccessException,
-      InstantiationException {
-    ResultSet.Record record = result.rowValues(0);
-    ValueWrapper valueWrapper = record.values().get(0);
-    Object value = ResultSetUtil.getValue(valueWrapper);
-    return value == null ? null : value.toString();
+  public String handle(
+      final String newResult, final ResultSet result,
+      final Class resultType)
+    throws NoSuchFieldException, IllegalAccessException,
+    InstantiationException {
+      ResultSet.Record record = result.rowValues(0);
+      ValueWrapper valueWrapper = record.values().get(0);
+      Object value = ResultSetUtil.getValue(valueWrapper);
+      return value == null ? null : value.toString();
   }
 }

@@ -12,7 +12,7 @@ package org.nebula.contrib.ngbatis.exception;
 public class StmtException extends RuntimeException {
   public StmtException() { }
 
-  public StmtException(String o) {
+  public StmtException(final String o) {
     super(o);
     ;
   }

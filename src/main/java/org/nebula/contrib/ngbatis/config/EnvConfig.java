@@ -66,7 +66,7 @@ public class EnvConfig {
     return textResolver;
   }
 
-  public void setTextResolver(TextResolver textResolver) {
+  public void setTextResolver(final TextResolver textResolver) {
     this.textResolver = textResolver;
   }
 
@@ -74,7 +74,7 @@ public class EnvConfig {
     return resultResolver;
   }
 
-  public void setResultResolver(ResultResolver resultResolver) {
+  public void setResultResolver(final ResultResolver resultResolver) {
     this.resultResolver = resultResolver;
   }
 
@@ -82,7 +82,7 @@ public class EnvConfig {
     return argsResolver;
   }
 
-  public void setArgsResolver(ArgsResolver argsResolver) {
+  public void setArgsResolver(final ArgsResolver argsResolver) {
     this.argsResolver = argsResolver;
   }
 
@@ -90,7 +90,7 @@ public class EnvConfig {
     return argNameFormatter;
   }
 
-  public void setArgNameFormatter(ArgNameFormatter argNameFormatter) {
+  public void setArgNameFormatter(final ArgNameFormatter argNameFormatter) {
     this.argNameFormatter = argNameFormatter;
   }
 
@@ -98,7 +98,7 @@ public class EnvConfig {
     return cfgProps;
   }
 
-  public void setCfgProps(ParseCfgProps cfgProps) {
+  public void setCfgProps(final ParseCfgProps cfgProps) {
     this.cfgProps = cfgProps;
   }
 
@@ -106,7 +106,7 @@ public class EnvConfig {
     return context;
   }
 
-  public void setContext(ApplicationContext context) {
+  public void setContext(final ApplicationContext context) {
     this.context = context;
   }
 
@@ -114,7 +114,7 @@ public class EnvConfig {
     return properties;
   }
 
-  public void setProperties(NebulaJdbcProperties properties) {
+  public void setProperties(final NebulaJdbcProperties properties) {
     this.properties = properties;
   }
 }

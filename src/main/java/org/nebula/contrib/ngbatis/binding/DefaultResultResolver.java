@@ -24,7 +24,7 @@ public class DefaultResultResolver implements ResultResolver {
   private Logger log = LoggerFactory.getLogger(DefaultResultResolver.class);
 
   @Override
-  public Object resolve(MethodModel methodModel, ResultSet result) {
+  public Object resolve(final MethodModel methodModel, final ResultSet result) {
     Class returnType = methodModel.getReturnType();
     Class resultType = methodModel.getResultType();
 

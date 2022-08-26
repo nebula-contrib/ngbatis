@@ -14,7 +14,7 @@ import org.apache.logging.log4j.util.Strings;
 .*/
 public class StringUtil {
 
-  public static String xX2x_x(String xX) {
+  public static String xX2x_x(final String xX) {
     String[] uUsers = StringUtils.splitByCharacterTypeCamelCase(xX);
     return Strings.join(Arrays.stream(uUsers).iterator(), '_').toLowerCase();
   }

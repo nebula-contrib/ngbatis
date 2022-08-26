@@ -32,7 +32,7 @@ public abstract class AbstractResultHandler<T, Z>
 
   private Logger log = LoggerFactory.getLogger(AbstractResultHandler.class);
 
-  protected boolean isReturnTypeInterface(Class returnType) {
+  protected boolean isReturnTypeInterface(final Class returnType) {
     return returnType.isInterface();
   }
 
@@ -44,7 +44,9 @@ public abstract class AbstractResultHandler<T, Z>
    * @param resultType xml 中声明的返回值类型。通常用于集合泛型.
    * @return ORM 之后的 java对象结果.
   .*/
-  public T handle(Class returnType, ResultSet result, Class resultType) {
+  public T handle(
+      final Class returnType, final ResultSet result,
+      final Class resultType) {
     if (returnType == ResultSet.class) {
       return (T) result;
     }
@@ -77,7 +79,7 @@ public abstract class AbstractResultHandler<T, Z>
    * @param resultType xml 中声明的返回值类型。通常用于集合泛型.
    * @return 与预期返回值相符的空属性对象。.
   .*/
-  protected T newInstance(Class<T> returnType, Class resultType) {
+  protected T newInstance(final Class<T> returnType, final Class resultType) {
     if (isReturnTypeInterface(returnType)) {
       return this.defaultInstance(returnType);
     } else {
@@ -97,7 +99,7 @@ public abstract class AbstractResultHandler<T, Z>
    * @param returnType
    * @return
   .*/
-  protected T defaultInstance(Class returnType) {
+  protected T defaultInstance(final Class returnType) {
     Object o =
         returnType == List.class
             ? new ArrayList()
@@ -131,13 +133,13 @@ public abstract class AbstractResultHandler<T, Z>
    * @param returnType 接口的返回值类型.
    * @param resultType xml 中声明的返回值类型。通常用于集合泛型.
   .*/
-  void addHandler(Class returnType, Class resultType) {
+  void addHandler(final Class returnType, final Class resultType) {
     ResultHandler bean = this;
     DIFF_TYPE_RESULT_HANDLER.put(returnType, resultType, bean);
     HANDLERS.putIfAbsent(returnType, bean);
   }
 
-  protected String getLastName(String name) {
+  protected String getLastName(final String name) {
     String[] split = name.split("\\.");
     if (split.length == 1) {
       return split[0];
@@ -146,7 +148,7 @@ public abstract class AbstractResultHandler<T, Z>
     }
   }
 
-  protected String getLastLabel(String[] labels) {
+  protected String getLastLabel(final String[] labels) {
     if (labels != null) {
       int length = labels.length;
       if (length > 0) {

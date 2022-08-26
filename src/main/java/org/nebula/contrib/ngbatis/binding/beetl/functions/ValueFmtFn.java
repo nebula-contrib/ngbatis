@@ -17,7 +17,7 @@ public class ValueFmtFn extends AbstractFunction
     <Object, Void, Void, Void, Void, Void> {
 
   @Override
-  public Object call(Object value) {
+  public Object call(final Object value) {
     if (value == null) {
       return null;
     }

@@ -27,7 +27,7 @@ public class NebulaDaoBasicExt {
    * @param entityType 节点实体类类型.
    * @return 数据库中的 节点类型名.
   .*/
-  public static String vertexName(Class<?> entityType) {
+  public static String vertexName(final Class<?> entityType) {
     Table tableAnno = entityType.getAnnotation(Table.class);
     return tableAnno != null
       ? tableAnno.name()
@@ -40,7 +40,7 @@ public class NebulaDaoBasicExt {
    * @param edgeType 关系的实体类型.
    * @return 数据库中的 关系类型名.
   .*/
-  public static String edgeName(Class<?> edgeType) {
+  public static String edgeName(final Class<?> edgeType) {
     return vertexName(edgeType);
   }
 
@@ -50,7 +50,7 @@ public class NebulaDaoBasicExt {
    * @param currentType 继承了 NebulaDaoBasic 并且声明了泛型T、ID的类，.
    * @return 两个元素的Class数组，第一个元素是 实体类型，第二个元素是 主键类型.
   .*/
-  public static Class<?>[] entityTypeAndIdType(Class<?> currentType) {
+  public static Class<?>[] entityTypeAndIdType(final Class<?> currentType) {
     Class<?>[] result = null;
     Type[] genericInterfaces = currentType.getGenericInterfaces();
     for (Type genericInterface : genericInterfaces) {
@@ -81,7 +81,7 @@ public class NebulaDaoBasicExt {
    * @param currentType 继承了 NebulaDaoBasic 并且声明了泛型T、ID的类，.
    * @return 实体类型.
   .*/
-  public static Class<?> entityType(Class<?> currentType) {
+  public static Class<?> entityType(final Class<?> currentType) {
     Class<?>[] entityTypeAndIdType = entityTypeAndIdType(currentType);
     if (entityTypeAndIdType != null && entityTypeAndIdType.length > 0) {
       return entityTypeAndIdType[0];
@@ -111,8 +111,8 @@ public class NebulaDaoBasicExt {
    * @return 对结果集进行处理后的 java对象.
   .*/
   public static Object proxy(
-      Class<?> currentType, Class<?> returnType, String nGQL,
-      Class<?>[] argTypes, Object... args) {
+      final Class<?> currentType, final Class<?> returnType,
+      final String nGQL, final Class<?>[] argTypes, final Object... args) {
     Method method = null;
     try {
       String methodName = getMethodName();
@@ -139,15 +139,15 @@ public class NebulaDaoBasicExt {
   }
 
   public static Class<?> getClassFromStack(
-      StackTraceElement stackTraceElement) {
-    String className = stackTraceElement.getClassName();
-    Class<?> clazz = null;
-    try {
-      clazz = Class.forName(className);
-    } catch (ClassNotFoundException ignored) {
-    } // 从方法栈中获得的 className 不会发生此异常
-    return clazz;
-  }
+    final StackTraceElement stackTraceElement) {
+      String className = stackTraceElement.getClassName();
+      Class<?> clazz = null;
+      try {
+        clazz = Class.forName(className);
+      } catch (ClassNotFoundException ignored) {
+      } // 从方法栈中获得的 className 不会发生此异常
+      return clazz;
+    }
 
   public static MethodModel getMethodModel() {
     StackTraceElement stackTraceElement = Thread.currentThread(

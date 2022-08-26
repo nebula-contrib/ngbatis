@@ -23,8 +23,9 @@ public class CollectionMapResultHandler extends AbstractResultHandler
     <Collection, Map> {
 
   @Override
-  public Collection handle(Collection newResult, ResultSet result,
-      Class resultType) {
+  public Collection handle(
+      final Collection newResult, final ResultSet result,
+      final Class resultType) {
     List<String> columnNames = result.getColumnNames();
     int size = result.rowsSize();
     for (int i = 0; i < size; i++) {

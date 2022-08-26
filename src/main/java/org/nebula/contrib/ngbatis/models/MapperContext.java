@@ -52,7 +52,7 @@ public class MapperContext {
     return interfaces;
   }
 
-  public void setInterfaces(Map<String, ClassModel> interfaces) {
+  public void setInterfaces(final Map<String, ClassModel> interfaces) {
     this.interfaces = interfaces;
   }
 
@@ -60,7 +60,7 @@ public class MapperContext {
     return daoBasicTpl;
   }
 
-  public void setDaoBasicTpl(Map<String, String> daoBasicTpl) {
+  public void setDaoBasicTpl(final Map<String, String> daoBasicTpl) {
     this.daoBasicTpl = daoBasicTpl;
   }
 
@@ -72,11 +72,11 @@ public class MapperContext {
     return nebulaPoolConfig;
   }
 
-  public void setNebulaPoolConfig(NebulaPoolConfig nebulaPoolConfig) {
+  public void setNebulaPoolConfig(final NebulaPoolConfig nebulaPoolConfig) {
     this.nebulaPoolConfig = nebulaPoolConfig;
   }
 
-  public void setNebulaPool(NebulaPool nebulaPool) {
+  public void setNebulaPool(final NebulaPool nebulaPool) {
     this.nebulaPool = nebulaPool;
   }
 
@@ -84,7 +84,7 @@ public class MapperContext {
     return resourceRefresh;
   }
 
-  public void setResourceRefresh(boolean resourceRefresh) {
+  public void setResourceRefresh(final boolean resourceRefresh) {
     this.resourceRefresh = resourceRefresh;
   }
 

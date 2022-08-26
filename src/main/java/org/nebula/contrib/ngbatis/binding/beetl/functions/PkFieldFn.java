@@ -18,7 +18,7 @@ public class PkFieldFn extends AbstractFunction
     <Class<?>, Boolean, Void, Void, Void, Void> {
 
   @Override
-  public Field call(Class<?> entityType, Boolean idRequired) {
+  public Field call(final Class<?> entityType, final Boolean idRequired) {
     return getPkField(entityType, idRequired);
   }
 }

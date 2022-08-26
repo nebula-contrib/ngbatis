@@ -54,18 +54,18 @@ public class Env {
   private MapperContext mapperContext;
 
   public Env(
-      TextResolver textResolver,
-      ResultResolver resultResolver,
-      ArgsResolver argsResolver,
-      ArgNameFormatter argNameFormatter,
-      ParseCfgProps cfgProps,
-      ApplicationContext applicationContext,
-      String username,
-      String password,
-      boolean reconnect,
-      String space,
-      PkGenerator pkGenerator,
-      SessionDispatcher dispatcher) {
+      final TextResolver textResolver,
+      final ResultResolver resultResolver,
+      final ArgsResolver argsResolver,
+      final ArgNameFormatter argNameFormatter,
+      final ParseCfgProps cfgProps,
+      final ApplicationContext applicationContext,
+      final String username,
+      final String password,
+      final boolean reconnect,
+      final String space,
+      final PkGenerator pkGenerator,
+      final SessionDispatcher dispatcher) {
     this.textResolver = textResolver;
     this.resultResolver = resultResolver;
     this.argsResolver = argsResolver;
@@ -96,7 +96,7 @@ public class Env {
     return username;
   }
 
-  public void setUsername(String username) {
+  public void setUsername(final String username) {
     this.username = username;
   }
 
@@ -104,7 +104,7 @@ public class Env {
     return password;
   }
 
-  public void setPassword(String password) {
+  public void setPassword(final String password) {
     this.password = password;
   }
 
@@ -112,7 +112,7 @@ public class Env {
     return reconnect;
   }
 
-  public void setReconnect(boolean reconnect) {
+  public void setReconnect(final boolean reconnect) {
     this.reconnect = reconnect;
   }
 
@@ -120,7 +120,7 @@ public class Env {
     return log;
   }
 
-  public void setLog(Logger log) {
+  public void setLog(final Logger log) {
     this.log = log;
   }
 
@@ -128,7 +128,7 @@ public class Env {
     return textResolver;
   }
 
-  public void setTextResolver(TextResolver textResolver) {
+  public void setTextResolver(final TextResolver textResolver) {
     this.textResolver = textResolver;
   }
 
@@ -136,7 +136,7 @@ public class Env {
     return resultResolver;
   }
 
-  public void setResultResolver(ResultResolver resultResolver) {
+  public void setResultResolver(final ResultResolver resultResolver) {
     this.resultResolver = resultResolver;
   }
 
@@ -144,7 +144,7 @@ public class Env {
     return argsResolver;
   }
 
-  public void setArgsResolver(ArgsResolver argsResolver) {
+  public void setArgsResolver(final ArgsResolver argsResolver) {
     this.argsResolver = argsResolver;
   }
 
@@ -152,7 +152,7 @@ public class Env {
     return argNameFormatter;
   }
 
-  public void setArgNameFormatter(ArgNameFormatter argNameFormatter) {
+  public void setArgNameFormatter(final ArgNameFormatter argNameFormatter) {
     this.argNameFormatter = argNameFormatter;
   }
 
@@ -160,7 +160,7 @@ public class Env {
     return cfgProps;
   }
 
-  public void setCfgProps(ParseCfgProps cfgProps) {
+  public void setCfgProps(final ParseCfgProps cfgProps) {
     this.cfgProps = cfgProps;
   }
 
@@ -168,7 +168,7 @@ public class Env {
     return context;
   }
 
-  public void setContext(ApplicationContext context) {
+  public void setContext(final ApplicationContext context) {
     this.context = context;
   }
 
@@ -176,7 +176,7 @@ public class Env {
     return space;
   }
 
-  public void setSpace(String space) {
+  public void setSpace(final String space) {
     this.space = space;
   }
 
@@ -184,7 +184,7 @@ public class Env {
     return mapperContext;
   }
 
-  public void setMapperContext(MapperContext mapperContext) {
+  public void setMapperContext(final MapperContext mapperContext) {
     this.mapperContext = mapperContext;
   }
 
@@ -192,7 +192,7 @@ public class Env {
     return pkGenerator;
   }
 
-  public void setPkGenerator(PkGenerator pkGenerator) {
+  public void setPkGenerator(final PkGenerator pkGenerator) {
     this.pkGenerator = pkGenerator;
   }
 }

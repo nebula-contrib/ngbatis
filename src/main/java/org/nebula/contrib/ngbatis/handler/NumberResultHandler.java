@@ -23,12 +23,13 @@ import org.springframework.stereotype.Component;
 public class NumberResultHandler extends AbstractResultHandler<Number, Number> {
 
   @Override
-  public Number handle(Number newResult, ResultSet result, Class resultType)
-      throws NoSuchFieldException, IllegalAccessException,
-      InstantiationException {
-    ResultSet.Record record = result.rowValues(0);
-    ValueWrapper valueWrapper = record.values().get(0);
-    Number value = ResultSetUtil.getValue(valueWrapper);
-    return castNumber(value, resultType);
+  public Number handle(
+      final Number newResult, final ResultSet result, final Class resultType)
+    throws NoSuchFieldException, IllegalAccessException,
+    InstantiationException {
+      ResultSet.Record record = result.rowValues(0);
+      ValueWrapper valueWrapper = record.values().get(0);
+      Number value = ResultSetUtil.getValue(valueWrapper);
+      return castNumber(value, resultType);
   }
 }

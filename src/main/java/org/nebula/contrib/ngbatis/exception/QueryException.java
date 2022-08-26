@@ -13,7 +13,7 @@ package org.nebula.contrib.ngbatis.exception;
 public class QueryException extends RuntimeException {
   public QueryException() { }
 
-  public QueryException(String o) {
+  public QueryException(final String o) {
     super(o);
     ;
   }

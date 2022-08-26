@@ -19,7 +19,7 @@ public class LocalSession {
   private String currentSpace;
   int useCount = 0;
 
-  public LocalSession(long birth, Session session) {
+  public LocalSession(final long birth, final Session session) {
     this.birth = birth;
     this.session = session;
   }
@@ -28,7 +28,7 @@ public class LocalSession {
     return birth;
   }
 
-  public void setBirth(long birth) {
+  public void setBirth(final long birth) {
     this.birth = birth;
   }
 
@@ -36,7 +36,7 @@ public class LocalSession {
     return session;
   }
 
-  public void setSession(Session session) {
+  public void setSession(final Session session) {
     this.session = session;
   }
 
@@ -44,7 +44,7 @@ public class LocalSession {
     return currentSpace;
   }
 
-  public void setCurrentSpace(String currentSpace) {
+  public void setCurrentSpace(final String currentSpace) {
     this.currentSpace = currentSpace;
   }
 }

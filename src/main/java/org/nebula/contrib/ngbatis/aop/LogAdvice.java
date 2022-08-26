@@ -33,7 +33,7 @@ public class LogAdvice {
   public void timeLog() { }
 
   @Around("timeLog()")
-  public Object msCount(ProceedingJoinPoint pjp) throws Throwable {
+  public Object msCount(final ProceedingJoinPoint pjp) throws Throwable {
     TimeLog annotation =
       ((MethodSignature) pjp.getSignature()).getMethod().getAnnotation(
         TimeLog.class);

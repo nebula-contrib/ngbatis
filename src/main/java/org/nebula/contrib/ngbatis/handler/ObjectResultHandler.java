@@ -30,7 +30,8 @@ public class ObjectResultHandler extends AbstractResultHandler
     <Object, Object> {
 
   @Override
-  public Object handle(Object newResult, ResultSet result, Class resultType)
+  public Object handle(
+    final Object newResult, final ResultSet result, final Class resultType)
       throws NoSuchFieldException, IllegalAccessException {
     if (result.rowsSize() == 0) { return null; }
     List<String> columnNames = result.getColumnNames();
@@ -39,8 +40,8 @@ public class ObjectResultHandler extends AbstractResultHandler
   }
 
   public Object handle(
-        Object newResult, ResultSet.Record record,
-        List<String> columnNames, Class<?> resultType)
+        Object newResult, final ResultSet.Record record,
+        final List<String> columnNames, final Class<?> resultType)
       throws NoSuchFieldException, IllegalAccessException {
 
     for (int i = 0; i < columnNames.size(); i++) {
@@ -53,8 +54,8 @@ public class ObjectResultHandler extends AbstractResultHandler
   }
 
   private Object fillResult(
-        Object v, Object newResult, List<String> columnNames,
-        Class resultType, int i)
+        final Object v, Object newResult, final List<String> columnNames,
+        final Class resultType, final int i)
       throws NoSuchFieldException, IllegalAccessException {
     String columnName = columnNames.get(i);
     if (vIsResultType(v, resultType)) {
@@ -73,12 +74,13 @@ public class ObjectResultHandler extends AbstractResultHandler
     return newResult;
   }
 
-  private boolean vIsResultType(Object v, Class resultType) {
+  private boolean vIsResultType(final Object v, final Class resultType) {
     return v != null && isCurrentTypeOrParentType(v.getClass(), resultType);
   }
 
   private Object fillResultByNode(
-      Node node, Object newResult, List<String> columnNames, Class resultType,
+        final Node node, Object newResult,
+        final List<String> columnNames, final Class resultType,
       String columnName) {
 
     if (columnNames.size() == 1) {
@@ -91,11 +93,11 @@ public class ObjectResultHandler extends AbstractResultHandler
   }
 
   private Object fillResultByRelationship(
-      Relationship relationship,
+      final Relationship relationship,
       Object newResult,
-      List<String> columnNames,
-      Class resultType,
-      String columnName) {
+      final List<String> columnNames,
+      final Class resultType,
+      final String columnName) {
 
     if (columnNames.size() == 1) {
       newResult = relationshipToResultType(relationship, resultType);

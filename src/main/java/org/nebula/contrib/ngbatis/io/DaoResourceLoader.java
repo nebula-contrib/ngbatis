@@ -26,7 +26,7 @@ import org.springframework.core.io.Resource;
 .*/
 public class DaoResourceLoader extends MapperResourceLoader {
 
-  public DaoResourceLoader(ParseCfgProps parseConfig) {
+  public DaoResourceLoader(final ParseCfgProps parseConfig) {
     super(parseConfig);
   }
 
@@ -51,7 +51,8 @@ public class DaoResourceLoader extends MapperResourceLoader {
    * @return 基类接口方法名 与 nGQL 模板的 Map.
    * @throws IOException.
   .*/
-  private Map<String, String> parse(Resource resource) throws IOException {
+  private Map<String, String> parse(final Resource resource)
+      throws IOException {
     Document doc = Jsoup.parse(
       resource.getInputStream(), "UTF-8", "http://example.com/");
     Map<String, String> result = new HashMap<>();

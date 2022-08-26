@@ -30,7 +30,7 @@ public class BeetlTextRender implements TextResolver {
     private GroupTemplate gt = null;
 
     @Override
-    public String resolve(String text, Map<String, Object> args) {
+    public String resolve(final String text, final Map<String, Object> args) {
         initGt();
         Template template = this.gt.getTemplate(text);
         template.fastBinding(args);
@@ -57,7 +57,7 @@ public class BeetlTextRender implements TextResolver {
         return props;
     }
 
-    public void setProps(ParseCfgProps props) {
+    public void setProps(final ParseCfgProps props) {
         this.props = props;
     }
 

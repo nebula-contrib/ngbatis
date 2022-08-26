@@ -25,7 +25,8 @@ public class CollectionStringResultHandler extends AbstractResultHandler
 
   @Override
   public Collection handle(
-      Collection newResult, ResultSet result, Class resultType) {
+      final Collection newResult, final ResultSet result,
+      final Class resultType) {
     List<String> columnNames = result.getColumnNames();
     String firstCol = columnNames.get(0);
     List<ValueWrapper> valueWrappers = result.colValues(firstCol);

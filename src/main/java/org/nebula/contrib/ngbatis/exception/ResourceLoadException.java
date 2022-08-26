@@ -14,11 +14,11 @@ public class ResourceLoadException extends RuntimeException {
 
   public ResourceLoadException() { }
 
-  public ResourceLoadException(String msg) {
+  public ResourceLoadException(final String msg) {
     super(msg);
   }
 
-  public ResourceLoadException(Throwable cause) {
+  public ResourceLoadException(final Throwable cause) {
     super(cause);
   }
 }

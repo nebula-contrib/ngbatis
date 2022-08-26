@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
 public class DefaultArgsResolver implements ArgsResolver {
   @Override
   public Map<String, Object> resolve(
-      MethodModel methodModel, Object... args) {
+      final MethodModel methodModel, final Object... args) {
     Method method = methodModel.getMethod();
     if (args.length == 0) {
       return Collections.emptyMap();
@@ -182,7 +182,7 @@ public class DefaultArgsResolver implements ArgsResolver {
         }
       };
 
-  public static <T> T toNebulaValueType(Object param) {
+  public static <T> T toNebulaValueType(final Object param) {
     if (param == null) {
       return null;
     }
@@ -197,7 +197,7 @@ public class DefaultArgsResolver implements ArgsResolver {
     return (T) param;
   }
 
-  public Object customToJSON(Object o) {
+  public Object customToJSON(final Object o) {
     try {
       ObjectMapper objectMapper = new ObjectMapper();
       SerializeConfig parserConfig = new SerializeConfig();
@@ -216,7 +216,7 @@ public class DefaultArgsResolver implements ArgsResolver {
     // return JSON.parseObject(text, Feature.AllowArbitraryCommas);
   }
 
-  private boolean isBaseType(Class clazz) {
+  private boolean isBaseType(final Class clazz) {
     return clazz == Character.class
         || clazz == char.class
         || clazz == Byte.class
@@ -244,8 +244,8 @@ interface Setter<T> {
 class DateDeserializer implements ObjectSerializer {
 
   @Override
-  public void write(JSONSerializer serializer, Object object,
-      Object fieldName, Type type, int i) {
+  public void write(final JSONSerializer serializer, final Object object,
+      final Object fieldName, final Type type, final int i) {
     SerializeWriter out = serializer.getWriter();
     if (object == null) {
       out.writeNull();

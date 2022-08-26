@@ -36,14 +36,16 @@ public class ReflectUtil {
           short.class,
           Short.class);
 
-  public static void setValue(Object o, String prop, Object value)
+  public static void setValue(
+        final Object o, final String prop, final Object value)
       throws NoSuchFieldException, IllegalAccessException {
     Field declaredField = o.getClass().getDeclaredField(prop);
     setValue(o, declaredField, value);
   }
 
   public static void setValue(
-      Object o, Field field, Object value) throws IllegalAccessException {
+    final Object o, final Field field, final Object value)
+      throws IllegalAccessException {
     if (NUMBER_TYPES.contains(field.getType())) {
       value = castNumber((Number) value, field.getType());
     }
@@ -57,7 +59,7 @@ public class ReflectUtil {
     }
   }
 
-  public static Number castNumber(Number n, Class resultType) {
+  public static Number castNumber(final Number n, final Class resultType) {
     if (n == null) { return null; }
     return (resultType == Integer.class || resultType == int.class)
       ? n.intValue()
@@ -74,7 +76,7 @@ public class ReflectUtil {
                 : n;
   }
 
-  public static Object getValue(Object o, Field field) {
+  public static Object getValue(final Object o, final Field field) {
     try {
       boolean accessible = field.isAccessible();
       if (accessible) {
@@ -90,7 +92,7 @@ public class ReflectUtil {
     }
   }
 
-  public static String getMethodSignature(MethodModel methodModel) {
+  public static String getMethodSignature(final MethodModel methodModel) {
     StringBuilder builder = new StringBuilder("(");
     Method method = methodModel.getMethod();
     Class<?> returnType;
@@ -124,7 +126,7 @@ public class ReflectUtil {
   }
 
   public static int containsType(
-      Method method, Class<?> parameterType) {
+      final Method method, final Class<?> parameterType) {
     List<Class<?>> classes = Arrays.asList(method.getParameterTypes());
     return classes.indexOf(parameterType);
   }
@@ -143,7 +145,7 @@ public class ReflectUtil {
         }
       };
 
-  public static Class<?> sealingBasicType(Class<?> returnType) {
+  public static Class<?> sealingBasicType(final Class<?> returnType) {
     return returnType == short.class
       ? Short.class
       : returnType == int.class
@@ -161,7 +163,7 @@ public class ReflectUtil {
                   : returnType == boolean.class ? Boolean.class : returnType;
   }
 
-  public static String insnType(Class<?> type) {
+  public static String insnType(final Class<?> type) {
     StringBuilder builder = new StringBuilder();
     if (type == int.class) {
       builder.append("I");
@@ -178,24 +180,25 @@ public class ReflectUtil {
     return builder.toString();
   }
 
-  public static Method getNameUniqueMethod(Class clazz, String methodName) {
-    Method[] declaredMethods = clazz.getDeclaredMethods();
-    for (Method method : declaredMethods) {
-      if (nullSafeEquals(method.getName(), methodName)) {
-        // Class<?> returnType = method.getReturnType();
-        // returnType = sealingBasicType(returnType);
-        // try {
-        // setValue(method, "returnType", returnType);
-        // } catch (NoSuchFieldException e) {
-        // e.printStackTrace();
-        // } catch (IllegalAccessException e) {
-        // e.printStackTrace();
-        // }
-        return method;
+  public static Method getNameUniqueMethod(
+    final Class clazz, final String methodName) {
+      Method[] declaredMethods = clazz.getDeclaredMethods();
+      for (Method method : declaredMethods) {
+        if (nullSafeEquals(method.getName(), methodName)) {
+          // Class<?> returnType = method.getReturnType();
+          // returnType = sealingBasicType(returnType);
+          // try {
+          // setValue(method, "returnType", returnType);
+          // } catch (NoSuchFieldException e) {
+          // e.printStackTrace();
+          // } catch (IllegalAccessException e) {
+          // e.printStackTrace();
+          // }
+          return method;
+        }
       }
+      return null;
     }
-    return null;
-  }
 
   public static final List<Class> CLASSES;
 
@@ -221,11 +224,11 @@ public class ReflectUtil {
             boolean.class);
   }
 
-  public static boolean isBasicType(Class clazz) {
+  public static boolean isBasicType(final Class clazz) {
     return CLASSES.contains(clazz);
   }
 
-  public static Class<?> fieldType(Object o, String fieldName) {
+  public static Class<?> fieldType(final Object o, final String fieldName) {
     try {
       Field field = o.getClass().getDeclaredField(fieldName);
       return field.getType();
@@ -236,13 +239,13 @@ public class ReflectUtil {
   }
 
   public static boolean isCurrentTypeOrParentType(
-      Class<?> paramType, Class<?> pType) {
-    if (paramType == pType) { return true; }
-    Set<Class<?>> parentTypes = getParentTypes(paramType);
-    return parentTypes.contains(pType);
+    final Class<?> paramType, final Class<?> pType) {
+      if (paramType == pType) { return true; }
+      Set<Class<?>> parentTypes = getParentTypes(paramType);
+      return parentTypes.contains(pType);
   }
 
-  public static Set<Class<?>> getParentTypes(Class<?> paramType) {
+  public static Set<Class<?>> getParentTypes(final Class<?> paramType) {
     if (paramType == null) {
       return Collections.EMPTY_SET;
     }
@@ -265,7 +268,7 @@ public class ReflectUtil {
    * @param clazz 实体类.
    * @return 当前类的属性及其父类中，带@Column注解的属性.
   .*/
-  public static Field[] getAllColumnFields(Class<?> clazz) {
+  public static Field[] getAllColumnFields(final Class<?> clazz) {
     Set<Field> fields = new HashSet<>();
     boolean leaf = true;
     do {
@@ -291,11 +294,12 @@ public class ReflectUtil {
    * @param type 实体类型.
    * @return 节点的主键属性.
   .*/
-  public static Field getPkField(Class<?> type) {
+  public static Field getPkField(final Class<?> type) {
     return getPkField(type, true);
   }
 
-  public static Field getPkField(Class<?> type, boolean canNotNull) {
+  public static Field getPkField(
+      final Class<?> type, final boolean canNotNull) {
     Field[] declaredFields = type.getDeclaredFields();
     return getPkField(declaredFields, type, canNotNull);
   }
@@ -307,7 +311,7 @@ public class ReflectUtil {
    * @param type 属性数组归属的类.
    * @return 众多属性中，带 @Id 注解的属性（唯一）.
   .*/
-  public static Field getPkField(Field[] fields, Class<?> type) {
+  public static Field getPkField(final Field[] fields, final Class<?> type) {
     return getPkField(fields, type, true);
   }
 
@@ -324,17 +328,17 @@ public class ReflectUtil {
    * @return 主键属性.
   .*/
   public static Field getPkField(
-      Field[] fields, Class<?> type, boolean canNotNull) {
-    Field pkField = null;
-    for (Field field : fields) {
-      if (field.isAnnotationPresent(Id.class)) {
-        pkField = field;
+    final Field[] fields, final Class<?> type, final boolean canNotNull) {
+      Field pkField = null;
+      for (Field field : fields) {
+        if (field.isAnnotationPresent(Id.class)) {
+          pkField = field;
+        }
       }
+      if (canNotNull && pkField == null) {
+        throw new ParseException(String.format(
+          "%s 必须有一个属性用 @Id 注解。（javax.persistence.Id）", type));
+      }
+      return pkField;
     }
-    if (canNotNull && pkField == null) {
-      throw new ParseException(String.format(
-        "%s 必须有一个属性用 @Id 注解。（javax.persistence.Id）", type));
-    }
-    return pkField;
-  }
 }

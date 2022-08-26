@@ -11,9 +11,10 @@ package org.nebula.contrib.ngbatis.binding.beetl.functions;
  * @since 2022-08-25 4:06 <br>.
  *     Now is history.
 .*/
-public class SchemaFmtFn extends AbstractFunction {
+public class SchemaFmtFn extends AbstractFunction
+    <String, String, Void, Void, Void, Void> {
   @Override
-  public Object call(Object[] paras) {
+  public Object call(final Object[] paras) {
     return String.format("`%s`", paras[0]);
   }
 }

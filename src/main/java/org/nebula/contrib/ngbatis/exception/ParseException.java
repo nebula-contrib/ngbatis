@@ -12,7 +12,7 @@ package org.nebula.contrib.ngbatis.exception;
 .*/
 public class ParseException extends RuntimeException {
 
-  public ParseException(String msg) {
+  public ParseException(final String msg) {
     super("映射文件解析异常：" + msg);
   }
 }

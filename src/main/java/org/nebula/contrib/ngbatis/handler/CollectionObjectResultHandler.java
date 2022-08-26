@@ -24,8 +24,8 @@ public class CollectionObjectResultHandler extends AbstractResultHandler
   @Autowired private ObjectResultHandler objectResultHandler;
 
   @Override
-  public Collection handle(Collection newResult, ResultSet result,
-        Class resultType)
+  public Collection handle(final Collection newResult, final ResultSet result,
+        final Class resultType)
       throws NoSuchFieldException, IllegalAccessException,
       InstantiationException {
     List<String> columnNames = result.getColumnNames();

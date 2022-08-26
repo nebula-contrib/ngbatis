@@ -26,7 +26,7 @@ public class Page<T> {
 
   public Page() { }
 
-  public Page(int pageNo, int pageSize) {
+  public Page(final int pageNo, final int pageSize) {
     this.pageNo = pageNo;
     this.pageSize = pageSize;
     this.startRow = pageNo > 0 ? (pageNo - 1) * pageSize : 0;
@@ -37,7 +37,7 @@ public class Page<T> {
     return sysUser;
   }
 
-  public void setSysUser(Long sysUser) {
+  public void setSysUser(final Long sysUser) {
     this.sysUser = sysUser;
   }
 
@@ -45,7 +45,7 @@ public class Page<T> {
     return rows;
   }
 
-  public void setRows(List<T> rows) {
+  public void setRows(final List<T> rows) {
     this.rows = rows;
   }
 
@@ -53,7 +53,7 @@ public class Page<T> {
     return pages;
   }
 
-  public void setPages(int pages) {
+  public void setPages(final int pages) {
     this.pages = pages;
   }
 
@@ -70,7 +70,7 @@ public class Page<T> {
     return pageNo;
   }
 
-  public void setPageNo(int pageNo) {
+  public void setPageNo(final int pageNo) {
     this.pageNo = pageNo;
     this.startRow = pageNo > 0 ? (pageNo - 1) * pageSize : 0;
     this.endRow = pageNo * pageSize;
@@ -80,7 +80,7 @@ public class Page<T> {
     return pageSize;
   }
 
-  public void setPageSize(int pageSize) {
+  public void setPageSize(final int pageSize) {
     this.pageSize = pageSize;
     this.startRow = pageNo > 0 ? (pageNo - 1) * pageSize : 0;
     this.endRow = pageNo * pageSize;
@@ -96,7 +96,7 @@ public class Page<T> {
     return total;
   }
 
-  public void setTotal(long total) {
+  public void setTotal(final long total) {
     this.total = total;
     this.setPages();
     ;
@@ -106,7 +106,7 @@ public class Page<T> {
     return q;
   }
 
-  public void setQ(Map<String, Object> q) {
+  public void setQ(final Map<String, Object> q) {
     this.q = q;
   }
 

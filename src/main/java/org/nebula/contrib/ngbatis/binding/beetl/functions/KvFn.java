@@ -23,11 +23,8 @@ public class KvFn extends AbstractFunction
 
   @Override
   public Object call(
-      Object entity, String prefix, Boolean excludePk, Boolean selective,
-      Boolean idRequired) {
-    excludePk = excludePk == null || excludePk;
-    selective = selective != null && selective;
-    idRequired = idRequired == null;
+      final Object entity, final String prefix, final Boolean excludePk,
+      final Boolean selective, final Boolean idRequired) {
     if (entity == null) {
       return new KV();
     }
@@ -36,8 +33,8 @@ public class KvFn extends AbstractFunction
 
     List<Field> fieldList = new ArrayList<>();
     Field pkField = null;
-    if (excludePk) {
-      pkField = fnCall(pkFieldFn, entityType, idRequired);
+    if (excludePk == null || excludePk) {
+      pkField = fnCall(pkFieldFn, entityType, idRequired == null);
     }
 
     for (Field field : fields) {
@@ -47,7 +44,8 @@ public class KvFn extends AbstractFunction
       fieldList.add(field);
     }
 
-    return recordToKV(entity, fieldList, selective, prefix);
+    return recordToKV(
+      entity, fieldList, selective != null && selective, prefix);
   }
 
   public static class KV {
@@ -65,8 +63,8 @@ public class KvFn extends AbstractFunction
    * @param prefix 参数前缀.
    * @return 属性占位符与属性值的键值对（双集合，相同下标成对）.
   .*/
-  public KV recordToKV(Object record, Iterable<Field> fields,
-      boolean selective, String prefix) {
+  public KV recordToKV(final Object record, final Iterable<Field> fields,
+      final boolean selective, final String prefix) {
     KV kv = new KV();
     for (Field field : fields) {
       String name = null;

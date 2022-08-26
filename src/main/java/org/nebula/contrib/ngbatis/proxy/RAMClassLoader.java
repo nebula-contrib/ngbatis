@@ -27,7 +27,7 @@ public class RAMClassLoader extends ClassLoader {
    *.
    * @param classModelMap 某个路径下.
   .*/
-  public RAMClassLoader(Map<String, ClassModel> classModelMap) {
+  public RAMClassLoader(final Map<String, ClassModel> classModelMap) {
     super(Env.classLoader);
     this.classModelMap = classModelMap;
     for (Map.Entry<String, ClassModel> classModelEntry
@@ -43,7 +43,7 @@ public class RAMClassLoader extends ClassLoader {
    *.
    * @param entry 接口全限定名与类模型的键值对.
   .*/
-  private void loadClassCode(Map.Entry<String, ClassModel> entry) {
+  private void loadClassCode(final Map.Entry<String, ClassModel> entry) {
     String className = entry.getKey();
     byte[] classByte = entry.getValue().getClassByte();
     log.info("Proxy class had been load (代理类被加载): {}", className);
@@ -59,7 +59,7 @@ public class RAMClassLoader extends ClassLoader {
    * @throws ClassNotFoundException 当代理类或者其方法涉及的类型不存在于当前加载链中时抛出.
   .*/
   @Override
-  public Class<?> loadClass(String name) throws ClassNotFoundException {
+  public Class<?> loadClass(final String name) throws ClassNotFoundException {
     Class<?> c = findLoadedClass(name);
     synchronized (lock) {
       if (c == null) {

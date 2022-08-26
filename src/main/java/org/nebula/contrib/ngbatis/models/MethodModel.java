@@ -47,7 +47,7 @@ public class MethodModel {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(final String id) {
     this.id = id;
   }
 
@@ -55,7 +55,7 @@ public class MethodModel {
     return text;
   }
 
-  public void setText(String text) {
+  public void setText(final String text) {
     this.text = text;
   }
 
@@ -63,7 +63,7 @@ public class MethodModel {
     return space;
   }
 
-  public void setSpace(String space) {
+  public void setSpace(final String space) {
     this.space = space;
   }
 
@@ -71,7 +71,7 @@ public class MethodModel {
     return parameterType;
   }
 
-  public void setParameterType(Class parameterType) {
+  public void setParameterType(final Class parameterType) {
     this.parameterType = parameterType;
   }
 
@@ -79,7 +79,7 @@ public class MethodModel {
     return resultType;
   }
 
-  public void setResultType(Class resultType) {
+  public void setResultType(final Class resultType) {
     this.resultType = resultType;
   }
 
@@ -87,7 +87,7 @@ public class MethodModel {
     return method;
   }
 
-  public void setMethod(Method method) {
+  public void setMethod(final Method method) {
     this.method = method;
   }
 
@@ -95,7 +95,7 @@ public class MethodModel {
     return signature;
   }
 
-  public void setSignature(String signature) {
+  public void setSignature(final String signature) {
     this.signature = signature;
   }
 
@@ -107,7 +107,7 @@ public class MethodModel {
     return method == null ? parameterTypes.length : method.getParameterCount();
   }
 
-  public void setParameterTypes(Class<?>[] parameterTypes) {
+  public void setParameterTypes(final Class<?>[] parameterTypes) {
     this.parameterTypes = parameterTypes;
   }
 
@@ -115,7 +115,7 @@ public class MethodModel {
     return method == null ? returnType : method.getReturnType();
   }
 
-  public void setReturnType(Class returnType) {
+  public void setReturnType(final Class returnType) {
     this.returnType = returnType;
   }
 

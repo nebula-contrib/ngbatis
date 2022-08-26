@@ -12,11 +12,11 @@ package org.nebula.contrib.ngbatis.exception;
 .*/
 public class ResultHandleException extends RuntimeException {
 
-  public ResultHandleException(String msg) {
+  public ResultHandleException(final String msg) {
     super("返回结果处理异常：" + msg);
   }
 
-  public ResultHandleException(Throwable cause) {
+  public ResultHandleException(final Throwable cause) {
     super("返回结果处理异常：" + cause.getMessage(), cause);
   }
 }

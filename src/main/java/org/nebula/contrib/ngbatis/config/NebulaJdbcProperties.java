@@ -52,7 +52,7 @@ public class NebulaJdbcProperties {
    * @param hosts ip:port, ip:port, ....
    * @return 当前对象，方便链式调用.
   .*/
-  public NebulaJdbcProperties setHosts(String hosts) {
+  public NebulaJdbcProperties setHosts(final String hosts) {
     String[] hostArr = hosts.split(",");
     hostAddresses = new ArrayList<HostAddress>();
     for (int i = 0; i < hostArr.length; i++) {
@@ -69,16 +69,17 @@ public class NebulaJdbcProperties {
     return poolConfig;
   }
 
-  public NebulaJdbcProperties setPoolConfig(NebulaPoolConfig poolConfig) {
-    this.poolConfig = poolConfig;
-    return this;
-  }
+  public NebulaJdbcProperties setPoolConfig(
+    final NebulaPoolConfig poolConfig) {
+      this.poolConfig = poolConfig;
+      return this;
+    }
 
   public String getUsername() {
     return username;
   }
 
-  public NebulaJdbcProperties setUsername(String username) {
+  public NebulaJdbcProperties setUsername(final String username) {
     this.username = username;
     return this;
   }
@@ -87,7 +88,7 @@ public class NebulaJdbcProperties {
     return password;
   }
 
-  public NebulaJdbcProperties setPassword(String password) {
+  public NebulaJdbcProperties setPassword(final String password) {
     this.password = password;
     return this;
   }
@@ -96,7 +97,7 @@ public class NebulaJdbcProperties {
     return space;
   }
 
-  public NebulaJdbcProperties setSpace(String space) {
+  public NebulaJdbcProperties setSpace(final String space) {
     this.space = space;
     return this;
   }

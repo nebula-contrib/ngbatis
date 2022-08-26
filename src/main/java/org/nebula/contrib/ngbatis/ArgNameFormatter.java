@@ -16,7 +16,7 @@ public interface ArgNameFormatter {
   CqlAndArgs format(String oldArgName, Map<String, Object> obj);
 
   class CqlAndArgs {
-    public CqlAndArgs(String cql, Map<String, Object> args) {
+    public CqlAndArgs(final String cql, final Map<String, Object> args) {
       this.cql = cql;
       this.args = args;
     }
@@ -28,7 +28,7 @@ public interface ArgNameFormatter {
       return cql;
     }
 
-    public void setCql(String cql) {
+    public void setCql(final String cql) {
       this.cql = cql;
     }
 
@@ -36,7 +36,7 @@ public interface ArgNameFormatter {
       return args;
     }
 
-    public void setArgs(Map<String, Object> args) {
+    public void setArgs(final Map<String, Object> args) {
       this.args = args;
     }
   }

@@ -24,7 +24,7 @@ public class ClassModel {
 
   private Map<String, MethodModel> methods;
 
-  public MethodModel getMethod(String methodName) {
+  public MethodModel getMethod(final String methodName) {
     return methods.get(methodName);
   }
 
@@ -40,7 +40,7 @@ public class ClassModel {
     return namespace;
   }
 
-  public void setNamespace(Class namespace) {
+  public void setNamespace(final Class namespace) {
     this.namespace = namespace;
   }
 
@@ -48,7 +48,7 @@ public class ClassModel {
     return space;
   }
 
-  public void setSpace(String space) {
+  public void setSpace(final String space) {
     this.space = space;
   }
 
@@ -56,7 +56,7 @@ public class ClassModel {
     return methods;
   }
 
-  public void setMethods(Map<String, MethodModel> methods) {
+  public void setMethods(final Map<String, MethodModel> methods) {
     this.methods = methods;
   }
 
@@ -64,7 +64,7 @@ public class ClassModel {
     return resourceLoader;
   }
 
-  public void setResourceLoader(ResourceLoader resourceLoader) {
+  public void setResourceLoader(final ResourceLoader resourceLoader) {
     this.resourceLoader = resourceLoader;
   }
 
@@ -72,7 +72,7 @@ public class ClassModel {
     return resource;
   }
 
-  public void setResource(Resource resource) {
+  public void setResource(final Resource resource) {
     this.resource = resource;
   }
 
@@ -80,7 +80,7 @@ public class ClassModel {
     return classByte;
   }
 
-  public void setClassByte(byte[] classByte) {
+  public void setClassByte(final byte[] classByte) {
     this.classByte = classByte;
   }
 
@@ -88,7 +88,7 @@ public class ClassModel {
     return clazz;
   }
 
-  public void setClazz(Class clazz) {
+  public void setClazz(final Class clazz) {
     this.clazz = clazz;
   }
 }

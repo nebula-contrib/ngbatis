@@ -50,7 +50,7 @@ public class ParseCfgProps {
 
   public ParseCfgProps() { }
 
-  public ParseCfgProps setLogShow(String logShow) {
+  public ParseCfgProps setLogShow(final String logShow) {
     if (Strings.isBlank(logShow)) { return this; };
     this.logShow = logShow;
     logShowTypes = new HashSet<>(Arrays.asList(logShow.split(",")));
@@ -61,7 +61,7 @@ public class ParseCfgProps {
     return mapperTplLocation;
   }
 
-  public ParseCfgProps setMapperTplLocation(String mapperTplLocation) {
+  public ParseCfgProps setMapperTplLocation(final String mapperTplLocation) {
     if (Strings.isBlank(mapperTplLocation)) { return this; };
     this.mapperTplLocation = mapperTplLocation;
     return this;
@@ -71,7 +71,7 @@ public class ParseCfgProps {
     return mapperLocations;
   }
 
-  public ParseCfgProps setMapperLocations(String mapperLocations) {
+  public ParseCfgProps setMapperLocations(final String mapperLocations) {
     if (Strings.isBlank(mapperLocations)) { return this; };
     this.mapperLocations = mapperLocations;
     return this;
@@ -81,7 +81,7 @@ public class ParseCfgProps {
     return id;
   }
 
-  public ParseCfgProps setId(String id) {
+  public ParseCfgProps setId(final String id) {
     if (Strings.isBlank(id)) { return this; };
     this.id = id;
     return this;
@@ -91,7 +91,7 @@ public class ParseCfgProps {
     return namespace;
   }
 
-  public ParseCfgProps setNamespace(String namespace) {
+  public ParseCfgProps setNamespace(final String namespace) {
     if (Strings.isBlank(namespace)) { return this; };
     this.namespace = namespace;
     return this;
@@ -101,7 +101,7 @@ public class ParseCfgProps {
     return space;
   }
 
-  public void setSpace(String space) {
+  public void setSpace(final String space) {
     this.space = space;
   }
 
@@ -109,7 +109,7 @@ public class ParseCfgProps {
     return resultType;
   }
 
-  public ParseCfgProps setResultType(String resultType) {
+  public ParseCfgProps setResultType(final String resultType) {
     if (Strings.isBlank(resultType)) { return this; };
     this.resultType = resultType;
     return this;
@@ -119,7 +119,7 @@ public class ParseCfgProps {
     return parameterType;
   }
 
-  public ParseCfgProps setParameterType(String parameterType) {
+  public ParseCfgProps setParameterType(final String parameterType) {
     if (Strings.isBlank(parameterType)) { return this; };
     this.parameterType = parameterType;
     return this;
@@ -129,7 +129,7 @@ public class ParseCfgProps {
     return mapper;
   }
 
-  public ParseCfgProps setMapper(String mapper) {
+  public ParseCfgProps setMapper(final String mapper) {
     if (Strings.isBlank(mapper)) { return this; };
     this.mapper = mapper;
     return this;
@@ -139,7 +139,7 @@ public class ParseCfgProps {
     return statementStart;
   }
 
-  public ParseCfgProps setStatementStart(String statementStart) {
+  public ParseCfgProps setStatementStart(final String statementStart) {
     if (Strings.isBlank(statementStart)) { return this; };
     this.statementStart = statementStart;
     return this;
@@ -149,7 +149,7 @@ public class ParseCfgProps {
     return statementEnd;
   }
 
-  public ParseCfgProps setStatementEnd(String statementEnd) {
+  public ParseCfgProps setStatementEnd(final String statementEnd) {
     if (Strings.isBlank(statementEnd)) { return this; };
     this.statementEnd = statementEnd;
     return this;
@@ -163,7 +163,7 @@ public class ParseCfgProps {
     return logShowTypes;
   }
 
-  public ParseCfgProps setLogShowTypes(Set<String> logShowTypes) {
+  public ParseCfgProps setLogShowTypes(final Set<String> logShowTypes) {
     if (isEmpty(logShowTypes)) { return this; };
     this.logShowTypes = logShowTypes;
     return this;
@@ -173,7 +173,7 @@ public class ParseCfgProps {
     return resourceRefresh;
   }
 
-  public ParseCfgProps setResourceRefresh(Boolean resourceRefresh) {
+  public ParseCfgProps setResourceRefresh(final Boolean resourceRefresh) {
     if (resourceRefresh == null) { return this; };
     this.resourceRefresh = resourceRefresh;
     return this;

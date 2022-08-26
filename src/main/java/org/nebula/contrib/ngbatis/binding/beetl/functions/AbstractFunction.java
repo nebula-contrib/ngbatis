@@ -26,13 +26,13 @@ public abstract class AbstractFunction<A, B, C, D, E, F> implements Function {
   protected String joinFn = "ng.join";
 
   @Override
-  public Object call(Object[] paras, Context ctx) {
+  public Object call(final Object[] paras, final Context ctx) {
     this.ctx = ctx;
     return call(paras);
   }
 
   @SuppressWarnings("unchecked")
-  public Object call(Object[] paras) {
+  public Object call(final Object[] paras) {
     int len = paras.length;
 
     // 限制 nGQL 使用 ng 函数时的长度，避免参数过长影响编写体验
@@ -47,42 +47,44 @@ public abstract class AbstractFunction<A, B, C, D, E, F> implements Function {
         len > 5 ? (F) paras[5] : null);
   }
 
-  public Object call(A p0, B p1, C p2, D p3, E p4, F p5) {
+  public Object call(final A p0, final B p1, final C p2, final D p3,
+      final E p4, final F p5) {
     if (p5 == null) {
       return call(p0, p1, p2, p3, p4);
     }
     throw new NotImplementedException();
   }
 
-  public Object call(A p0, B p1, C p2, D p3, E p4) {
+  public Object call(
+      final A p0, final B p1, final C p2, final D p3, final E p4) {
     if (p4 == null) {
       return call(p0, p1, p2, p3);
     }
     throw new NotImplementedException();
   }
 
-  public Object call(A p0, B p1, C p2, D p3) {
+  public Object call(final A p0, final B p1, final C p2, final D p3) {
     if (p3 == null) {
       return call(p0, p1, p2);
     }
     throw new NotImplementedException();
   }
 
-  public Object call(A p0, B p1, C p2) {
+  public Object call(final A p0, final B p1, final C p2) {
     if (p2 == null) {
       return call(p0, p1);
     }
     throw new NotImplementedException();
   }
 
-  public Object call(A p0, B p1) {
+  public Object call(final A p0, final B p1) {
     if (p1 == null) {
       return call(p0);
     }
     throw new NotImplementedException();
   }
 
-  public Object call(A p0) {
+  public Object call(final A p0) {
     if (p0 == null) {
       return call();
     }
@@ -93,7 +95,7 @@ public abstract class AbstractFunction<A, B, C, D, E, F> implements Function {
     throw new NotImplementedException();
   }
 
-  public <T> T fnCall(Object fnName, Object... args) {
+  public <T> T fnCall(final Object fnName, final Object... args) {
     return (T) ctx.gt.getFunction(String.valueOf(fnName)).call(args, ctx);
   }
 }
