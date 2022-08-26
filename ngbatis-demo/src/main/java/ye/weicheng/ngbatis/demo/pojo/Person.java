@@ -9,8 +9,8 @@ import java.util.Date;
 
 /**
  * @author yeweicheng
- * @since 2022-06-10 22:10
- * <br>Now is history!
+ * @since 2022-06-10 22:10 <br>
+ *        Now is history!
  */
 @Table(name = "person")
 public class Person {
@@ -58,9 +58,6 @@ public class Person {
 
     @Override
     public String toString() {
-        return "Person{" +
-                "name='" + name + '\'' +
-                ", age=" + age +
-                '}';
+        return "Person{" + "name='" + name + '\'' + ", age=" + age + '}';
     }
 }

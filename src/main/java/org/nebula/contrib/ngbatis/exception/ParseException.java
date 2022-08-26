@@ -7,13 +7,13 @@ package org.nebula.contrib.ngbatis.exception;
 /**
  * 解析xml文件时发生的异常
  *
- * @author yeweicheng
- * <br>Now is history!
+ * @author yeweicheng <br>
+ *         Now is history!
  */
 public class ParseException extends RuntimeException {
 
-    public ParseException( String msg ) {
-        super( "映射文件解析异常：" + msg );
+    public ParseException(String msg) {
+        super("映射文件解析异常：" + msg);
     }
 
 }

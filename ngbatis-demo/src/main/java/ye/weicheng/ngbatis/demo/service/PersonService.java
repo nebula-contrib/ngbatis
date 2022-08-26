@@ -5,8 +5,8 @@ package ye.weicheng.ngbatis.demo.service;
 
 /**
  * @author yeweicheng
- * @since 2022-06-17 7:18
- * <br>Now is history!
+ * @since 2022-06-17 7:18 <br>
+ *        Now is history!
  */
 public interface PersonService {
 }

@@ -12,8 +12,8 @@ import org.nebula.contrib.ngbatis.binding.TimestampPkGenerator;
  * 主键生成样例
  *
  * @author yeweicheng
- * @since 2022-06-14 12:32
- * <br>Now is history!
+ * @since 2022-06-14 12:32 <br>
+ *        Now is history!
  */
 @Configuration
 public class PkGeneratorConfig {

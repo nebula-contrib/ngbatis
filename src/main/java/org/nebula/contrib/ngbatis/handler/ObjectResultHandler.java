@@ -3,7 +3,6 @@ package org.nebula.contrib.ngbatis.handler;
 // Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
 //
 // This source code is licensed under Apache 2.0 License.
-
 import com.vesoft.nebula.client.graph.data.Node;
 import com.vesoft.nebula.client.graph.data.Relationship;
 import com.vesoft.nebula.client.graph.data.ResultSet;
@@ -20,28 +19,30 @@ import static org.nebula.contrib.ngbatis.utils.ResultSetUtil.relationshipToResul
 
 /**
  * 结果集数据类型转换器
- * <p> ResultSet -&gt;  Object </p>
+ * <p>
+ * ResultSet -&gt; Object
+ * </p>
  *
  * @author yeweicheng
- * @since 2022-06-10 22:53
- * <br>Now is history!
+ * @since 2022-06-10 22:53 <br>
+ *        Now is history!
  */
 @Component
 public class ObjectResultHandler extends AbstractResultHandler<Object, Object> {
 
     @Override
-    public Object handle(Object newResult, ResultSet result, Class resultType) throws NoSuchFieldException, IllegalAccessException {
-        if (result.rowsSize() == 0) return null;
+    public Object handle(Object newResult, ResultSet result, Class resultType)
+            throws NoSuchFieldException, IllegalAccessException {
+        if (result.rowsSize() == 0)
+            return null;
         List<String> columnNames = result.getColumnNames();
         ResultSet.Record record = result.rowValues(0);
-        return handle(newResult, record, columnNames, resultType );
+        return handle(newResult, record, columnNames, resultType);
     }
 
-    public Object handle(
-            Object newResult,
-            ResultSet.Record record,
-            List<String> columnNames,
-            Class<?> resultType) throws NoSuchFieldException, IllegalAccessException {
+    public Object handle(Object newResult, ResultSet.Record record,
+            List<String> columnNames, Class<?> resultType)
+            throws NoSuchFieldException, IllegalAccessException {
 
         for (int i = 0; i < columnNames.size(); i++) {
             ValueWrapper valueWrapper = record.values().get(i);
@@ -52,27 +53,18 @@ public class ObjectResultHandler extends AbstractResultHandler<Object, Object> {
         return newResult;
     }
 
-    private Object fillResult(Object v, Object newResult, List<String> columnNames, Class resultType, int i)
+    private Object fillResult(Object v, Object newResult,
+            List<String> columnNames, Class resultType, int i)
             throws NoSuchFieldException, IllegalAccessException {
         String columnName = columnNames.get(i);
-        if ( vIsResultType( v, resultType ) ) {
+        if (vIsResultType(v, resultType)) {
             newResult = v;
         } else if (v instanceof Node) {
-            newResult = fillResultByNode(
-                    (Node) v,
-                    newResult,
-                    columnNames,
-                    resultType,
-                    columnName
-            );
+            newResult = fillResultByNode((Node) v, newResult, columnNames,
+                    resultType, columnName);
         } else if (v instanceof Relationship) {
-            newResult = fillResultByRelationship(
-                    (Relationship) v,
-                    newResult,
-                    columnNames,
-                    resultType,
-                    columnName
-            );
+            newResult = fillResultByRelationship((Relationship) v, newResult,
+                    columnNames, resultType, columnName);
         } else {
             ReflectUtil.setValue(newResult, columnName, v);
         }
@@ -80,11 +72,10 @@ public class ObjectResultHandler extends AbstractResultHandler<Object, Object> {
     }
 
     private boolean vIsResultType(Object v, Class resultType) {
-        return v != null && isCurrentTypeOrParentType( v.getClass(), resultType );
+        return v != null && isCurrentTypeOrParentType(v.getClass(), resultType);
     }
 
-    private Object fillResultByNode(
-            Node node, Object newResult,
+    private Object fillResultByNode(Node node, Object newResult,
             List<String> columnNames, Class resultType, String columnName) {
 
         if (columnNames.size() == 1)
@@ -94,9 +85,9 @@ public class ObjectResultHandler extends AbstractResultHandler<Object, Object> {
         return newResult;
     }
 
-    private Object fillResultByRelationship(
-            Relationship relationship, Object newResult,
-            List<String> columnNames, Class resultType, String columnName) {
+    private Object fillResultByRelationship(Relationship relationship,
+            Object newResult, List<String> columnNames, Class resultType,
+            String columnName) {
 
         if (columnNames.size() == 1)
             newResult = relationshipToResultType(relationship, resultType);

@@ -3,18 +3,17 @@ package org.nebula.contrib.ngbatis.models;
 // Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
 //
 // This source code is licensed under Apache 2.0 License.
-
 import org.nebula.contrib.ngbatis.ResourceLoader;
 import org.springframework.core.io.Resource;
 
 import java.util.Map;
 
 /**
- * 类模型信息  <br>
+ * 类模型信息 <br>
  * xml 中 mapper 标签所声明的信息（类），包含属性与子标签（方法）
  *
- * @author yeweicheng
- * <br>Now is history!
+ * @author yeweicheng <br>
+ *         Now is history!
  */
 public class ClassModel {
 
@@ -26,8 +25,8 @@ public class ClassModel {
 
     private Map<String, MethodModel> methods;
 
-    public MethodModel getMethod( String methodName ) {
-        return methods.get( methodName );
+    public MethodModel getMethod(String methodName) {
+        return methods.get(methodName);
     };
 
     private ResourceLoader resourceLoader;

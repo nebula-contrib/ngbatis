@@ -7,19 +7,20 @@ package org.nebula.contrib.ngbatis.exception;
 /**
  * 加载所需资源时发生的异常
  *
- * @author yeweicheng
- * <br>Now is history!
+ * @author yeweicheng <br>
+ *         Now is history!
  */
-public class ResourceLoadException extends RuntimeException{
+public class ResourceLoadException extends RuntimeException {
 
-    public ResourceLoadException() {}
-    public ResourceLoadException( String msg ) {
-        super( msg );
+    public ResourceLoadException() {
     }
 
+    public ResourceLoadException(String msg) {
+        super(msg);
+    }
 
-    public ResourceLoadException( Throwable cause ) {
-        super( cause );
+    public ResourceLoadException(Throwable cause) {
+        super(cause);
     }
 
 }

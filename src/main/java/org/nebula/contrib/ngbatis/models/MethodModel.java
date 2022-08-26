@@ -3,15 +3,14 @@ package org.nebula.contrib.ngbatis.models;
 // Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
 //
 // This source code is licensed under Apache 2.0 License.
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 /**
  * XXXDao.java 中的单个方法信息，以及 xml 中 子标签下的文本数据酷操作脚本 CQL
  *
- * @author yeweicheng
- * <br>Now is history!
+ * @author yeweicheng <br>
+ *         Now is history!
  */
 public class MethodModel {
 
@@ -61,7 +60,6 @@ public class MethodModel {
      * 用于 asm 的方法签名。
      */
     private String signature;
-
 
     public String getId() {
         return id;
@@ -124,7 +122,8 @@ public class MethodModel {
     }
 
     public int getParameterCount() {
-        return method == null ? parameterTypes.length : method.getParameterCount();
+        return method == null ? parameterTypes.length
+                : method.getParameterCount();
     }
 
     public void setParameterTypes(Class<?>[] parameterTypes) {
@@ -140,7 +139,8 @@ public class MethodModel {
     }
 
     public Annotation[][] getParameterAnnotations() {
-        if( method != null ) return method.getParameterAnnotations();
+        if (method != null)
+            return method.getParameterAnnotations();
         return new Annotation[getParameterCount()][];
     }
 }

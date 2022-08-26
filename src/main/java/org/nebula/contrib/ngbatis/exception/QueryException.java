@@ -7,12 +7,15 @@ package org.nebula.contrib.ngbatis.exception;
 /**
  * 查询数据库时发生的异常
  *
- * @author yeweicheng
- * <br>Now is history!
+ * @author yeweicheng <br>
+ *         Now is history!
  */
 public class QueryException extends RuntimeException {
-    public QueryException () {}
+    public QueryException() {
+    }
+
     public QueryException(String o) {
-        super(o);;
+        super(o);
+        ;
     }
 }

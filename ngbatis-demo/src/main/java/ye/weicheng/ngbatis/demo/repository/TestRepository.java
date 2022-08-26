@@ -16,8 +16,8 @@ import java.util.Set;
 /**
  * 数据访问层 样例
  *
- * @author yeweicheng
- * <br>Now is history!
+ * @author yeweicheng <br>
+ *         Now is history!
  */
 public interface TestRepository extends NebulaDaoBasic<Person, String> {
 
@@ -42,7 +42,9 @@ public interface TestRepository extends NebulaDaoBasic<Person, String> {
     String selectString();
 
     String selectStringParam(String name);
+
     Integer selectIntParam(Integer age);
+
     Boolean selectBoolParam(Boolean finish);
 
     List<Person> selectCustomPage(Page<Person> page);

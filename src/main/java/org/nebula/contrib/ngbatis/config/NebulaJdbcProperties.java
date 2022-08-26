@@ -3,7 +3,6 @@ package org.nebula.contrib.ngbatis.config;
 // Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
 //
 // This source code is licensed under Apache 2.0 License.
-
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -16,13 +15,11 @@ import java.util.List;
  * yml 配置文件对应属性的模型类
  *
  * @author yeweicheng
- * @since 2022-06-09 11:16
- * <br>Now is history!
+ * @since 2022-06-09 11:16 <br>
+ *        Now is history!
  */
 @Component
-@ConfigurationProperties(
-        prefix = "nebula"
-)
+@ConfigurationProperties(prefix = "nebula")
 public class NebulaJdbcProperties {
 
     public NebulaJdbcProperties() {
@@ -65,6 +62,7 @@ public class NebulaJdbcProperties {
 
     /**
      * 对 hosts 进行切割
+     * 
      * @param hosts ip:port, ip:port, ....
      * @return 当前对象，方便链式调用
      */
@@ -73,8 +71,9 @@ public class NebulaJdbcProperties {
         hostAddresses = new ArrayList<HostAddress>();
         for (int i = 0; i < hostArr.length; i++) {
             String ipAndPort = hostArr[i];
-            String[] iandp =  ipAndPort.split(":");
-            hostAddresses.add(new HostAddress(iandp[0].trim(), Integer.parseInt(iandp[1].trim())));
+            String[] iandp = ipAndPort.split(":");
+            hostAddresses.add(new HostAddress(iandp[0].trim(),
+                    Integer.parseInt(iandp[1].trim())));
         }
         this.hosts = hosts;
         return this;
@@ -117,4 +116,3 @@ public class NebulaJdbcProperties {
     }
 
 }
-

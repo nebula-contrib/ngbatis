@@ -3,7 +3,6 @@ package org.nebula.contrib.ngbatis.config;
 // Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
 //
 // This source code is licensed under Apache 2.0 License.
-
 import org.nebula.contrib.ngbatis.*;
 import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.nebula.contrib.ngbatis.session.IntervalCheckSessionDispatcher;
@@ -12,12 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
-
 /**
  * 环境配置类，用于存放框架的配置信息
  *
- * @author yeweicheng
- * <br>Now is history!
+ * @author yeweicheng <br>
+ *         Now is history!
  */
 @Configuration
 public class EnvConfig {
@@ -67,26 +65,15 @@ public class EnvConfig {
 
     private SessionDispatcher sessionDispatcher;
 
-
     @Bean
     public Env getEnv() {
-        sessionDispatcher = new IntervalCheckSessionDispatcher(MapperContext.newInstance().getNebulaPoolConfig());
-        return new Env(
-                textResolver,
-                resultResolver,
-                argsResolver,
-                argNameFormatter,
-                cfgProps,
-                context,
-                properties.getUsername(),
-                properties.getPassword(),
-                reconnect,
-                properties.getSpace(),
-                pkGenerator,
-                sessionDispatcher
-        );
+        sessionDispatcher = new IntervalCheckSessionDispatcher(
+                MapperContext.newInstance().getNebulaPoolConfig());
+        return new Env(textResolver, resultResolver, argsResolver,
+                argNameFormatter, cfgProps, context, properties.getUsername(),
+                properties.getPassword(), reconnect, properties.getSpace(),
+                pkGenerator, sessionDispatcher);
     }
-
 
     public TextResolver getTextResolver() {
         return textResolver;

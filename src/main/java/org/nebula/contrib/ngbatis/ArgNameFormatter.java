@@ -3,18 +3,17 @@ package org.nebula.contrib.ngbatis;
 // Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
 //
 // This source code is licensed under Apache 2.0 License.
-
 import java.util.Map;
 
 /**
  * 参数格式化器
  *
- * @author yeweicheng
- * <br>Now is history!
+ * @author yeweicheng <br>
+ *         Now is history!
  */
 public interface ArgNameFormatter {
 
-    CqlAndArgs format(String oldArgName,  Map<String, Object> obj );
+    CqlAndArgs format(String oldArgName, Map<String, Object> obj);
 
     class CqlAndArgs {
         public CqlAndArgs(String cql, Map<String, Object> args) {

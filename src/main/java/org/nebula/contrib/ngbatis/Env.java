@@ -3,7 +3,6 @@ package org.nebula.contrib.ngbatis;
 // Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
 //
 // This source code is licensed under Apache 2.0 License.
-
 import com.alibaba.fastjson.parser.ParserConfig;
 import com.vesoft.nebula.client.graph.net.Session;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
@@ -16,8 +15,8 @@ import org.springframework.context.ApplicationContext;
 /**
  * 当前框架的全局环境信息，用于指定各个重要环节所使用的具体实现类
  *
- * @author yeweicheng
- * <br>Now is history!
+ * @author yeweicheng <br>
+ *         Now is history!
  */
 public class Env {
 
@@ -28,9 +27,9 @@ public class Env {
 
     public static ClassLoader classLoader;
 
-    private Logger log = LoggerFactory.getLogger( Env.class );
+    private Logger log = LoggerFactory.getLogger(Env.class);
 
-//    private SessionFactory sessionFactory;
+    // private SessionFactory sessionFactory;
     private TextResolver textResolver;
     private ResultResolver resultResolver;
     private ArgsResolver argsResolver;
@@ -50,17 +49,16 @@ public class Env {
         return dispatcher;
     }
 
-    public Env() {}
+    public Env() {
+    }
 
     private MapperContext mapperContext;
 
-    public Env(
-            TextResolver textResolver,
-            ResultResolver resultResolver, ArgsResolver argsResolver,
-            ArgNameFormatter argNameFormatter, ParseCfgProps cfgProps, ApplicationContext applicationContext,
+    public Env(TextResolver textResolver, ResultResolver resultResolver,
+            ArgsResolver argsResolver, ArgNameFormatter argNameFormatter,
+            ParseCfgProps cfgProps, ApplicationContext applicationContext,
             String username, String password, boolean reconnect, String space,
-            PkGenerator pkGenerator, SessionDispatcher dispatcher
-    ) {
+            PkGenerator pkGenerator, SessionDispatcher dispatcher) {
         this.textResolver = textResolver;
         this.resultResolver = resultResolver;
         this.argsResolver = argsResolver;
@@ -75,18 +73,17 @@ public class Env {
         this.mapperContext = MapperContext.newInstance();
         MapperProxy.ENV = this;
         this.dispatcher = dispatcher;
-        log.debug( " Env constructor ");
+        log.debug(" Env constructor ");
     }
-
 
     public Session openSession() {
         try {
-            return mapperContext.getNebulaPool().getSession(username, password, reconnect);
+            return mapperContext.getNebulaPool().getSession(username, password,
+                    reconnect);
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
     }
-
 
     public String getUsername() {
         return username;

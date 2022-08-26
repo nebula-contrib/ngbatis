@@ -5,8 +5,8 @@ package ye.weicheng.ngbatis.demo.pojo;
 
 /**
  * @author yeweicheng
- * @since 2022-06-28 20:34
- * <br>Now is history!
+ * @since 2022-06-28 20:34 <br>
+ *        Now is history!
  */
 
 public class NRN2 {
