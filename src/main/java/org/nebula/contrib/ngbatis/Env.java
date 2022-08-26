@@ -49,7 +49,7 @@ public class Env {
     return dispatcher;
   }
 
-  public Env() {}
+  public Env() { }
 
   private MapperContext mapperContext;
 

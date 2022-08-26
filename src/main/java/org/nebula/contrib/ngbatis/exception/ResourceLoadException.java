@@ -12,7 +12,7 @@ package org.nebula.contrib.ngbatis.exception;
 .*/
 public class ResourceLoadException extends RuntimeException {
 
-  public ResourceLoadException() {}
+  public ResourceLoadException() { }
 
   public ResourceLoadException(String msg) {
     super(msg);

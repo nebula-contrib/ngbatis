@@ -11,7 +11,7 @@ package org.nebula.contrib.ngbatis.exception;
  *     Now is history.
 .*/
 public class QueryException extends RuntimeException {
-  public QueryException() {}
+  public QueryException() { }
 
   public QueryException(String o) {
     super(o);

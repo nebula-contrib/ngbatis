@@ -128,8 +128,8 @@ public class MapperResourceLoader extends
         methodModel.setMethod(method);
         Assert.notNull(
             method,
-            "接口 " + namespace.getName() +
-              " 中，未声明 xml 中的出现的方法：" + methodModel.getId());
+            "接口 " + namespace.getName()
+              + " 中，未声明 xml 中的出现的方法：" + methodModel.getId());
         checkReturnType(method, namespace);
         pageSupport(method, methodModel, methodNames, methods);
         methods.put(methodModel.getId(), methodModel);
@@ -260,8 +260,8 @@ public class MapperResourceLoader extends
     Class<?> returnType = method.getReturnType();
     if (NEED_SEALING_TYPES.contains(returnType)) {
       throw new ResourceLoadException(
-          "目前不支持返回基本类型，请使用对应的包装类，接口：" +
-            namespace.getName() + "." + method.getName());
+          "目前不支持返回基本类型，请使用对应的包装类，接口："
+            + namespace.getName() + "." + method.getName());
     }
   }
 
@@ -314,7 +314,7 @@ public class MapperResourceLoader extends
     String attrTemp = null;
     try {
       String attrText = node.attr(attr);
-      if (Strings.isBlank(attrText)) {return;}
+      if (Strings.isBlank(attrText)) { return; }
       attrTemp = attrText;
       Field field = model.getClass().getDeclaredField(javaAttr);
       Class<?> type = field.getType();

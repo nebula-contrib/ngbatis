@@ -56,8 +56,8 @@ public class DefaultArgsResolver implements ArgsResolver {
       }
       if (notFoundParamAnno) {
         Class<?> paramClass = args[i].getClass();
-        if (isBaseType(paramClass)) {result.put("p" + i, JSON.toJSON(args[i]));}
-        else if (args[i] instanceof Collection) {result.put("p" + i, args[i]);}
+        if (isBaseType(paramClass)) { result.put("p" + i, JSON.toJSON(args[i])); }
+        else if (args[i] instanceof Collection) { result.put("p" + i, args[i]); }
         else {
           if (len == 1) {
             result = (Map<String, Object>) customToJSON(args[0]);
@@ -188,7 +188,7 @@ public class DefaultArgsResolver implements ArgsResolver {
     }
     Class<?> paramType = param.getClass();
     Setter setter = LEAF_TYPE_AND_SETTER.get(paramType);
-    if (setter != null) {return (T) setter.set(param);}
+    if (setter != null) { return (T) setter.set(param); }
     for (Class<?> pType : COMPLEX_TYPE_AND_SETTER.keySet()) {
       if (isCurrentTypeOrParentType(paramType, pType)) {
         return (T) COMPLEX_TYPE_AND_SETTER.get(pType).set(param);

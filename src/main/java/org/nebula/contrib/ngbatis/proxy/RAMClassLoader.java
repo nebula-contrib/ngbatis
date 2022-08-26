@@ -30,8 +30,8 @@ public class RAMClassLoader extends ClassLoader {
   public RAMClassLoader(Map<String, ClassModel> classModelMap) {
     super(Env.classLoader);
     this.classModelMap = classModelMap;
-    for (Map.Entry<String, ClassModel> classModelEntry :
-        classModelMap.entrySet()) {
+    for (Map.Entry<String, ClassModel> classModelEntry
+        : classModelMap.entrySet()) {
       loadClassCode(classModelEntry);
     }
   }

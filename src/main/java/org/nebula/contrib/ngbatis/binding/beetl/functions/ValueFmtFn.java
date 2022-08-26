@@ -21,7 +21,7 @@ public class ValueFmtFn extends AbstractFunction
     if (value == null) {
       return null;
     }
-    if (value instanceof String) {return "'" + value + "'";}
+    if (value instanceof String) { return "'" + value + "'"; }
 
     if (value instanceof Date) {
       SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");

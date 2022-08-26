@@ -121,8 +121,8 @@ public class MapperProxyClassGenerator implements Opcodes {
         INVOKESTATIC,
         getFullNameType(MapperProxy.class.getName()),
         "invoke",
-        "(Ljava/lang/String;Ljava/lang/String;" +
-          "[Ljava/lang/Object;)Ljava/lang/Object;",
+        "(Ljava/lang/String;Ljava/lang/String;"
+          + "[Ljava/lang/Object;)Ljava/lang/Object;",
         false);
 
     /*.

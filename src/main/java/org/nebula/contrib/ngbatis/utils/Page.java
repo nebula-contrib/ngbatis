@@ -24,7 +24,7 @@ public class Page<T> {
 
   public Long sysUser;
 
-  public Page() {}
+  public Page() { }
 
   public Page(int pageNo, int pageSize) {
     this.pageNo = pageNo;

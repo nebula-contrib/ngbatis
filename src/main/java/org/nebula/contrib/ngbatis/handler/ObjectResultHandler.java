@@ -32,7 +32,7 @@ public class ObjectResultHandler extends AbstractResultHandler
   @Override
   public Object handle(Object newResult, ResultSet result, Class resultType)
       throws NoSuchFieldException, IllegalAccessException {
-    if (result.rowsSize() == 0) {return null;}
+    if (result.rowsSize() == 0) { return null; }
     List<String> columnNames = result.getColumnNames();
     ResultSet.Record record = result.rowValues(0);
     return handle(newResult, record, columnNames, resultType);

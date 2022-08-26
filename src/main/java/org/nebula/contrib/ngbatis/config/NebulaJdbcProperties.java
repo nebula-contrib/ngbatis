@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "nebula")
 public class NebulaJdbcProperties {
 
-  public NebulaJdbcProperties() {}
+  public NebulaJdbcProperties() { }
 
   /** Nebula 地址。由 hosts 切割而来.*/
   private List<HostAddress> hostAddresses;

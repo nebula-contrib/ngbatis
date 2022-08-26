@@ -18,7 +18,7 @@ public class MapperContext {
 
   private static MapperContext INSTANCE;
 
-  private MapperContext() {}
+  private MapperContext() { }
 
   public static MapperContext newInstance() {
     if (INSTANCE == null) {

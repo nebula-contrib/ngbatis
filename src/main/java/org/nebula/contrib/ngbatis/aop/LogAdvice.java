@@ -30,7 +30,7 @@ public class LogAdvice {
 
   @Pointcut(
     value = "@annotation(org.nebula.contrib.ngbatis.annotations.TimeLog)")
-  public void timeLog() {}
+  public void timeLog() { }
 
   @Around("timeLog()")
   public Object msCount(ProceedingJoinPoint pjp) throws Throwable {
