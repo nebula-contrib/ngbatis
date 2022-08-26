@@ -30,20 +30,20 @@ public class AbstractBasicDaoTests {
     public void insert() {
         Person person = new Person();
         person.setAge( 18 );
-        person.setName( "取名有点难");
+        person.setName( "赵小洋");
         repository.insert(person);
     }
     @Test
     public void insertSelective() {
         Person person = new Person();
 //        person.setAge( 18L );
-        person.setName( "取名有点难2");
+        person.setName( "王小冰");
         repository.insertSelective(person);
     }
 
     @Test
     public void selectById() {
-        String id = "取名有点难2";
+        String id = "赵小洋";
         Person person = repository.selectById(id);
         System.out.println( JSON.toJSONString( person ) );
     }
@@ -58,25 +58,26 @@ public class AbstractBasicDaoTests {
     @Test
     public void selectBySelective() {
         Person person = new Person();
-        person.setName( "取名有点难2" );
+        person.setName( "赵小洋" );
         person.setAge( 18 );
         List<Person> people = repository.selectBySelective(person);
         System.out.println(JSON.toJSONString( people ) );
     }
 
     @Test
-    public void deleteLogicById () {
-        int row = repository.deleteLogicById("取名有点难2");
+    public void deleteWithEdgeById () {
+        int row = repository.deleteWithEdgeById("赵小洋");
         System.out.println( row );
     }
 
     @Test
     public void insertEdge() {
         Person person1 = new Person();
-        person1.setName( "测试" );
+        person1.setName( "赵小洋" );
         repository.insertSelective( person1 );
 
         Person person2 = new Person();
+        person2.setName( "易小海" );
         repository.insertSelective( person2 );
 
         Like like = new Like();
@@ -87,7 +88,7 @@ public class AbstractBasicDaoTests {
     @Test
     public void insertEdgeWithRank() {
         Person person1 = new Person();
-        person1.setName( "测试" );
+        person1.setName( "叶小南" );
         repository.insertSelective( person1 );
 
         Person person2 = new Person();
@@ -101,11 +102,11 @@ public class AbstractBasicDaoTests {
     @Test
     public void insertEdgeWithProps() {
         Person person1 = new Person();
-        person1.setName( "edgeDemoV1" );
+        person1.setName( "吴小极" );
         repository.insertSelective( person1 );
 
         Person person2 = new Person();
-        person2.setName( "edgeDemoV2" );
+        person2.setName( "刘小洲" );
         repository.insertSelective( person2 );
 
         Like like = new Like();
@@ -117,11 +118,11 @@ public class AbstractBasicDaoTests {
     @Test
     public void insertEdgeWithPropsAndRank() {
         Person person1 = new Person();
-        person1.setName( "edgeDemoV1" );
+        person1.setName( "李大印" );
         repository.insertSelective( person1 );
 
         Person person2 = new Person();
-        person2.setName( "edgeDemoV2" );
+        person2.setName( "王小雪" );
         repository.insertSelective( person2 );
 
         LikeWithRank likeWithRank = new LikeWithRank();
@@ -135,17 +136,17 @@ public class AbstractBasicDaoTests {
     public void insertSelectiveWithDate() {
         Person person = new Person();
         person.setBirthday( new Date() );
-        person.setName( "取名有点难2");
+        person.setName( "丁小碧");
         repository.insertSelective(person);
     }
 
     @Test
     public void selectPage() {
         Page<Person> page = new Page<>();
-        page.setPageNo( 2 );
+        page.setPageNo( 1 );
         page.setPageSize( 30 );
         Person entity = new Person();
-        entity.setName( "1655802721996" );
+//        entity.setName( "1655802721996" );
         entity.setAge( 18 );
         page.entity = entity;
         repository.selectPage( page );
@@ -154,19 +155,19 @@ public class AbstractBasicDaoTests {
 
     @Test
     public void existsEdge() {
-        Boolean existsEdge = repository.existsEdge("测试", Like.class, "测试");
+        Boolean existsEdge = repository.existsEdge("李大印", Like.class, "丁小碧");
         System.out.println( existsEdge );
     }
 
     @Test
     public void listStartNodes() {
-        List<Person> personList = repository.listStartNodes(Like.class, "测试");
+        List<Person> personList = repository.listStartNodes(Like.class, "易小海");
         System.out.println( JSON.toJSONString( personList ) );
     }
 
     @Test
     public void startNode() {
-        Person whoIsStartForTest = repository.startNode(Like.class, "测试");
+        Person whoIsStartForTest = repository.startNode(Like.class, "易小海");
         System.out.println( JSON.toJSONString( whoIsStartForTest ) );
     }
 

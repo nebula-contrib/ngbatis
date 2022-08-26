@@ -40,7 +40,7 @@ public class DefaultArgsResolver implements ArgsResolver {
             return Collections.emptyMap();
         }
         int len = methodModel.getParameterCount();
-        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> result = new LinkedHashMap<>();
         Annotation[][] parameterAnnotations = methodModel.getParameterAnnotations();
         for( int i = 0 ; i < len ; i ++ ) {
             Annotation[] annotationArgIndex = parameterAnnotations[i];

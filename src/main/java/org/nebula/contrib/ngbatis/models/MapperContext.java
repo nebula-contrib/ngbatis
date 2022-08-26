@@ -4,6 +4,7 @@ package org.nebula.contrib.ngbatis.models;
 //
 // This source code is licensed under Apache 2.0 License.
 
+import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
 
 import java.util.HashMap;
@@ -49,6 +50,11 @@ public class MapperContext {
      */
     NebulaPool nebulaPool;
 
+    /**
+     * Nebula 连接配置
+     */
+    NebulaPoolConfig nebulaPoolConfig;
+
     boolean resourceRefresh = false;
 
     public Map<String, ClassModel> getInterfaces() {
@@ -69,6 +75,14 @@ public class MapperContext {
 
     public NebulaPool getNebulaPool() {
         return nebulaPool;
+    }
+
+    public NebulaPoolConfig getNebulaPoolConfig() {
+        return nebulaPoolConfig;
+    }
+
+    public void setNebulaPoolConfig(NebulaPoolConfig nebulaPoolConfig) {
+        this.nebulaPoolConfig = nebulaPoolConfig;
     }
 
     public void setNebulaPool(NebulaPool nebulaPool) {

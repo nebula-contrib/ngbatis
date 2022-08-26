@@ -44,6 +44,11 @@ public class Env {
     private String space;
     private PkGenerator pkGenerator;
 
+    private SessionDispatcher dispatcher;
+
+    public SessionDispatcher getDispatcher() {
+        return dispatcher;
+    }
 
     public Env() {}
 
@@ -54,7 +59,7 @@ public class Env {
             ResultResolver resultResolver, ArgsResolver argsResolver,
             ArgNameFormatter argNameFormatter, ParseCfgProps cfgProps, ApplicationContext applicationContext,
             String username, String password, boolean reconnect, String space,
-            PkGenerator pkGenerator
+            PkGenerator pkGenerator, SessionDispatcher dispatcher
     ) {
         this.textResolver = textResolver;
         this.resultResolver = resultResolver;
@@ -69,21 +74,14 @@ public class Env {
         this.pkGenerator = pkGenerator;
         this.mapperContext = MapperContext.newInstance();
         MapperProxy.ENV = this;
+        this.dispatcher = dispatcher;
         log.debug( " Env constructor ");
     }
 
-    // FIXME 使用连接池替换 THREAD_LOCAL 的实现方式
-    static final ThreadLocal<Session> SESSION_CACHE = new ThreadLocal<>();
 
     public Session openSession() {
         try {
             return mapperContext.getNebulaPool().getSession(username, password, reconnect);
-//            Session sessionCache = SESSION_CACHE.get();
-//            if( sessionCache != null && sessionCache.ping() ) return sessionCache;
-//            Session session = mapperContext.getNebulaPool().getSession(username, password, reconnect);
-//            SESSION_CACHE.set( session );
-//            log.info( "Nebula Graph sessionId: {}", session );
-//            return session;
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }

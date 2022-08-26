@@ -15,6 +15,7 @@ import org.nebula.contrib.ngbatis.exception.QueryException;
 import org.nebula.contrib.ngbatis.models.ClassModel;
 import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.nebula.contrib.ngbatis.models.MethodModel;
+import org.nebula.contrib.ngbatis.session.LocalSession;
 import org.nebula.contrib.ngbatis.utils.Page;
 import org.nebula.contrib.ngbatis.utils.ReflectUtil;
 import org.slf4j.Logger;
@@ -23,9 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.nebula.contrib.ngbatis.models.ClassModel.PROXY_SUFFIX;
 
@@ -142,9 +141,14 @@ public class MapperProxy {
         // 参数格式转换
         long step0 = System.currentTimeMillis();
         Map<String, Object> argMap = ENV.getArgsResolver().resolve( methodModel, args );
+        Map<String, Object> paramWithSchema = new LinkedHashMap<String, Object>( argMap ) {{
+            put( "ng_cm", classModel );
+            put( "ng_mm", methodModel );
+            put( "ng_args", args );
+        }};
         // beetl 渲染模板
         String textTpl = methodModel.getText();
-        String nGQL = ENV.getTextResolver().resolve( textTpl, argMap );
+        String nGQL = ENV.getTextResolver().resolve( textTpl, paramWithSchema );
         Map<String, Object> params = null;
         if( method != null &&  method.isAnnotationPresent( UseKeyArgReplace.class ) ) {
             ArgNameFormatter.CqlAndArgs format = ENV.getArgNameFormatter().format(nGQL, argMap);
@@ -190,6 +194,7 @@ public class MapperProxy {
      * @return nebula-graph 的未被 orm 操作的原始结果集
      */
     public static  ResultSet executeWithParameter(ClassModel cm, MethodModel mm, String nGQL, Map<String, Object> params )  {
+        LocalSession localSession = null;
         Session session = null;
         ResultSet result = null;
         String proxyClass = null;
@@ -201,8 +206,9 @@ public class MapperProxy {
                 proxyMethod = stackTraceElement.getMethodName();
             }
 
-            nGQL = "USE " + getSpace(cm, mm) + ";\n\t\t" + nGQL.trim();
-            session = ENV.openSession();
+            localSession = ENV.getDispatcher().poll();
+            nGQL = qlWithSpace( localSession, nGQL, getSpace(cm, mm) );
+            session = localSession.getSession();
             result = session.executeWithParameter( nGQL, params );
             if( result.isSucceeded() ) {
                 return result;
@@ -213,8 +219,18 @@ public class MapperProxy {
             throw new QueryException(  "数据查询失败："  + e.getMessage() );
         } finally {
             log.debug("\n\t- proxyMethod: {}#{} \n\t- nGql：{} \n\t - params: {}\n\t - result：{}", proxyClass, proxyMethod, nGQL, params, result);
-            if (session != null ) session.release();
+            if (localSession != null ) ENV.getDispatcher().offer( localSession );
         }
+    }
+
+    private static String qlWithSpace(LocalSession localSession, String nGQL, String currentSpace) {
+        nGQL = nGQL.trim();
+        String sessionSpace = localSession.getCurrentSpace();
+        if( Objects.equals( sessionSpace, currentSpace ) ) {
+            return String.format("\n\t\t%s", nGQL);
+        }
+        localSession.setCurrentSpace( currentSpace );
+        return String.format("USE %s;\n\t\t%s", currentSpace, nGQL);
     }
 
     public static String getSpace(ClassModel cm, MethodModel mm) {

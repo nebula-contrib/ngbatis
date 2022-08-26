@@ -5,6 +5,8 @@ package org.nebula.contrib.ngbatis.config;
 // This source code is licensed under Apache 2.0 License.
 
 import org.nebula.contrib.ngbatis.*;
+import org.nebula.contrib.ngbatis.models.MapperContext;
+import org.nebula.contrib.ngbatis.session.IntervalCheckSessionDispatcher;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -19,6 +21,8 @@ import org.springframework.context.annotation.Bean;
  */
 @Configuration
 public class EnvConfig {
+
+    public static boolean reconnect = true;
 
     /**
      * xml 所采用的模板引擎策略
@@ -61,9 +65,12 @@ public class EnvConfig {
     @Autowired(required = false)
     private PkGenerator pkGenerator;
 
+    private SessionDispatcher sessionDispatcher;
+
 
     @Bean
     public Env getEnv() {
+        sessionDispatcher = new IntervalCheckSessionDispatcher(MapperContext.newInstance().getNebulaPoolConfig());
         return new Env(
                 textResolver,
                 resultResolver,
@@ -73,9 +80,10 @@ public class EnvConfig {
                 context,
                 properties.getUsername(),
                 properties.getPassword(),
-                true,
+                reconnect,
                 properties.getSpace(),
-                pkGenerator
+                pkGenerator,
+                sessionDispatcher
         );
     }
 
