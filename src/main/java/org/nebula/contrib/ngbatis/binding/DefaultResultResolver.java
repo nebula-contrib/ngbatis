@@ -30,11 +30,11 @@ public class DefaultResultResolver implements ResultResolver {
 
     if (resultType == null) {
       resultType = returnType;
-    };
+    }
 
     if (returnType == void.class) {
       return null;
-    };
+    }
 
     // 核心方法。获取真正执行结果集类型转换的结果处理执行者
     ResultHandler<Object, Object> handler =

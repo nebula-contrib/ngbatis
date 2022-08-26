@@ -87,7 +87,9 @@ public class KeySymbolMap extends HashMap<String, Object> {
   }
 
   public Object get(final Object keyDot) {
-    if (keyDot == null) { return null; }
+    if (keyDot == null) {
+      return null;
+    }
     String[] split = keyDot.toString().split(this.split);
     Queue<String> queue = new ConcurrentLinkedQueue(Arrays.asList(split));
     Object o = this.get(queue, null);

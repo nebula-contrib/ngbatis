@@ -60,7 +60,9 @@ public class ReflectUtil {
   }
 
   public static Number castNumber(final Number n, final Class resultType) {
-    if (n == null) { return null; }
+    if (n == null) {
+      return null;
+    }
     return (resultType == Integer.class || resultType == int.class)
       ? n.intValue()
       : (resultType == Long.class || resultType == long.class)
@@ -240,7 +242,9 @@ public class ReflectUtil {
 
   public static boolean isCurrentTypeOrParentType(
     final Class<?> paramType, final Class<?> pType) {
-      if (paramType == pType) { return true; }
+      if (paramType == pType) {
+        return true;
+      }
       Set<Class<?>> parentTypes = getParentTypes(paramType);
       return parentTypes.contains(pType);
   }

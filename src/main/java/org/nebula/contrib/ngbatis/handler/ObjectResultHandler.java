@@ -33,7 +33,9 @@ public class ObjectResultHandler extends AbstractResultHandler
   public Object handle(
     final Object newResult, final ResultSet result, final Class resultType)
       throws NoSuchFieldException, IllegalAccessException {
-    if (result.rowsSize() == 0) { return null; }
+    if (result.rowsSize() == 0) {
+      return null;
+    }
     List<String> columnNames = result.getColumnNames();
     ResultSet.Record record = result.rowValues(0);
     return handle(newResult, record, columnNames, resultType);
@@ -85,8 +87,7 @@ public class ObjectResultHandler extends AbstractResultHandler
 
     if (columnNames.size() == 1) {
         newResult = nodeToResultType(node, resultType);
-    }
-    else {
+    } else {
       nodeToResultType(newResult, columnName, node);
     }
     return newResult;
@@ -101,8 +102,7 @@ public class ObjectResultHandler extends AbstractResultHandler
 
     if (columnNames.size() == 1) {
       newResult = relationshipToResultType(relationship, resultType);
-    }
-    else {
+    } else {
       relationshipToResultType(newResult, columnName, relationship);
     }
     return newResult;

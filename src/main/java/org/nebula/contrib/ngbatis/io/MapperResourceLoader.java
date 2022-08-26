@@ -316,7 +316,9 @@ public class MapperResourceLoader extends
     String attrTemp = null;
     try {
       String attrText = node.attr(attr);
-      if (Strings.isBlank(attrText)) { return; }
+      if (Strings.isBlank(attrText)) {
+        return;
+      }
       attrTemp = attrText;
       Field field = model.getClass().getDeclaredField(javaAttr);
       Class<?> type = field.getType();
