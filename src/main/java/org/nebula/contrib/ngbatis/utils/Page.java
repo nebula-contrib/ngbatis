@@ -6,11 +6,11 @@ package org.nebula.contrib.ngbatis.utils;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author yeweicheng
- * @since 2022-06-28 3:12 <br>
- *     Now is history!
- */
+/**.
+ * @author yeweicheng.
+ * @since 2022-06-28 3:12 <br>.
+ *     Now is history.
+.*/
 public class Page<T> {
   public int pageNo = 1;
   public int pageSize = 100;

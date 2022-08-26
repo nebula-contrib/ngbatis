@@ -5,12 +5,12 @@ package org.nebula.contrib.ngbatis;
 // This source code is licensed under Apache 2.0 License.
 import java.util.Map;
 
-/**
- * 参数格式化器
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * 参数格式化器.
+ *.
+ * @author yeweicheng <br>.
+ *     Now is history.
+.*/
 public interface ArgNameFormatter {
 
   CqlAndArgs format(String oldArgName, Map<String, Object> obj);

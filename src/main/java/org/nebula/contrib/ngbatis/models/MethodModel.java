@@ -6,41 +6,41 @@ package org.nebula.contrib.ngbatis.models;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-/**
- * XXXDao.java 中的单个方法信息，以及 xml 中 子标签下的文本数据酷操作脚本 CQL
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * XXXDao.java 中的单个方法信息，以及 xml 中 子标签下的文本数据酷操作脚本 CQL.
+ *.
+ * @author yeweicheng <br>.
+ *     Now is history.
+.*/
 public class MethodModel {
 
   // ---------------- info in xml start ---------------------
-  /** 方法名 */
+  /** 方法名.*/
   private String id;
 
-  /** nGQL 模板 */
+  /** nGQL 模板.*/
   private String text; // cql
 
-  /** 在方法中指定使用的 space */
+  /** 在方法中指定使用的 space.*/
   private String space;
 
-  /** xml 中配置的参数类型 */
+  /** xml 中配置的参数类型.*/
   private Class parameterType;
 
-  /** xml 中子标签所声明的 集合泛型 */
+  /** xml 中子标签所声明的 集合泛型.*/
   private Class resultType;
 
-  /** 反射所得的方法返回值 */
+  /** 反射所得的方法返回值.*/
   private Class returnType;
 
-  /** XXXDao 的方法对象 */
+  /** XXXDao 的方法对象.*/
   private Method method;
 
-  /** {@link #method} 参数列表的参数类型数组 */
+  /** {@link #method} 参数列表的参数类型数组.*/
   private Class<?>[] parameterTypes;
 
   // ---------------- info in interface start ---------------------
-  /** 用于 asm 的方法签名。 */
+  /** 用于 asm 的方法签名..*/
   private String signature;
 
   public String getId() {

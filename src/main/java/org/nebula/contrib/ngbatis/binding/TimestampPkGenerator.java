@@ -5,13 +5,13 @@ package org.nebula.contrib.ngbatis.binding;
 // This source code is licensed under Apache 2.0 License.
 import org.nebula.contrib.ngbatis.PkGenerator;
 
-/**
- * 主键生成样例
- *
- * @author yeweicheng
- * @since 2022-06-14 12:32 <br>
- *     Now is history!
- */
+/**.
+ * 主键生成样例.
+ *.
+ * @author yeweicheng.
+ * @since 2022-06-14 12:32 <br>.
+ *     Now is history.
+.*/
 public class TimestampPkGenerator implements PkGenerator {
 
   @Override

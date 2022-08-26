@@ -9,12 +9,12 @@ import org.nebula.contrib.ngbatis.models.ClassModel;
 import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.springframework.core.io.Resource;
 
-/**
- * xml 资源加载器，与 接口解析器。并将获取到的结果填充到 {@link MapperContext} 中
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * xml 资源加载器，与 接口解析器。并将获取到的结果填充到 {@link MapperContext} 中.
+ *.
+ * @author yeweicheng <br>.
+ *     Now is history.
+.*/
 public interface ResourceLoader {
 
   Map<String, ClassModel> load();

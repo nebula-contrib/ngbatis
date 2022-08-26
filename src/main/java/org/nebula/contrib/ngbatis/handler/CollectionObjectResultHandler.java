@@ -8,15 +8,15 @@ import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/**
- * 结果集数据类型转换器
- *
- * <p>ResultSet -&gt; Collection&lt;Object&gt;
- *
- * @author yeweicheng
- * @since 2022-06-10 22:31 <br>
- *     Now is history!
- */
+/**.
+ * 结果集数据类型转换器.
+ *.
+ * <p>ResultSet -&gt; Collection&lt;Object&gt;.
+ *.
+ * @author yeweicheng.
+ * @since 2022-06-10 22:31 <br>.
+ *     Now is history.
+.*/
 @Component
 public class CollectionObjectResultHandler extends AbstractResultHandler
     <Collection, Object> {

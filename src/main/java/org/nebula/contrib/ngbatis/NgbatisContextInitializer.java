@@ -34,14 +34,14 @@ import org.springframework.core.Ordered;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.stereotype.Component;
 
-/**
- * SpringBoot start <br>
- * 用于被 SpringBoot 所引导启动。
- *
- * @author yeweicheng
- * @since 2022-06-17 10:01 <br>
- *     Now is history!
- */
+/**.
+ * SpringBoot start <br>.
+ * 用于被 SpringBoot 所引导启动.
+ *.
+ * @author yeweicheng.
+ * @since 2022-06-17 10:01 <br>.
+ *     Now is history.
+.*/
 public class NgbatisContextInitializer
     implements ApplicationContextInitializer {
 
@@ -122,13 +122,13 @@ public class NgbatisContextInitializer
   }
 }
 
-/**
- * Ngbatis 创建动态代理的主程
- *
- * @author yeweicheng
- * @since 2022-06-17 10:01 <br>
- *     Now is history!
- */
+/**.
+ * Ngbatis 创建动态代理的主程.
+ *.
+ * @author yeweicheng.
+ * @since 2022-06-17 10:01 <br>.
+ *     Now is history.
+.*/
 class NgbatisBeanFactoryPostProcessor
     implements BeanFactoryPostProcessor, Ordered {
 
@@ -174,12 +174,12 @@ class NgbatisBeanFactoryPostProcessor
     return context;
   }
 
-  /**
-   * 自动从代码中获取 实体类与数据库标签 的映射关系
-   *
-   * @param classModels 类模型
-   * @param tagTypeMapping 实体类与数据库标签 （容器）
-   */
+  /**.
+   * 自动从代码中获取 实体类与数据库标签 的映射关系.
+   *.
+   * @param classModels 类模型.
+   * @param tagTypeMapping 实体类与数据库标签 （容器）.
+  .*/
   private void figureTagTypeMapping(
       Collection<ClassModel> classModels,
       Map<String, Class<?>> tagTypeMapping) {
@@ -195,11 +195,11 @@ class NgbatisBeanFactoryPostProcessor
     }
   }
 
-  /**
-   * 为所有的动态代理类 注册Bean到SpringBoot
-   *
-   * @param context Ngbatis上下文
-   */
+  /**.
+   * 为所有的动态代理类 注册Bean到SpringBoot.
+   *.
+   * @param context Ngbatis上下文.
+  .*/
   private void registerBean(MapperContext context) {
     Map<String, ClassModel> interfaces = context.getInterfaces();
     for (ClassModel cm : interfaces.values()) {
@@ -218,12 +218,12 @@ class NgbatisBeanFactoryPostProcessor
     }
   }
 
-  /**
-   * 为单个动态代理类 注册Bean到SpringBoot
-   *
-   * @param cm 类模型
-   * @param proxy 动态代理类
-   */
+  /**.
+   * 为单个动态代理类 注册Bean到SpringBoot.
+   *.
+   * @param cm 类模型.
+   * @param proxy 动态代理类.
+  .*/
   private void registerBean(ClassModel cm, Class proxy) {
     BeanDefinitionBuilder beanDefinitionBuilder =
       BeanDefinitionBuilder.genericBeanDefinition(proxy);
@@ -232,24 +232,24 @@ class NgbatisBeanFactoryPostProcessor
     registerBean(getBeanName(cm) + PROXY_SUFFIX, beanDefinition);
   }
 
-  /**
-   * 为所代理的类指定 Bean 名
-   *
-   * @param className 类名
-   * @param beanDefinition Spring 的bean注册器
-   */
+  /**.
+   * 为所代理的类指定 Bean 名.
+   *.
+   * @param className 类名.
+   * @param beanDefinition Spring 的bean注册器.
+  .*/
   private void registerBean(String className, BeanDefinition beanDefinition) {
     BeanDefinitionRegistry beanFactory =
         (BeanDefinitionRegistry) context.getAutowireCapableBeanFactory();
     beanFactory.registerBeanDefinition(className, beanDefinition);
   }
 
-  /**
-   * 获取 Bean 的名字
-   *
-   * @param cm
+  /**.
+   * 获取 Bean 的名字.
+   *.
+   * @param cm.
    * @return
-   */
+  .*/
   private String getBeanName(ClassModel cm) {
     Annotation annotation = cm.getNamespace().getAnnotation(Component.class);
     if (annotation == null) {
@@ -259,11 +259,11 @@ class NgbatisBeanFactoryPostProcessor
     }
   }
 
-  /**
-   * 创建 Nebula 连接池
-   *
-   * @return Nebula 连接池
-   */
+  /**.
+   * 创建 Nebula 连接池.
+   *.
+   * @return Nebula 连接池.
+  .*/
   public NebulaPool nebulaPool() {
     NebulaPool pool = new NebulaPool();
     try {

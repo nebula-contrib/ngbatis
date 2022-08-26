@@ -4,12 +4,12 @@ package org.nebula.contrib.ngbatis.exception;
 //
 // This source code is licensed under Apache 2.0 License.
 
-/**
- * 解析xml文件时发生的异常
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * 解析xml文件时发生的异常.
+ *.
+ * @author yeweicheng <br>.
+ *     Now is history.
+.*/
 public class ParseException extends RuntimeException {
 
   public ParseException(String msg) {

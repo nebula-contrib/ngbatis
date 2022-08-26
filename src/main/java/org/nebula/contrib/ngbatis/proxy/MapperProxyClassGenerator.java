@@ -17,41 +17,41 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-/**
- * 基于 ASM 对接口进行动态代理，并生成 Bean 代理的实现类
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * 基于 ASM 对接口进行动态代理，并生成 Bean 代理的实现类.
+ *.
+ * @author yeweicheng <br>.
+ *     Now is history.
+.*/
 public class MapperProxyClassGenerator implements Opcodes {
 
-  /**
-   * 获取DAO接口对应的动态代理类名称
-   *
-   * @param cm 已经扫描的类模型
+  /**.
+   * 获取DAO接口对应的动态代理类名称.
+   *.
+   * @param cm 已经扫描的类模型.
    * @return
-   */
+  .*/
   private String getFullNameType(ClassModel cm) {
     return getFullNameType((cm.getNamespace().getName() + PROXY_SUFFIX));
   }
 
-  /**
-   * 通过类的全限定名，获取类在JVM中的类名
-   *
-   * @param className 接口全限定名
+  /**.
+   * 通过类的全限定名，获取类在JVM中的类名.
+   *.
+   * @param className 接口全限定名.
    * @return
-   */
+  .*/
   private String getFullNameType(String className) {
     return className.replace(".", "/");
   }
 
-  /**
-   * 根据 ClassModel 对象中扫描得到的信息，<br>
-   * 生成代理类，并将字节码设置到 ClassModel 对象中<br>
-   *
-   * @param cm DAO 类模型
-   * @return DAO 接口对应的字节码
-   */
+  /**.
+   * 根据 ClassModel 对象中扫描得到的信息，<br>.
+   * 生成代理类，并将字节码设置到 ClassModel 对象中<br>.
+   *.
+   * @param cm DAO 类模型.
+   * @return DAO 接口对应的字节码.
+  .*/
   public byte[] setClassCode(ClassModel cm) {
     String fullNameType = getFullNameType(cm);
 
@@ -78,12 +78,12 @@ public class MapperProxyClassGenerator implements Opcodes {
     return code;
   }
 
-  /**
-   * 根据扫描得到的类模型获取方法，并让类访问器进行访问
-   *
-   * @param cw asm 的类访问器
-   * @param cm DAO 接口类模型
-   */
+  /**.
+   * 根据扫描得到的类模型获取方法，并让类访问器进行访问.
+   *.
+   * @param cw asm 的类访问器.
+   * @param cm DAO 接口类模型.
+  .*/
   private void methods(ClassWriter cw, ClassModel cm) {
     // 读取配置，并根据配置向 class 文件写人代理方法
     Map<String, MethodModel> methods = cm.getMethods();
@@ -92,21 +92,21 @@ public class MapperProxyClassGenerator implements Opcodes {
     }
   }
 
-  /**
-   * 生成代理方法
-   *
-   * @param cw asm 类访问器
-   * @param cm 扫描所得类模型
-   * @param mmEntry 方法名与方法模型映射
-   */
+  /**.
+   * 生成代理方法.
+   *.
+   * @param cw asm 类访问器.
+   * @param cm 扫描所得类模型.
+   * @param mmEntry 方法名与方法模型映射.
+  .*/
   private void method(
       ClassWriter cw, ClassModel cm, Map.Entry<String, MethodModel> mmEntry) {
     String methodName = mmEntry.getKey();
     MethodModel mm = mmEntry.getValue();
-    /*
-     * return Mapper.invoke( "接口名 namespace", "方法名 method", new Object[]{
-     * arg1, arg2, ... } ); ----- start
-     */
+    /*.
+     * return Mapper.invoke( "接口名 namespace", "方法名 method", new Object[]{.
+     * arg1, arg2, ... } ); ----- start.
+    .*/
     Method method = mm.getMethod();
     String methodSignature = ReflectUtil.getMethodSignature(mm);
     MethodVisitor mapper = cw.visitMethod(
@@ -125,9 +125,9 @@ public class MapperProxyClassGenerator implements Opcodes {
           "[Ljava/lang/Object;)Ljava/lang/Object;",
         false);
 
-    /*
-     * -------------------------------- end --------------------------------
-     */
+    /*.
+     * -------------------------------- end --------------------------------.
+    .*/
 
     // *2，每多一个方法参数，需要多定义 2 个局部变量，下标变量
     // +3： 3 个固定参数位，namespace、methodName、args
@@ -155,14 +155,14 @@ public class MapperProxyClassGenerator implements Opcodes {
     }
   }
 
-  /**
-   * int IRETURN = 172; // visitInsn int LRETURN = 173;
-   * // - int FRETURN = 174; // - int DRETURN = 175;
-   * // - int ARETURN = 176; // - int RETURN = 177; // -
-   *
+  /**.
+   * int IRETURN = 172; // visitInsn int LRETURN = 173;.
+   * // - int FRETURN = 174; // - int DRETURN = 175;.
+   * // - int ARETURN = 176; // - int RETURN = 177; // -.
+   *.
    * @param returnType
    * @return
-   */
+  .*/
   private int getReturnTypeInsn(Class returnType) {
     return returnType == long.class
         ? LRETURN
@@ -175,12 +175,12 @@ public class MapperProxyClassGenerator implements Opcodes {
                     : returnType == void.class ? RETURN : ARETURN;
   }
 
-  /**
-   * Object[] args3 = new Object[] { arg1, arg2, arg3... }
-   *
-   * @param mv
-   * @param parameterCount
-   */
+  /**.
+   * Object[] args3 = new Object[] { arg1, arg2, arg3... }.
+   *.
+   * @param mv.
+   * @param parameterCount.
+  .*/
   private int addParams(MethodVisitor mv, int parameterCount) {
     // 获取被代理方法的参数个数，当前变量的栈中位置后推一位
     int varLocation = parameterCount + 1;
@@ -204,11 +204,11 @@ public class MapperProxyClassGenerator implements Opcodes {
     return parameterCount;
   }
 
-  /**
-   * 空参构造函数生成方法 public XXX() {
-   *
-   * <p>}
-   */
+  /**.
+   * 空参构造函数生成方法 public XXX() {.
+   *.
+   * <p>}.
+  .*/
   private void constructor(ClassWriter cw) {
     MethodVisitor constructor = cw.visitMethod(
       ACC_PUBLIC, "<init>", "()V", null, null);
@@ -224,11 +224,11 @@ public class MapperProxyClassGenerator implements Opcodes {
     constructor.visitEnd();
   }
 
-  /**
-   * 将生成的字节码，写入本地文件，形成 .class 文件供调试时使用
-   *
-   * @param cm
-   */
+  /**.
+   * 将生成的字节码，写入本地文件，形成 .class 文件供调试时使用.
+   *.
+   * @param cm.
+  .*/
   private void writeFile(ClassModel cm) {
     try {
       File file = new File("asm-debug\\" + getFullNameType(cm) + ".class");

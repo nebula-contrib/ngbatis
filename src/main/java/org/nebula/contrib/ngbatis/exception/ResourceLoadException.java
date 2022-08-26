@@ -4,12 +4,12 @@ package org.nebula.contrib.ngbatis.exception;
 //
 // This source code is licensed under Apache 2.0 License.
 
-/**
- * 加载所需资源时发生的异常
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * 加载所需资源时发生的异常.
+ *.
+ * @author yeweicheng <br>.
+ *     Now is history.
+.*/
 public class ResourceLoadException extends RuntimeException {
 
   public ResourceLoadException() {}

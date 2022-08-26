@@ -11,32 +11,32 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * 环境配置类，用于存放框架的配置信息
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * 环境配置类，用于存放框架的配置信息.
+ *.
+ * @author yeweicheng <br>.
+ *     Now is history.
+.*/
 @Configuration
 public class EnvConfig {
 
   public static boolean reconnect = true;
 
-  /** xml 所采用的模板引擎策略 */
+  /** xml 所采用的模板引擎策略.*/
   @Autowired private TextResolver textResolver;
-  /** 结果处理路由策略 */
+  /** 结果处理路由策略.*/
   @Autowired private ResultResolver resultResolver;
-  /** 执行到数据库前的参数替换策略 */
+  /** 执行到数据库前的参数替换策略.*/
   @Autowired private ArgsResolver argsResolver;
-  /** 复杂对象，转换成 xml 可访问的参数名格式化策略 */
+  /** 复杂对象，转换成 xml 可访问的参数名格式化策略.*/
   @Autowired private ArgNameFormatter argNameFormatter;
-  /** mapper.xml 解析时的配置，及声明 xml 标签用途跟 xml文件存放位置的配置。 */
+  /** mapper.xml 解析时的配置，及声明 xml 标签用途跟 xml文件存放位置的配置..*/
   @Autowired private ParseCfgProps cfgProps;
-  /** Springboot 应用上下文 */
+  /** Springboot 应用上下文.*/
   @Autowired private ApplicationContext context;
-  /** Nebula 连接配置 */
+  /** Nebula 连接配置.*/
   @Autowired private NebulaJdbcProperties properties;
-  /** 主键生成器 */
+  /** 主键生成器.*/
   @Autowired(required = false)
   private PkGenerator pkGenerator;
 

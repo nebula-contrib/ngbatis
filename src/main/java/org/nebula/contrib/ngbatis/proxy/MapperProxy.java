@@ -26,12 +26,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-/**
- * 被动态代理类所调用。用于实际的数据库访问并调用结果集处理方法
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * 被动态代理类所调用。用于实际的数据库访问并调用结果集处理方法.
+ *.
+ * @author yeweicheng <br>.
+ *     Now is history.
+.*/
 public class MapperProxy {
 
   private static Logger log = LoggerFactory.getLogger(MapperProxy.class);
@@ -54,16 +54,16 @@ public class MapperProxy {
     methodCache.putAll(methods);
   }
 
-  /**
-   * <strong>框架中极其重要的方法，被动态代理类所执行。
-   * 是动态代理的入口方法{@link MapperProxyClassGenerator#method}</strong>
-   * 提供给代理类所调用
-   *
-   * @param className 访问数据库的接口
-   * @param methodName 执行数据库操作的方法名
-   * @param args 执行数据库操作的参数
-   * @return 结果对象映射的 java 对象
-   */
+  /**.
+   * <strong>框架中极其重要的方法，被动态代理类所执行。.
+   * 是动态代理的入口方法{@link MapperProxyClassGenerator#method}</strong>.
+   * 提供给代理类所调用.
+   *.
+   * @param className 访问数据库的接口.
+   * @param methodName 执行数据库操作的方法名.
+   * @param args 执行数据库操作的参数.
+   * @return 结果对象映射的 java 对象.
+  .*/
   public static Object invoke(
       String className, String methodName, Object... args) {
     MapperContext mapperContext = ENV.getMapperContext();
@@ -86,15 +86,15 @@ public class MapperProxy {
     return pageSupport(classModel, method, args);
   }
 
-  /**
-   * 自动对该分页的接口进行分页操作<br>
-   * 该分页：接口参数中有 {@link Page Page} 对象
-   *
-   * @param classModel 应用初始化后，数据访问接口对应的类模型
-   * @param method 执行数据库操作的方法
-   * @param args 执行数据库操作的参数
-   * @return 结果对象映射的 java 对象
-   */
+  /**.
+   * 自动对该分页的接口进行分页操作<br>.
+   * 该分页：接口参数中有 {@link Page Page} 对象.
+   *.
+   * @param classModel 应用初始化后，数据访问接口对应的类模型.
+   * @param method 执行数据库操作的方法.
+   * @param args 执行数据库操作的参数.
+   * @return 结果对象映射的 java 对象.
+  .*/
   private static Object pageSupport(
       ClassModel classModel, Method method, Object[] args) {
     int pageParamIndex = ReflectUtil.containsType(method, Page.class);
@@ -124,22 +124,22 @@ public class MapperProxy {
     return invoke(null, methodModel, args);
   }
 
-  /**
-   * 提供给基类所调用，完整描述整个 orm 流程的核心方法。
-   *
-   * <ol>
-   *   <li>获取方法具体信息，主要包括返回值类型与查询脚本(nGQL)
-   *   <li>对上一步获取到的 nGQL 中，参数占位符替换成实际参数值
-   *   <li>执行数据库访问
-   *   <li>按返回值类型获取对应结果集处理器
-   *   <li>完成数据库数据类型向 javaa 对象类型的转化
-   * </ol>
-   *
-   * @param classModel mapper 接口类型，存放 mapper 标签的属性
-   * @param methodModel 接口方法模型，存放了 dao接口的详细信息（nGQL模板、返回值类型等）
-   * @param args 执行 nGQL 的参数
-   * @return 结果值
-   */
+  /**.
+   * 提供给基类所调用，完整描述整个 orm 流程的核心方法。.
+   *.
+   * <ol>.
+   *   <li>获取方法具体信息，主要包括返回值类型与查询脚本(nGQL).
+   *   <li>对上一步获取到的 nGQL 中，参数占位符替换成实际参数值.
+   *   <li>执行数据库访问.
+   *   <li>按返回值类型获取对应结果集处理器.
+   *   <li>完成数据库数据类型向 javaa 对象类型的转化.
+   * </ol>.
+   *.
+   * @param classModel mapper 接口类型，存放 mapper 标签的属性.
+   * @param methodModel 接口方法模型，存放了 dao接口的详细信息（nGQL模板、返回值类型等）.
+   * @param args 执行 nGQL 的参数.
+   * @return 结果值.
+  .*/
   public static Object invoke(ClassModel classModel, MethodModel methodModel,
       Object... args) {
     Method method = methodModel.getMethod();
@@ -203,13 +203,13 @@ public class MapperProxy {
     return invoke(classModel, methodModel, args);
   }
 
-  /**
-   * 通过 nebula-graph 客户端执行数据库访问。被 invoke 所调用，间接为动态代理类服务
-   *
-   * @param nGQL 待执行的查询脚本（模板）
-   * @param params 待执行脚本的参数所需的参数
-   * @return nebula-graph 的未被 orm 操作的原始结果集
-   */
+  /**.
+   * 通过 nebula-graph 客户端执行数据库访问。被 invoke 所调用，间接为动态代理类服务.
+   *.
+   * @param nGQL 待执行的查询脚本（模板）.
+   * @param params 待执行脚本的参数所需的参数.
+   * @return nebula-graph 的未被 orm 操作的原始结果集.
+  .*/
   public static ResultSet executeWithParameter(
       ClassModel cm, MethodModel mm, String nGQL,
       Map<String, Object> params) {

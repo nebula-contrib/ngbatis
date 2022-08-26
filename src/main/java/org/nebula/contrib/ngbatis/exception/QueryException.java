@@ -4,12 +4,12 @@ package org.nebula.contrib.ngbatis.exception;
 //
 // This source code is licensed under Apache 2.0 License.
 
-/**
- * 查询数据库时发生的异常
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * 查询数据库时发生的异常.
+ *.
+ * @author yeweicheng <br>.
+ *     Now is history.
+.*/
 public class QueryException extends RuntimeException {
   public QueryException() {}
 

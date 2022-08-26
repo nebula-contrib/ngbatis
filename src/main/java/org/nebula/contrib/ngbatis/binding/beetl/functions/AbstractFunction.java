@@ -8,11 +8,11 @@ import org.beetl.core.Context;
 import org.beetl.core.Function;
 import org.springframework.util.Assert;
 
-/**
- * @author yeweicheng
- * @since 2022-08-25 5:41 <br>
- *     Now is history!
- */
+/**.
+ * @author yeweicheng.
+ * @since 2022-08-25 5:41 <br>.
+ *     Now is history.
+.*/
 public abstract class AbstractFunction<A, B, C, D, E, F> implements Function {
 
   protected Context ctx = null;

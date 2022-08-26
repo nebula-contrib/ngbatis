@@ -8,13 +8,13 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-/**
- * 键名含 . 运算符的地图，将 key 根据 . 运算符进行切割，形成嵌套的 Map 对象。<br>
- * 主要用途在于可以通过 . 表达式深层次获取 表达式所指数据对象，不至于造成数据凌乱
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * 键名含 . 运算符的地图，将 key 根据 . 运算符进行切割，形成嵌套的 Map 对象。<br>.
+ * 主要用途在于可以通过 . 表达式深层次获取 表达式所指数据对象，不至于造成数据凌乱.
+ *.
+ * @author yeweicheng <br>.
+ *     Now is history.
+.*/
 public class KeySymbolMap extends HashMap<String, Object> {
 
   private final Map<String, Object> map;

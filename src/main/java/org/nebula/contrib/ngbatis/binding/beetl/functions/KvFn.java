@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 import org.nebula.contrib.ngbatis.utils.ReflectUtil;
 
-/**
- * 通过实体对象，获取属性的 属性名列表、值列表、参数名列表
- *
- * @author yeweicheng
- * @since 2022-08-25 3:56 <br>
- *     Now is history!
- */
+/**.
+ * 通过实体对象，获取属性的 属性名列表、值列表、参数名列表.
+ *.
+ * @author yeweicheng.
+ * @since 2022-08-25 3:56 <br>.
+ *     Now is history.
+.*/
 public class KvFn extends AbstractFunction
     <Object, String, Boolean, Boolean, Boolean, Void> {
 
@@ -52,15 +52,15 @@ public class KvFn extends AbstractFunction
     public final List<Object> values = new ArrayList<>();
   }
 
-  /**
-   * 对输入接口的参数进行前置处理，转换成 {@link KV KV} 对象，为参数替换做准备
-   *
-   * @param record 待参数化对象
-   * @param fields 对象属性数组
-   * @param selective 是否排除空值
-   * @param prefix 参数前缀
-   * @return 属性占位符与属性值的键值对（双集合，相同下标成对）
-   */
+  /**.
+   * 对输入接口的参数进行前置处理，转换成 {@link KV KV} 对象，为参数替换做准备.
+   *.
+   * @param record 待参数化对象.
+   * @param fields 对象属性数组.
+   * @param selective 是否排除空值.
+   * @param prefix 参数前缀.
+   * @return 属性占位符与属性值的键值对（双集合，相同下标成对）.
+  .*/
   public KV recordToKV(Object record, Iterable<Field> fields,
       boolean selective, String prefix) {
     KV kv = new KV();

@@ -12,12 +12,12 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-/**
- * xml 相关的配置参数
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * xml 相关的配置参数.
+ *.
+ * @author yeweicheng <br>.
+ *     Now is history.
+.*/
 @Component
 @ConfigurationProperties(prefix = "cql.parser")
 public class ParseCfgProps {

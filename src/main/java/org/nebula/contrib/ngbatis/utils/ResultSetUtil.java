@@ -17,12 +17,12 @@ import org.nebula.contrib.ngbatis.proxy.MapperProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * 结果集基础类型处理的工具类
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * 结果集基础类型处理的工具类.
+ *.
+ * @author yeweicheng <br>.
+ *     Now is history.
+.*/
 public class ResultSetUtil {
 
   private static Logger log = LoggerFactory.getLogger(ResultSetUtil.class);

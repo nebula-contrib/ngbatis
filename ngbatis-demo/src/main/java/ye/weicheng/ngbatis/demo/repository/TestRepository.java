@@ -12,12 +12,12 @@ import org.nebula.contrib.ngbatis.utils.Page;
 import ye.weicheng.ngbatis.demo.pojo.NRN2;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 
-/**
- * 数据访问层 样例
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * 数据访问层 样例.
+ *.
+ * @author yeweicheng <br>.
+ *     Now is history.
+.*/
 public interface TestRepository extends NebulaDaoBasic<Person, String> {
 
   Person selectPerson();

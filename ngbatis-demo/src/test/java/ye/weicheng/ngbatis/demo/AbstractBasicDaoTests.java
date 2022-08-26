@@ -15,11 +15,11 @@ import ye.weicheng.ngbatis.demo.pojo.LikeWithRank;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 import ye.weicheng.ngbatis.demo.repository.TestRepository;
 
-/**
- * @author yeweicheng
- * @since 2022-06-13 0:47 <br>
- *     Now is history!
- */
+/**.
+ * @author yeweicheng.
+ * @since 2022-06-13 0:47 <br>.
+ *     Now is history.
+.*/
 @SpringBootTest
 public class AbstractBasicDaoTests {
   @Autowired private TestRepository repository;

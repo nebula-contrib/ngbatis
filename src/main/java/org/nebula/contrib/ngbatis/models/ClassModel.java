@@ -7,13 +7,13 @@ import java.util.Map;
 import org.nebula.contrib.ngbatis.ResourceLoader;
 import org.springframework.core.io.Resource;
 
-/**
- * 类模型信息 <br>
- * xml 中 mapper 标签所声明的信息（类），包含属性与子标签（方法）
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * 类模型信息 <br>.
+ * xml 中 mapper 标签所声明的信息（类），包含属性与子标签（方法）.
+ *.
+ * @author yeweicheng <br>.
+ *     Now is history.
+.*/
 public class ClassModel {
 
   public static final String PROXY_SUFFIX = "$Proxy";

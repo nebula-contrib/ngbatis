@@ -23,12 +23,12 @@ import org.nebula.contrib.ngbatis.utils.ReflectUtil;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
-/**
- * 默认的参数解析器
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * 默认的参数解析器.
+ *.
+ * @author yeweicheng <br>.
+ *     Now is history.
+.*/
 @Component
 public class DefaultArgsResolver implements ArgsResolver {
   @Override

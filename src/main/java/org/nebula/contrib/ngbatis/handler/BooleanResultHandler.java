@@ -8,15 +8,15 @@ import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import org.nebula.contrib.ngbatis.utils.ResultSetUtil;
 import org.springframework.stereotype.Component;
 
-/**
- * 结果集数据类型转换器
- *
- * <p>ResultSet -&gt; Boolean
- *
- * @author yeweicheng
- * @since 2022-06-11 3:04 <br>
- *     Now is history!
- */
+/**.
+ * 结果集数据类型转换器.
+ *.
+ * <p>ResultSet -&gt; Boolean.
+ *.
+ * @author yeweicheng.
+ * @since 2022-06-11 3:04 <br>.
+ *     Now is history.
+.*/
 @Component
 public class BooleanResultHandler extends AbstractResultHandler
     <Boolean, Boolean> {

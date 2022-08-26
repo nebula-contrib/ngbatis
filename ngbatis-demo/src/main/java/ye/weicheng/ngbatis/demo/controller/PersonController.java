@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 import ye.weicheng.ngbatis.demo.repository.TestRepository;
 
-/**
- * @author yeweicheng
- * @since 2022-08-24 3:08 <br>
- *     Now is history!
- */
+/**.
+ * @author yeweicheng.
+ * @since 2022-08-24 3:08 <br>.
+ *     Now is history.
+.*/
 @Controller
 @RequestMapping("/person")
 public class PersonController {

@@ -12,12 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-/**
- * 默认的结果集处理入口（承担根据不同数据类型与接口返回值类型之间的【路由】角色）
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * 默认的结果集处理入口（承担根据不同数据类型与接口返回值类型之间的【路由】角色）.
+ *.
+ * @author yeweicheng <br>.
+ *     Now is history.
+.*/
 @Component
 public class DefaultResultResolver implements ResultResolver {
 

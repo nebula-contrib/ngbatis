@@ -6,11 +6,11 @@ package ye.weicheng.ngbatis.demo.pojo;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * @author yeweicheng
- * @since 2022-06-21 17:08 <br>
- *     Now is history!
- */
+/**.
+ * @author yeweicheng.
+ * @since 2022-06-21 17:08 <br>.
+ *     Now is history.
+.*/
 @Table(name = "like")
 public class LikeWithRank {
   @Id private Long rank;

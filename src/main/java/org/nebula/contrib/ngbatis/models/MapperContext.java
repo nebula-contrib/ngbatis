@@ -8,12 +8,12 @@ import com.vesoft.nebula.client.graph.net.NebulaPool;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * xml 中标签所声明的信息（方法）
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * xml 中标签所声明的信息（方法）.
+ *.
+ * @author yeweicheng <br>.
+ *     Now is history.
+.*/
 public class MapperContext {
 
   private static MapperContext INSTANCE;
@@ -27,23 +27,23 @@ public class MapperContext {
     return INSTANCE;
   }
 
-  /** 当前应用中，在 xml 中 namespace 所声明的所有 XXXDao 及其 类模型 */
+  /** 当前应用中，在 xml 中 namespace 所声明的所有 XXXDao 及其 类模型.*/
   Map<String, ClassModel> interfaces;
 
-  /**
+  /**.
    * 标签名与实体的映射。（除了根据
    * {@link org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic } 中
-   * 泛型 T 所自动识别的外，还可以自行补充）
-   */
+   * 泛型 T 所自动识别的外，还可以自行补充）.
+  .*/
   final Map<String, Class<?>> tagTypeMapping = new HashMap<>();
 
-  /** 基类所有的 nGQL模板 */
+  /** 基类所有的 nGQL模板.*/
   Map<String, String> daoBasicTpl;
 
-  /** Nebula 连接池 */
+  /** Nebula 连接池.*/
   NebulaPool nebulaPool;
 
-  /** Nebula 连接配置 */
+  /** Nebula 连接配置.*/
   NebulaPoolConfig nebulaPoolConfig;
 
   boolean resourceRefresh = false;

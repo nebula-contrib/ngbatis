@@ -21,8 +21,7 @@ import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getPkField;
  * @since 2022-08-25 2:58
  * <br>Now is history!
  */
-public class IdFn extends AbstractFunction
-    <Iterable<?>, String, String, Void, Void, Void> {
+public class IdFn extends AbstractFunction<Object, Boolean, Void, Void, Void, Void> {
 
     private static Logger log = LoggerFactory.getLogger(IdFn.class);
 

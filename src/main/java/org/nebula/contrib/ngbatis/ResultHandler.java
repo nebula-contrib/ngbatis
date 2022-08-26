@@ -8,13 +8,13 @@ import java.util.HashMap;
 import java.util.Map;
 import org.antlr.v4.runtime.misc.DoubleKeyMap;
 
-/**
- * 结果集处理的接口，也是总入口<br>
- * 通过两个接口方法的返回值类型与声明的结果类型获取具体的类型转换实现类
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * 结果集处理的接口，也是总入口<br>.
+ * 通过两个接口方法的返回值类型与声明的结果类型获取具体的类型转换实现类.
+ *.
+ * @author yeweicheng <br>.
+ *     Now is history.
+.*/
 public interface ResultHandler<T, Z> {
 
   DoubleKeyMap<Class, Class, ResultHandler> DIFF_TYPE_RESULT_HANDLER

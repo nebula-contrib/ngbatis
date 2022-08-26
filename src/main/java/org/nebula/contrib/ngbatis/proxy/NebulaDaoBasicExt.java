@@ -14,19 +14,19 @@ import org.nebula.contrib.ngbatis.models.MethodModel;
 import org.nebula.contrib.ngbatis.utils.StringUtil;
 import org.springframework.util.Assert;
 
-/**
- * @author yeweicheng
- * @since 2022-06-14 4:25 <br>
- *     Now is history!
- */
+/**.
+ * @author yeweicheng.
+ * @since 2022-06-14 4:25 <br>.
+ *     Now is history.
+.*/
 public class NebulaDaoBasicExt {
 
-  /**
-   * 根据节点实体类型，获取数据库中的节点类型名
-   *
-   * @param entityType 节点实体类类型
-   * @return 数据库中的 节点类型名
-   */
+  /**.
+   * 根据节点实体类型，获取数据库中的节点类型名.
+   *.
+   * @param entityType 节点实体类类型.
+   * @return 数据库中的 节点类型名.
+  .*/
   public static String vertexName(Class<?> entityType) {
     Table tableAnno = entityType.getAnnotation(Table.class);
     return tableAnno != null
@@ -34,22 +34,22 @@ public class NebulaDaoBasicExt {
       : StringUtil.xX2x_x(entityType.getSimpleName());
   }
 
-  /**
-   * 根据关系的实体类型，获取数据库中关系的类型名
-   *
-   * @param edgeType 关系的实体类型
-   * @return 数据库中的 关系类型名
-   */
+  /**.
+   * 根据关系的实体类型，获取数据库中关系的类型名.
+   *.
+   * @param edgeType 关系的实体类型.
+   * @return 数据库中的 关系类型名.
+  .*/
   public static String edgeName(Class<?> edgeType) {
     return vertexName(edgeType);
   }
 
-  /**
-   * 根据dao接口类型，通过它的泛型，取得其管理的实体类型与主键类型
-   *
-   * @param currentType 继承了 NebulaDaoBasic 并且声明了泛型T、ID的类，
-   * @return 两个元素的Class数组，第一个元素是 实体类型，第二个元素是 主键类型
-   */
+  /**.
+   * 根据dao接口类型，通过它的泛型，取得其管理的实体类型与主键类型.
+   *.
+   * @param currentType 继承了 NebulaDaoBasic 并且声明了泛型T、ID的类，.
+   * @return 两个元素的Class数组，第一个元素是 实体类型，第二个元素是 主键类型.
+  .*/
   public static Class<?>[] entityTypeAndIdType(Class<?> currentType) {
     Class<?>[] result = null;
     Type[] genericInterfaces = currentType.getGenericInterfaces();
@@ -75,12 +75,12 @@ public class NebulaDaoBasicExt {
     return result;
   }
 
-  /**
-   * 根据dao接口类型，通过它的泛型，取得其管理的实体类型
-   *
-   * @param currentType 继承了 NebulaDaoBasic 并且声明了泛型T、ID的类，
-   * @return 实体类型
-   */
+  /**.
+   * 根据dao接口类型，通过它的泛型，取得其管理的实体类型.
+   *.
+   * @param currentType 继承了 NebulaDaoBasic 并且声明了泛型T、ID的类，.
+   * @return 实体类型.
+  .*/
   public static Class<?> entityType(Class<?> currentType) {
     Class<?>[] entityTypeAndIdType = entityTypeAndIdType(currentType);
     if (entityTypeAndIdType != null && entityTypeAndIdType.length > 0) {
@@ -89,7 +89,7 @@ public class NebulaDaoBasicExt {
     return null;
   }
 
-  /** 只能由 NebulaDaoBasic 调用，用于获取当前 dao 所管控的实体类 */
+  /** 只能由 NebulaDaoBasic 调用，用于获取当前 dao 所管控的实体类.*/
   public static Class<?> entityType() {
     StackTraceElement stackTraceElement = Thread.currentThread(
       ).getStackTrace()[2];
@@ -97,19 +97,19 @@ public class NebulaDaoBasicExt {
     return entityType(currentType);
   }
 
-  /**
-   * <strong>基类访问数据库的调用入口。</strong><br>
-   * 调用入口与 xml 形式的动态代理类一致，均使用了 {@link MapperProxy#invoke(
-   *   org.nebula.contrib.ngbatis.models.MethodModel,
-   *   java.lang.Object...) MapperProxy.proxy}
-   *
-   * @param currentType 被动态代理的 dao，NebulaDaoBasic 子类
-   * @param returnType 返回值类型
-   * @param nGQL 查询脚本（可带占位符的模板）
-   * @param argTypes 接口参数值类型
-   * @param args 接口参数
-   * @return 对结果集进行处理后的 java对象
-   */
+  /**.
+   * <strong>基类访问数据库的调用入口。</strong><br>.
+   * 调用入口与 xml 形式的动态代理类一致，均使用了 {@link MapperProxy#invoke(.
+   *   org.nebula.contrib.ngbatis.models.MethodModel,.
+   *   java.lang.Object...) MapperProxy.proxy}.
+   *.
+   * @param currentType 被动态代理的 dao，NebulaDaoBasic 子类.
+   * @param returnType 返回值类型.
+   * @param nGQL 查询脚本（可带占位符的模板）.
+   * @param argTypes 接口参数值类型.
+   * @param args 接口参数.
+   * @return 对结果集进行处理后的 java对象.
+  .*/
   public static Object proxy(
       Class<?> currentType, Class<?> returnType, String nGQL,
       Class<?>[] argTypes, Object... args) {
@@ -127,11 +127,11 @@ public class NebulaDaoBasicExt {
     return MapperProxy.invoke(methodModel, args);
   }
 
-  /**
-   * 从基类对应的 xml 中获取 数据库执行脚本，（xml 默认在 resources/NebulaDaoBasic.xml）
-   *
-   * @return 数据库执行脚本
-   */
+  /**.
+   * 从基类对应的 xml 中获取 数据库执行脚本，（xml 默认在 resources/NebulaDaoBasic.xml）.
+   *.
+   * @return 数据库执行脚本.
+  .*/
   public static String getCqlTpl() {
     Map<String, String> daoBasicTpl = MapperProxy.ENV.getMapperContext(
       ).getDaoBasicTpl();
@@ -175,11 +175,11 @@ public class NebulaDaoBasicExt {
     return methodModel;
   }
 
-  /**
-   * 获取正在被执行的 dao 方法名
-   *
-   * @return dao方法名
-   */
+  /**.
+   * 获取正在被执行的 dao 方法名.
+   *.
+   * @return dao方法名.
+  .*/
   public static String getMethodName() {
     StackTraceElement stackTraceElement = Thread.currentThread(
       ).getStackTrace()[3];

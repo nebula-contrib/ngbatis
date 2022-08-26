@@ -16,15 +16,15 @@ import org.nebula.contrib.ngbatis.utils.ReflectUtil;
 import org.nebula.contrib.ngbatis.utils.ResultSetUtil;
 import org.springframework.stereotype.Component;
 
-/**
- * 结果集数据类型转换器
- *
- * <p>ResultSet -&gt; Object
- *
- * @author yeweicheng
- * @since 2022-06-10 22:53 <br>
- *     Now is history!
- */
+/**.
+ * 结果集数据类型转换器.
+ *.
+ * <p>ResultSet -&gt; Object.
+ *.
+ * @author yeweicheng.
+ * @since 2022-06-10 22:53 <br>.
+ *     Now is history.
+.*/
 @Component
 public class ObjectResultHandler extends AbstractResultHandler
     <Object, Object> {

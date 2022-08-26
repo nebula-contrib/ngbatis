@@ -8,13 +8,13 @@ import org.nebula.contrib.ngbatis.binding.TimestampPkGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * 主键生成样例
- *
- * @author yeweicheng
- * @since 2022-06-14 12:32 <br>
- *     Now is history!
- */
+/**.
+ * 主键生成样例.
+ *.
+ * @author yeweicheng.
+ * @since 2022-06-14 12:32 <br>.
+ *     Now is history.
+.*/
 @Configuration
 public class PkGeneratorConfig {
 

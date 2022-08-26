@@ -15,12 +15,12 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.Map;
 
-/**
- * 查询语句的中，参数占位符的渲染器
- *
- * @author yeweicheng <br>
- *         Now is history!
- */
+/**.
+ * 查询语句的中，参数占位符的渲染器.
+ *.
+ * @author yeweicheng <br>.
+ *         Now is history.
+.*/
 @Component
 public class BeetlTextRender implements TextResolver {
 

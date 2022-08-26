@@ -10,11 +10,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-/**
- * @author yeweicheng
- * @since 2022-06-18 5:13 <br>
- *     Now is history!
- */
+/**.
+ * @author yeweicheng.
+ * @since 2022-06-18 5:13 <br>.
+ *     Now is history.
+.*/
 @SpringBootTest
 class TestChildPackageRepositoryTest {
 

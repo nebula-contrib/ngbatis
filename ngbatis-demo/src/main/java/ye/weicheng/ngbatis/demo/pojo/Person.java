@@ -7,11 +7,11 @@ import java.util.Date;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * @author yeweicheng
- * @since 2022-06-10 22:10 <br>
- *     Now is history!
- */
+/**.
+ * @author yeweicheng.
+ * @since 2022-06-10 22:10 <br>.
+ *     Now is history.
+.*/
 @Table(name = "person")
 public class Person {
 

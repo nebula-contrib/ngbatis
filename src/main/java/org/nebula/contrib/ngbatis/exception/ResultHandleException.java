@@ -4,12 +4,12 @@ package org.nebula.contrib.ngbatis.exception;
 //
 // This source code is licensed under Apache 2.0 License.
 
-/**
- * 处理结果集时发生的异常
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * 处理结果集时发生的异常.
+ *.
+ * @author yeweicheng <br>.
+ *     Now is history.
+.*/
 public class ResultHandleException extends RuntimeException {
 
   public ResultHandleException(String msg) {

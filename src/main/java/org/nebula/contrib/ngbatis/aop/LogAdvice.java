@@ -15,12 +15,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/**
- * 方法执行时间切面
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * 方法执行时间切面.
+ *.
+ * @author yeweicheng <br>.
+ *     Now is history.
+.*/
 @Aspect
 @Component
 public class LogAdvice {

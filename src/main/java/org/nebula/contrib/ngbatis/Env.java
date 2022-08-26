@@ -12,12 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
-/**
- * 当前框架的全局环境信息，用于指定各个重要环节所使用的具体实现类
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * 当前框架的全局环境信息，用于指定各个重要环节所使用的具体实现类.
+ *.
+ * @author yeweicheng.<br>.
+ *     Now is history.
+.*/
 public class Env {
 
   // 使用 fastjson 安全模式，规避任意代码执行风险

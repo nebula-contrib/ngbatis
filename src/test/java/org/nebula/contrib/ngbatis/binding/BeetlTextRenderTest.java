@@ -11,11 +11,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
 
-/**
- * @author yeweicheng
- * @since 2022-06-21 2:56 <br>
- *     Now is history!
- */
+/**.
+ * @author yeweicheng.
+ * @since 2022-06-21 2:56 <br>.
+ *     Now is history.
+.*/
 class BeetlTextRenderTest {
 
   private BeetlTextRender render = new BeetlTextRender();
@@ -277,9 +277,9 @@ class BeetlTextRenderTest {
     System.out.println(cql);
   }
 
-  /*
-   * https://github.com/nebula-contrib/ngbatis/issues/14
-   */
+  /*.
+   * https://github.com/nebula-contrib/ngbatis/issues/14.
+  .*/
   @Test
   public void textForBatchInsert() {
     String text =

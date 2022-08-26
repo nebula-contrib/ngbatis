@@ -12,12 +12,12 @@ import org.nebula.contrib.ngbatis.ArgNameFormatter;
 import org.nebula.contrib.ngbatis.utils.KeySymbolMap;
 import org.springframework.stereotype.Component;
 
-/**
- * 查询语句的中，下划线参数占位符的渲染器 FIXME 当前值支持一次 . 运算，需要修改格式化规则，形成不限制次数的 . 运算符运算
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * 查询语句的中，下划线参数占位符的渲染器 FIXME 当前值支持一次 . 运算，需要修改格式化规则，形成不限制次数的 . 运算符运算.
+ *.
+ * @author yeweicheng <br>.
+ *     Now is history.
+.*/
 @Component
 public class UnderlineArgNameFormatter implements ArgNameFormatter {
   @Override

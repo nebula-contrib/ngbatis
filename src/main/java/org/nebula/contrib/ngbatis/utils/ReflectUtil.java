@@ -13,12 +13,12 @@ import javax.persistence.Id;
 import org.nebula.contrib.ngbatis.exception.ParseException;
 import org.nebula.contrib.ngbatis.models.MethodModel;
 
-/**
- * 反射工具类
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * 反射工具类.
+ *.
+ * @author yeweicheng <br>.
+ *     Now is history.
+.*/
 public class ReflectUtil {
 
   public static List<Class<?>> NUMBER_TYPES =
@@ -257,12 +257,12 @@ public class ReflectUtil {
     return parents;
   }
 
-  /**
-   * 实体类获取全部属性，对父类获取 带 @Column 的属性
-   *
-   * @param clazz 实体类
-   * @return 当前类的属性及其父类中，带@Column注解的属性
-   */
+  /**.
+   * 实体类获取全部属性，对父类获取 带 @Column 的属性.
+   *.
+   * @param clazz 实体类.
+   * @return 当前类的属性及其父类中，带@Column注解的属性.
+  .*/
   public static Field[] getAllColumnFields(Class<?> clazz) {
     Set<Field> fields = new HashSet<>();
     boolean leaf = true;
@@ -283,12 +283,12 @@ public class ReflectUtil {
     return fields.toArray(new Field[0]);
   }
 
-  /**
-   * 根据实体类类型，获取其带有 @Id 注解（有且仅有一个）的属性。
-   *
-   * @param type 实体类型
-   * @return 节点的主键属性
-   */
+  /**.
+   * 根据实体类类型，获取其带有 @Id 注解（有且仅有一个）的属性。.
+   *.
+   * @param type 实体类型.
+   * @return 节点的主键属性.
+  .*/
   public static Field getPkField(Class<?> type) {
     return getPkField(type, true);
   }
@@ -298,29 +298,29 @@ public class ReflectUtil {
     return getPkField(declaredFields, type, canNotNull);
   }
 
-  /**
-   * 传入多个属性对象，获取其中带有 @Id 注解（有且仅有一个）的属性
-   *
-   * @param fields 属性数组。
-   * @param type 属性数组归属的类
-   * @return 众多属性中，带 @Id 注解的属性（唯一）
-   */
+  /**.
+   * 传入多个属性对象，获取其中带有 @Id 注解（有且仅有一个）的属性.
+   *.
+   * @param fields 属性数组。.
+   * @param type 属性数组归属的类.
+   * @return 众多属性中，带 @Id 注解的属性（唯一）.
+  .*/
   public static Field getPkField(Field[] fields, Class<?> type) {
     return getPkField(fields, type, true);
   }
 
-  /**
-   * @param fields 属性数组。
-   * @param type 属性数组归属的类
-   * @param canNotNull 是否不为空。
-   *     <ol>
-   *       <li>为 true 时：用于获取vertex类型主键，因数据库vertex单值主键的要求
-   *       <li>为 false 时：用于获取 edge类型主键用，因数据库edge中，rank 值的要求为
-   *           可以有可以没有。
-   *     </ol>
-   *
-   * @return 主键属性
-   */
+  /**.
+   * @param fields 属性数组。.
+   * @param type 属性数组归属的类.
+   * @param canNotNull 是否不为空。.
+   *     <ol>.
+   *       <li>为 true 时：用于获取vertex类型主键，因数据库vertex单值主键的要求.
+   *       <li>为 false 时：用于获取 edge类型主键用，因数据库edge中，rank 值的要求为.
+   *           可以有可以没有。.
+   *     </ol>.
+   *.
+   * @return 主键属性.
+  .*/
   public static Field getPkField(
       Field[] fields, Class<?> type, boolean canNotNull) {
     Field pkField = null;

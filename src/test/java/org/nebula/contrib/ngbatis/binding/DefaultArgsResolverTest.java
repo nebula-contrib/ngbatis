@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
-/**
- * @author yeweicheng
- * @since 2022-06-22 14:45 <br>
- *     Now is history!
- */
+/**.
+ * @author yeweicheng.
+ * @since 2022-06-22 14:45 <br>.
+ *     Now is history.
+.*/
 class DefaultArgsResolverTest {
 
   @Test

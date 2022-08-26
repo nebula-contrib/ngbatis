@@ -6,12 +6,12 @@ package org.nebula.contrib.ngbatis;
 import java.util.Map;
 import org.nebula.contrib.ngbatis.models.MethodModel;
 
-/**
- * 参数解析器
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * 参数解析器.
+ *.
+ * @author yeweicheng <br>.
+ *     Now is history.
+.*/
 public interface ArgsResolver {
 
   Map<String, Object> resolve(MethodModel methodModel, Object... args);

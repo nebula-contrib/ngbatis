@@ -32,17 +32,17 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.Assert;
 
-/**
- * xml 文件加载器，主要作用有：
- *
- * <ul>
- *   <li>读取并解析 mapper/*.xml 文件
- *   <li>对 xml 声明的类与方法进行存储，供生成动态代理使用
- * </ul>
- *
- * @author yeweicheng <br>
- *     Now is history!
- */
+/**.
+ * xml 文件加载器，主要作用有：.
+ *.
+ * <ul>.
+ *   <li>读取并解析 mapper/*.xml 文件.
+ *   <li>对 xml 声明的类与方法进行存储，供生成动态代理使用.
+ * </ul>.
+ *.
+ * @author yeweicheng <br>.
+ *     Now is history.
+.*/
 public class MapperResourceLoader extends
     PathMatchingResourcePatternResolver {
 
@@ -59,11 +59,11 @@ public class MapperResourceLoader extends
 
   protected ParseCfgProps parseConfig;
 
-  /**
-   * 加载多个开发者自建的 XXXDao.xml 资源。
-   *
-   * @return 所有 XXXDao 的全限定名 与 当前接口所对应 XXXDao.xml 解析后的全部信息
-   */
+  /**.
+   * 加载多个开发者自建的 XXXDao.xml 资源。.
+   *.
+   * @return 所有 XXXDao 的全限定名 与 当前接口所对应 XXXDao.xml 解析后的全部信息.
+  .*/
   @TimeLog(name = "xml-load", explain = "mappers xml load completed : {} ms")
   public Map<String, ClassModel> load() {
     Map<String, ClassModel> resultClassModel = new HashMap<>();
@@ -78,13 +78,13 @@ public class MapperResourceLoader extends
     return resultClassModel;
   }
 
-  /**
-   * 解析 单个开发者自定义的 XXXDao.xml 文件
-   *
-   * @param resource 单个 XXXDao.xml 的资源文件
-   * @return 单个 XXXDao 的全限定名 与 当前接口所对应 XXXDao.xml 解析后的全部信息
-   * @throws IOException
-   */
+  /**.
+   * 解析 单个开发者自定义的 XXXDao.xml 文件.
+   *.
+   * @param resource 单个 XXXDao.xml 的资源文件.
+   * @return 单个 XXXDao 的全限定名 与 当前接口所对应 XXXDao.xml 解析后的全部信息.
+   * @throws IOException.
+  .*/
   public Map<String, ClassModel> parseClassModel(
       Resource resource) throws IOException {
     Map<String, ClassModel> result = new HashMap<>();
@@ -110,13 +110,13 @@ public class MapperResourceLoader extends
     return result;
   }
 
-  /**
-   * 解析 一个 XXXDao 的多个方法。
-   *
-   * @param namespace XXXDao 类
-   * @param nodes XXXDao.xml 中 &lt;mapper&gt; 下的子标签。即方法标签。
-   * @return 返回当前XXXDao类的所有方法信息Map，k: 方法名，v：方法模型（即 xml 里一个方法标签的全部信息）
-   */
+  /**.
+   * 解析 一个 XXXDao 的多个方法。.
+   *.
+   * @param namespace XXXDao 类.
+   * @param nodes XXXDao.xml 中 &lt;mapper&gt; 下的子标签。即方法标签。.
+   * @return 返回当前XXXDao类的所有方法信息Map，k: 方法名，v：方法模型（即 xml 里一个方法标签的全部信息）.
+  .*/
   private Map<String, MethodModel> parseMethodModel(
       Class namespace, List<Node> nodes) {
     Map<String, MethodModel> methods = new HashMap<>();
@@ -138,14 +138,14 @@ public class MapperResourceLoader extends
     return methods;
   }
 
-  /**
-   * 一次性对当前接口中，需要分页的方法进行支持。
-   *
-   * @param method 接口方法
-   * @param methodModel 方法模型（即 xml 里一个方法标签的全部信息）
-   * @param methodNames 当前接口的所有方法名（用于判断自动生成的接口是否已经有同名，如果已有则不再重复创建）
-   * @param methods 用于将需要分页的接口，自动追加两个接口，用于生成动态代理
-   */
+  /**.
+   * 一次性对当前接口中，需要分页的方法进行支持。.
+   *.
+   * @param method 接口方法.
+   * @param methodModel 方法模型（即 xml 里一个方法标签的全部信息）.
+   * @param methodNames 当前接口的所有方法名（用于判断自动生成的接口是否已经有同名，如果已有则不再重复创建）.
+   * @param methods 用于将需要分页的接口，自动追加两个接口，用于生成动态代理.
+  .*/
   private void pageSupport(
       Method method,
       MethodModel methodModel,
@@ -166,14 +166,14 @@ public class MapperResourceLoader extends
     }
   }
 
-  /**
-   * 创建分页中的 条数统计接口 的方法模型
-   *
-   * @param methodModel 分页原始方法模型
-   * @param methodNames 当前接口的所有方法名（用于判断自动生成的接口是否已经有同名，如果已有则不再重复创建）
-   * @param parameterTypes 方法的全部参数类型
+  /**.
+   * 创建分页中的 条数统计接口 的方法模型.
+   *.
+   * @param methodModel 分页原始方法模型.
+   * @param methodNames 当前接口的所有方法名（用于判断自动生成的接口是否已经有同名，如果已有则不再重复创建）.
+   * @param parameterTypes 方法的全部参数类型.
    * @return
-   */
+  .*/
   private MethodModel createCountMethod(
       MethodModel methodModel, List<String> methodNames,
       Class<?>[] parameterTypes) {
@@ -196,15 +196,15 @@ public class MapperResourceLoader extends
     return countMethodModel;
   }
 
-  /**
-   * 创建 分页中查询范围条目方法 的模型
-   *
-   * @param methodModel 分页原始方法模型
-   * @param methodNames 当前接口的所有方法名（用于判断自动生成的接口是否已经有同名，如果已有则不再重复创建）
-   * @param parameterTypes 方法的全部参数类型
-   * @param pageParamIndex 分页参数处在参数列表中的下标位
-   * @return 查询范围条目方法 的方法模型
-   */
+  /**.
+   * 创建 分页中查询范围条目方法 的模型.
+   *.
+   * @param methodModel 分页原始方法模型.
+   * @param methodNames 当前接口的所有方法名（用于判断自动生成的接口是否已经有同名，如果已有则不再重复创建）.
+   * @param parameterTypes 方法的全部参数类型.
+   * @param pageParamIndex 分页参数处在参数列表中的下标位.
+   * @return 查询范围条目方法 的方法模型.
+  .*/
   private MethodModel createPageMethod(
       MethodModel methodModel,
       List<String> methodNames,
@@ -232,12 +232,12 @@ public class MapperResourceLoader extends
     return pageMethodModel;
   }
 
-  /**
-   * 从xml标签中，获取所有的方法名。
-   *
-   * @param nodes xml 中 &lt;mapper&gt; 下的子标签
-   * @return 当前 &lt;mapper&gt; 所声明的所有子标签 id
-   */
+  /**.
+   * 从xml标签中，获取所有的方法名。.
+   *.
+   * @param nodes xml 中 &lt;mapper&gt; 下的子标签.
+   * @return 当前 &lt;mapper&gt; 所声明的所有子标签 id.
+  .*/
   private List<String> getMethodNames(List<Node> nodes) {
     return nodes.stream()
         .map(
@@ -250,12 +250,12 @@ public class MapperResourceLoader extends
         .collect(Collectors.toList());
   }
 
-  /**
-   * 对暂未支持的 未封箱基础类型 进行检查并给出友好报错
-   *
-   * @param method 查询方法
-   * @param namespace 接口类
-   */
+  /**.
+   * 对暂未支持的 未封箱基础类型 进行检查并给出友好报错.
+   *.
+   * @param method 查询方法.
+   * @param namespace 接口类.
+  .*/
   private void checkReturnType(Method method, Class namespace) {
     Class<?> returnType = method.getReturnType();
     if (NEED_SEALING_TYPES.contains(returnType)) {
@@ -265,12 +265,12 @@ public class MapperResourceLoader extends
     }
   }
 
-  /**
-   * 解析 &lt;mapper&gt; 下的一个子标签，形成方法模型
-   *
-   * @param node &lt;mapper&gt; 子标签
-   * @return 方法模型
-   */
+  /**.
+   * 解析 &lt;mapper&gt; 下的一个子标签，形成方法模型.
+   *.
+   * @param node &lt;mapper&gt; 子标签.
+   * @return 方法模型.
+  .*/
   protected MethodModel parseMethodModel(Node node) {
     MethodModel model = new MethodModel();
     match(model, node, "id", parseConfig.getId());
@@ -283,12 +283,12 @@ public class MapperResourceLoader extends
     return model;
   }
 
-  /**
-   * 获取&lt;mapper&gt; 子标签默认插槽内的文本
-   *
-   * @param nodes
+  /**.
+   * 获取&lt;mapper&gt; 子标签默认插槽内的文本.
+   *.
+   * @param nodes.
    * @return
-   */
+  .*/
   protected String nodesToString(List<? extends Node> nodes) {
     StringBuilder builder = new StringBuilder();
     for (Node node : nodes) {
@@ -302,14 +302,14 @@ public class MapperResourceLoader extends
     return unescape;
   }
 
-  /**
-   * 将 xml 中的标签属性及文本，与模型进行匹配并设值。（模型包含 类模型与方法模型）
-   *
-   * @param model
-   * @param node
-   * @param javaAttr
-   * @param attr
-   */
+  /**.
+   * 将 xml 中的标签属性及文本，与模型进行匹配并设值。（模型包含 类模型与方法模型）.
+   *.
+   * @param model.
+   * @param node.
+   * @param javaAttr.
+   * @param attr.
+  .*/
   private void match(Object model, Node node, String javaAttr, String attr) {
     String attrTemp = null;
     try {
