@@ -27,7 +27,8 @@ import org.slf4j.LoggerFactory;
  * @author yeweicheng <br>
  *     Now is history!
  */
-public abstract class AbstractResultHandler<T, Z> implements ResultHandler<T, Z> {
+public abstract class AbstractResultHandler<T, Z>
+    implements ResultHandler<T, Z> {
 
   private Logger log = LoggerFactory.getLogger(AbstractResultHandler.class);
 
@@ -111,7 +112,8 @@ public abstract class AbstractResultHandler<T, Z> implements ResultHandler<T, Z>
   /** 不同数据类型的结果处理类创建时，需要将自身所处理的类型注册到全局变量中。 */
   public AbstractResultHandler() {
     Type[] typeParameters =
-        ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments();
+        ((ParameterizedType)
+          this.getClass().getGenericSuperclass()).getActualTypeArguments();
     if (typeParameters != null && typeParameters.length == 2) {
       try {
         addHandler(

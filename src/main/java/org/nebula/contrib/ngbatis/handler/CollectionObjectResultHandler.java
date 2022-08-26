@@ -18,13 +18,16 @@ import org.springframework.stereotype.Component;
  *     Now is history!
  */
 @Component
-public class CollectionObjectResultHandler extends AbstractResultHandler<Collection, Object> {
+public class CollectionObjectResultHandler extends AbstractResultHandler
+    <Collection, Object> {
 
   @Autowired private ObjectResultHandler objectResultHandler;
 
   @Override
-  public Collection handle(Collection newResult, ResultSet result, Class resultType)
-      throws NoSuchFieldException, IllegalAccessException, InstantiationException {
+  public Collection handle(Collection newResult, ResultSet result,
+        Class resultType)
+      throws NoSuchFieldException, IllegalAccessException,
+      InstantiationException {
     List<String> columnNames = result.getColumnNames();
     int size = result.rowsSize();
     for (int i = 0; i < size; i++) {

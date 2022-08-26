@@ -18,10 +18,13 @@ import org.springframework.stereotype.Component;
  *     Now is history!
  */
 @Component
-public class BooleanResultHandler extends AbstractResultHandler<Boolean, Boolean> {
+public class BooleanResultHandler extends AbstractResultHandler
+    <Boolean, Boolean> {
+
   @Override
   public Boolean handle(Boolean newResult, ResultSet result, Class resultType)
-      throws NoSuchFieldException, IllegalAccessException, InstantiationException {
+      throws NoSuchFieldException, IllegalAccessException,
+      InstantiationException {
     ResultSet.Record record = result.rowValues(0);
     ValueWrapper valueWrapper = record.values().get(0);
     return ResultSetUtil.getValue(valueWrapper);

@@ -42,7 +42,9 @@ import org.springframework.stereotype.Component;
  * @since 2022-06-17 10:01 <br>
  *     Now is history!
  */
-public class NgbatisContextInitializer implements ApplicationContextInitializer {
+public class NgbatisContextInitializer
+    implements ApplicationContextInitializer {
+
   @Override
   public void initialize(ConfigurableApplicationContext context) {
 
@@ -58,7 +60,8 @@ public class NgbatisContextInitializer implements ApplicationContextInitializer 
     ParseCfgProps parseCfgProps = readParseCfgProps(environment);
 
     context.addBeanFactoryPostProcessor(
-        new NgbatisBeanFactoryPostProcessor(nebulaJdbcProperties, parseCfgProps, context));
+      new NgbatisBeanFactoryPostProcessor(
+        nebulaJdbcProperties, parseCfgProps, context));
   }
 
   private ParseCfgProps readParseCfgProps(ConfigurableEnvironment environment) {
@@ -67,36 +70,50 @@ public class NgbatisContextInitializer implements ApplicationContextInitializer 
         .setLogShow(environment.getProperty("cql.parser.log-show"))
         .setMapper(environment.getProperty("cql.parser.mapper"))
         .setNamespace(environment.getProperty("cql.parser.namespace"))
-        .setMapperLocations(environment.getProperty("cql.parser.mapper-locations"))
-        .setMapperTplLocation(environment.getProperty("cql.parser.mapper-tpl-location"))
+        .setMapperLocations(environment.getProperty(
+          "cql.parser.mapper-locations"))
+        .setMapperTplLocation(environment.getProperty(
+          "cql.parser.mapper-tpl-location"))
         .setResultType(environment.getProperty("cql.parser.result-type"))
-        .setParameterType(environment.getProperty("cql.parser.parameter-type"))
+        .setParameterType(environment.getProperty(
+          "cql.parser.parameter-type"))
         .setStatementEnd(environment.getProperty("cql.parser.statement-end"))
-        .setStatementStart(environment.getProperty("cql.parser.statement-start"))
-        .setResourceRefresh(environment.getProperty("cql.parser.statement-start", Boolean.class));
+        .setStatementStart(environment.getProperty(
+          "cql.parser.statement-start"))
+        .setResourceRefresh(environment.getProperty(
+          "cql.parser.statement-start", Boolean.class));
   }
 
-  private NebulaJdbcProperties getNebulaJdbcProperties(ConfigurableEnvironment environment) {
+  private NebulaJdbcProperties getNebulaJdbcProperties(
+      ConfigurableEnvironment environment) {
     NebulaJdbcProperties nebulaJdbcProperties = new NebulaJdbcProperties();
     return nebulaJdbcProperties
-        .setHosts(Objects.requireNonNull(environment.getProperty("nebula.hosts")))
+        .setHosts(Objects.requireNonNull(environment.getProperty(
+          "nebula.hosts")))
         .setUsername(environment.getProperty("nebula.username"))
         .setPassword(environment.getProperty("nebula.password"))
         .setSpace(environment.getProperty("nebula.space"));
   }
 
-  private NebulaPoolConfig getNebulaPoolConfig(ConfigurableEnvironment environment) {
+  private NebulaPoolConfig getNebulaPoolConfig(
+      ConfigurableEnvironment environment) {
     NebulaPoolConfig nebulaPoolConfig =
         new NebulaPoolConfig()
-            .setMinConnSize(
-                environment.getProperty("nebula.pool-config.min-conn-size", Integer.class, 0))
-            .setMaxConnSize(
-                environment.getProperty("nebula.pool-config.max-conn-size", Integer.class, 10))
-            .setTimeout(environment.getProperty("nebula.pool-config.timeout", Integer.class, 0))
-            .setIdleTime(environment.getProperty("nebula.pool-config.idle-time", Integer.class, 0))
-            .setIntervalIdle(
-                environment.getProperty("nebula.pool-config.interval-idle", Integer.class, -1))
-            .setWaitTime(environment.getProperty("nebula.pool-config.wait-time", Integer.class, 0));
+          .setMinConnSize(
+            environment.getProperty(
+              "nebula.pool-config.min-conn-size", Integer.class, 0))
+          .setMaxConnSize(
+            environment.getProperty(
+              "nebula.pool-config.max-conn-size", Integer.class, 10))
+          .setTimeout(environment.getProperty(
+            "nebula.pool-config.timeout", Integer.class, 0))
+          .setIdleTime(environment.getProperty(
+            "nebula.pool-config.idle-time", Integer.class, 0))
+          .setIntervalIdle(
+            environment.getProperty(
+              "nebula.pool-config.interval-idle", Integer.class, -1))
+          .setWaitTime(environment.getProperty(
+            "nebula.pool-config.wait-time", Integer.class, 0));
     // .setMinClusterHealthRate( environment.getProperty(
     // "nebula.pool-config.min-cluster-health-rate", Double.class,
     // 1.0D ) );
@@ -112,13 +129,16 @@ public class NgbatisContextInitializer implements ApplicationContextInitializer 
  * @since 2022-06-17 10:01 <br>
  *     Now is history!
  */
-class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Ordered {
+class NgbatisBeanFactoryPostProcessor
+    implements BeanFactoryPostProcessor, Ordered {
 
-  private Logger log = LoggerFactory.getLogger(NgbatisBeanFactoryPostProcessor.class);
+  private Logger log = LoggerFactory.getLogger(
+    NgbatisBeanFactoryPostProcessor.class);
   private NebulaJdbcProperties nebulaJdbcProperties;
   private ParseCfgProps parseCfgProps;
   private ConfigurableApplicationContext context;
-  private MapperProxyClassGenerator beanFactory = new MapperProxyClassGenerator();
+  private MapperProxyClassGenerator beanFactory
+    = new MapperProxyClassGenerator();
 
   public NgbatisBeanFactoryPostProcessor(
       NebulaJdbcProperties nebulaJdbcProperties,
@@ -131,13 +151,15 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
 
   @Override
   public void postProcessBeanFactory(
-      ConfigurableListableBeanFactory configurableListableBeanFactory) throws BeansException {
+      ConfigurableListableBeanFactory configurableListableBeanFactory)
+      throws BeansException {
     NebulaPool nebulaPool = nebulaPool();
     mapperContext(nebulaPool);
   }
 
   public MapperContext mapperContext(NebulaPool nebulaPool) {
-    DaoResourceLoader daoBasicResourceLoader = new DaoResourceLoader(parseCfgProps);
+    DaoResourceLoader daoBasicResourceLoader = new DaoResourceLoader(
+      parseCfgProps);
     MapperContext context = MapperContext.newInstance();
     context.setResourceRefresh(parseCfgProps.isResourceRefresh());
     Map<String, ClassModel> interfaces = daoBasicResourceLoader.load();
@@ -159,10 +181,12 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
    * @param tagTypeMapping 实体类与数据库标签 （容器）
    */
   private void figureTagTypeMapping(
-      Collection<ClassModel> classModels, Map<String, Class<?>> tagTypeMapping) {
+      Collection<ClassModel> classModels,
+      Map<String, Class<?>> tagTypeMapping) {
 
     for (ClassModel classModel : classModels) {
-      Class<?>[] entityTypeAndIdType = entityTypeAndIdType(classModel.getNamespace());
+      Class<?>[] entityTypeAndIdType = entityTypeAndIdType(
+        classModel.getNamespace());
       if (entityTypeAndIdType != null) {
         Class<?> entityType = entityTypeAndIdType[0];
         String vertexName = vertexName(entityType);
@@ -181,7 +205,8 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
     for (ClassModel cm : interfaces.values()) {
       beanFactory.setClassCode(cm);
     }
-    RAMClassLoader ramClassLoader = new RAMClassLoader(context.getInterfaces());
+    RAMClassLoader ramClassLoader = new RAMClassLoader(
+      context.getInterfaces());
     for (ClassModel cm : interfaces.values()) {
       try {
         String className = cm.getNamespace().getName() + PROXY_SUFFIX;
@@ -201,8 +226,9 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
    */
   private void registerBean(ClassModel cm, Class proxy) {
     BeanDefinitionBuilder beanDefinitionBuilder =
-        BeanDefinitionBuilder.genericBeanDefinition(proxy);
-    BeanDefinition beanDefinition = beanDefinitionBuilder.getRawBeanDefinition();
+      BeanDefinitionBuilder.genericBeanDefinition(proxy);
+    BeanDefinition beanDefinition =
+      beanDefinitionBuilder.getRawBeanDefinition();
     registerBean(getBeanName(cm) + PROXY_SUFFIX, beanDefinition);
   }
 
@@ -241,7 +267,9 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
   public NebulaPool nebulaPool() {
     NebulaPool pool = new NebulaPool();
     try {
-      pool.init(nebulaJdbcProperties.getHostAddresses(), nebulaJdbcProperties.getPoolConfig());
+      pool.init(
+        nebulaJdbcProperties.getHostAddresses(),
+        nebulaJdbcProperties.getPoolConfig());
     } catch (UnknownHostException e) {
       throw new RuntimeException("Can not connect to Nebula Graph");
     }

@@ -31,8 +31,9 @@ public class MapperContext {
   Map<String, ClassModel> interfaces;
 
   /**
-   * 标签名与实体的映射。（除了根据 {@link org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic } 中 泛型 T
-   * 所自动识别的外，还可以自行补充）
+   * 标签名与实体的映射。（除了根据
+   * {@link org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic } 中
+   * 泛型 T 所自动识别的外，还可以自行补充）
    */
   final Map<String, Class<?>> tagTypeMapping = new HashMap<>();
 

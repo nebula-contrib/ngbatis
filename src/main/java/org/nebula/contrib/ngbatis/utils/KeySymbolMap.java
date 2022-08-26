@@ -59,7 +59,8 @@ public class KeySymbolMap extends HashMap<String, Object> {
     return oneDMap;
   }
 
-  private void putOneDMap(Map<String, Object> result, String prefix, String split) {
+  private void putOneDMap(
+      Map<String, Object> result, String prefix, String split) {
     Map<String, Object> oneDMapInner = this.getOneDMap(prefix, split);
     result.putAll(oneDMapInner);
   }
@@ -74,7 +75,8 @@ public class KeySymbolMap extends HashMap<String, Object> {
         for (int i = 0; i < size; i++) {
           Object o = ((List) value).get(i);
           if (o instanceof Map) {
-            KeySymbolMap element = new KeySymbolMap((Map<String, Object>) o, this.split);
+            KeySymbolMap element = new KeySymbolMap(
+              (Map<String, Object>) o, this.split);
             ((List) value).set(i, element);
           }
         }
@@ -92,7 +94,8 @@ public class KeySymbolMap extends HashMap<String, Object> {
 
   public Object get(Queue<String> queue, String collectionInner) {
     if (queue.size() != 0) {
-      String currentKey = collectionInner == null ? queue.poll() : collectionInner;
+      String currentKey =
+        collectionInner == null ? queue.poll() : collectionInner;
       boolean isLeaf = queue.size() == 0;
 
       Object data = map.get(currentKey);
@@ -134,7 +137,8 @@ public class KeySymbolMap extends HashMap<String, Object> {
     map.putAll(m);
   }
 
-  public KeySymbolMap fluentPutAll(Map<? extends String, ? extends Object> m) {
+  public KeySymbolMap fluentPutAll(
+      Map<? extends String, ? extends Object> m) {
     map.putAll(m);
     return this;
   }

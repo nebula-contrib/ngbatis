@@ -26,7 +26,8 @@ import org.springframework.stereotype.Component;
  *     Now is history!
  */
 @Component
-public class ObjectResultHandler extends AbstractResultHandler<Object, Object> {
+public class ObjectResultHandler extends AbstractResultHandler
+    <Object, Object> {
 
   @Override
   public Object handle(Object newResult, ResultSet result, Class resultType)
@@ -38,7 +39,8 @@ public class ObjectResultHandler extends AbstractResultHandler<Object, Object> {
   }
 
   public Object handle(
-      Object newResult, ResultSet.Record record, List<String> columnNames, Class<?> resultType)
+        Object newResult, ResultSet.Record record,
+        List<String> columnNames, Class<?> resultType)
       throws NoSuchFieldException, IllegalAccessException {
 
     for (int i = 0; i < columnNames.size(); i++) {
@@ -51,17 +53,20 @@ public class ObjectResultHandler extends AbstractResultHandler<Object, Object> {
   }
 
   private Object fillResult(
-      Object v, Object newResult, List<String> columnNames, Class resultType, int i)
+        Object v, Object newResult, List<String> columnNames,
+        Class resultType, int i)
       throws NoSuchFieldException, IllegalAccessException {
     String columnName = columnNames.get(i);
     if (vIsResultType(v, resultType)) {
       newResult = v;
     } else if (v instanceof Node) {
-      newResult = fillResultByNode((Node) v, newResult, columnNames, resultType, columnName);
+      newResult = fillResultByNode(
+        (Node) v, newResult, columnNames, resultType, columnName);
     } else if (v instanceof Relationship) {
       newResult =
           fillResultByRelationship(
-              (Relationship) v, newResult, columnNames, resultType, columnName);
+              (Relationship) v, newResult, columnNames, resultType,
+              columnName);
     } else {
       ReflectUtil.setValue(newResult, columnName, v);
     }
@@ -73,9 +78,11 @@ public class ObjectResultHandler extends AbstractResultHandler<Object, Object> {
   }
 
   private Object fillResultByNode(
-      Node node, Object newResult, List<String> columnNames, Class resultType, String columnName) {
+      Node node, Object newResult, List<String> columnNames, Class resultType,
+      String columnName) {
 
-    if (columnNames.size() == 1) newResult = nodeToResultType(node, resultType);
+    if (columnNames.size() == 1) newResult = nodeToResultType(
+      node, resultType);
     else nodeToResultType(newResult, columnName, node);
     return newResult;
   }
@@ -87,7 +94,8 @@ public class ObjectResultHandler extends AbstractResultHandler<Object, Object> {
       Class resultType,
       String columnName) {
 
-    if (columnNames.size() == 1) newResult = relationshipToResultType(relationship, resultType);
+    if (columnNames.size() == 1) newResult = relationshipToResultType(
+      relationship, resultType);
     else relationshipToResultType(newResult, columnName, relationship);
     return newResult;
   }

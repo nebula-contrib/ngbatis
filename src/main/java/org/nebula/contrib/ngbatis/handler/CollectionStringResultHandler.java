@@ -20,10 +20,12 @@ import org.springframework.stereotype.Component;
  *     Now is history!
  */
 @Component
-public class CollectionStringResultHandler extends AbstractResultHandler<Collection, String> {
+public class CollectionStringResultHandler extends AbstractResultHandler
+    <Collection, String> {
 
   @Override
-  public Collection handle(Collection newResult, ResultSet result, Class resultType) {
+  public Collection handle(
+      Collection newResult, ResultSet result, Class resultType) {
     List<String> columnNames = result.getColumnNames();
     String firstCol = columnNames.get(0);
     List<ValueWrapper> valueWrappers = result.colValues(firstCol);

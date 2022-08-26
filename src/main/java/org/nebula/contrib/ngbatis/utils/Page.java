@@ -58,7 +58,8 @@ public class Page<T> {
   }
 
   public void setPages() {
-    this.pages = (int) (this.total / this.pageSize + ((this.total % this.pageSize == 0) ? 0 : 1));
+    this.pages = (int) (this.total / this.pageSize + ((
+      this.total % this.pageSize == 0) ? 0 : 1));
   }
 
   public int getEndRow() {

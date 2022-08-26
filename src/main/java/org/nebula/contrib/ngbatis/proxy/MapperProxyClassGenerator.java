@@ -99,7 +99,8 @@ public class MapperProxyClassGenerator implements Opcodes {
    * @param cm 扫描所得类模型
    * @param mmEntry 方法名与方法模型映射
    */
-  private void method(ClassWriter cw, ClassModel cm, Map.Entry<String, MethodModel> mmEntry) {
+  private void method(
+      ClassWriter cw, ClassModel cm, Map.Entry<String, MethodModel> mmEntry) {
     String methodName = mmEntry.getKey();
     MethodModel mm = mmEntry.getValue();
     /*
@@ -108,7 +109,8 @@ public class MapperProxyClassGenerator implements Opcodes {
      */
     Method method = mm.getMethod();
     String methodSignature = ReflectUtil.getMethodSignature(mm);
-    MethodVisitor mapper = cw.visitMethod(ACC_PUBLIC, methodName, methodSignature, null, null);
+    MethodVisitor mapper = cw.visitMethod(
+      ACC_PUBLIC, methodName, methodSignature, null, null);
 
     mapper.visitCode();
     String className = cm.getNamespace().getName();
@@ -119,7 +121,8 @@ public class MapperProxyClassGenerator implements Opcodes {
         INVOKESTATIC,
         getFullNameType(MapperProxy.class.getName()),
         "invoke",
-        "(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/Object;",
+        "(Ljava/lang/String;Ljava/lang/String;" +
+          "[Ljava/lang/Object;)Ljava/lang/Object;",
         false);
 
     /*
@@ -147,13 +150,15 @@ public class MapperProxyClassGenerator implements Opcodes {
     if (NEED_SEALING_TYPES.contains(returnType)) {
       String typeName = getFullNameType(basicReturnType.getName());
       String methodName = returnType.getName() + "Value";
-      mapper.visitMethodInsn(INVOKEVIRTUAL, typeName, methodName, "()I", false);
+      mapper.visitMethodInsn(
+        INVOKEVIRTUAL, typeName, methodName, "()I", false);
     }
   }
 
   /**
-   * int IRETURN = 172; // visitInsn int LRETURN = 173; // - int FRETURN = 174; // - int DRETURN =
-   * 175; // - int ARETURN = 176; // - int RETURN = 177; // -
+   * int IRETURN = 172; // visitInsn int LRETURN = 173;
+   * // - int FRETURN = 174; // - int DRETURN = 175;
+   * // - int ARETURN = 176; // - int RETURN = 177; // -
    *
    * @param returnType
    * @return
@@ -165,7 +170,9 @@ public class MapperProxyClassGenerator implements Opcodes {
             ? IRETURN
             : returnType == double.class
                 ? DRETURN
-                : returnType == float.class ? FRETURN : returnType == void.class ? RETURN : ARETURN;
+                : returnType == float.class
+                    ? FRETURN
+                    : returnType == void.class ? RETURN : ARETURN;
   }
 
   /**
@@ -203,11 +210,13 @@ public class MapperProxyClassGenerator implements Opcodes {
    * <p>}
    */
   private void constructor(ClassWriter cw) {
-    MethodVisitor constructor = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
+    MethodVisitor constructor = cw.visitMethod(
+      ACC_PUBLIC, "<init>", "()V", null, null);
     // 将this参数入栈
     constructor.visitCode();
     constructor.visitVarInsn(ALOAD, 0);
-    constructor.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+    constructor.visitMethodInsn(
+      INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
     constructor.visitInsn(RETURN);
     // 指定局部变量栈的空间大小
     constructor.visitMaxs(1, 1);

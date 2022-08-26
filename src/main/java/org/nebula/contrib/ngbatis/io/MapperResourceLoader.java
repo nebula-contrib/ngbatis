@@ -43,9 +43,11 @@ import org.springframework.util.Assert;
  * @author yeweicheng <br>
  *     Now is history!
  */
-public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
+public class MapperResourceLoader extends
+    PathMatchingResourcePatternResolver {
 
-  private static Logger log = LoggerFactory.getLogger(MapperResourceLoader.class);
+  private static Logger log = LoggerFactory.getLogger(
+    MapperResourceLoader.class);
 
   private MapperResourceLoader() {
     super();
@@ -83,10 +85,12 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
    * @return 单个 XXXDao 的全限定名 与 当前接口所对应 XXXDao.xml 解析后的全部信息
    * @throws IOException
    */
-  public Map<String, ClassModel> parseClassModel(Resource resource) throws IOException {
+  public Map<String, ClassModel> parseClassModel(
+      Resource resource) throws IOException {
     Map<String, ClassModel> result = new HashMap<>();
     // 从资源中获取文件信息，IO 读取
-    Document doc = Jsoup.parse(resource.getInputStream(), "UTF-8", "http://example.com/");
+    Document doc = Jsoup.parse(
+      resource.getInputStream(), "UTF-8", "http://example.com/");
     // 传入 xml 解析器，获取 xml 信息
     Elements elementsByTag = doc.getElementsByTag(parseConfig.getMapper());
     for (Element element : elementsByTag) {
@@ -98,7 +102,8 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
       // 获取 子节点
       List<Node> nodes = element.childNodes();
       // 便历子节点，获取 MethodModel
-      Map<String, MethodModel> methods = parseMethodModel(cm.getNamespace(), nodes);
+      Map<String, MethodModel> methods = parseMethodModel(
+        cm.getNamespace(), nodes);
       cm.setMethods(methods);
       result.put(cm.getNamespace().getName() + PROXY_SUFFIX, cm);
     }
@@ -112,7 +117,8 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
    * @param nodes XXXDao.xml 中 &lt;mapper&gt; 下的子标签。即方法标签。
    * @return 返回当前XXXDao类的所有方法信息Map，k: 方法名，v：方法模型（即 xml 里一个方法标签的全部信息）
    */
-  private Map<String, MethodModel> parseMethodModel(Class namespace, List<Node> nodes) {
+  private Map<String, MethodModel> parseMethodModel(
+      Class namespace, List<Node> nodes) {
     Map<String, MethodModel> methods = new HashMap<>();
     List<String> methodNames = getMethodNames(nodes);
     for (Node methodNode : nodes) {
@@ -121,7 +127,9 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
         Method method = getNameUniqueMethod(namespace, methodModel.getId());
         methodModel.setMethod(method);
         Assert.notNull(
-            method, "接口 " + namespace.getName() + " 中，未声明 xml 中的出现的方法：" + methodModel.getId());
+            method,
+            "接口 " + namespace.getName() +
+              " 中，未声明 xml 中的出现的方法：" + methodModel.getId());
         checkReturnType(method, namespace);
         pageSupport(method, methodModel, methodNames, methods);
         methods.put(methodModel.getId(), methodModel);
@@ -148,10 +156,12 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
     if (parameterTypeList.contains(Page.class)) {
       int pageParamIndex = parameterTypeList.indexOf(Page.class);
       MethodModel pageMethod =
-          createPageMethod(methodModel, methodNames, parameterTypes, pageParamIndex);
+        createPageMethod(
+          methodModel, methodNames, parameterTypes, pageParamIndex);
       methods.put(pageMethod.getId(), pageMethod);
 
-      MethodModel countMethod = createCountMethod(methodModel, methodNames, parameterTypes);
+      MethodModel countMethod = createCountMethod(
+        methodModel, methodNames, parameterTypes);
       methods.put(countMethod.getId(), countMethod);
     }
   }
@@ -165,7 +175,8 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
    * @return
    */
   private MethodModel createCountMethod(
-      MethodModel methodModel, List<String> methodNames, Class<?>[] parameterTypes) {
+      MethodModel methodModel, List<String> methodNames,
+      Class<?>[] parameterTypes) {
     String methodName = methodModel.getId();
     String countMethodName = String.format("%s$Count", methodName);
     Assert.isTrue(
@@ -249,7 +260,8 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
     Class<?> returnType = method.getReturnType();
     if (NEED_SEALING_TYPES.contains(returnType)) {
       throw new ResourceLoadException(
-          "目前不支持返回基本类型，请使用对应的包装类，接口：" + namespace.getName() + "." + method.getName());
+          "目前不支持返回基本类型，请使用对应的包装类，接口：" +
+            namespace.getName() + "." + method.getName());
     }
   }
 

@@ -18,11 +18,13 @@ import org.nebula.contrib.ngbatis.utils.ReflectUtil;
  * @since 2022-08-25 3:56 <br>
  *     Now is history!
  */
-public class KvFn extends AbstractFunction<Object, String, Boolean, Boolean, Boolean, Void> {
+public class KvFn extends AbstractFunction
+    <Object, String, Boolean, Boolean, Boolean, Void> {
 
   @Override
   public Object call(
-      Object entity, String prefix, Boolean excludePk, Boolean selective, Boolean idRequired) {
+      Object entity, String prefix, Boolean excludePk, Boolean selective,
+      Boolean idRequired) {
     excludePk = excludePk == null || excludePk;
     selective = selective != null && selective;
     idRequired = idRequired == null;
@@ -59,7 +61,8 @@ public class KvFn extends AbstractFunction<Object, String, Boolean, Boolean, Boo
    * @param prefix 参数前缀
    * @return 属性占位符与属性值的键值对（双集合，相同下标成对）
    */
-  public KV recordToKV(Object record, Iterable<Field> fields, boolean selective, String prefix) {
+  public KV recordToKV(Object record, Iterable<Field> fields,
+      boolean selective, String prefix) {
     KV kv = new KV();
     for (Field field : fields) {
       String name = null;
@@ -75,7 +78,8 @@ public class KvFn extends AbstractFunction<Object, String, Boolean, Boolean, Boo
         kv.columns.add(name);
         Object[] paras = {ReflectUtil.getValue(record, field)};
         kv.values.add(fnCall(valueFmtFn, paras));
-        kv.valueNames.add(isEmpty(prefix) ? name : String.format("%s.%s", prefix, name));
+        kv.valueNames.add(isEmpty(prefix) ? name : String.format(
+          "%s.%s", prefix, name));
       }
     }
     return kv;

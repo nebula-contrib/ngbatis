@@ -298,7 +298,8 @@ public interface NebulaDaoBasic<T, ID extends Serializable> {
    * @param endId 结束节点的 id
    * @return 开始节点
    */
-  default List<?> listStartNodes(Class<?> startType, Class<?> edgeType, ID endId) {
+  default List<?> listStartNodes(
+      Class<?> startType, Class<?> edgeType, ID endId) {
     String cqlTpl = getCqlTpl();
     String startVertexName = vertexName(startType);
     String edgeName = edgeName(edgeType);

@@ -55,7 +55,8 @@ public class MapperProxy {
   }
 
   /**
-   * <strong>框架中极其重要的方法，被动态代理类所执行。是动态代理的入口方法{@link MapperProxyClassGenerator#method}</strong>
+   * <strong>框架中极其重要的方法，被动态代理类所执行。
+   * 是动态代理的入口方法{@link MapperProxyClassGenerator#method}</strong>
    * 提供给代理类所调用
    *
    * @param className 访问数据库的接口
@@ -63,7 +64,8 @@ public class MapperProxy {
    * @param args 执行数据库操作的参数
    * @return 结果对象映射的 java 对象
    */
-  public static Object invoke(String className, String methodName, Object... args) {
+  public static Object invoke(
+      String className, String methodName, Object... args) {
     MapperContext mapperContext = ENV.getMapperContext();
     String proxyClassName = className + PROXY_SUFFIX;
     ClassModel classModel = mapperContext.getInterfaces().get(proxyClassName);
@@ -71,7 +73,8 @@ public class MapperProxy {
     if (mapperContext.isResourceRefresh()) {
       try {
         Map<String, ClassModel> classModelMap =
-            classModel.getResourceLoader().parseClassModel(classModel.getResource());
+          classModel.getResourceLoader().parseClassModel(
+            classModel.getResource());
         classModel = classModelMap.get(proxyClassName);
         method = classModel.getMethod(methodName).getMethod();
       } catch (IOException e) {
@@ -92,7 +95,8 @@ public class MapperProxy {
    * @param args 执行数据库操作的参数
    * @return 结果对象映射的 java 对象
    */
-  private static Object pageSupport(ClassModel classModel, Method method, Object[] args) {
+  private static Object pageSupport(
+      ClassModel classModel, Method method, Object[] args) {
     int pageParamIndex = ReflectUtil.containsType(method, Page.class);
 
     MapperProxy mapperProxy = new MapperProxy(classModel);
@@ -104,9 +108,11 @@ public class MapperProxy {
     String pageMethodName = method.getName() + "$Page";
 
     Long count =
-        (Long) mapperProxy.invoke(classModel, classModel.getMethods().get(countMethodName), args);
+        (Long) mapperProxy.invoke(classModel, classModel.getMethods().get(
+          countMethodName), args);
     List rows =
-        (List) mapperProxy.invoke(classModel, classModel.getMethods().get(pageMethodName), args);
+        (List) mapperProxy.invoke(classModel, classModel.getMethods().get(
+          pageMethodName), args);
 
     Page page = (Page) args[pageParamIndex];
     page.setTotal(count);
@@ -134,12 +140,14 @@ public class MapperProxy {
    * @param args 执行 nGQL 的参数
    * @return 结果值
    */
-  public static Object invoke(ClassModel classModel, MethodModel methodModel, Object... args) {
+  public static Object invoke(ClassModel classModel, MethodModel methodModel,
+      Object... args) {
     Method method = methodModel.getMethod();
     ResultSet query = null;
     // 参数格式转换
     long step0 = System.currentTimeMillis();
-    Map<String, Object> argMap = ENV.getArgsResolver().resolve(methodModel, args);
+    Map<String, Object> argMap = ENV.getArgsResolver().resolve(
+      methodModel, args);
     Map<String, Object> paramWithSchema =
         new LinkedHashMap<String, Object>(argMap) {
           {
@@ -152,8 +160,10 @@ public class MapperProxy {
     String textTpl = methodModel.getText();
     String nGQL = ENV.getTextResolver().resolve(textTpl, paramWithSchema);
     Map<String, Object> params = null;
-    if (method != null && method.isAnnotationPresent(UseKeyArgReplace.class)) {
-      ArgNameFormatter.CqlAndArgs format = ENV.getArgNameFormatter().format(nGQL, argMap);
+    if (method != null && method.isAnnotationPresent(
+        UseKeyArgReplace.class)) {
+      ArgNameFormatter.CqlAndArgs format = ENV.getArgNameFormatter().format(
+        nGQL, argMap);
       nGQL = format.getCql();
       params = format.getArgs();
     } else {
@@ -175,7 +185,7 @@ public class MapperProxy {
     long step3 = System.currentTimeMillis();
 
     log.debug(
-        "nGql make up costs {}ms, query costs {}ms, result handle costs {}ms ",
+        "nGQL construction in {}ms, query in {}ms, result handle in {}ms ",
         step1 - step0,
         step2 - step1,
         step3 - step2);
@@ -201,7 +211,8 @@ public class MapperProxy {
    * @return nebula-graph 的未被 orm 操作的原始结果集
    */
   public static ResultSet executeWithParameter(
-      ClassModel cm, MethodModel mm, String nGQL, Map<String, Object> params) {
+      ClassModel cm, MethodModel mm, String nGQL,
+      Map<String, Object> params) {
     LocalSession localSession = null;
     Session session = null;
     ResultSet result = null;
@@ -209,7 +220,8 @@ public class MapperProxy {
     String proxyMethod = null;
     try {
       if (log.isDebugEnabled()) {
-        StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[6];
+        StackTraceElement stackTraceElement = Thread.currentThread(
+          ).getStackTrace()[6];
         proxyClass = stackTraceElement.getClassName();
         proxyMethod = stackTraceElement.getMethodName();
       }
@@ -227,7 +239,7 @@ public class MapperProxy {
       throw new QueryException("数据查询失败：" + e.getMessage());
     } finally {
       log.debug(
-          "\n\t- proxyMethod: {}#{} \n\t- nGql：{} \n\t - params: {}\n\t - result：{}",
+          "\n\t- proxyMethod:{}#{}\n\t- nGQL{}\n\t- params:{}\n\t- result:{}",
           proxyClass,
           proxyMethod,
           nGQL,
@@ -237,7 +249,8 @@ public class MapperProxy {
     }
   }
 
-  private static String qlWithSpace(LocalSession localSession, String nGQL, String currentSpace) {
+  private static String qlWithSpace(LocalSession localSession, String nGQL,
+      String currentSpace) {
     nGQL = nGQL.trim();
     String sessionSpace = localSession.getCurrentSpace();
     if (Objects.equals(sessionSpace, currentSpace)) {
@@ -249,8 +262,8 @@ public class MapperProxy {
 
   public static String getSpace(ClassModel cm, MethodModel mm) {
     return mm != null && mm.getSpace() != null
-        ? mm.getSpace()
-        : cm != null && cm.getSpace() != null ? cm.getSpace() : ENV.getSpace();
+      ? mm.getSpace()
+      : cm != null && cm.getSpace() != null ? cm.getSpace() : ENV.getSpace();
   }
 
   public static Logger getLog() {

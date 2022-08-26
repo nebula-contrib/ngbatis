@@ -52,7 +52,8 @@ public class DaoResourceLoader extends MapperResourceLoader {
    * @throws IOException
    */
   private Map<String, String> parse(Resource resource) throws IOException {
-    Document doc = Jsoup.parse(resource.getInputStream(), "UTF-8", "http://example.com/");
+    Document doc = Jsoup.parse(
+      resource.getInputStream(), "UTF-8", "http://example.com/");
     Map<String, String> result = new HashMap<>();
     Method[] methods = NebulaDaoBasic.class.getMethods();
     for (Method method : methods) {

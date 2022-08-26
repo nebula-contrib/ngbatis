@@ -42,10 +42,12 @@ public class UnderlineArgNameFormatter implements ArgNameFormatter {
         }
         text =
             text.replaceFirst(
-                replaceRegExpSymbol(target), target.replaceAll("\\.", "_" + integer + "_"));
+                replaceRegExpSymbol(target),
+                target.replaceAll("\\.", "_" + integer + "_"));
         elCount.put(countKey, integer + 1);
       } else {
-        text = text.replaceFirst(replaceRegExpSymbol(target), target.replaceAll("\\.", "_"));
+        text = text.replaceFirst(
+          replaceRegExpSymbol(target), target.replaceAll("\\.", "_"));
       }
     }
     return text;

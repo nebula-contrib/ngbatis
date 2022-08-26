@@ -45,20 +45,21 @@ public class EnvConfig {
   @Bean
   public Env getEnv() {
     sessionDispatcher =
-        new IntervalCheckSessionDispatcher(MapperContext.newInstance().getNebulaPoolConfig());
+      new IntervalCheckSessionDispatcher(
+        MapperContext.newInstance().getNebulaPoolConfig());
     return new Env(
-        textResolver,
-        resultResolver,
-        argsResolver,
-        argNameFormatter,
-        cfgProps,
-        context,
-        properties.getUsername(),
-        properties.getPassword(),
-        reconnect,
-        properties.getSpace(),
-        pkGenerator,
-        sessionDispatcher);
+      textResolver,
+      resultResolver,
+      argsResolver,
+      argNameFormatter,
+      cfgProps,
+      context,
+      properties.getUsername(),
+      properties.getPassword(),
+      reconnect,
+      properties.getSpace(),
+      pkGenerator,
+      sessionDispatcher);
   }
 
   public TextResolver getTextResolver() {

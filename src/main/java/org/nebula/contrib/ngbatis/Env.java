@@ -85,7 +85,8 @@ public class Env {
 
   public Session openSession() {
     try {
-      return mapperContext.getNebulaPool().getSession(username, password, reconnect);
+      return mapperContext.getNebulaPool().getSession(
+        username, password, reconnect);
     } catch (Throwable e) {
       throw new RuntimeException(e);
     }

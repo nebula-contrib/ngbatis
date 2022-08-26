@@ -15,7 +15,8 @@ import java.util.List;
  * @since 2022-08-25 3:59 <br>
  *     Now is history!
  */
-public class JoinFn extends AbstractFunction<Iterable<?>, String, String, Void, Void, Void> {
+public class JoinFn extends AbstractFunction
+    <Iterable<?>, String, String, Void, Void, Void> {
 
   public String call(Iterable<?> iterable, String sep, String fnName) {
     sep = sep == null ? "," : sep;

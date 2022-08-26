@@ -28,13 +28,15 @@ public class LogAdvice {
   private Logger logger = LoggerFactory.getLogger(LogAdvice.class);
   @Autowired private ParseCfgProps props;
 
-  @Pointcut(value = "@annotation(org.nebula.contrib.ngbatis.annotations.TimeLog)")
+  @Pointcut(
+    value = "@annotation(org.nebula.contrib.ngbatis.annotations.TimeLog)")
   public void timeLog() {}
 
   @Around("timeLog()")
   public Object msCount(ProceedingJoinPoint pjp) throws Throwable {
     TimeLog annotation =
-        ((MethodSignature) pjp.getSignature()).getMethod().getAnnotation(TimeLog.class);
+      ((MethodSignature) pjp.getSignature()).getMethod().getAnnotation(
+        TimeLog.class);
     long start = System.currentTimeMillis();
     Object result = pjp.proceed();
     long end = System.currentTimeMillis();

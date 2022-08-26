@@ -32,14 +32,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class DefaultArgsResolver implements ArgsResolver {
   @Override
-  public Map<String, Object> resolve(MethodModel methodModel, Object... args) {
+  public Map<String, Object> resolve(
+      MethodModel methodModel, Object... args) {
     Method method = methodModel.getMethod();
     if (args.length == 0) {
       return Collections.emptyMap();
     }
     int len = methodModel.getParameterCount();
     Map<String, Object> result = new LinkedHashMap<>();
-    Annotation[][] parameterAnnotations = methodModel.getParameterAnnotations();
+    Annotation[][] parameterAnnotations
+      = methodModel.getParameterAnnotations();
     for (int i = 0; i < len; i++) {
       Annotation[] annotationArgIndex = parameterAnnotations[i];
       int annoLen = annotationArgIndex == null ? 0 : annotationArgIndex.length;
@@ -86,8 +88,10 @@ public class DefaultArgsResolver implements ArgsResolver {
           put(double.class, (Setter<Double>) Value::fVal);
           put(Double.class, (Setter<Double>) Value::fVal);
           put(byte[].class, (Setter<byte[]>) Value::sVal);
-          put(String.class, (Setter<String>) (param) -> Value.sVal(param.getBytes()));
-          put(com.vesoft.nebula.Date.class, (Setter<com.vesoft.nebula.Date>) Value::dVal);
+          put(String.class, (Setter<String>) (param) -> Value.sVal(
+            param.getBytes()));
+          put(com.vesoft.nebula.Date.class, (
+            Setter<com.vesoft.nebula.Date>) Value::dVal);
           put(Time.class, (Setter<Time>) Value::tVal);
           put(DateTime.class, (Setter<DateTime>) Value::dtVal);
           put(Vertex.class, (Setter<Vertex>) Value::vVal);
@@ -130,25 +134,34 @@ public class DefaultArgsResolver implements ArgsResolver {
                     Map<Object, Object> valueMap = new HashMap<>();
                     map.forEach(
                         (k, v) -> {
-                          valueMap.put(toNebulaValueType(k), toNebulaValueType(v));
+                          valueMap.put(
+                            toNebulaValueType(k), toNebulaValueType(v));
                         });
                     return valueMap;
                   });
 
           put(
-              Date.class,
-              (Setter<Date>)
-                  (date) -> {
-                    Calendar calendar = new Calendar.Builder().setInstant(date).build();
-                    return Value.dtVal(
-                        new DateTime(
-                            new Short(String.valueOf(calendar.get(Calendar.YEAR))),
-                            new Byte(String.valueOf(calendar.get(Calendar.MONTH))),
-                            new Byte(String.valueOf(calendar.get(Calendar.DATE))),
-                            new Byte(String.valueOf(calendar.get(Calendar.HOUR))),
-                            new Byte(String.valueOf(calendar.get(Calendar.MINUTE))),
-                            new Byte(String.valueOf(calendar.get(Calendar.SECOND))),
-                            new Short(String.valueOf(calendar.get(Calendar.MILLISECOND)))));
+            Date.class,
+            (Setter<Date>)
+              (date) -> {
+                Calendar calendar = new Calendar.Builder().setInstant(
+                  date).build();
+                return Value.dtVal(
+                    new DateTime(
+                        new Short(String.valueOf(
+                          calendar.get(Calendar.YEAR))),
+                        new Byte(String.valueOf(
+                          calendar.get(Calendar.MONTH))),
+                        new Byte(String.valueOf(
+                          calendar.get(Calendar.DATE))),
+                        new Byte(String.valueOf(
+                          calendar.get(Calendar.HOUR))),
+                        new Byte(String.valueOf(
+                          calendar.get(Calendar.MINUTE))),
+                        new Byte(String.valueOf(
+                          calendar.get(Calendar.SECOND))),
+                        new Short(String.valueOf(
+                          calendar.get(Calendar.MILLISECOND)))));
                   });
 
           put(
@@ -161,7 +174,8 @@ public class DefaultArgsResolver implements ArgsResolver {
                     for (Field declaredField : declaredFields) {
                       pojoFields.put(
                           declaredField.getName(),
-                          toNebulaValueType(ReflectUtil.getValue(obj, declaredField)));
+                          toNebulaValueType(
+                            ReflectUtil.getValue(obj, declaredField)));
                     }
                     return pojoFields;
                   });
@@ -190,7 +204,8 @@ public class DefaultArgsResolver implements ArgsResolver {
       parserConfig.put(Date.class, new DateDeserializer());
       parserConfig.put(java.sql.Date.class, new DateDeserializer());
       parserConfig.put(java.sql.Time.class, new DateDeserializer());
-      String text = JSON.toJSONString(o, parserConfig, SerializerFeature.WriteMapNullValue);
+      String text = JSON.toJSONString(
+        o, parserConfig, SerializerFeature.WriteMapNullValue);
       text = text.replaceAll("\\\\n", "\\\\\\\\n");
       Map map = objectMapper.readValue(text, Map.class);
       return map;
@@ -229,7 +244,8 @@ interface Setter<T> {
 class DateDeserializer implements ObjectSerializer {
 
   @Override
-  public void write(JSONSerializer serializer, Object object, Object fieldName, Type type, int i) {
+  public void write(JSONSerializer serializer, Object object,
+      Object fieldName, Type type, int i) {
     SerializeWriter out = serializer.getWriter();
     if (object == null) {
       out.writeNull();

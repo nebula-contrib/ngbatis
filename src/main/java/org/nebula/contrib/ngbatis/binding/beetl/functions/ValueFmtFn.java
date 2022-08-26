@@ -13,7 +13,8 @@ import java.util.Date;
  * @since 2022-08-24 15:52 <br>
  *     Now is history!
  */
-public class ValueFmtFn extends AbstractFunction<Object, Void, Void, Void, Void, Void> {
+public class ValueFmtFn extends AbstractFunction
+    <Object, Void, Void, Void, Void, Void> {
 
   @Override
   public Object call(Object value) {

@@ -35,7 +35,8 @@ public class DefaultResultResolver implements ResultResolver {
     // 核心方法。获取真正执行结果集类型转换的结果处理执行者
     ResultHandler<Object, Object> handler =
         ResultHandler.getHandler(
-            ReflectUtil.sealingBasicType(returnType), ReflectUtil.sealingBasicType(resultType));
+            ReflectUtil.sealingBasicType(returnType),
+            ReflectUtil.sealingBasicType(resultType));
     log.debug(
         "针对java返回类型 {} 与 xml 返回类型 {} 的结果集处理器为：{}",
         returnType.getName(),

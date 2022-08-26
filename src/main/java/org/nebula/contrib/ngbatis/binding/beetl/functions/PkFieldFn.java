@@ -14,7 +14,8 @@ import java.lang.reflect.Field;
  * @since 2022-08-25 2:58 <br>
  *     Now is history!
  */
-public class PkFieldFn extends AbstractFunction<Class<?>, Boolean, Void, Void, Void, Void> {
+public class PkFieldFn extends AbstractFunction
+    <Class<?>, Boolean, Void, Void, Void, Void> {
 
   @Override
   public Field call(Class<?> entityType, Boolean idRequired) {

@@ -58,7 +58,8 @@ public class NebulaJdbcProperties {
     for (int i = 0; i < hostArr.length; i++) {
       String ipAndPort = hostArr[i];
       String[] iandp = ipAndPort.split(":");
-      hostAddresses.add(new HostAddress(iandp[0].trim(), Integer.parseInt(iandp[1].trim())));
+      hostAddresses.add(
+        new HostAddress(iandp[0].trim(), Integer.parseInt(iandp[1].trim())));
     }
     this.hosts = hosts;
     return this;

@@ -17,7 +17,8 @@ import org.antlr.v4.runtime.misc.DoubleKeyMap;
  */
 public interface ResultHandler<T, Z> {
 
-  DoubleKeyMap<Class, Class, ResultHandler> DIFF_TYPE_RESULT_HANDLER = new DoubleKeyMap<>();
+  DoubleKeyMap<Class, Class, ResultHandler> DIFF_TYPE_RESULT_HANDLER
+    = new DoubleKeyMap<>();
   Map<Class, ResultHandler> HANDLERS = new HashMap<>();
 
   static ResultHandler<Object, Object> getHandler(
@@ -42,8 +43,10 @@ public interface ResultHandler<T, Z> {
     return classResultHandler;
   }
 
-  static ResultHandler<Object, Object> getHandler(Class returnType, Class resultType) {
-    Map<Class, ResultHandler> classResultHandlerMap = DIFF_TYPE_RESULT_HANDLER.get(returnType);
+  static ResultHandler<Object, Object> getHandler(
+      Class returnType, Class resultType) {
+    Map<Class, ResultHandler> classResultHandlerMap
+      = DIFF_TYPE_RESULT_HANDLER.get(returnType);
     ResultHandler classResultHandler = null;
     if (classResultHandlerMap != null) {
       classResultHandler = getHandler(classResultHandlerMap, resultType);
@@ -70,5 +73,6 @@ public interface ResultHandler<T, Z> {
   T handle(Class<T> returnType, ResultSet result, Class resultType);
 
   T handle(T newResult, ResultSet result, Class resultType)
-      throws NoSuchFieldException, IllegalAccessException, InstantiationException;
+      throws NoSuchFieldException, IllegalAccessException,
+        InstantiationException;
 }

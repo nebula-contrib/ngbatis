@@ -42,7 +42,8 @@ public class ReflectUtil {
     setValue(o, declaredField, value);
   }
 
-  public static void setValue(Object o, Field field, Object value) throws IllegalAccessException {
+  public static void setValue(
+      Object o, Field field, Object value) throws IllegalAccessException {
     if (NUMBER_TYPES.contains(field.getType())) {
       value = castNumber((Number) value, field.getType());
     }
@@ -59,18 +60,18 @@ public class ReflectUtil {
   public static Number castNumber(Number n, Class resultType) {
     if (n == null) return null;
     return (resultType == Integer.class || resultType == int.class)
-        ? n.intValue()
-        : (resultType == Long.class || resultType == long.class)
-            ? n.longValue()
-            : (resultType == Float.class || resultType == float.class)
-                ? n.floatValue()
-                : (resultType == Double.class || resultType == double.class)
-                    ? n.doubleValue()
-                    : (resultType == Byte.class || resultType == byte.class)
-                        ? n.byteValue()
-                        : (resultType == Short.class || resultType == short.class)
-                            ? n.shortValue()
-                            : n;
+      ? n.intValue()
+      : (resultType == Long.class || resultType == long.class)
+        ? n.longValue()
+        : (resultType == Float.class || resultType == float.class)
+          ? n.floatValue()
+          : (resultType == Double.class || resultType == double.class)
+            ? n.doubleValue()
+            : (resultType == Byte.class || resultType == byte.class)
+              ? n.byteValue()
+              : (resultType == Short.class ||resultType == short.class)
+                ? n.shortValue()
+                : n;
   }
 
   public static Object getValue(Object o, Field field) {
@@ -122,7 +123,8 @@ public class ReflectUtil {
     return string;
   }
 
-  public static int containsType(Method method, Class<?> parameterType) {
+  public static int containsType(
+      Method method, Class<?> parameterType) {
     List<Class<?>> classes = Arrays.asList(method.getParameterTypes());
     return classes.indexOf(parameterType);
   }
@@ -143,20 +145,20 @@ public class ReflectUtil {
 
   public static Class<?> sealingBasicType(Class<?> returnType) {
     return returnType == short.class
-        ? Short.class
-        : returnType == int.class
-            ? Integer.class
-            : returnType == long.class
-                ? Long.class
-                : returnType == double.class
-                    ? Double.class
-                    : returnType == float.class
-                        ? Float.class
-                        : returnType == byte.class
-                            ? Byte.class
-                            : returnType == char.class
-                                ? Character.class
-                                : returnType == boolean.class ? Boolean.class : returnType;
+      ? Short.class
+      : returnType == int.class
+        ? Integer.class
+        : returnType == long.class
+          ? Long.class
+          : returnType == double.class
+            ? Double.class
+            : returnType == float.class
+              ? Float.class
+              : returnType == byte.class
+                ? Byte.class
+                : returnType == char.class
+                  ? Character.class
+                  : returnType == boolean.class ? Boolean.class : returnType;
   }
 
   public static String insnType(Class<?> type) {
@@ -233,7 +235,8 @@ public class ReflectUtil {
     return null;
   }
 
-  public static boolean isCurrentTypeOrParentType(Class<?> paramType, Class<?> pType) {
+  public static boolean isCurrentTypeOrParentType(
+      Class<?> paramType, Class<?> pType) {
     if (paramType == pType) return true;
     Set<Class<?>> parentTypes = getParentTypes(paramType);
     return parentTypes.contains(pType);
@@ -312,12 +315,14 @@ public class ReflectUtil {
    * @param canNotNull 是否不为空。
    *     <ol>
    *       <li>为 true 时：用于获取vertex类型主键，因数据库vertex单值主键的要求
-   *       <li>为 false 时：用于获取 edge类型主键用，因数据库edge中，rank 值的要求为 可以有可以没有。
+   *       <li>为 false 时：用于获取 edge类型主键用，因数据库edge中，rank 值的要求为
+   *           可以有可以没有。
    *     </ol>
    *
    * @return 主键属性
    */
-  public static Field getPkField(Field[] fields, Class<?> type, boolean canNotNull) {
+  public static Field getPkField(
+      Field[] fields, Class<?> type, boolean canNotNull) {
     Field pkField = null;
     for (Field field : fields) {
       if (field.isAnnotationPresent(Id.class)) {
@@ -325,7 +330,8 @@ public class ReflectUtil {
       }
     }
     if (canNotNull && pkField == null) {
-      throw new ParseException(String.format("%s 必须有一个属性用 @Id 注解。（javax.persistence.Id）", type));
+      throw new ParseException(String.format(
+        "%s 必须有一个属性用 @Id 注解。（javax.persistence.Id）", type));
     }
     return pkField;
   }

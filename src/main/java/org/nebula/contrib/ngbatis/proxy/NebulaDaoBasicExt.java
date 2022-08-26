@@ -29,7 +29,9 @@ public class NebulaDaoBasicExt {
    */
   public static String vertexName(Class<?> entityType) {
     Table tableAnno = entityType.getAnnotation(Table.class);
-    return tableAnno != null ? tableAnno.name() : StringUtil.xX2x_x(entityType.getSimpleName());
+    return tableAnno != null
+      ? tableAnno.name()
+      : StringUtil.xX2x_x(entityType.getSimpleName());
   }
 
   /**
@@ -52,7 +54,8 @@ public class NebulaDaoBasicExt {
     Class<?>[] result = null;
     Type[] genericInterfaces = currentType.getGenericInterfaces();
     for (Type genericInterface : genericInterfaces) {
-      if (isCurrentTypeOrParentType(genericInterface.getClass(), ParameterizedType.class)) {
+      if (isCurrentTypeOrParentType(
+          genericInterface.getClass(), ParameterizedType.class)) {
         Type[] actualTypeArguments =
             ((ParameterizedType) genericInterface).getActualTypeArguments();
         result =
@@ -88,7 +91,8 @@ public class NebulaDaoBasicExt {
 
   /** 只能由 NebulaDaoBasic 调用，用于获取当前 dao 所管控的实体类 */
   public static Class<?> entityType() {
-    StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[2];
+    StackTraceElement stackTraceElement = Thread.currentThread(
+      ).getStackTrace()[2];
     Class<?> currentType = getClassFromStack(stackTraceElement);
     return entityType(currentType);
   }
@@ -96,7 +100,8 @@ public class NebulaDaoBasicExt {
   /**
    * <strong>基类访问数据库的调用入口。</strong><br>
    * 调用入口与 xml 形式的动态代理类一致，均使用了 {@link MapperProxy#invoke(
-   * org.nebula.contrib.ngbatis.models.MethodModel, java.lang.Object...) MapperProxy.proxy}
+   *   org.nebula.contrib.ngbatis.models.MethodModel,
+   *   java.lang.Object...) MapperProxy.proxy}
    *
    * @param currentType 被动态代理的 dao，NebulaDaoBasic 子类
    * @param returnType 返回值类型
@@ -106,7 +111,8 @@ public class NebulaDaoBasicExt {
    * @return 对结果集进行处理后的 java对象
    */
   public static Object proxy(
-      Class<?> currentType, Class<?> returnType, String nGQL, Class<?>[] argTypes, Object... args) {
+      Class<?> currentType, Class<?> returnType, String nGQL,
+      Class<?>[] argTypes, Object... args) {
     Method method = null;
     try {
       String methodName = getMethodName();
@@ -127,11 +133,13 @@ public class NebulaDaoBasicExt {
    * @return 数据库执行脚本
    */
   public static String getCqlTpl() {
-    Map<String, String> daoBasicTpl = MapperProxy.ENV.getMapperContext().getDaoBasicTpl();
+    Map<String, String> daoBasicTpl = MapperProxy.ENV.getMapperContext(
+      ).getDaoBasicTpl();
     return daoBasicTpl.get(getMethodName());
   }
 
-  public static Class<?> getClassFromStack(StackTraceElement stackTraceElement) {
+  public static Class<?> getClassFromStack(
+      StackTraceElement stackTraceElement) {
     String className = stackTraceElement.getClassName();
     Class<?> clazz = null;
     try {
@@ -142,7 +150,8 @@ public class NebulaDaoBasicExt {
   }
 
   public static MethodModel getMethodModel() {
-    StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[2];
+    StackTraceElement stackTraceElement = Thread.currentThread(
+      ).getStackTrace()[2];
     MethodModel methodModel = new MethodModel();
     String methodName = stackTraceElement.getMethodName();
     Class<?> dao = getClassFromStack(stackTraceElement);
@@ -160,7 +169,8 @@ public class NebulaDaoBasicExt {
     methodModel.setMethod(method);
     methodModel.setId(methodName);
     methodModel.setReturnType(method.getReturnType());
-    Map<String, String> daoBasicTpl = MapperProxy.ENV.getMapperContext().getDaoBasicTpl();
+    Map<String, String> daoBasicTpl = MapperProxy.ENV.getMapperContext(
+      ).getDaoBasicTpl();
     methodModel.setText(daoBasicTpl.get(methodName));
     return methodModel;
   }
@@ -171,7 +181,8 @@ public class NebulaDaoBasicExt {
    * @return dao方法名
    */
   public static String getMethodName() {
-    StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[3];
+    StackTraceElement stackTraceElement = Thread.currentThread(
+      ).getStackTrace()[3];
     return stackTraceElement.getMethodName();
   }
 }
