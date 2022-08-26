@@ -1,6 +1,6 @@
 package org.nebula.contrib.ngbatis.binding.beetl.functions;
 
-// Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
+// Copyright (c) 2022 All project authors. All rights reserved.
 //
 // This source code is licensed under Apache 2.0 License.
 
@@ -9,11 +9,11 @@ package org.nebula.contrib.ngbatis.binding.beetl.functions;
  *
  * @author yeweicheng
  * @since 2022-08-25 4:06 <br>
- *        Now is history!
+ *     Now is history!
  */
 public class SchemaFmtFn extends AbstractFunction {
-    @Override
-    public Object call(Object[] paras) {
-        return String.format("`%s`", paras[0]);
-    }
+  @Override
+  public Object call(Object[] paras) {
+    return String.format("`%s`", paras[0]);
+  }
 }

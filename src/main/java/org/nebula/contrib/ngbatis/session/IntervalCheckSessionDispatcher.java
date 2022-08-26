@@ -3,6 +3,7 @@ package org.nebula.contrib.ngbatis.session;
 // Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
 //
 // This source code is licensed under Apache 2.0 License.
+
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import org.nebula.contrib.ngbatis.SessionDispatcher;
 import org.nebula.contrib.ngbatis.config.EnvConfig;
@@ -20,18 +21,16 @@ import static org.nebula.contrib.ngbatis.proxy.MapperProxy.ENV;
  * 间隔时间进行检查的本地会话调度器
  *
  * @author yeweicheng
- * @since 2022-08-26 2:34 <br>
- *        Now is history!
+ * @since 2022-08-26 2:34
+ * <br>Now is history!
  */
-public class IntervalCheckSessionDispatcher
-        implements Runnable, SessionDispatcher {
+public class IntervalCheckSessionDispatcher implements Runnable, SessionDispatcher {
 
-    private static Logger log = LoggerFactory
-            .getLogger(IntervalCheckSessionDispatcher.class);
+    private static Logger log = LoggerFactory.getLogger(IntervalCheckSessionDispatcher.class);
 
     private final NebulaPoolConfig nebulaPoolConfig;
 
-    private final ArrayBlockingQueue<LocalSession> sessionQueue;
+    private final ArrayBlockingQueue <LocalSession> sessionQueue;
     private final ScheduledExecutorService threadPool;
 
     public static long SESSION_LIFE_LENGTH = 5 * 60 * 60 * 1000;
@@ -39,23 +38,20 @@ public class IntervalCheckSessionDispatcher
 
     public IntervalCheckSessionDispatcher(NebulaPoolConfig nebulaPoolConfig) {
         this.nebulaPoolConfig = nebulaPoolConfig;
-        this.sessionQueue = new ArrayBlockingQueue<>(
-                nebulaPoolConfig.getMaxConnSize());
-        threadPool = EnvConfig.reconnect ? Executors.newScheduledThreadPool(1)
-                : null;
+        this.sessionQueue = new ArrayBlockingQueue<>( nebulaPoolConfig.getMaxConnSize() );
+        threadPool = EnvConfig.reconnect ? Executors.newScheduledThreadPool(1) : null;
         wakeUp();
     }
 
     @Override
     public void run() {
         for (LocalSession session : sessionQueue) {
-            log.info("LocalSession in queue which created at {}, useCount: {}",
-                    session.getBirth(), session.useCount);
+            log.info( "LocalSession in queue which created at {}, useCount: {}",
+                    session.getBirth(), session.useCount );
 
             boolean finished = timeToRelease(session);
-            if (finished || !session.getSession().ping()) {
-                log.info("Release a session which created at {}",
-                        session.getBirth());
+            if( finished || !session.getSession().ping() ) {
+                log.info( "Release a session which created at {}", session.getBirth() );
                 release(session);
             }
         }
@@ -65,9 +61,9 @@ public class IntervalCheckSessionDispatcher
     }
 
     @Override
-    public void offer(LocalSession session) {
+    public void offer( LocalSession session ) {
         boolean offer = sessionQueue.offer(session);
-        if (!offer) {
+        if(!offer) {
             releaseInnerSession(session);
         }
     }
@@ -75,16 +71,14 @@ public class IntervalCheckSessionDispatcher
     @Override
     public synchronized LocalSession poll() {
         LocalSession localSession = null;
-        if (!EnvConfig.reconnect) {
+        if( !EnvConfig.reconnect ) {
             localSession = newLocalSession();
-            localSession.useCount++;
+            localSession.useCount ++;
             return localSession;
         }
         try {
-            localSession = sessionQueue.poll(nebulaPoolConfig.getWaitTime(),
-                    TimeUnit.MILLISECONDS);
-            localSession = localSession == null ? newLocalSession()
-                    : localSession;
+            localSession = sessionQueue.poll(nebulaPoolConfig.getWaitTime(), TimeUnit.MILLISECONDS);
+            localSession = localSession == null ? newLocalSession() : localSession;
             localSession.useCount++;
             return localSession;
         } catch (InterruptedException e) {
@@ -93,15 +87,14 @@ public class IntervalCheckSessionDispatcher
     }
 
     private void wakeUp() {
-        if (threadPool != null) {
-            threadPool.scheduleAtFixedRate(this, 3L, CHECK_FIXED_RATE,
-                    TimeUnit.MILLISECONDS);
+        if( threadPool != null ) {
+            threadPool.scheduleAtFixedRate( this, 3L, CHECK_FIXED_RATE, TimeUnit.MILLISECONDS  );
         }
     }
 
     private void offer() {
         LocalSession localSession = newLocalSession();
-        offer(localSession);
+        offer( localSession );
     }
 
     private LocalSession newLocalSession() {
@@ -114,7 +107,7 @@ public class IntervalCheckSessionDispatcher
 
     private void release(LocalSession session) {
         session.getSession().release();
-        sessionQueue.remove(session);
+        sessionQueue.remove( session );
     }
 
     private boolean timeToRelease(LocalSession session) {

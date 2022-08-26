@@ -6,10 +6,9 @@ package ye.weicheng.ngbatis.demo.repository;
 /**
  * @author yeweicheng
  * @since 2022-06-18 5:09 <br>
- *        Now is history!
+ *     Now is history!
  */
 public interface TestChildPackageRepository {
 
-    Integer select1();
-
+  Integer select1();
 }

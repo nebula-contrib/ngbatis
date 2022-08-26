@@ -3,6 +3,7 @@ package org.nebula.contrib.ngbatis.binding.beetl.functions;
 // Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
 //
 // This source code is licensed under Apache 2.0 License.
+
 import org.nebula.contrib.ngbatis.PkGenerator;
 import org.nebula.contrib.ngbatis.proxy.MapperProxy;
 import org.nebula.contrib.ngbatis.utils.ReflectUtil;
@@ -17,11 +18,10 @@ import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getPkField;
  * 通过实体对象，获取 id 值
  *
  * @author yeweicheng
- * @since 2022-08-25 2:58 <br>
- *        Now is history!
+ * @since 2022-08-25 2:58
+ * <br>Now is history!
  */
-public class IdFn extends AbstractFunction
-        <Object, Boolean, Void, Void, Void, Void> {
+public class IdFn extends AbstractFunction<Object, Boolean, Void, Void, Void, Void> {
 
     private static Logger log = LoggerFactory.getLogger(IdFn.class);
 

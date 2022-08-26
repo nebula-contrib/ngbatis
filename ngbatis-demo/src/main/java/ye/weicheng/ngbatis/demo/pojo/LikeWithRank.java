@@ -9,28 +9,27 @@ import javax.persistence.Table;
 /**
  * @author yeweicheng
  * @since 2022-06-21 17:08 <br>
- *        Now is history!
+ *     Now is history!
  */
 @Table(name = "like")
 public class LikeWithRank {
-    @Id
-    private Long rank;
+  @Id private Long rank;
 
-    private Double likeness;
+  private Double likeness;
 
-    public Double getLikeness() {
-        return likeness;
-    }
+  public Double getLikeness() {
+    return likeness;
+  }
 
-    public void setLikeness(Double likeness) {
-        this.likeness = likeness;
-    }
+  public void setLikeness(Double likeness) {
+    this.likeness = likeness;
+  }
 
-    public Long getRank() {
-        return rank;
-    }
+  public Long getRank() {
+    return rank;
+  }
 
-    public void setRank(Long rank) {
-        this.rank = rank;
-    }
+  public void setRank(Long rank) {
+    this.rank = rank;
+  }
 }
