@@ -4,55 +4,55 @@
 package ye.weicheng.ngbatis.demo.repository;
 
 import com.vesoft.nebula.client.graph.data.ResultSet;
+import ye.weicheng.ngbatis.demo.pojo.NRN2;
+import ye.weicheng.ngbatis.demo.pojo.Person;
+import org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic;
+import org.nebula.contrib.ngbatis.utils.Page;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic;
-import org.nebula.contrib.ngbatis.utils.Page;
-import ye.weicheng.ngbatis.demo.pojo.NRN2;
-import ye.weicheng.ngbatis.demo.pojo.Person;
 
-/**.
- * 数据访问层 样例.
- *.
- * @author yeweicheng <br>.
- *     Now is history.
-.*/
+/**
+ * 数据访问层 样例
+ *
+ * @author yeweicheng
+ * <br>Now is history!
+ */
 public interface TestRepository extends NebulaDaoBasic<Person, String> {
 
-  Person selectPerson();
+    Person selectPerson();
 
-  Map selectPersonMap();
+    Map selectPersonMap();
 
-  List<Map> selectPersonsMap();
+    List<Map> selectPersonsMap();
 
-  List<Person> selectPersons();
+    List<Person> selectPersons();
 
-  Set<Map> selectPersonsSet();
+    Set<Map> selectPersonsSet();
 
-  List<String> selectListString();
+    List<String> selectListString();
 
-  Integer selectInt();
+    Integer selectInt();
 
-  Person selectV();
+    Person selectV();
 
-  List<Person> selectListV();
+    List<Person> selectListV();
 
-  String selectString();
+    String selectString();
 
-  String selectStringParam(String name);
+    String selectStringParam(String name);
+    Integer selectIntParam(Integer age);
+    Boolean selectBoolParam(Boolean finish);
 
-  Integer selectIntParam(Integer age);
+    List<Person> selectCustomPage(Page<Person> page);
 
-  Boolean selectBoolParam(Boolean finish);
+    List<Person> selectCustomPageAndName(Page<Person> page, String name);
 
-  List<Person> selectCustomPage(Page<Person> page);
+    List<NRN2> selectNRN2();
 
-  List<Person> selectCustomPageAndName(Page<Person> page, String name);
+    NRN2 selectNRN2Limit1();
 
-  List<NRN2> selectNRN2();
+    ResultSet testMulti();
 
-  NRN2 selectNRN2Limit1();
-
-  ResultSet testMulti();
 }
