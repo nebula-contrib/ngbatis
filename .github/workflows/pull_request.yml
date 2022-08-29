@@ -23,6 +23,26 @@ jobs:
       with:
         java-version: 1.8
 
+    - name: Cache the Maven packages to speed up build
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-maven-
+
+    - name: Install nebula-graph
+      run: |
+        mkdir tmp
+        pushd tmp
+        git clone https://github.com/vesoft-inc/nebula-docker-compose.git
+        pushd nebula-docker-compose/
+        cp ../../src/test/resources/docker-compose.yaml .
+        docker-compose up -d
+        sleep 30
+        docker-compose ps
+        popd
+        popd
+
     - name: Build with Maven
       run: |
         mvn -B package
