@@ -1,6 +1,6 @@
 package org.nebula.contrib.ngbatis.exception;
 
-// Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
+// Copyright (c) 2022 All project authors. All rights reserved.
 //
 // This source code is licensed under Apache 2.0 License.
 
@@ -11,8 +11,12 @@ package org.nebula.contrib.ngbatis.exception;
  * <br>Now is history!
  */
 public class QueryException extends RuntimeException {
-    public QueryException () {}
-    public QueryException(String o) {
-        super(o);;
-    }
+
+  public QueryException() {
+  }
+
+  public QueryException(String o) {
+    super(o);
+    ;
+  }
 }

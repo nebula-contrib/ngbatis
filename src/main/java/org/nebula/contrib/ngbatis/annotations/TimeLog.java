@@ -1,6 +1,6 @@
 package org.nebula.contrib.ngbatis.annotations;
 
-// Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
+// Copyright (c) 2022 All project authors. All rights reserved.
 //
 // This source code is licensed under Apache 2.0 License.
 
@@ -16,11 +16,19 @@ import java.lang.annotation.Target;
  * <br>Now is history!
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target( ElementType.METHOD)
+@Target(ElementType.METHOD)
 public @interface TimeLog {
 
-    String explain();
+  /**
+   * 日志格式。
+   * @return 日志格式。
+   */
+  String explain();
 
-    String name();
+  /**
+   * 日志分类名。
+   * @return 日志分类名。
+   */
+  String name();
 
 }

@@ -1,6 +1,6 @@
 package org.nebula.contrib.ngbatis.exception;
 
-// Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
+// Copyright (c) 2022 All project authors. All rights reserved.
 //
 // This source code is licensed under Apache 2.0 License.
 
@@ -12,8 +12,8 @@ package org.nebula.contrib.ngbatis.exception;
  */
 public class ParseException extends RuntimeException {
 
-    public ParseException( String msg ) {
-        super( "映射文件解析异常：" + msg );
-    }
+  public ParseException(String msg) {
+    super("映射文件解析异常：" + msg);
+  }
 
 }

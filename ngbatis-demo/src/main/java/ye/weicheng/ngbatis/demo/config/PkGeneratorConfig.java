@@ -1,12 +1,13 @@
 // Copyright 2022-present Weicheng Ye. All rights reserved.
 // Use of this source code is governed by a MIT-style license that can be
 // found in the LICENSE file.
+
 package ye.weicheng.ngbatis.demo.config;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.nebula.contrib.ngbatis.PkGenerator;
 import org.nebula.contrib.ngbatis.binding.TimestampPkGenerator;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * 主键生成样例
@@ -18,9 +19,9 @@ import org.nebula.contrib.ngbatis.binding.TimestampPkGenerator;
 @Configuration
 public class PkGeneratorConfig {
 
-    @Bean
-    public PkGenerator pkGenerator() {
-        return new TimestampPkGenerator();
-    }
+  @Bean
+  public PkGenerator pkGenerator() {
+    return new TimestampPkGenerator();
+  }
 
 }

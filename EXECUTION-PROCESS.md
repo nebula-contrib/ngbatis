@@ -28,7 +28,7 @@ This source code is licensed under Apache 2.0 License.
             2. 空参构造字节码
             3. 方法字节码
                 > 实际调用的方法为 MapperProxy.invoke 方法，传入自身的类信息与方法信息与运行时接收的参数，从上下文信息中获取对应的 nGQL。详情见下【运行时】
-        2. 将代理类加载到 jvm 中，执行方：[RAMClassLoader](./src/main/java/org/nebula/contrib/ngbatis/proxy/RAMClassLoader.java)
+        2. 将代理类加载到 jvm 中，执行方：[RAMClassLoader](src/main/java/org/nebula/contrib/ngbatis/proxy/RamClassLoader.java)
         3. 从类模型中读取接口全限定名，并将其对应的、由第2步加载的类注册成 spring bean 交由spring bean容器管理
     8. 批量注册结果集处理器，机制为：通过将结果集处理器继承抽象类[AbstractResultHandler](./src/main/java/org/nebula/contrib/ngbatis/handler/AbstractResultHandler.java)，在创建对象时，在抽象类构造函数中注册进上下文，用于ResultSet内部不同类型的结果，即 nGQL 不同类型的返回值。使用详见【运行时】
 

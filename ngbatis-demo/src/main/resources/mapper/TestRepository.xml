@@ -70,16 +70,16 @@
         RETURN n
     </select>
 
-    <select id="selectNRN2" resultType="ye.weicheng.ngbatis.demo.pojo.NRN2">
+    <select id="selectPersonLikePerson" resultType="ye.weicheng.ngbatis.demo.pojo.PersonLikePerson">
         MATCH (n: person)-[r: like]-( n2: person )
         WHERE id(n) == 'edgeDemoV1'
-        RETURN n, r, n2
+        RETURN n as person1, r as like, n2 as person2
     </select>
 
-    <select id="selectNRN2Limit1" resultType="ye.weicheng.ngbatis.demo.pojo.NRN2">
+    <select id="selectPersonLikePersonLimit1" resultType="ye.weicheng.ngbatis.demo.pojo.PersonLikePerson">
         MATCH (n: person)-[r: like]-( n2: person )
         WHERE id(n) == 'edgeDemoV1'
-        RETURN n, r, n2
+        RETURN n as person1, r as like, n2 as person2
         LIMIT 1
     </select>
 

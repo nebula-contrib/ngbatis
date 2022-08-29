@@ -1,12 +1,11 @@
 package org.nebula.contrib.ngbatis.models;
 
-// Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
+// Copyright (c) 2022 All project authors. All rights reserved.
 //
 // This source code is licensed under Apache 2.0 License.
 
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,87 +17,86 @@ import java.util.Map;
  */
 public class MapperContext {
 
-    private static MapperContext INSTANCE;
+  private static MapperContext INSTANCE;
+  /**
+   * 标签名与实体的映射。<br> （除了根据 {@link org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic } 中 泛型 T
+   * 所自动识别的外，还可以自行补充）
+   */
+  final Map<String, Class<?>> tagTypeMapping = new HashMap<>();
+  /**
+   * 当前应用中，在 xml 中 namespace 所声明的所有 XXXDao 及其 类模型
+   */
+  Map<String, ClassModel> interfaces;
+  /**
+   * 基类所有的 nGQL模板
+   */
+  Map<String, String> daoBasicTpl;
+  /**
+   * Nebula 连接池
+   */
+  NebulaPool nebulaPool;
+  /**
+   * Nebula 连接配置
+   */
+  NebulaPoolConfig nebulaPoolConfig;
+  boolean resourceRefresh = false;
 
-    private MapperContext() {
+  private MapperContext() {
+  }
+
+  /**
+   * <p>创建mapper上下文单例。</p>
+   * @return
+   */
+  public static MapperContext newInstance() {
+    if (INSTANCE == null) {
+      INSTANCE = new MapperContext();
     }
+    return INSTANCE;
+  }
 
-    public static MapperContext newInstance() {
-        if( INSTANCE == null ) {
-            INSTANCE = new MapperContext();
-        }
-        return INSTANCE;
-    }
+  public Map<String, ClassModel> getInterfaces() {
+    return interfaces;
+  }
 
-    /**
-     * 当前应用中，在 xml 中 namespace 所声明的所有 XXXDao 及其 类模型
-     */
-    Map<String, ClassModel> interfaces;
+  public void setInterfaces(Map<String, ClassModel> interfaces) {
+    this.interfaces = interfaces;
+  }
 
-    /**
-     * 标签名与实体的映射。（除了根据 {@link org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic } 中 泛型 T 所自动识别的外，还可以自行补充）
-     */
-    final Map<String, Class<?>> tagTypeMapping = new HashMap<>();
+  public Map<String, String> getDaoBasicTpl() {
+    return daoBasicTpl;
+  }
 
-    /**
-     * 基类所有的 nGQL模板
-     */
-    Map<String, String> daoBasicTpl;
+  public void setDaoBasicTpl(Map<String, String> daoBasicTpl) {
+    this.daoBasicTpl = daoBasicTpl;
+  }
 
-    /**
-     * Nebula 连接池
-     */
-    NebulaPool nebulaPool;
+  public NebulaPool getNebulaPool() {
+    return nebulaPool;
+  }
 
-    /**
-     * Nebula 连接配置
-     */
-    NebulaPoolConfig nebulaPoolConfig;
+  public void setNebulaPool(NebulaPool nebulaPool) {
+    this.nebulaPool = nebulaPool;
+  }
 
-    boolean resourceRefresh = false;
+  public NebulaPoolConfig getNebulaPoolConfig() {
+    return nebulaPoolConfig;
+  }
 
-    public Map<String, ClassModel> getInterfaces() {
-        return interfaces;
-    }
+  public void setNebulaPoolConfig(NebulaPoolConfig nebulaPoolConfig) {
+    this.nebulaPoolConfig = nebulaPoolConfig;
+  }
 
-    public void setInterfaces(Map<String, ClassModel> interfaces) {
-        this.interfaces = interfaces;
-    }
+  public boolean isResourceRefresh() {
+    return resourceRefresh;
+  }
 
-    public Map<String, String> getDaoBasicTpl() {
-        return daoBasicTpl;
-    }
+  public void setResourceRefresh(boolean resourceRefresh) {
+    this.resourceRefresh = resourceRefresh;
+  }
 
-    public void setDaoBasicTpl(Map<String, String> daoBasicTpl) {
-        this.daoBasicTpl = daoBasicTpl;
-    }
-
-    public NebulaPool getNebulaPool() {
-        return nebulaPool;
-    }
-
-    public NebulaPoolConfig getNebulaPoolConfig() {
-        return nebulaPoolConfig;
-    }
-
-    public void setNebulaPoolConfig(NebulaPoolConfig nebulaPoolConfig) {
-        this.nebulaPoolConfig = nebulaPoolConfig;
-    }
-
-    public void setNebulaPool(NebulaPool nebulaPool) {
-        this.nebulaPool = nebulaPool;
-    }
-
-    public boolean isResourceRefresh() {
-        return resourceRefresh;
-    }
-
-    public void setResourceRefresh(boolean resourceRefresh) {
-        this.resourceRefresh = resourceRefresh;
-    }
-
-    public Map<String, Class<?>> getTagTypeMapping() {
-        return tagTypeMapping;
-    }
+  public Map<String, Class<?>> getTagTypeMapping() {
+    return tagTypeMapping;
+  }
 
 }
