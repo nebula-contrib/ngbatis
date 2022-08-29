@@ -1,96 +1,90 @@
 package org.nebula.contrib.ngbatis.models;
 
-// Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
+// Copyright (c) 2022 All project authors. All rights reserved.
 //
 // This source code is licensed under Apache 2.0 License.
 
+import java.util.Map;
 import org.nebula.contrib.ngbatis.ResourceLoader;
 import org.springframework.core.io.Resource;
 
-import java.util.Map;
-
 /**
- * 类模型信息  <br>
- * xml 中 mapper 标签所声明的信息（类），包含属性与子标签（方法）
- *
+ * 类模型信息  <br> xml 中 mapper 标签所声明的信息（类），包含属性与子标签（方法）。
  * @author yeweicheng
  * <br>Now is history!
  */
 public class ClassModel {
 
-    public static final String PROXY_SUFFIX = "$Proxy";
+  public static final String PROXY_SUFFIX = "$Proxy";
 
-    private Class namespace;
+  private Class namespace;
 
-    private String space;
+  private String space;
 
-    private Map<String, MethodModel> methods;
+  private Map<String, MethodModel> methods;
+  private ResourceLoader resourceLoader;
 
-    public MethodModel getMethod( String methodName ) {
-        return methods.get( methodName );
-    };
+  private Resource resource;
+  private byte[] classByte;
+  private Class clazz;
 
-    private ResourceLoader resourceLoader;
+  public MethodModel getMethod(String methodName) {
+    return methods.get(methodName);
+  }
 
-    private Resource resource;
+  public Class getNamespace() {
+    return namespace;
+  }
 
-    private byte[] classByte;
+  public void setNamespace(Class namespace) {
+    this.namespace = namespace;
+  }
 
-    private Class clazz;
+  public String getSpace() {
+    return space;
+  }
 
-    public Class getNamespace() {
-        return namespace;
-    }
+  public void setSpace(String space) {
+    this.space = space;
+  }
 
-    public void setNamespace(Class namespace) {
-        this.namespace = namespace;
-    }
+  public Map<String, MethodModel> getMethods() {
+    return methods;
+  }
 
-    public String getSpace() {
-        return space;
-    }
+  public void setMethods(Map<String, MethodModel> methods) {
+    this.methods = methods;
+  }
 
-    public void setSpace(String space) {
-        this.space = space;
-    }
+  public ResourceLoader getResourceLoader() {
+    return resourceLoader;
+  }
 
-    public Map<String, MethodModel> getMethods() {
-        return methods;
-    }
+  public void setResourceLoader(ResourceLoader resourceLoader) {
+    this.resourceLoader = resourceLoader;
+  }
 
-    public void setMethods(Map<String, MethodModel> methods) {
-        this.methods = methods;
-    }
+  public Resource getResource() {
+    return resource;
+  }
 
-    public ResourceLoader getResourceLoader() {
-        return resourceLoader;
-    }
+  public void setResource(Resource resource) {
+    this.resource = resource;
+  }
 
-    public void setResourceLoader(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
-    }
+  public byte[] getClassByte() {
+    return classByte;
+  }
 
-    public Resource getResource() {
-        return resource;
-    }
+  public void setClassByte(byte[] classByte) {
+    this.classByte = classByte;
+  }
 
-    public void setResource(Resource resource) {
-        this.resource = resource;
-    }
+  public Class getClazz() {
+    return clazz;
+  }
 
-    public byte[] getClassByte() {
-        return classByte;
-    }
-
-    public void setClassByte(byte[] classByte) {
-        this.classByte = classByte;
-    }
-
-    public Class getClazz() {
-        return clazz;
-    }
-
-    public void setClazz(Class clazz) {
-        this.clazz = clazz;
-    }
+  public void setClazz(Class clazz) {
+    this.clazz = clazz;
+  }
 }

@@ -1,6 +1,6 @@
 package org.nebula.contrib.ngbatis.binding;
 
-// Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
+// Copyright (c) 2022 All project authors. All rights reserved.
 //
 // This source code is licensed under Apache 2.0 License.
 
@@ -15,13 +15,13 @@ import org.nebula.contrib.ngbatis.PkGenerator;
  */
 public class TimestampPkGenerator implements PkGenerator {
 
-    @Override
-    public <T> T generate(String tagName, Class<T> pkType) {
-        Long id = System.currentTimeMillis();
-        if(pkType == String.class) {
-            return (T) String.valueOf( id );
-        }
-        return (T) id;
+  @Override
+  public <T> T generate(String tagName, Class<T> pkType) {
+    Long id = System.currentTimeMillis();
+    if (pkType == String.class) {
+      return (T) String.valueOf(id);
     }
+    return (T) id;
+  }
 
 }
