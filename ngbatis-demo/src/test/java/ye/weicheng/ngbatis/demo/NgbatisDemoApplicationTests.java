@@ -13,8 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.nebula.contrib.ngbatis.utils.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ye.weicheng.ngbatis.demo.pojo.PersonLikePerson;
 import ye.weicheng.ngbatis.demo.pojo.Person;
+import ye.weicheng.ngbatis.demo.pojo.PersonLikePerson;
 import ye.weicheng.ngbatis.demo.repository.TestRepository;
 
 @SpringBootTest
