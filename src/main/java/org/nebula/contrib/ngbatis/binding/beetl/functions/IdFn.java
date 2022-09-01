@@ -5,6 +5,7 @@ package org.nebula.contrib.ngbatis.binding.beetl.functions;
 // This source code is licensed under Apache 2.0 License.
 
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getPkField;
+import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getValue;
 
 import java.lang.reflect.Field;
 import org.nebula.contrib.ngbatis.PkGenerator;
@@ -20,17 +21,18 @@ import org.slf4j.LoggerFactory;
  * @since 2022-08-25 2:58
  * <br>Now is history!
  */
-public class IdFn extends AbstractFunction<Object, Boolean, Void, Void, Void, Void> {
+public class IdFn extends AbstractFunction<Object, Boolean, Boolean, Void, Void, Void> {
 
   private static Logger log = LoggerFactory.getLogger(IdFn.class);
 
   @Override
-  public Object call(Object entity, Boolean canNotNull) {
+  public Object call(Object entity, Boolean canNotNull, Boolean autoGenerate) {
     canNotNull = canNotNull == null;
+    autoGenerate = autoGenerate == null;
     Class<?> entityType = entity.getClass();
     Field pkField = getPkField(entityType, canNotNull);
     String tagName = fnCall(tagNameFn, entity);
-    return setId(entity, pkField, tagName);
+    return autoGenerate ? setId(entity, pkField, tagName) : getValue(entity, pkField);
   }
 
   /**
