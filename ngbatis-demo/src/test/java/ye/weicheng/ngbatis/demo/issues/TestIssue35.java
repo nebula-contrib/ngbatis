@@ -17,24 +17,24 @@ import ye.weicheng.ngbatis.demo.repository.TestRepository;
 @SpringBootTest
 public class TestIssue35 {
 
-    @Autowired
-    private TestRepository repository;
+  @Autowired
+  private TestRepository repository;
 
-    @Test
-    public void selectBySelectiveWhenIdIsNull() {
-        Person person = new Person();
-        person.setAge(18);
-        List<Person> people = repository.selectBySelective(person);
-        System.out.println(JSON.toJSONString(people));
-    }
+  @Test
+  public void selectBySelectiveWhenIdIsNull() {
+    Person person = new Person();
+    person.setAge(18);
+    List<Person> people = repository.selectBySelective(person);
+    System.out.println(JSON.toJSONString(people));
+  }
 
-    @Test
-    public void selectBySelective() {
-        Person person = new Person();
-        person.setName("赵小洋");
-        person.setAge(18);
-        List<Person> people = repository.selectBySelective(person);
-        System.out.println(JSON.toJSONString(people));
-    }
+  @Test
+  public void selectBySelective() {
+    Person person = new Person();
+    person.setName("赵小洋");
+    person.setAge(18);
+    List<Person> people = repository.selectBySelective(person);
+    System.out.println(JSON.toJSONString(people));
+  }
 
 }
