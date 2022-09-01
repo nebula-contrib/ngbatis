@@ -56,6 +56,17 @@ public class AbstractBasicDaoTests {
     System.out.println(JSON.toJSONString(person));
   }
 
+  /**
+   * https://github.com/nebula-contrib/ngbatis/issues/35.
+   */
+  @Test
+  public void selectBySelectiveWhenIdIsNull() {
+    Person person = new Person();
+    person.setAge(18);
+    List<Person> people = repository.selectBySelective(person);
+    System.out.println(JSON.toJSONString(people));
+  }
+  
   @Test
   public void selectBySelective() {
     Person person = new Person();
