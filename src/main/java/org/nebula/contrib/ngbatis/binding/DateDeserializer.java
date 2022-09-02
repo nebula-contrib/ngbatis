@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
  * <p>提供给fastjson的时间序列化器。</p>
  * @author yeweicheng
  * @since 2022-08-29 8:06
- * <br>Now is history!
+ *     Now is history!
  */
 public class DateDeserializer implements ObjectSerializer {
 

@@ -1,0 +1,68 @@
+[
+  {
+    "id": "quick-start",
+    "text": "快速开始",
+    "children": [
+      {
+        "id": "about",
+        "text": "关于Ngbatis"
+      },
+      {
+        "id": "features",
+        "text": "框架特性"
+      },
+      {
+        "id": "install",
+        "text": "引入项目与配置"
+      }
+    ]
+  },
+  {
+    "id": "dev-example",
+    "text": "使用样例",
+    "children": [
+      {
+        "id": "prepare",
+        "text": "准备工作"
+      },
+      {
+        "id": "dao-basic",
+        "text": "使用基类读写"
+      },
+      {
+        "id": "custom-crud",
+        "text": "自定义nGQL"
+      },
+      {
+        "id": "parameter-use",
+        "text": "如何传入参数"
+      },
+      {
+        "id": "result",
+        "text": "不同返回值类型"
+      },
+      {
+        "id": "parameter-if",
+        "text": "参数条件控制"
+      },
+      {
+        "id": "parameter-for",
+        "text": "参数循环"
+      }
+    ]
+  },
+  {
+    "id": "step-forward-docs",
+    "text": "了解更多",
+    "children": [
+      {
+        "id": "operation-sequence",
+        "text": "运行时序"
+      },
+      {
+        "id": "advanced-configuration",
+        "text": "进阶配置"
+      }
+    ]
+  }
+]

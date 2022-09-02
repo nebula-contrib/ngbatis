@@ -38,8 +38,8 @@ class TestChildPackageRepositoryTest {
         + "        $name \n"
         + "    );",
       new HashMap<String, Object>() {{
-        put("name", "");
-      }}
+          put("name", "");
+        }}
     );
     System.out.println(resultSet.getErrorMessage());
     System.out.println(resultSet);

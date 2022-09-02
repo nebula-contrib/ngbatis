@@ -1,0 +1,68 @@
+[
+  {
+    "id": "quick-start",
+    "text": "Quick Start",
+    "children": [
+      {
+        "id": "about",
+        "text": "About Ngbatis"
+      },
+      {
+        "id": "features",
+        "text": "Features"
+      },
+      {
+        "id": "install",
+        "text": "Import and Config"
+      }
+    ]
+  },
+  {
+    "id": "dev-example",
+    "text": "How to use",
+    "children": [
+      {
+        "id": "prepare",
+        "text": "Prepare Work"
+      },
+      {
+        "id": "dao-basic",
+        "text": "By Basic DAO"
+      },
+      {
+        "id": "custom-crud",
+        "text": "By Custom nGQL"
+      },
+      {
+        "id": "parameter-use",
+        "text": "Param Usage"
+      },
+      {
+        "id": "result",
+        "text": "Result Mapping"
+      },
+      {
+        "id": "parameter-if",
+        "text": "Param Condition Control"
+      },
+      {
+        "id": "parameter-for",
+        "text": "Param Loop"
+      }
+    ]
+  },
+  {
+    "id": "step-forward-docs",
+    "text": "More Details",
+    "children": [
+      {
+        "id": "operation-sequence",
+        "text": "Operatior Sequence"
+      },
+      {
+        "id": "advanced-configuration",
+        "text": "Advanced Configuration"
+      }
+    ]
+  }
+]

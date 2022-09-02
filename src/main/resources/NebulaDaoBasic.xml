@@ -6,16 +6,15 @@
 <mapper namespace="org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic">
 
     <select id="selectBySelective">
-        @var kv = ng.kv( ng_args[0], '', false, true, false );
+        @var kv = ng.kv( ng_args[0], '', true, true, false );
+        @var id = ng.id( ng_args[0], true, false );
+        @var pkName = ng.pkName( ng_args[0] );
         @var tagName = ng.tagName( ng_args[0] );
         MATCH (n:`${ tagName }`)
+        WHERE 1 == 1 ${ isNotEmpty( id ) ? ('\n                and id(n) == $' + pkName) : '' } 
         @if ( isNotEmpty( @kv.columns ) ) {
-            WHERE
             @for ( col in @kv.columns ) {
-                n.`${ tagName }`.${ col } == $${ @kv.valueNames.get( colLP.index - 1 ) }
-                @if (!colLP.last) {
-                    and
-                @}
+                and n.`${ tagName }`.${ col } == $${ @kv.valueNames.get( colLP.index - 1 ) }
             @}
         @}
         RETURN n
