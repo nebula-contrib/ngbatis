@@ -38,7 +38,7 @@ See [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
     <dependency>
       <groupId>org.nebula-contrib</groupId>
       <artifactId>ngbatis</artifactId>
-      <version>1.1.0-beta</version>
+      <version>1.1.1-beta</version>
     </dependency>
 ```
 - Referring to [ngbatis-demo](./ngbatis-demo), which was smoothly integrated with spring-boot. The API examples could be found under the test of it for all features of ngbatis.
