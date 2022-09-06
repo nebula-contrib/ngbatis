@@ -21,10 +21,12 @@ public class TagNameFn extends AbstractFunction<Object, ClassModel, Void, Void, 
 
   @Override
   public Object call(Object para, ClassModel cm) {
+    Class<?> entityType = null;
     if (cm != null) {
-      return entityType(cm.getClazz());
+      entityType = entityType(cm.getNamespace());
+    } else {
+      entityType = para.getClass();
     }
-    Class<?> entityType = para.getClass();
     Table tableAnno = entityType.getAnnotation(Table.class);
     return tableAnno != null
       ? tableAnno.name()

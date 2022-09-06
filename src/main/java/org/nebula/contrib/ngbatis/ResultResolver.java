@@ -9,7 +9,7 @@ import org.nebula.contrib.ngbatis.models.MethodModel;
 
 /**
  * 结果解析接口。
- * <p/>
+ * 
  * @author yeweicheng
  * <br>Now is history!
  */

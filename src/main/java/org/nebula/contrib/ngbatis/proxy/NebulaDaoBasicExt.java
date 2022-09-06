@@ -65,7 +65,7 @@ public class NebulaDaoBasicExt {
           (Class<?>) actualTypeArguments[1]  // ID {@link NebulaDaoBasic }
         };
       } else if (genericInterface instanceof Class) {
-        result = entityTypeAndIdType((Class) genericInterface);
+        result = entityTypeAndIdType((Class<?>) genericInterface);
       }
     }
     return result;
@@ -81,6 +81,20 @@ public class NebulaDaoBasicExt {
     Class<?>[] entityTypeAndIdType = entityTypeAndIdType(currentType);
     if (entityTypeAndIdType != null && entityTypeAndIdType.length > 0) {
       return entityTypeAndIdType[0];
+    }
+    return null;
+  }
+
+  /**
+   * 根据dao接口类型，通过它的泛型，取得其管理的实体的主键类型
+   *
+   * @param currentType 继承了 NebulaDaoBasic 并且声明了泛型T、ID的类，
+   * @return 实体的主键类型
+   */
+  public static Class<?> pkType(Class<?> currentType) {
+    Class<?>[] entityTypeAndIdType = entityTypeAndIdType(currentType);
+    if (entityTypeAndIdType != null && entityTypeAndIdType.length > 1) {
+      return entityTypeAndIdType[1];
     }
     return null;
   }

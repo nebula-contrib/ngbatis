@@ -99,7 +99,7 @@ public class DefaultArgsResolver implements ArgsResolver {
 
       put(Map.class, (Setter<Map<?, ?>>) (map) -> {
         Map<Object, Object> valueMap = new HashMap<>();
-        map.forEach((k, v) -> valueMap.put(toNebulaValueType(k), toNebulaValueType(v)));
+        map.forEach((k, v) -> valueMap.put(k, toNebulaValueType(v)));
         return valueMap;
       });
 
@@ -179,12 +179,12 @@ public class DefaultArgsResolver implements ArgsResolver {
         if (isBaseType(paramClass)) {
           result.put("p" + i, JSON.toJSON(args[i]));
         } else if (args[i] instanceof Collection) {
-          result.put("p" + i, args[i]);
+          result.put("p" + i, toNebulaValueType(args[i]));
         } else {
           if (len == 1) {
-            result = (Map<String, Object>) customToJson(args[0]);
+            result = toNebulaValueType(args[0]);
           } else {
-            result.put("p" + i, customToJson(args[i]));
+            result.put("p" + i, toNebulaValueType(args[i]));
           }
         }
       }

@@ -8,6 +8,7 @@ import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.edgeName;
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.entityType;
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.getCqlTpl;
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.getMethodModel;
+import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.pkType;
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.proxy;
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.vertexName;
 
@@ -18,8 +19,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.nebula.contrib.ngbatis.exception.QueryException;
+import org.nebula.contrib.ngbatis.models.ClassModel;
 import org.nebula.contrib.ngbatis.models.MethodModel;
 import org.nebula.contrib.ngbatis.utils.Page;
+import org.springframework.data.repository.query.Param;
 
 /**
  * 数据访问的基类，用于提供单表 CRUD 与基本的节点关系操作<br>
@@ -31,6 +34,211 @@ import org.nebula.contrib.ngbatis.utils.Page;
  */
 public interface NebulaDaoBasic<T, I extends Serializable> {
 
+  // region query zoom
+  /**
+   * <p>通过主键查询对应表的单条记录</p>
+   *
+   * @param id 记录主键
+   * @return 表中的记录对应的实体对象
+   */
+  default T selectById(@Param("id") I id) {
+    MethodModel methodModel = getMethodModel();
+    return (T) MapperProxy.invoke(methodModel, id);
+  }
+
+  /**
+   * <p>通过多个 id 值查询符合条件的记录</p>
+   *
+   * @param ids 多个 id
+   * @return 多个 id 对应的节点
+   */
+  default List<T> selectByIds(@Param("ids") Collection<I> ids) {
+    MethodModel methodModel = getMethodModel();
+    Class<?> currentType = this.getClass();
+    Class<?> entityType = entityType(currentType);
+    methodModel.setResultType(entityType);
+    ClassModel classModel = new ClassModel();
+    classModel.setNamespace(currentType);
+    return (List<T>) MapperProxy.invoke(classModel, methodModel, ids);
+  }
+
+  /**
+   * <p>以实体类为载体，存放查询条件，不为空的属性为查询条件</p>
+   *
+   * @param record 单个节点做为查询条件
+   * @return 符合条件节点的集合
+   */
+  default List<T> selectBySelective(T record) {
+    MethodModel methodModel = getMethodModel();
+    methodModel.setReturnType(List.class);
+    methodModel.setResultType(entityType(this.getClass()));
+    return (List<T>) MapperProxy.invoke(methodModel, record);
+  }
+
+  /**
+   * <p>以实体类为载体，存放查询条件，不为空的属性为查询条件，String 类型的属性使用模糊查询</p>
+   *
+   * @param record 查询条件
+   * @return 符合条件的节点集合
+   */
+  default List<T> selectBySelectiveStringLike(T record) {
+    MethodModel methodModel = getMethodModel();
+    methodModel.setReturnType(List.class);
+    methodModel.setResultType(entityType(this.getClass()));
+    return (List<T>) MapperProxy.invoke(methodModel, record);
+  }
+
+  /**
+   * <p>按条件查出所有符合条件的记录的 主键 </p>
+   *
+   * @param record 查询条件
+   * @return 符合查询条件的节点 id
+   */
+  default List<I> selectIdBySelective(T record) {
+    MethodModel methodModel = getMethodModel();
+    methodModel.setResultType(pkType(this.getClass()));
+    return (List<I>) MapperProxy.invoke(methodModel, record);
+  }
+
+  /**
+   * <p>按条件查出所有符合条件的记录的 主键 （String字段模糊查询）</p>
+   *
+   * @param record 查询条件
+   * @return 符合查询条件的节点 id
+   */
+  default List<I> selectIdBySelectiveStringLike(T record) {
+    MethodModel methodModel = getMethodModel();
+    methodModel.setResultType(pkType(this.getClass()));
+    return (List<I>) MapperProxy.invoke(methodModel, record);
+  }
+
+  /**
+   * <p>通过 map 存放查询参数，查询多条记录并映射成实体类</p>
+   *
+   * @param param 查询条件
+   * @return 符合查询条件的节点集合
+   */
+  default List<T> selectByMap(Map<String, Object> param) {
+    MethodModel methodModel = getMethodModel();
+    methodModel.setReturnType(List.class);
+    methodModel.setResultType(entityType(this.getClass()));
+    ClassModel classModel = new ClassModel();
+    classModel.setNamespace(this.getClass());
+    return (List<T>) MapperProxy.invoke(classModel, methodModel, param);
+  }
+
+  /**
+   * <p>统计符合条件的记录数</p>
+   *
+   * @param param 查询条件
+   * @return 统及符合查询条件的总节点数
+   */
+  default Long countByMap(Map<String, Object> param) {
+    MethodModel methodModel = getMethodModel();
+    ClassModel classModel = new ClassModel();
+    classModel.setNamespace(this.getClass());
+    return (Long) MapperProxy.invoke(classModel, methodModel, param);
+  }
+
+  /**
+   * 查询对应类型的数据并分页
+   *
+   * @param page 分页的参数，与分页结果的容器
+   * @return 分页的结果
+   */
+  default List<T> selectPage(Page<T> page) {
+    MethodModel methodModel = getMethodModel();
+    Long total = countPage(page);
+    page.setTotal(total);
+    if (total == 0) {
+      return Collections.EMPTY_LIST;
+    }
+    methodModel.setReturnType(List.class);
+    methodModel.setResultType(entityType(this.getClass()));
+    List<T> proxy = (List<T>) MapperProxy.invoke(methodModel, page);
+    page.setRows(proxy);
+    return proxy;
+  }
+
+  default Long countPage(Page<T> page) {
+    MethodModel methodModel = getMethodModel();
+    return (Long) MapperProxy.invoke(methodModel, page);
+  }
+  // endregion
+  
+  // region insert zoom
+  /**
+   * <p>插入一条记录，全属性插入</p>
+   *
+   * @param record 当前表对应的记录数据
+   * @return 是否删除成功，成功 1，失败 0
+   */
+  default Integer insert(T record) {
+    MethodModel methodModel = getMethodModel();
+    methodModel.setReturnType(ResultSet.class);
+    methodModel.setResultType(ResultSet.class);
+    ResultSet resultSet = (ResultSet) MapperProxy.invoke(methodModel, record);
+    return resultSet.isSucceeded() ? 1 : 0;
+  }
+
+  /**
+   * <p>插入非空字段。</p>
+   *
+   * @param record 单个顶点
+   * @return 是否删除成功，成功 1，失败 0
+   */
+  default Integer insertSelective(T record) {
+    MethodModel methodModel = getMethodModel();
+    methodModel.setReturnType(ResultSet.class);
+    methodModel.setResultType(ResultSet.class);
+    ResultSet resultSet = (ResultSet) MapperProxy.invoke(methodModel, record);
+    return resultSet.isSucceeded() ? 1 : 0;
+  }
+
+  /**
+   * 批量插入全字段
+   * @param ts 当前Tag下的多节点
+   */
+  default void insertBatch(List<T> ts) {
+    MethodModel methodModel = getMethodModel();
+    MapperProxy.invoke(methodModel, ts);
+  }
+  // endregion
+
+  // region update zoom
+  default T updateById(T record) {
+    MethodModel methodModel = getMethodModel();
+    Class<?> entityType = record.getClass();
+    methodModel.setReturnType(entityType);
+    methodModel.setResultType(entityType);
+    return (T) MapperProxy.invoke(methodModel, record);
+  }
+
+  /**
+   * <p>更新</p>
+   *
+   * @param record 节点
+   * @return 是否删除成功，成功 1，失败 0
+   */
+  default T updateByIdSelective(T record) {
+    MethodModel methodModel = getMethodModel();
+    Class<?> entityType = record.getClass();
+    methodModel.setReturnType(entityType);
+    methodModel.setResultType(entityType);
+    return (T) MapperProxy.invoke(methodModel, record);
+  }
+
+  /**
+   * 批量更新行记录，selective
+   * @param ts 当前Tag下的多节点
+   */
+  default void updateByIdBatchSelective(List<T> ts) {
+    MethodModel methodModel = getMethodModel();
+    MapperProxy.invoke(methodModel, ts);
+  }
+  // endregion
+  
+  // region delete zoom
   /**
    * <p>数据操作，逻辑删除接口，前提当前类 有字段 is_del </p>
    *
@@ -62,189 +270,15 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    * @return 是否删除成功，成功 1，失败 0
    */
   default int deleteById(I id) {
-    throw new QueryException("No implements");
-  }
-
-  /**
-   * <p>插入一条记录，全属性插入</p>
-   *
-   * @param record 当前表对应的记录数据
-   * @return 是否删除成功，成功 1，失败 0
-   */
-  default Integer insert(T record) {
     MethodModel methodModel = getMethodModel();
     methodModel.setReturnType(ResultSet.class);
     methodModel.setResultType(ResultSet.class);
-    ResultSet resultSet = (ResultSet) MapperProxy.invoke(methodModel, record);
+    ResultSet resultSet = (ResultSet) MapperProxy.invoke(methodModel, id);
     return resultSet.isSucceeded() ? 1 : 0;
   }
+  // endregion
 
-  /**
-   * <p>插入非空字段。</p>
-   *
-   * @param record 单个顶点
-   * @return 是否删除成功，成功 1，失败 0
-   */
-  default Integer insertSelective(T record) {
-    MethodModel methodModel = getMethodModel();
-    methodModel.setReturnType(ResultSet.class);
-    methodModel.setResultType(ResultSet.class);
-    ResultSet resultSet = (ResultSet) MapperProxy.invoke(methodModel, record);
-    return resultSet.isSucceeded() ? 1 : 0;
-  }
-
-
-  /**
-   * <p>通过主键查询对应表的单条记录</p>
-   *
-   * @param id 记录主键
-   * @return 表中的记录对应的实体对象
-   */
-  default T selectById(I id) {
-    MethodModel methodModel = getMethodModel();
-    Class<?> currentType = this.getClass();
-    methodModel.setReturnType(Collection.class);
-    methodModel.setResultType(entityType(currentType));
-    return (T) MapperProxy.invoke(methodModel, id);
-  }
-
-  /**
-   * <p>通过多个 id 值查询符合条件的记录</p>
-   *
-   * @param ids 多个 id
-   * @return 多个 id 对应的节点
-   */
-  default List<T> selectByIds(Collection<I> ids) {
-
-    throw new QueryException("No implements");
-  }
-
-  /**
-   * <p>以实体类为载体，存放查询条件，不为空的属性为查询条件</p>
-   *
-   * @param record 单个节点做为查询条件
-   * @return 符合条件节点的集合
-   */
-  default List<T> selectBySelective(T record) {
-    MethodModel methodModel = getMethodModel();
-    methodModel.setReturnType(List.class);
-    methodModel.setResultType(entityType(this.getClass()));
-    return (List<T>) MapperProxy.invoke(methodModel, record);
-  }
-
-  /**
-   * <p>以实体类为载体，存放查询条件，不为空的属性为查询条件，String 类型的属性也使用精确查询</p>
-   *
-   * @param record 查询条件
-   * @return 符合条件的节点集合
-   */
-  default List<T> selectBySelectivePrecise(T record) {
-
-    throw new QueryException("No implements");
-  }
-
-  /**
-   * <p>通过 map 存放查询参数，查询多条记录并映射成实体类</p>
-   * <p>通常与 {@link #countByMap(Map) countByMap} 联合使用，以实现分页数据获取功能</p>
-   *
-   * @param param 查询条件
-   * @return 符合查询条件的节点集合
-   */
-  default List<T> selectByMap(Map<String, Object> param) {
-
-    throw new QueryException("No implements");
-  }
-
-  /**
-   * <p>统计符合条件的记录数</p>
-   * <p>通常与 {@link #selectByMap(Map) selectByMap} 联合使用，以实现分页数据获取功能</p>
-   *
-   * @param param 查询条件
-   * @return 统及符合查询条件的总节点数
-   */
-  default Long countByMap(Map<String, Object> param) {
-
-    throw new QueryException("No implements");
-  }
-
-  /**
-   * <p>按条件查出所有符合条件的记录的 主键 </p>
-   *
-   * @param record 查询条件
-   * @return 符合查询条件的节点 id
-   */
-  default List<I> selectIdBySelective(T record) {
-
-    throw new QueryException("No implements");
-  }
-
-  /**
-   * <p>更新</p>
-   *
-   * @param record 节点
-   * @return 是否删除成功，成功 1，失败 0
-   */
-  default int updateByIdSelective(T record) {
-
-    throw new QueryException("No implements");
-  }
-
-  default int updateById(T record) {
-
-    throw new QueryException("No implements");
-  }
-
-  default int insertBatch(List<T> ts) {
-
-    throw new QueryException("No implements");
-  }
-
-  default Long countGridByMap(Map<String, Object> param) {
-
-    throw new QueryException("No implements");
-  }
-
-  default List<Map> selectGridByMap(Map<String, Object> param) {
-
-    throw new QueryException("No implements");
-  }
-
-  default int updateSelective(T t) {
-
-    throw new QueryException("No implements");
-  }
-
-  default Long countPage(Page<T> page) {
-    MethodModel methodModel = getMethodModel();
-    return (Long) MapperProxy.invoke(methodModel, page);
-  }
-
-  /**
-   * 查询对应类型的数据并分页
-   *
-   * @param page 分页的参数，与分页结果的容器
-   * @return 分页的结果
-   */
-  default List<T> selectPage(Page<T> page) {
-    MethodModel methodModel = getMethodModel();
-    Long total = countPage(page);
-    page.setTotal(total);
-    if (total == 0) {
-      return Collections.EMPTY_LIST;
-    }
-    ;
-    methodModel.setReturnType(List.class);
-    methodModel.setResultType(entityType(this.getClass()));
-    List<T> proxy = (List<T>) MapperProxy.invoke(methodModel, page);
-    page.setRows(proxy);
-    return proxy;
-  }
-
-  default int updateBatch(List<T> ts) {
-
-    throw new QueryException("No implements");
-  }
-
+  // region graph special
   /**
    * 根据三元组值，插入关系
    *
@@ -275,8 +309,6 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
       new Class[]{Serializable.class, Class.class, Serializable.class}, startId, edgeName,
       endId);
   }
-
-  ;
 
   /**
    * 通过结束节点id与关系类型获取所有开始节点，<br> 开始节点类型为当前接口实现类所管理的实体对应的类型
@@ -340,6 +372,7 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
       new Class[]{Class.class, Class.class, Serializable.class}, startVertexName, edgeName,
       endId);
   }
+  // endregion
 
 }
 

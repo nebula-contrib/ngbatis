@@ -10,6 +10,8 @@ import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getAllColumnFields;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.nebula.contrib.ngbatis.utils.ReflectUtil;
 
 /**
@@ -26,9 +28,12 @@ public class KvFn extends AbstractFunction<Object, String, Boolean, Boolean, Boo
       Boolean idRequired) {
     excludePk = excludePk == null || excludePk;
     selective = selective != null && selective;
-    idRequired = idRequired == null;
+    idRequired = idRequired == null || idRequired;
     if (entity == null) {
       return new KV();
+    }
+    if (entity instanceof Map) {
+      return mapToKv((Map<String, Object>)entity, prefix, selective);
     }
     Class<?> entityType = entity.getClass();
     Field[] fields = getAllColumnFields(entityType);
@@ -49,6 +54,29 @@ public class KvFn extends AbstractFunction<Object, String, Boolean, Boolean, Boo
     return recordToKV(entity, fieldList, selective, prefix);
   }
 
+  private Object mapToKv(Map<String, Object> map, String prefix, Boolean selective) {
+    KV kv = new KV();
+    Set<String> keys = map.keySet();
+    for (String key : keys) {
+      String name = null;
+      Object value = map.get(key);
+      if (!selective || value != null) {
+        name = key;
+      }
+      if (name != null) {
+        kv.columns.add(name);
+        Object[] paras = {value};
+        kv.values.add(fnCall(valueFmtFn, paras));
+        kv.values.add(fnCall(valueFmtFn, paras));
+        Class<?> type = value == null ? null : value.getClass();
+        kv.types.add(type);
+        String valueName = isEmpty(prefix) ? name : String.format("%s.%s", prefix, name);
+        kv.valueNames.add(valueName);
+      }
+    }
+    return kv;
+  }
+
   /**
    * 对输入接口的参数进行前置处理，转换成 {@link KV KV} 对象，为参数替换做准备
    *
@@ -62,29 +90,27 @@ public class KvFn extends AbstractFunction<Object, String, Boolean, Boolean, Boo
     KV kv = new KV();
     for (Field field : fields) {
       String name = null;
-      if (selective) {
-        Object value = ReflectUtil.getValue(record, field);
-        if (value != null) {
-          name = field.getName();
-        }
-      } else {
+      Object value = ReflectUtil.getValue(record, field);
+      if (!selective || value != null) {
         name = field.getName();
       }
       if (name != null) {
         kv.columns.add(name);
-        Object[] paras = {ReflectUtil.getValue(record, field)};
+        Object[] paras = {value};
         kv.values.add(fnCall(valueFmtFn, paras));
-        kv.valueNames.add(isEmpty(prefix) ? name : String.format("%s.%s", prefix, name));
+        kv.types.add(field.getType());
+        String valueName = isEmpty(prefix) ? name : String.format("%s.%s", prefix, name);
+        kv.valueNames.add(valueName);
       }
     }
     return kv;
   }
 
   public static class KV {
-
     public final List<String> columns = new ArrayList<>();
     public final List<String> valueNames = new ArrayList<>();
     public final List<Object> values = new ArrayList<>();
+    public final List<Class<?>> types = new ArrayList<>();
   }
 
 }

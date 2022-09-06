@@ -117,7 +117,7 @@ public abstract class AbstractResultHandler<T, Z> implements ResultHandler<T, Z>
   /**
    * 为不同集合类型创建 0元素对象。
    * @param returnType 判断返回值类型，并根据接口实例化对象
-   * @return
+   * @return 返回接口类型默认使用的实现
    */
   protected T defaultInstance(Class<?> returnType) {
     Object o = returnType == List.class ? new ArrayList<>()
