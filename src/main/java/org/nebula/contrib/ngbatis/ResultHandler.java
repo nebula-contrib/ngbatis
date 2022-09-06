@@ -54,7 +54,7 @@ public interface ResultHandler<T, Z> {
    * @param returnType dao接口返回值类型
    * @param resultType xml中声明的 resultType，
    *                   当returnType是集合时，为范型。否则与 returnType 相同
-   * @return
+   * @return 分类型结果集处理器
    */
   static ResultHandler<Object, Object> getHandler(Class returnType, Class resultType) {
     Map<Class, ResultHandler> classResultHandlerMap = DIFF_TYPE_RESULT_HANDLER.get(returnType);

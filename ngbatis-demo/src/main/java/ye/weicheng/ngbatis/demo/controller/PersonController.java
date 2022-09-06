@@ -1,5 +1,9 @@
 package ye.weicheng.ngbatis.demo.controller;
 
+// Copyright (c) 2022 All project authors. All rights reserved.
+//
+// This source code is licensed under Apache 2.0 License.
+
 import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

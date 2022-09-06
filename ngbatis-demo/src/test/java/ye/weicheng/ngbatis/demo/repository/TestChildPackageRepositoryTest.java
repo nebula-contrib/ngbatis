@@ -1,5 +1,9 @@
 package ye.weicheng.ngbatis.demo.repository;
 
+// Copyright (c) 2022 All project authors. All rights reserved.
+//
+// This source code is licensed under Apache 2.0 License.
+
 import static org.nebula.contrib.ngbatis.proxy.MapperProxy.ENV;
 
 import com.vesoft.nebula.client.graph.data.ResultSet;
