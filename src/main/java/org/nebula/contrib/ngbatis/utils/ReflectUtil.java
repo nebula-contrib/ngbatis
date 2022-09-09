@@ -60,8 +60,32 @@ public abstract class ReflectUtil {
 
   public static void setValue(Object o, String prop, Object value)
       throws NoSuchFieldException, IllegalAccessException {
-    Field declaredField = o.getClass().getDeclaredField(prop);
+    Field[] allColumnFields = getAllColumnFields(o.getClass());
+    Field declaredField = null;
+    for (Field columnField : allColumnFields) {
+      if (getNameByColumn(columnField).equals(prop)){
+        declaredField = columnField;
+        break;
+      }
+    }
+    if (declaredField == null) {
+      throw new NoSuchFieldException(prop);
+    }
+    //Field declaredField = o.getClass().getDeclaredField(prop);
     setValue(o, declaredField, value);
+  }
+
+  /**
+   * get Column.class name field value, to replace the original field
+   *
+   * @param field  对象属性
+   * @return 获取Column.class name字段值，以替换原始字段
+   */
+  public static String getNameByColumn(Field field) {
+    if (field.getAnnotation(Column.class) != null && field.getAnnotation(Column.class).name().length() > 0) {
+      return field.getAnnotation(Column.class).name();
+    }
+    return field.getName();
   }
 
   /**
