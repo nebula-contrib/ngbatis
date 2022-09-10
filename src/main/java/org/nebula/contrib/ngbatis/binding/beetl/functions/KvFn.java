@@ -14,6 +14,8 @@ import java.util.Map;
 import java.util.Set;
 import org.nebula.contrib.ngbatis.utils.ReflectUtil;
 
+import javax.persistence.Column;
+
 /**
  * 通过实体对象，获取属性的 属性名列表、值列表、参数名列表
  *
@@ -92,7 +94,7 @@ public class KvFn extends AbstractFunction<Object, String, Boolean, Boolean, Boo
       String name = null;
       Object value = ReflectUtil.getValue(record, field);
       if (!selective || value != null) {
-        name = field.getName();
+        name = ReflectUtil.getNameByColumn(field);
       }
       if (name != null) {
         kv.columns.add(name);
