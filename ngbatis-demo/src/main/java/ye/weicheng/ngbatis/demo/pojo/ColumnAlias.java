@@ -7,6 +7,7 @@ package ye.weicheng.ngbatis.demo.pojo;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * 列别名测试用例-实体类
@@ -26,6 +27,9 @@ public class ColumnAlias {
   
   @Column(name = "last_name")
   private String lastName;
+  
+  @Transient
+  private String ignoreMe;
 
   public String getIdNo() {
     return idNo;
@@ -51,4 +55,11 @@ public class ColumnAlias {
     this.lastName = lastName;
   }
   
+  public String getIgnoreMe() {
+    return ignoreMe;
+  }
+
+  public void setIgnoreMe(String ignoreMe) {
+    this.ignoreMe = ignoreMe;
+  }
 }

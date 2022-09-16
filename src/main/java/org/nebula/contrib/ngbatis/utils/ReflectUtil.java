@@ -12,8 +12,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import org.nebula.contrib.ngbatis.exception.ParseException;
 import org.nebula.contrib.ngbatis.models.MethodModel;
 
@@ -317,7 +319,10 @@ public abstract class ReflectUtil {
     do {
       Field[] declaredFields = clazz.getDeclaredFields();
       if (leaf) {
-        fields.addAll(Arrays.asList(declaredFields));
+        Set<Field> cols = Arrays.stream(declaredFields)
+          .filter(el -> !el.isAnnotationPresent(Transient.class))
+          .collect(Collectors.toSet());
+        fields.addAll(cols);
       } else {
         for (Field declaredField : declaredFields) {
           if (declaredField.isAnnotationPresent(Column.class)) {
