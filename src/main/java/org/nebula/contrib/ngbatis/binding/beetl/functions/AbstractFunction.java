@@ -156,6 +156,7 @@ public abstract class AbstractFunction<A, B, C, D, E, F> implements Function {
    * 函数调用基类方法。
    * @param fnName 调用的 beetl function 的函数名
    * @param args 模板函数的参数
+   * @param <T> 调用方自行决定的类型
    * @return 最终体现在模板内的内容
    */
   public <T> T fnCall(Object fnName, Object... args) {
