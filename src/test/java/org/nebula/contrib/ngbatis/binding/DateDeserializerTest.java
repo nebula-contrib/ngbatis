@@ -23,8 +23,8 @@ class DateDeserializerTest {
     DateDeserializer dateDeserializer = new DateDeserializer();
     SerializeConfig cfg = new SerializeConfig();
     Map<String, Date> o = new HashMap<String, Date>() {{
-      put("t", new Date());
-    }};
+        put("t", new Date());
+      }};
     cfg.put(Date.class, dateDeserializer);
     System.out.println(JSON.toJSON(o, cfg));
     String o1 = JSON.toJSONString(o, cfg);
