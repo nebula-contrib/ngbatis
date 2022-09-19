@@ -86,6 +86,15 @@ public class NebulaDaoBasicExt {
   }
 
   /**
+   * 只能由 NebulaDaoBasic 调用，用于获取当前 dao 所管控的实体类
+   */
+  public static Class<?> entityType() {
+    StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[2];
+    Class<?> currentType = getClassFromStack(stackTraceElement);
+    return entityType(currentType);
+  }
+
+  /**
    * 根据dao接口类型，通过它的泛型，取得其管理的实体的主键类型
    *
    * @param currentType 继承了 NebulaDaoBasic 并且声明了泛型T、ID的类，
@@ -97,15 +106,6 @@ public class NebulaDaoBasicExt {
       return entityTypeAndIdType[1];
     }
     return null;
-  }
-
-  /**
-   * 只能由 NebulaDaoBasic 调用，用于获取当前 dao 所管控的实体类
-   */
-  public static Class<?> entityType() {
-    StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[2];
-    Class<?> currentType = getClassFromStack(stackTraceElement);
-    return entityType(currentType);
   }
 
   /**
