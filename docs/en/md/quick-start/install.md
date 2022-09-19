@@ -5,7 +5,7 @@
     <dependency>
         <groupId>org.nebula-contrib</groupId>
         <artifactId>ngbatis</artifactId>
-        <version>1.1.0-beta</version>
+        <version>1.1.0-rc</version>
     </dependency>
 ```
 

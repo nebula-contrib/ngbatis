@@ -14,8 +14,6 @@ import java.util.Map;
 import java.util.Set;
 import org.nebula.contrib.ngbatis.utils.ReflectUtil;
 
-import javax.persistence.Column;
-
 /**
  * 通过实体对象，获取属性的 属性名列表、值列表、参数名列表
  *
