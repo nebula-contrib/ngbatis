@@ -114,10 +114,10 @@ public abstract class AbstractResultHandler<T, Z> implements ResultHandler<T, Z>
         Object t = resultType.newInstance();
         return (T) t;
       } catch (InstantiationException | IllegalAccessException e) {
-        log.error(String.format(
-            "泛型第二个参数 %s 的类型，不支持实例化，请提供无参构造器。",
-            resultType.getName()
-          ));
+        log.error(
+          "resultType: {}，不支持实例化，请提供无参构造器。",
+          resultType.getName()
+        );
         return null;
       }
     }
