@@ -76,14 +76,20 @@ public abstract class AbstractResultHandler<T, Z> implements ResultHandler<T, Z>
       throw new QueryException(result.getErrorMessage());
     }
 
-    T newResult = (T) newInstance(returnType, resultType);
+    // fix: https://github.com/nebula-contrib/ngbatis/issues/47
+    // issue contributor @hejiahuichengxuyuan
+    boolean basicType = isBasicType(returnType);
+    T newResult = null;
+    if (!basicType) {
+      newResult = (T) newInstance(returnType, resultType);
+    }
 
     if (!(newResult instanceof Collection) && result.rowsSize() > 1) {
       throw new ResultHandleException("返回值要求只有一个值，但却出现了一行以上记录。");
     }
 
     List<String> columnNames = result.getColumnNames();
-    if (isBasicType(returnType) && columnNames.size() > 1) {
+    if (basicType && columnNames.size() > 1) {
       throw new ResultHandleException("接口返回类型为基本类型，结果集却存在多个列。" + columnNames);
     }
 
@@ -108,7 +114,10 @@ public abstract class AbstractResultHandler<T, Z> implements ResultHandler<T, Z>
         Object t = resultType.newInstance();
         return (T) t;
       } catch (InstantiationException | IllegalAccessException e) {
-        log.error("泛型第二个参数" + resultType.getName() + "的类型，不支持实例化。");
+        log.error(
+          "resultType: {}，不支持实例化，请提供无参构造器。",
+          resultType.getName()
+        );
         return null;
       }
     }
