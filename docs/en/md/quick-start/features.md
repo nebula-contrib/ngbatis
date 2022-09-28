@@ -9,7 +9,7 @@
 API | Instructions
 --|--
 insert(T entity) | Insert vertex, null value override
-nsertSelective(T entity) | Insert vertex, write only non empty properties.
+insertSelective(T entity) | Insert vertex, write only non empty properties.
 selectById(ID id) | Get vertex by primary key
 selectBySelective(T entity) | Query by non empty properties
 insertEdge(S startNode, R edge, E endNode) | Establish the relationship between two nodes
