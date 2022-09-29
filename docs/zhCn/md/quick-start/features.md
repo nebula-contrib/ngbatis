@@ -9,7 +9,7 @@
 API | 用法说明
 --|--
 insert(T entity) | 插入 Vertex，空值覆盖
-nsertSelective(T entity) | 插入 Vertext，空值跳过
+insertSelective(T entity) | 插入 Vertext，空值跳过
 selectById(ID id) | 通过主键获取节点
 selectBySelective(T entity) | 按实体属性值查询
 insertEdge(S startNode, R edge, E endNode) | 插入关系
