@@ -30,16 +30,19 @@ public class NgbatisContextInitializer implements ApplicationContextInitializer 
 
     NebulaPoolConfig nebulaPool = getNebulaPoolConfig(environment);
 
-    NebulaJdbcProperties nebulaJdbcProperties =
-        getNebulaJdbcProperties(environment)
-        .setPoolConfig(nebulaPool);
+    if (environment.getProperty("nebula.hosts")!=null){
 
-    ParseCfgProps parseCfgProps = readParseCfgProps(environment);
+      NebulaJdbcProperties nebulaJdbcProperties =
+              getNebulaJdbcProperties(environment)
+                      .setPoolConfig(nebulaPool);
 
-    context.addBeanFactoryPostProcessor(
-        new NgbatisBeanFactoryPostProcessor(nebulaJdbcProperties, parseCfgProps, context)
-    );
+      ParseCfgProps parseCfgProps = readParseCfgProps(environment);
 
+      context.addBeanFactoryPostProcessor(
+              new NgbatisBeanFactoryPostProcessor(nebulaJdbcProperties, parseCfgProps, context)
+      );
+
+    }
   }
 
   private ParseCfgProps readParseCfgProps(ConfigurableEnvironment environment) {
