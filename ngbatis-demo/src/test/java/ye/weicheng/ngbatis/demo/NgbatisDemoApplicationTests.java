@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
+import org.locationtech.jts.util.Assert;
 import org.nebula.contrib.ngbatis.utils.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -152,6 +153,12 @@ class NgbatisDemoApplicationTests {
     Person personDb = repository.selectById(genderNullTest);
     System.out.println(JSON.toJSONString(personDb));
     assert personDb.getGender() == null;
+  }
+  
+  @Test
+  public void selectMapWhenNull() {
+    Map<String, Object> result = repository.selectMapWhenNull();
+    Assert.isTrue(result == null);;
   }
 
 }
