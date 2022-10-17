@@ -332,6 +332,20 @@ public class NebulaBasicDaoTests {
   }
 
   @Test
+  public void insertEdgeUseNodeId() {
+    Like like = new Like();
+    like.setLikeness(0.202210171102);
+    repository.insertEdge("吴小极", like, "刘小洲");
+  }
+  
+  @Test
+  public void insertEdgeUseNodeId2() {
+    LikeWithRank like = new LikeWithRank();
+    like.setLikeness(0.202210171111);
+    repository.insertEdge("吴小极", like, "刘小洲");
+  }
+
+  @Test
   public void insertEdgeWithPropsAndRank() {
     Person person1 = new Person();
     person1.setName("李大印");

@@ -6,6 +6,7 @@ package org.nebula.contrib.ngbatis.binding.beetl.functions;
 
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getPkField;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getValue;
+import static org.nebula.contrib.ngbatis.utils.ReflectUtil.isBasicType;
 
 import java.lang.reflect.Field;
 import org.nebula.contrib.ngbatis.PkGenerator;
@@ -13,6 +14,7 @@ import org.nebula.contrib.ngbatis.proxy.MapperProxy;
 import org.nebula.contrib.ngbatis.utils.ReflectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 
 /**
  * 通过实体对象，获取 id 值
@@ -27,9 +29,13 @@ public class IdFn extends AbstractFunction<Object, Boolean, Boolean, Void, Void,
 
   @Override
   public Object call(Object entity, Boolean canNotNull, Boolean autoGenerate) {
+    Assert.notNull(entity, "param can not be null");
+    Class<?> entityType = entity.getClass();
+    if (isBasicType(entityType)) {
+      return fnCall(valueFmtFn, entity);
+    }
     canNotNull = canNotNull == null;
     autoGenerate = autoGenerate == null;
-    Class<?> entityType = entity.getClass();
     Field pkField = getPkField(entityType, canNotNull);
     String tagName = fnCall(tagNameFn, entity);
     return autoGenerate ? setId(entity, pkField, tagName) : getValue(entity, pkField);
