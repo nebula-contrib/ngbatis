@@ -57,4 +57,6 @@ public interface TestRepository extends NebulaDaoBasic<Person, String> {
 
   ResultSet testMulti();
 
+  Map<String, Object> selectMapWhenNull();
+
 }

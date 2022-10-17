@@ -87,6 +87,12 @@
         return "1111";
         return "222";
     </select>
+    
+    <select id="selectMapWhenNull">
+        MATCH (n: person) 
+        WHERE 1 == 2 
+        RETURN n
+    </select>
 
 </mapper>
 

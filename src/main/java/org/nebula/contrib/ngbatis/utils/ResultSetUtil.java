@@ -55,10 +55,8 @@ public class ResultSetUtil {
                       : value.isEdge() ? value.asRelationship()
                         : value.isPath() ? value.asPath()
                           : value.isList() ? transformList(value.asList())
-                            : value.isSet() ? transformList(
-                              value.asList())
-                              : value.isMap() ? transformMap(
-                                value.asMap())
+                            : value.isSet() ? transformList(value.asList())
+                              : value.isMap() ? transformMap(value.asMap())
                                 : null;
 
       return (T) o;

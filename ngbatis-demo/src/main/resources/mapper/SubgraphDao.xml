@@ -1,0 +1,14 @@
+<!--
+    Copyright (c) 2022 All project authors. All rights reserved.
+    
+    This source code is licensed under Apache 2.0 License.
+-->
+<mapper namespace="ye.weicheng.ngbatis.demo.repository.SubgraphDao">
+    
+    <select id="subgraph" resultType="ye.weicheng.ngbatis.demo.pojo.Subgraph">
+        GET SUBGRAPH WITH PROP 3 STEPS FROM "叶小南"
+        BOTH like
+        YIELD VERTICES AS nodes, EDGES AS relationships
+    </select>
+    
+</mapper>

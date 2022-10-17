@@ -84,6 +84,10 @@ public abstract class AbstractResultHandler<T, Z> implements ResultHandler<T, Z>
       newResult = (T) newInstance(returnType, resultType);
     }
 
+    if (!(newResult instanceof Collection) && result.rowsSize() == 0) {
+      return null;
+    }
+
     if (!(newResult instanceof Collection) && result.rowsSize() > 1) {
       throw new ResultHandleException("返回值要求只有一个值，但却出现了一行以上记录。");
     }
