@@ -269,4 +269,5 @@ public class PersonServiceImpl {
 
 
 ## License
-This code is under the [Apache License, Version 2.0, January 2004](https://www.apache.org/licenses/LICENSE-2.0).
+
+NGBATIS is under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0).
