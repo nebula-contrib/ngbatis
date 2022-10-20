@@ -263,5 +263,11 @@ public class PersonServiceImpl {
 
 ```
 
+## Upstream projects
+
+- [beetl](https://gitee.com/xiandafu/beetl), BSD-3, we proudly use the beetl template language as our template engine, which is consumed in binary package(as is).
+
+
 ## License
-This code is under the [Apache License, Version 2.0, January 2004](https://www.apache.org/licenses/LICENSE-2.0).
+
+NGBATIS is under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0).
