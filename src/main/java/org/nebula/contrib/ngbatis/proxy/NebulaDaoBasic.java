@@ -12,6 +12,7 @@ import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.pkType;
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.proxy;
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.vertexName;
 
+import com.sun.istack.NotNull;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import java.io.Serializable;
 import java.util.Collection;
@@ -282,11 +283,11 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   /**
    * 根据三元组值，插入关系
    *
-   * @param v1 开始节点值
+   * @param v1 开始节点值 或 开始节点id
    * @param e  关系值
-   * @param v2 结束节点值
+   * @param v2 结束节点值 或 结束节点id
    */
-  default void insertEdge(Object v1, Object e, Object v2) {
+  default void insertEdge(@NotNull Object v1, @NotNull Object e, @NotNull Object v2) {
     if (v2 == null || v1 == null || e == null) {
       return;
     }
