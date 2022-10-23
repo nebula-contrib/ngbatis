@@ -127,8 +127,7 @@ public abstract class ReflectUtil {
         : (resultType == Float.class || resultType == float.class) ? n.floatValue()
           : (resultType == Double.class || resultType == double.class) ? n.doubleValue()
             : (resultType == Byte.class || resultType == byte.class) ? n.byteValue()
-              : (resultType == Short.class || resultType == short.class) ? n
-                .shortValue()
+              : (resultType == Short.class || resultType == short.class) ? n.shortValue()
                 : n;
   }
 
@@ -348,7 +347,7 @@ public abstract class ReflectUtil {
   }
 
   public static Field getPkField(Class<?> type, boolean canNotNull) {
-    Field[] declaredFields = type.getDeclaredFields();
+    Field[] declaredFields = getAllColumnFields(type);
     return getPkField(declaredFields, type, canNotNull);
   }
 
