@@ -161,4 +161,21 @@ class NgbatisDemoApplicationTests {
     Assert.isTrue(result == null);;
   }
 
+  @Test
+  public void testSpaceSwitch() {
+    for (int i = 0; i < 30; i++) {
+      long l = System.currentTimeMillis();
+      int mod = (int) (l % 3);
+      switch (mod) {
+        case 0: repository.testSpaceSwitchStep1();
+          break;
+        case 1: repository.testSpaceSwitchStep2();
+          break;
+        case 2: repository.selectMapWhenNull();
+          break;
+        default: break;
+      }
+    }
+  }
+
 }
