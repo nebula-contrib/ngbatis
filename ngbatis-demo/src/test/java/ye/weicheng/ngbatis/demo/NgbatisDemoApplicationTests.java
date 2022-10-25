@@ -163,7 +163,7 @@ class NgbatisDemoApplicationTests {
 
   @Test
   public void testSpaceSwitch() {
-    for (int i = 0; i < 30; i ++) {
+    for (int i = 0; i < 30; i++) {
       long l = System.currentTimeMillis();
       int mod = (int) (l % 3);
       switch (mod) {
@@ -173,6 +173,7 @@ class NgbatisDemoApplicationTests {
           break;
         case 2: repository.selectMapWhenNull();
           break;
+        default: break;
       }
     }
   }
