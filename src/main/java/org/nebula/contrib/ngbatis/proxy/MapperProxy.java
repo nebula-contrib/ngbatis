@@ -15,6 +15,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.nebula.contrib.ngbatis.ArgNameFormatter;
 import org.nebula.contrib.ngbatis.Env;
 import org.nebula.contrib.ngbatis.ResultResolver;
@@ -238,11 +240,33 @@ public class MapperProxy {
   private static String qlWithSpace(LocalSession localSession, String gql, String currentSpace) {
     gql = gql.trim();
     String sessionSpace = localSession.getCurrentSpace();
-    if (Objects.equals(sessionSpace, currentSpace)) {
-      return String.format("\n\t\t%s", gql);
+    String qlWithSpace = Objects.equals(sessionSpace, currentSpace)
+        ? String.format("\n\t\t%s", gql)
+        : String.format("USE %s;\n\t\t%s", currentSpace, gql);
+    
+    setNewSpace(localSession, gql, currentSpace);
+    return qlWithSpace;
+  }
+
+  private static void setNewSpace(LocalSession localSession, String gql, String currentSpace) {
+    String lastSpace = findLastSpaceFromGql(gql);
+    if (lastSpace == null) {
+      localSession.setCurrentSpace(currentSpace);
+    } else {
+      localSession.setCurrentSpace(lastSpace);
     }
-    localSession.setCurrentSpace(currentSpace);
-    return String.format("USE %s;\n\t\t%s", currentSpace, gql);
+  }
+
+  private static final String PATTERN = "(?s).*(\\bUSE\\s+(\\S+);).*";
+
+  private static String findLastSpaceFromGql(String gql) {
+    Pattern r = Pattern.compile(PATTERN, Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
+    Matcher m = r.matcher(gql);
+    if (!m.matches()) {
+      return null;
+    } else {
+      return m.group(2);
+    }
   }
 
   /**

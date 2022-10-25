@@ -93,6 +93,17 @@
         WHERE 1 == 2 
         RETURN n
     </select>
+    
+    <select id="testSpaceSwitchStep1">
+        use cmqa;
+        INSERT VERTEX paragraph( name ) VALUES -31415926:('spaceSwitch');
+    </select>
+    
+    <select id="testSpaceSwitchStep2" space="cmqa">
+        MATCH (n: paragraph)
+        WHERE id(n) == -31415926
+        RETURN count(n)
+    </select>
 
 </mapper>
 
