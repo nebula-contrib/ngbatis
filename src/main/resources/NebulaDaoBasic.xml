@@ -12,7 +12,7 @@
 
     <select id="selectByIds">
         match (n: `${ ng.tagName( ng_args[0], ng_cm ) }`)
-        where id(n) in $ids
+        where id(n) in [ ${ ng.join( @ids, ", ", "ng.valueFmt" ) } ]
         return n
     </select>
     
