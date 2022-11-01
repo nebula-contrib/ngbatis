@@ -227,7 +227,7 @@ public class MapperProxy {
         throw new QueryException(" 数据查询失败" + result.getErrorMessage());
       }
     } catch (Exception e) {
-      throw new QueryException("数据查询失败：" + e.getMessage());
+      throw new QueryException("数据查询失败：" + e.getMessage(), e);
     } finally {
       log.debug("\n\t- proxyMethod: {}#{} \n\t- nGql：{} \n\t - params: {}\n\t - result：{}",
           proxyClass, proxyMethod, gql, params, result);
