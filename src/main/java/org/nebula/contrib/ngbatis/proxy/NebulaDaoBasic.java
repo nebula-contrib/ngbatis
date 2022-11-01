@@ -6,6 +6,7 @@ package org.nebula.contrib.ngbatis.proxy;
 
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.edgeName;
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.entityType;
+import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.getClassModel;
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.getCqlTpl;
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.getMethodModel;
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.pkType;
@@ -44,7 +45,8 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    */
   default T selectById(@Param("id") I id) {
     MethodModel methodModel = getMethodModel();
-    return (T) MapperProxy.invoke(methodModel, id);
+    ClassModel classModel = getClassModel(this.getClass());
+    return (T) MapperProxy.invoke(classModel, methodModel, id);
   }
 
   /**
@@ -58,8 +60,7 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     Class<?> currentType = this.getClass();
     Class<?> entityType = entityType(currentType);
     methodModel.setResultType(entityType);
-    ClassModel classModel = new ClassModel();
-    classModel.setNamespace(currentType);
+    ClassModel classModel = getClassModel(this.getClass());
     return (List<T>) MapperProxy.invoke(classModel, methodModel, ids);
   }
 
@@ -72,8 +73,10 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   default List<T> selectBySelective(T record) {
     MethodModel methodModel = getMethodModel();
     methodModel.setReturnType(List.class);
-    methodModel.setResultType(entityType(this.getClass()));
-    return (List<T>) MapperProxy.invoke(methodModel, record);
+    Class<? extends NebulaDaoBasic> daoType = this.getClass();
+    methodModel.setResultType(entityType(daoType));
+    ClassModel classModel = getClassModel(daoType);
+    return (List<T>) MapperProxy.invoke(classModel, methodModel, record);
   }
 
   /**
@@ -85,8 +88,10 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   default List<T> selectBySelectiveStringLike(T record) {
     MethodModel methodModel = getMethodModel();
     methodModel.setReturnType(List.class);
-    methodModel.setResultType(entityType(this.getClass()));
-    return (List<T>) MapperProxy.invoke(methodModel, record);
+    Class<? extends NebulaDaoBasic> daoType = this.getClass();
+    methodModel.setResultType(entityType(daoType));
+    ClassModel classModel = getClassModel(daoType);
+    return (List<T>) MapperProxy.invoke(classModel, methodModel, record);
   }
 
   /**
@@ -97,8 +102,10 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    */
   default List<I> selectIdBySelective(T record) {
     MethodModel methodModel = getMethodModel();
-    methodModel.setResultType(pkType(this.getClass()));
-    return (List<I>) MapperProxy.invoke(methodModel, record);
+    Class<? extends NebulaDaoBasic> daoType = this.getClass();
+    methodModel.setResultType(pkType(daoType));
+    ClassModel classModel = getClassModel(daoType);
+    return (List<I>) MapperProxy.invoke(classModel, methodModel, record);
   }
 
   /**
@@ -109,8 +116,10 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    */
   default List<I> selectIdBySelectiveStringLike(T record) {
     MethodModel methodModel = getMethodModel();
-    methodModel.setResultType(pkType(this.getClass()));
-    return (List<I>) MapperProxy.invoke(methodModel, record);
+    Class<? extends NebulaDaoBasic> daoType = this.getClass();
+    methodModel.setResultType(pkType(daoType));
+    ClassModel classModel = getClassModel(daoType);
+    return (List<I>) MapperProxy.invoke(classModel, methodModel, record);
   }
 
   /**
@@ -122,9 +131,9 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   default List<T> selectByMap(Map<String, Object> param) {
     MethodModel methodModel = getMethodModel();
     methodModel.setReturnType(List.class);
-    methodModel.setResultType(entityType(this.getClass()));
-    ClassModel classModel = new ClassModel();
-    classModel.setNamespace(this.getClass());
+    Class<? extends NebulaDaoBasic> daoType = this.getClass();
+    methodModel.setResultType(entityType(daoType));
+    ClassModel classModel = getClassModel(daoType);
     return (List<T>) MapperProxy.invoke(classModel, methodModel, param);
   }
 
@@ -136,8 +145,7 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    */
   default Long countByMap(Map<String, Object> param) {
     MethodModel methodModel = getMethodModel();
-    ClassModel classModel = new ClassModel();
-    classModel.setNamespace(this.getClass());
+    ClassModel classModel = getClassModel(this.getClass());
     return (Long) MapperProxy.invoke(classModel, methodModel, param);
   }
 
@@ -155,15 +163,18 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
       return Collections.EMPTY_LIST;
     }
     methodModel.setReturnType(List.class);
-    methodModel.setResultType(entityType(this.getClass()));
-    List<T> proxy = (List<T>) MapperProxy.invoke(methodModel, page);
+    Class<? extends NebulaDaoBasic> daoType = this.getClass();
+    methodModel.setResultType(entityType(daoType));
+    ClassModel classModel = getClassModel(daoType);
+    List<T> proxy = (List<T>) MapperProxy.invoke(classModel, methodModel, page);
     page.setRows(proxy);
     return proxy;
   }
 
   default Long countPage(Page<T> page) {
     MethodModel methodModel = getMethodModel();
-    return (Long) MapperProxy.invoke(methodModel, page);
+    ClassModel classModel = getClassModel(this.getClass());
+    return (Long) MapperProxy.invoke(classModel, methodModel, page);
   }
   // endregion
   
@@ -178,7 +189,8 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     MethodModel methodModel = getMethodModel();
     methodModel.setReturnType(ResultSet.class);
     methodModel.setResultType(ResultSet.class);
-    ResultSet resultSet = (ResultSet) MapperProxy.invoke(methodModel, record);
+    ClassModel classModel = getClassModel(this.getClass());
+    ResultSet resultSet = (ResultSet) MapperProxy.invoke(classModel, methodModel, record);
     return resultSet.isSucceeded() ? 1 : 0;
   }
 
@@ -192,7 +204,8 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     MethodModel methodModel = getMethodModel();
     methodModel.setReturnType(ResultSet.class);
     methodModel.setResultType(ResultSet.class);
-    ResultSet resultSet = (ResultSet) MapperProxy.invoke(methodModel, record);
+    ClassModel classModel = getClassModel(this.getClass());
+    ResultSet resultSet = (ResultSet) MapperProxy.invoke(classModel, methodModel, record);
     return resultSet.isSucceeded() ? 1 : 0;
   }
 
@@ -202,7 +215,8 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    */
   default void insertBatch(List<T> ts) {
     MethodModel methodModel = getMethodModel();
-    MapperProxy.invoke(methodModel, ts);
+    ClassModel classModel = getClassModel(this.getClass());
+    MapperProxy.invoke(classModel, methodModel, ts);
   }
   // endregion
 
@@ -212,7 +226,8 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     Class<?> entityType = record.getClass();
     methodModel.setReturnType(entityType);
     methodModel.setResultType(entityType);
-    return (T) MapperProxy.invoke(methodModel, record);
+    ClassModel classModel = getClassModel(this.getClass());
+    return (T) MapperProxy.invoke(classModel, methodModel, record);
   }
 
   /**
@@ -226,7 +241,8 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     Class<?> entityType = record.getClass();
     methodModel.setReturnType(entityType);
     methodModel.setResultType(entityType);
-    return (T) MapperProxy.invoke(methodModel, record);
+    ClassModel classModel = getClassModel(this.getClass());
+    return (T) MapperProxy.invoke(classModel, methodModel, record);
   }
 
   /**
@@ -235,7 +251,8 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    */
   default void updateByIdBatchSelective(List<T> ts) {
     MethodModel methodModel = getMethodModel();
-    MapperProxy.invoke(methodModel, ts);
+    ClassModel classModel = getClassModel(this.getClass());
+    MapperProxy.invoke(classModel, methodModel, ts);
   }
   // endregion
   
@@ -260,7 +277,8 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     MethodModel methodModel = getMethodModel();
     methodModel.setReturnType(ResultSet.class);
     methodModel.setResultType(ResultSet.class);
-    ResultSet resultSet = (ResultSet) MapperProxy.invoke(methodModel, id);
+    ClassModel classModel = getClassModel(this.getClass());
+    ResultSet resultSet = (ResultSet) MapperProxy.invoke(classModel, methodModel, id);
     return resultSet.isSucceeded() ? 1 : 0;
   }
 
@@ -274,7 +292,8 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     MethodModel methodModel = getMethodModel();
     methodModel.setReturnType(ResultSet.class);
     methodModel.setResultType(ResultSet.class);
-    ResultSet resultSet = (ResultSet) MapperProxy.invoke(methodModel, id);
+    ClassModel classModel = getClassModel(this.getClass());
+    ResultSet resultSet = (ResultSet) MapperProxy.invoke(classModel, methodModel, id);
     return resultSet.isSucceeded() ? 1 : 0;
   }
   // endregion
@@ -292,7 +311,8 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
       return;
     }
     MethodModel methodModel = getMethodModel();
-    MapperProxy.invoke(methodModel, v1, e, v2);
+    ClassModel classModel = getClassModel(this.getClass());
+    MapperProxy.invoke(classModel, methodModel, v1, e, v2);
   }
 
   /**

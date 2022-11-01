@@ -30,8 +30,8 @@ public class NgbatisContextInitializer implements ApplicationContextInitializer 
 
     NebulaPoolConfig nebulaPool = getNebulaPoolConfig(environment);
 
-    if (environment.getProperty("nebula.hosts")!=null){
-
+    // @author: Szt-1 fix #https://github.com/nebula-contrib/ngbatis/pull/54
+    if (environment.getProperty("nebula.hosts") != null) {
       NebulaJdbcProperties nebulaJdbcProperties =
               getNebulaJdbcProperties(environment)
                       .setPoolConfig(nebulaPool);

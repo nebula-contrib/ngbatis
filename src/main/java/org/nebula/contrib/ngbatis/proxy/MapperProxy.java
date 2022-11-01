@@ -218,10 +218,12 @@ public class MapperProxy {
       }
 
       localSession = ENV.getDispatcher().poll();
-      gql = qlWithSpace(localSession, gql, getSpace(cm, mm));
+      String currentSpace = getSpace(cm, mm);
+      gql = qlWithSpace(localSession, gql, currentSpace);
       session = localSession.getSession();
       result = session.executeWithParameter(gql, params);
       if (result.isSucceeded()) {
+        setNewSpace(localSession, gql, currentSpace);
         return result;
       } else {
         throw new QueryException(" 数据查询失败" + result.getErrorMessage());
@@ -240,12 +242,9 @@ public class MapperProxy {
   private static String qlWithSpace(LocalSession localSession, String gql, String currentSpace) {
     gql = gql.trim();
     String sessionSpace = localSession.getCurrentSpace();
-    String qlWithSpace = Objects.equals(sessionSpace, currentSpace)
+    return Objects.equals(sessionSpace, currentSpace)
         ? String.format("\n\t\t%s", gql)
         : String.format("USE %s;\n\t\t%s", currentSpace, gql);
-    
-    setNewSpace(localSession, gql, currentSpace);
-    return qlWithSpace;
   }
 
   private static void setNewSpace(LocalSession localSession, String gql, String currentSpace) {

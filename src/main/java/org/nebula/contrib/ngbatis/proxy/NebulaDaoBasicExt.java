@@ -11,6 +11,8 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
 import javax.persistence.Table;
+import org.nebula.contrib.ngbatis.models.ClassModel;
+import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.nebula.contrib.ngbatis.models.MethodModel;
 import org.nebula.contrib.ngbatis.utils.StringUtil;
 import org.springframework.util.Assert;
@@ -135,7 +137,8 @@ public class NebulaDaoBasicExt {
     methodModel.setMethod(method);
     methodModel.setResultType(returnType);
     methodModel.setText(gql);
-    return MapperProxy.invoke(methodModel, args);
+    ClassModel classModel = getClassModel(currentType);
+    return MapperProxy.invoke(classModel, methodModel, args);
   }
 
 
@@ -163,6 +166,11 @@ public class NebulaDaoBasicExt {
       //
     } // 从方法栈中获得的 className 不会发生此异常
     return clazz;
+  }
+  
+  public static ClassModel getClassModel(Class<?> dao) {
+    Map<String, ClassModel> interfaces = MapperContext.newInstance().getInterfaces();
+    return interfaces.get(dao.getName());
   }
 
   /**
