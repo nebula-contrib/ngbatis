@@ -7,7 +7,7 @@
     
     <!--region query zoom-->
     <select id="selectById">
-        match (n) where id(n) == $id return n
+        match (n) where id(n) == ${ ng.valueFmt( id ) } return n
     </select>
 
     <select id="selectByIds">
