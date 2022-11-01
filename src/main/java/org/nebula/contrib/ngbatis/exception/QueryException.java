@@ -17,6 +17,9 @@ public class QueryException extends RuntimeException {
 
   public QueryException(String o) {
     super(o);
-    ;
+  }
+
+  public QueryException(String o, Throwable e) {
+    super(o, e);
   }
 }
