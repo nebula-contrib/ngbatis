@@ -237,13 +237,13 @@ public abstract class ReflectUtil {
 
   /**
    * <p>根据方法名，获取唯一的方法。</p>
-   * @param clazz 类对象
+   * @param daoInterface DAO接口
    * @param methodName 方法名
    * @return 方法
    */
-  public static Method getNameUniqueMethod(Class clazz, String methodName) {
-    Method[] declaredMethods = clazz.getMethods();
-    for (Method method : declaredMethods) {
+  public static Method getNameUniqueMethod(Class<?> daoInterface, String methodName) {
+    Method[] daoMethods = daoInterface.getMethods();
+    for (Method method : daoMethods) {
       if (nullSafeEquals(method.getName(), methodName)) {
         return method;
       }
