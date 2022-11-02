@@ -242,7 +242,7 @@ public abstract class ReflectUtil {
    * @return 方法
    */
   public static Method getNameUniqueMethod(Class clazz, String methodName) {
-    Method[] declaredMethods = clazz.getDeclaredMethods();
+    Method[] declaredMethods = clazz.getMethods();
     for (Method method : declaredMethods) {
       if (nullSafeEquals(method.getName(), methodName)) {
         return method;
