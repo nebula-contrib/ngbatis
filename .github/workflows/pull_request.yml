@@ -48,4 +48,6 @@ jobs:
         mvn -B package
         cd ngbatis-demo
         mvn -B compile
+
     - uses: codecov/codecov-action@v2
+      with: "v0.1.15"
