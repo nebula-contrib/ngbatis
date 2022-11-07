@@ -50,4 +50,5 @@ jobs:
         mvn -B compile
 
     - uses: codecov/codecov-action@v2
-      with: "v0.1.15"
+      with:
+        version: "v0.1.15"
