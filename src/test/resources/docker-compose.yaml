@@ -13,18 +13,19 @@ services:
       - --data_path=/data/meta
       - --log_dir=/logs
       - --v=0
+      - --ws_http_port=19559
       - --minloglevel=0
       - --heartbeat_interval_secs=2
       - --expired_time_factor=2
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://172.28.1.1:11000/status"]
+      test: ["CMD", "curl", "-f", "http://172.28.1.1:19559/status"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 20s
     ports:
       - "9559:9559"
-      - 11000
+      - 19559
       - 11002
     volumes:
       - ./data/meta0:/data/meta:Z
@@ -49,18 +50,19 @@ services:
       - --data_path=/data/meta
       - --log_dir=/logs
       - --v=0
+      - --ws_http_port=19559
       - --minloglevel=0
       - --heartbeat_interval_secs=2
       - --expired_time_factor=2
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://172.28.1.2:11000/status"]
+      test: ["CMD", "curl", "-f", "http://172.28.1.2:19559/status"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 20s
     ports:
       - "9560:9559"
-      - 11000
+      - 19559
       - 11002
     volumes:
       - ./data/meta1:/data/meta:Z
@@ -85,18 +87,19 @@ services:
       - --data_path=/data/meta
       - --log_dir=/logs
       - --v=0
+      - --ws_http_port=19559
       - --minloglevel=0
       - --heartbeat_interval_secs=2
       - --expired_time_factor=2
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://172.28.1.3:11000/status"]
+      test: ["CMD", "curl", "-f", "http://172.28.1.3:19559/status"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 20s
     ports:
       - "9561:9559"
-      - 11000
+      - 19559
       - 11002
     volumes:
       - ./data/meta2:/data/meta:Z
@@ -121,6 +124,7 @@ services:
       - --data_path=/data/storage
       - --log_dir=/logs
       - --v=0
+      - --ws_http_port=19779
       - --minloglevel=0
       - --heartbeat_interval_secs=2
       - --timezone_name=+08:00:00
@@ -129,14 +133,14 @@ services:
       - metad1
       - metad2
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://172.28.2.1:12000/status"]
+      test: ["CMD", "curl", "-f", "http://172.28.2.1:19779/status"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 20s
     ports:
       - "9779:9779"
-      - 12000
+      - 19669
       - 12002
     volumes:
       - ./data/storage0:/data/storage:Z
@@ -161,6 +165,7 @@ services:
       - --data_path=/data/storage
       - --log_dir=/logs
       - --v=0
+      - --ws_http_port=19779
       - --minloglevel=0
       - --heartbeat_interval_secs=2
       - --timezone_name=+08:00:00
@@ -169,14 +174,14 @@ services:
       - metad1
       - metad2
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://172.28.2.2:12000/status"]
+      test: ["CMD", "curl", "-f", "http://172.28.2.2:19779/status"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 20s
     ports:
       - "9780:9779"
-      - 12000
+      - 19669
       - 12002
     volumes:
       - ./data/storage1:/data/storage:Z
@@ -201,6 +206,7 @@ services:
       - --data_path=/data/storage
       - --log_dir=/logs
       - --v=0
+      - --ws_http_port=19779
       - --minloglevel=0
       - --heartbeat_interval_secs=2
       - --timezone_name=+08:00:00
@@ -209,14 +215,14 @@ services:
       - metad1
       - metad2
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://172.28.2.3:12000/status"]
+      test: ["CMD", "curl", "-f", "http://172.28.2.3:19779/status"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 20s
     ports:
       - "9781:9779"
-      - 12000
+      - 19669
       - 12002
     volumes:
       - ./data/storage2:/data/storage:Z
@@ -239,6 +245,7 @@ services:
       - --ws_ip=172.28.3.1
       - --log_dir=/logs
       - --v=0
+      - --ws_http_port=19669
       - --minloglevel=0
       - --heartbeat_interval_secs=2
       - --timezone_name=+08:00:00
@@ -247,14 +254,14 @@ services:
       - metad1
       - metad2
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://172.28.3.1:13000/status"]
+      test: ["CMD", "curl", "-f", "http://172.28.3.1:19669/status"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 20s
     ports:
       - "9669:9669"
-      - 13000
+      - 19779
       - 13002
     volumes:
       - ./logs/graph0:/logs:Z
@@ -276,6 +283,7 @@ services:
       - --ws_ip=172.28.3.2
       - --log_dir=/logs
       - --v=0
+      - --ws_http_port=19669
       - --minloglevel=0
       - --heartbeat_interval_secs=2
       - --timezone_name=+08:00:00
@@ -284,14 +292,14 @@ services:
       - metad1
       - metad2
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://172.28.3.2:13000/status"]
+      test: ["CMD", "curl", "-f", "http://172.28.3.2:19669/status"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 20s
     ports:
       - "9670:9669"
-      - 13000
+      - 19779
       - 13002
     volumes:
       - ./logs/graph1:/logs:Z
@@ -313,6 +321,7 @@ services:
       - --ws_ip=172.28.3.3
       - --log_dir=/logs
       - --v=0
+      - --ws_http_port=19669
       - --minloglevel=0
       - --heartbeat_interval_secs=2
       - --timezone_name=+08:00:00
@@ -321,14 +330,14 @@ services:
       - metad1
       - metad2
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://172.28.3.3:13000/status"]
+      test: ["CMD", "curl", "-f", "http://172.28.3.3:19669/status"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 20s
     ports:
       - "9671:9669"
-      - 13000
+      - 19779
       - 13002
     volumes:
       - ./logs/graph2:/logs:Z

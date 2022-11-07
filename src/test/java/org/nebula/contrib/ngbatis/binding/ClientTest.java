@@ -29,6 +29,7 @@ public class ClientTest {
 
       ResultSet resultSet = session.execute("SHOW SPACES");
       Assert.assertTrue(resultSet.isSucceeded());
+      System.out.println("access NebulaGraph success!");
     } catch (Exception e) {
       e.printStackTrace();
       assert false;
