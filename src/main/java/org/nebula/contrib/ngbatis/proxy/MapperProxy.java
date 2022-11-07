@@ -4,9 +4,11 @@ package org.nebula.contrib.ngbatis.proxy;
 //
 // This source code is licensed under Apache 2.0 License.
 
+import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 import static org.nebula.contrib.ngbatis.models.ClassModel.PROXY_SUFFIX;
 
 import com.vesoft.nebula.client.graph.data.ResultSet;
+import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.net.Session;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -211,6 +213,7 @@ public class MapperProxy {
     String proxyClass = null;
     String proxyMethod = null;
     String localSessionSpace = null;
+    String autoSwitch = null;
     try {
       localSession = ENV.getDispatcher().poll();
       if (log.isDebugEnabled()) {
@@ -221,7 +224,9 @@ public class MapperProxy {
       }
 
       String currentSpace = getSpace(cm, mm);
-      gql = qlWithSpace(localSession, gql, currentSpace);
+      String[] qlAndSpace = qlWithSpace(localSession, gql, currentSpace);
+      gql = qlAndSpace[1];
+      autoSwitch = qlAndSpace[0] == null ? "" : qlAndSpace[0];
       session = localSession.getSession();
       result = session.executeWithParameter(gql, params);
       if (result.isSucceeded()) {
@@ -236,10 +241,11 @@ public class MapperProxy {
       if (log.isDebugEnabled()) {
         log.debug("\n\t- proxyMethod: {}#{}"
                 + "\n\t- session space: {}"
+                + (isEmpty(autoSwitch) ? "{}" : "\n\t- auto switch to: {}")
                 + "\n\t- nGql：{}"
                 + "\n\t- params: {}"
                 + "\n\t- result：{}",
-            proxyClass, proxyMethod, localSessionSpace, gql, params, result);
+            proxyClass, proxyMethod, localSessionSpace, autoSwitch, gql, params, result);
       }
       if (localSession != null) {
         ENV.getDispatcher().offer(localSession);
@@ -247,12 +253,19 @@ public class MapperProxy {
     }
   }
 
-  private static String qlWithSpace(LocalSession localSession, String gql, String currentSpace) {
+  private static String[] qlWithSpace(LocalSession localSession, String gql, String currentSpace)
+      throws IOErrorException {
+    String[] qlAndSpace = new String[2];
     gql = gql.trim();
     String sessionSpace = localSession.getCurrentSpace();
-    return Objects.equals(sessionSpace, currentSpace)
-        ? String.format("\n\t\t%s", gql)
-        : String.format("USE %s;\n\t\t%s", currentSpace, gql);
+    boolean sameSpace = Objects.equals(sessionSpace, currentSpace);
+    if (!sameSpace) {
+      qlAndSpace[0] = currentSpace;
+      Session session = localSession.getSession();
+      session.execute(String.format("USE %s", currentSpace));
+    }
+    qlAndSpace[1] = String.format("\n\t\t%s", gql);
+    return qlAndSpace;
   }
 
   private static void setNewSpace(LocalSession localSession, String gql, String currentSpace) {
