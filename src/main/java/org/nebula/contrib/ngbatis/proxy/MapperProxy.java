@@ -17,8 +17,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.nebula.contrib.ngbatis.ArgNameFormatter;
 import org.nebula.contrib.ngbatis.Env;
 import org.nebula.contrib.ngbatis.ResultResolver;
@@ -229,8 +227,8 @@ public class MapperProxy {
       autoSwitch = qlAndSpace[0] == null ? "" : qlAndSpace[0];
       session = localSession.getSession();
       result = session.executeWithParameter(gql, params);
+      localSession.setCurrentSpace(result.getSpaceName());
       if (result.isSucceeded()) {
-        setNewSpace(localSession, gql, currentSpace);
         return result;
       } else {
         throw new QueryException(" 数据查询失败" + result.getErrorMessage());
@@ -266,27 +264,6 @@ public class MapperProxy {
     }
     qlAndSpace[1] = String.format("\n\t\t%s", gql);
     return qlAndSpace;
-  }
-
-  private static void setNewSpace(LocalSession localSession, String gql, String currentSpace) {
-    String lastSpace = findLastSpaceFromGql(gql);
-    if (lastSpace == null) {
-      localSession.setCurrentSpace(currentSpace);
-    } else {
-      localSession.setCurrentSpace(lastSpace);
-    }
-  }
-
-  private static final String PATTERN = "(?s).*(\\bUSE\\s+(\\S+);).*";
-
-  private static String findLastSpaceFromGql(String gql) {
-    Pattern r = Pattern.compile(PATTERN, Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
-    Matcher m = r.matcher(gql);
-    if (!m.matches()) {
-      return null;
-    } else {
-      return m.group(2);
-    }
   }
 
   /**
