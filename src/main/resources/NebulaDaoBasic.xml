@@ -241,6 +241,23 @@
             ;
         @}
     </update>
+
+    <update id="upsertByIdSelective">
+        @var kv = ng.kv( ng_args[0],  '', true, true );
+        @var id = ng.id( ng_args[0] );
+        @var pkName = ng.pkName( ng_args[0] );
+        @var tagName = ng.tagName( ng_args[0] );
+        @var fields = ng.fieldNames( ng_args[0] );
+
+        UPSERT VERTEX ON `${ tagName }` ${ id }
+        @if ( isNotEmpty( @kv.columns ) ) {
+        SET
+        @for ( col in @kv.columns ) {
+        @var val = @kv.values.get(colLP.dataIndex);
+        `${ col }` = ${ val } ${ colLP.last ? '' : ',' }
+        @}
+        @}
+    </update>
     <!--endregion-->
     
     <!--region delete zoom-->
@@ -269,6 +286,39 @@
         VALUES ${ vId1 }-> ${ vId2 } ${ isNotEmpty( rank ) ? ('@' + rank) : ''  } :(
             ${ ng.join( @kv.values ) }
         );
+    </insert>
+
+    <insert id="insertEdgeSelective">
+        @var kv = ng.kv( ng_args[1], '', null, true, false );
+        @var vId1 = ng.id( ng_args[0] );
+        @var rank = ng.id( ng_args[1], false );
+        @var vId2 = ng.id( ng_args[2] );
+        @var e = ng.tagName( ng_args[1] );
+
+        INSERT EDGE `${ e }` (
+        ${ ng.join( @kv.columns, ", ", "ng.schemaFmt" ) }
+        )
+        VALUES ${ vId1 }-> ${ vId2 } ${ isNotEmpty( rank ) ? ('@' + rank) : ''  } :(
+        ${ ng.join( @kv.values ) }
+        );
+    </insert>
+
+    <insert id="upsertEdgeSelective">
+        @var kv = ng.kv( ng_args[1], '', null, true, false );
+        @var rank = ng.id( ng_args[1] );
+        @var tagName = ng.tagName( ng_args[1] );
+        @var vId1 = ng.id( ng_args[0] );
+        @var vId2 = ng.id( ng_args[2] );
+
+        UPSERT EDGE ON `${ tagName }`
+        ${ vId1 }-> ${ vId2 } ${ isNotEmpty( rank ) ? ('@' + rank) : ''  }
+        @if ( isNotEmpty( @kv.columns ) ) {
+        SET
+        @for ( col in @kv.columns ) {
+        @var val = @kv.values.get(colLP.dataIndex);
+        `${ col }` = ${ val } ${ colLP.last ? '' : ',' }
+        @}
+        @}
     </insert>
 
     <select id="existsEdge">

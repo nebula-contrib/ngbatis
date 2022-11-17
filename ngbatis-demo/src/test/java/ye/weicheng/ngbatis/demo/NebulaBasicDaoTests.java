@@ -269,6 +269,26 @@ public class NebulaBasicDaoTests {
     }
     System.out.println(peopleDb);
   }
+
+  @Test
+  public void upsertByIdSelective() {
+    long now = System.currentTimeMillis();
+    String oldGender = "F";
+    String name = "UPSERT" + now;
+    Person person = new Person();
+    person.setName(name);
+    person.setGender(oldGender);
+    repository.upsertByIdSelective(person);
+
+    Integer newAge = randomAge();
+    person.setAge(newAge);
+    person.setBirthday(new Date());
+    repository.upsertByIdSelective(person);
+
+    Person personDb = repository.selectById(name);
+    Assert.equals(oldGender, personDb.getGender());
+    Assert.equals(newAge, personDb.getAge());
+  }
   // endregion
 
   // region delete zoom
@@ -359,6 +379,40 @@ public class NebulaBasicDaoTests {
     likeWithRank.setLikeness(0.7);
 
     repository.insertEdge(person1, likeWithRank, person2);
+  }
+
+  @Test
+  public void insertEdgeSelective() {
+    Person person1 = new Person();
+    person1.setName("gin");
+    repository.insertSelective(person1);
+
+    Person person2 = new Person();
+    person2.setName("soul");
+    repository.insertSelective(person2);
+
+    LikeWithRank likeWithRank = new LikeWithRank();
+    likeWithRank.setRank(0L);
+    likeWithRank.setLikeness(0.87);
+
+    repository.insertEdgeSelective(person1, likeWithRank, person2);
+  }
+
+  @Test
+  public void upsertEdgeSelective() {
+    Person person1 = new Person();
+    person1.setName("gin");
+    repository.insertSelective(person1);
+
+    Person person2 = new Person();
+    person2.setName("soul");
+    repository.insertSelective(person2);
+
+    LikeWithRank likeWithRank = new LikeWithRank();
+    likeWithRank.setRank(0L);
+    likeWithRank.setLikeness(0.98);
+
+    repository.upsertEdgeSelective(person1, likeWithRank, person2);
   }
 
 

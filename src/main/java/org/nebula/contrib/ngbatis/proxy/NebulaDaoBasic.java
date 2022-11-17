@@ -254,6 +254,21 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     ClassModel classModel = getClassModel(this.getClass());
     MapperProxy.invoke(classModel, methodModel, ts);
   }
+
+  /**
+   * <p>新增/更新</p>
+   * <p>Selective: 仅处理非空字段</p>
+   *
+   * @param record 节点
+   */
+  default void upsertByIdSelective(T record) {
+    MethodModel methodModel = getMethodModel();
+    Class<?> entityType = record.getClass();
+    methodModel.setReturnType(entityType);
+    methodModel.setResultType(entityType);
+    ClassModel classModel = getClassModel(this.getClass());
+    MapperProxy.invoke(classModel, methodModel, record);
+  }
   // endregion
   
   // region delete zoom
@@ -313,6 +328,40 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     MethodModel methodModel = getMethodModel();
     ClassModel classModel = getClassModel(this.getClass());
     MapperProxy.invoke(classModel, methodModel, v1, e, v2);
+  }
+
+  /**
+   * 根据三元组值, 插入关系
+   * <p>Selective: 仅处理非空字段</p>
+   *
+   * @param src 开始节点值
+   * @param edge  关系值
+   * @param dst 结束节点值
+   */
+  default void insertEdgeSelective(@NotNull Object src, @NotNull Object edge, @NotNull Object dst) {
+    if (dst == null || src == null || edge == null) {
+      return;
+    }
+    MethodModel methodModel = getMethodModel();
+    ClassModel classModel = getClassModel(this.getClass());
+    MapperProxy.invoke(classModel, methodModel, src, edge, dst);
+  }
+
+  /**
+   * 根据三元组值, 插入关系
+   * <p>Selective: 仅处理非空字段</p>
+   *
+   * @param src 开始节点值
+   * @param edge  关系值
+   * @param dst 结束节点值
+   */
+  default void upsertEdgeSelective(@NotNull Object src, @NotNull Object edge, @NotNull Object dst) {
+    if (dst == null || src == null || edge == null) {
+      return;
+    }
+    MethodModel methodModel = getMethodModel();
+    ClassModel classModel = getClassModel(this.getClass());
+    MapperProxy.invoke(classModel, methodModel, src, edge, dst);
   }
 
   /**
