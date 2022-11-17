@@ -7,11 +7,9 @@ package org.nebula.contrib.ngbatis.utils;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.castNumber;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getPkField;
 
-import com.vesoft.nebula.client.graph.data.DateTimeWrapper;
-import com.vesoft.nebula.client.graph.data.DateWrapper;
-import com.vesoft.nebula.client.graph.data.Node;
-import com.vesoft.nebula.client.graph.data.Relationship;
-import com.vesoft.nebula.client.graph.data.ValueWrapper;
+import com.vesoft.nebula.ErrorCode;
+import com.vesoft.nebula.client.graph.data.*;
+
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -232,6 +230,43 @@ public class ResultSetUtil {
     ValueWrapper idWrapper = v.getId();
     Object id = ResultSetUtil.getValue(idWrapper);
     ReflectUtil.setValue(obj, pkField, id);
+  }
+
+  /**
+   * 是否命中指定错误枚举
+   * @param resultSet 执行结果
+   * @param errorCodes 错误枚举
+   * @return 是否命中指定错误枚举
+   */
+  public static boolean isMatchedErrorCode(ResultSet resultSet, ErrorCode... errorCodes) {
+    if (resultSet == null || errorCodes == null) {
+      return false;
+    }
+    for (ErrorCode code : errorCodes) {
+      if (resultSet.getErrorCode() == code.getValue()){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * 是否命中session失效情况
+   * @param resultSet 执行结果
+   * @return 是否命中session失效情况
+   */
+  public static boolean isSessionError(ResultSet resultSet) {
+    return isMatchedErrorCode(resultSet, ErrorCode.E_SESSION_INVALID,
+            ErrorCode.E_SESSION_NOT_FOUND, ErrorCode.E_SESSION_TIMEOUT);
+  }
+
+  /**
+   * nebula重启后, 对应的session执行的第一条gql需要选择space
+   * @param resultSet 执行结果
+   * @return 是否命中语法错误情况
+   */
+  public static boolean isSemanticError(ResultSet resultSet) {
+    return isMatchedErrorCode(resultSet, ErrorCode.E_SEMANTIC_ERROR);
   }
 
 }
