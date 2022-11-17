@@ -24,6 +24,10 @@
             <name>zhangbin</name>
             <email>1394078687@qq.com</email>
         </developer>
+        <developer>
+            <name>soul-gin</name>
+            <email>1533119789@qq.com</email>
+        </developer>
     </developers>
 
     <properties>
