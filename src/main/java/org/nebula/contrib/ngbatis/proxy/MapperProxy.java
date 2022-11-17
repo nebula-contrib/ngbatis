@@ -210,14 +210,16 @@ public class MapperProxy {
     ResultSet result = null;
     String proxyClass = null;
     String proxyMethod = null;
+    String localSessionSpace = null;
     try {
+      localSession = ENV.getDispatcher().poll();
       if (log.isDebugEnabled()) {
         StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[6];
         proxyClass = stackTraceElement.getClassName();
         proxyMethod = stackTraceElement.getMethodName();
+        localSessionSpace = localSession.getCurrentSpace();
       }
 
-      localSession = ENV.getDispatcher().poll();
       String currentSpace = getSpace(cm, mm);
       gql = qlWithSpace(localSession, gql, currentSpace);
       session = localSession.getSession();
@@ -231,8 +233,14 @@ public class MapperProxy {
     } catch (Exception e) {
       throw new QueryException("数据查询失败：" + e.getMessage(), e);
     } finally {
-      log.debug("\n\t- proxyMethod: {}#{} \n\t- nGql：{} \n\t - params: {}\n\t - result：{}",
-          proxyClass, proxyMethod, gql, params, result);
+      if (log.isDebugEnabled()) {
+        log.debug("\n\t- proxyMethod: {}#{}"
+                + "\n\t- session space: {}"
+                + "\n\t- nGql：{}"
+                + "\n\t- params: {}"
+                + "\n\t- result：{}",
+            proxyClass, proxyMethod, localSessionSpace, gql, params, result);
+      }
       if (localSession != null) {
         ENV.getDispatcher().offer(localSession);
       }
