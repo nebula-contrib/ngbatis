@@ -29,6 +29,7 @@ import org.nebula.contrib.ngbatis.models.MethodModel;
 import org.nebula.contrib.ngbatis.session.LocalSession;
 import org.nebula.contrib.ngbatis.utils.Page;
 import org.nebula.contrib.ngbatis.utils.ReflectUtil;
+import org.nebula.contrib.ngbatis.utils.ResultSetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -231,6 +232,10 @@ public class MapperProxy {
       if (result.isSucceeded()) {
         return result;
       } else {
+        if (ResultSetUtil.isSemanticError(result)) {
+          //after nebula restarts, the first gql executed by the session needs to select space
+          localSession.setCurrentSpace(null);
+        }
         throw new QueryException(" 数据查询失败" + result.getErrorMessage());
       }
     } catch (Exception e) {
@@ -245,7 +250,7 @@ public class MapperProxy {
                 + "\n\t- result：{}",
             proxyClass, proxyMethod, localSessionSpace, autoSwitch, gql, params, result);
       }
-      if (localSession != null) {
+      if (localSession != null && !ResultSetUtil.isSessionError(result)) {
         ENV.getDispatcher().offer(localSession);
       }
     }
