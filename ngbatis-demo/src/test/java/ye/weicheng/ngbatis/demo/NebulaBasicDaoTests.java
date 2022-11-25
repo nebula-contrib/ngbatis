@@ -5,6 +5,7 @@ package ye.weicheng.ngbatis.demo;
 // This source code is licensed under Apache 2.0 License.
 
 import com.alibaba.fastjson.JSON;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -133,6 +134,15 @@ public class NebulaBasicDaoTests {
     Person person = new Person();
     person.setAge(null);
     person.setName("赵小洋");
+    repository.insert(person);
+  }
+  // region insert zoom
+  @Test
+  public void insertWhenTypeHasTimestamp() {
+    Person person = new Person();
+    person.setAge(null);
+    person.setName("赵小洋");
+    person.setBirthday(new Timestamp(System.currentTimeMillis()));
     repository.insert(person);
   }
 

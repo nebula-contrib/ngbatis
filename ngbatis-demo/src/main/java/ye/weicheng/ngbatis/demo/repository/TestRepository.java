@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic;
 import org.nebula.contrib.ngbatis.utils.Page;
+import org.springframework.data.repository.query.Param;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 import ye.weicheng.ngbatis.demo.pojo.PersonLikePerson;
 
@@ -62,5 +63,7 @@ public interface TestRepository extends NebulaDaoBasic<Person, String> {
   void testSpaceSwitchStep1();
   
   Integer testSpaceSwitchStep2();
+
+  void insertWithTimestamp(@Param("person") Person person);
 
 }
