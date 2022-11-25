@@ -136,7 +136,7 @@ public class NebulaBasicDaoTests {
     person.setName("赵小洋");
     repository.insert(person);
   }
-  // region insert zoom
+
   @Test
   public void insertWhenTypeHasTimestamp() {
     Person person = new Person();
