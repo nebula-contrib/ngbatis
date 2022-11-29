@@ -23,8 +23,7 @@ public class BigDecimalSetter implements Setter<BigDecimal> {
   public Object set(BigDecimal param) {
     return param.doubleValue();
   }
-  
-  @Override
+
   public Object set(BigDecimal param, Field field) {
     ValueType annotation = field.getAnnotation(ValueType.class);
     Class<?> valueType = annotation.value();
