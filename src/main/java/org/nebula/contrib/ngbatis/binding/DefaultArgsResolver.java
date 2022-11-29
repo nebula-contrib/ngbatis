@@ -156,6 +156,16 @@ public class DefaultArgsResolver implements ArgsResolver {
   @SuppressWarnings("unchecked")
   @Override
   public Map<String, Object> resolve(MethodModel methodModel, Object... args) {
+    return resolve(false, methodModel, args);
+  }
+
+  @Override
+  public Map<String, Object> resolveForTemplate(MethodModel methodModel, Object... args) {
+    return resolve(true, methodModel, args);
+  }
+
+  private Map<String, Object> resolve(boolean forTemplate,
+      MethodModel methodModel, Object... args) {
     if (args.length == 0) {
       return Collections.emptyMap();
     }
@@ -170,26 +180,30 @@ public class DefaultArgsResolver implements ArgsResolver {
         if (annotationArgIndex[j] instanceof Param) {
           Param annotationArgIndex1 = (Param) annotationArgIndex[j];
           String key = annotationArgIndex1.value();
-          result.put(key, JSON.toJSON(args[i]));
+          result.put(key, serialize(forTemplate, args[i]));
           notFoundParamAnno = false;
         }
       }
       if (notFoundParamAnno) {
         Class<?> paramClass = args[i].getClass();
         if (isBaseType(paramClass)) {
-          result.put("p" + i, JSON.toJSON(args[i]));
+          result.put("p" + i, serialize(forTemplate, args[i]));
         } else if (args[i] instanceof Collection) {
-          result.put("p" + i, toNebulaValueType(args[i]));
+          result.put("p" + i, serialize(forTemplate, args[i]));
         } else {
           if (len == 1) {
-            result = toNebulaValueType(args[0]);
+            result = (Map<String, Object>) serialize(forTemplate, args[0]);
           } else {
-            result.put("p" + i, toNebulaValueType(args[i]));
+            result.put("p" + i, serialize(forTemplate, args[i]));
           }
         }
       }
     }
     return result;
+  }
+  
+  private Object serialize(boolean forTemplate, Object o) {
+    return forTemplate ? JSON.toJSON(o) : toNebulaValueType(o);
   }
 
   /**
@@ -197,12 +211,14 @@ public class DefaultArgsResolver implements ArgsResolver {
    * @param o java对象
    * @return json 对象
    */
+  @Deprecated
   public Object customToJson(Object o) {
     try {
       SerializeConfig parserConfig = new SerializeConfig();
       parserConfig.put(Date.class, new DateDeserializer());
       parserConfig.put(java.sql.Date.class, new DateDeserializer());
       parserConfig.put(java.sql.Time.class, new DateDeserializer());
+      parserConfig.put(java.sql.Timestamp.class, new DateDeserializer());
       String text = JSON.toJSONString(o, parserConfig, SerializerFeature.WriteMapNullValue);
       text = text.replaceAll("\\\\n", "\\\\\\\\n");
       ObjectMapper objectMapper = new ObjectMapper();

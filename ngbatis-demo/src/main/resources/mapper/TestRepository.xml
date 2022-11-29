@@ -104,6 +104,15 @@
         WHERE id(n) == -31415926
         RETURN count(n)
     </select>
+    
+    <insert id="insertWithTimestamp">
+        INSERT VERTEX IF NOT EXISTS `person` (
+         `birthday`
+        )
+        VALUES ${ ng.valueFmt(person.name) } : (
+          ${ ng.valueFmt(person.birthday) }
+        );
+    </insert>
 
 </mapper>
 

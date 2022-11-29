@@ -17,10 +17,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import org.nebula.contrib.ngbatis.ArgNameFormatter;
+import org.nebula.contrib.ngbatis.ArgsResolver;
 import org.nebula.contrib.ngbatis.Env;
 import org.nebula.contrib.ngbatis.ResultResolver;
-import org.nebula.contrib.ngbatis.annotations.UseKeyArgReplace;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
 import org.nebula.contrib.ngbatis.exception.QueryException;
 import org.nebula.contrib.ngbatis.models.ClassModel;
@@ -110,7 +109,8 @@ public class MapperProxy {
     ResultSet query = null;
     // 参数格式转换
     final long step0 = System.currentTimeMillis();
-    Map<String, Object> argMap = ENV.getArgsResolver().resolve(methodModel, args);
+    ArgsResolver argsResolver = ENV.getArgsResolver();
+    Map<String, Object> argMap = argsResolver.resolveForTemplate(methodModel, args);
     Map<String, Object> paramWithSchema = new LinkedHashMap<String, Object>(argMap) {{
         put("ng_cm", classModel);
         put("ng_mm", methodModel);
@@ -119,17 +119,10 @@ public class MapperProxy {
     // beetl 渲染模板
     String textTpl = methodModel.getText();
     String gql = ENV.getTextResolver().resolve(textTpl, paramWithSchema);
-    Map<String, Object> params = null;
-    if (method != null && method.isAnnotationPresent(UseKeyArgReplace.class)) {
-      ArgNameFormatter.CqlAndArgs format = ENV.getArgNameFormatter().format(gql, argMap);
-      gql = format.getGql();
-      params = format.getArgs();
-    } else {
-      params = argMap;
-    }
 
+    Map<String,Object> parasForDb = argsResolver.resolve(methodModel, args);
     final long step1 = System.currentTimeMillis();
-    query = executeWithParameter(classModel, methodModel, gql, params);
+    query = executeWithParameter(classModel, methodModel, gql, parasForDb, argMap);
 
     final long step2 = System.currentTimeMillis();
     if (!query.isSucceeded()) {
@@ -205,7 +198,7 @@ public class MapperProxy {
    * @return nebula-graph 的未被 orm 操作的原始结果集
    */
   public static ResultSet executeWithParameter(ClassModel cm, MethodModel mm, String gql,
-      Map<String, Object> params) {
+      Map<String, Object> params, Map<String, Object> paramsForTemplate) {
     LocalSession localSession = null;
     Session session = null;
     ResultSet result = null;
@@ -248,7 +241,7 @@ public class MapperProxy {
                 + "\n\t- nGql：{}"
                 + "\n\t- params: {}"
                 + "\n\t- result：{}",
-            proxyClass, proxyMethod, localSessionSpace, autoSwitch, gql, params, result);
+            proxyClass, proxyMethod, localSessionSpace, autoSwitch, gql, paramsForTemplate, result);
       }
       if (localSession != null && !ResultSetUtil.isSessionError(result)) {
         ENV.getDispatcher().offer(localSession);
