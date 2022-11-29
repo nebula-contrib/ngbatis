@@ -153,15 +153,15 @@ public class DefaultArgsResolver implements ArgsResolver {
     return (T) param;
   }
 
+  @Override
+  public Map<String, Object> resolveForTemplate(MethodModel methodModel, Object... args) {
+    return resolve(true, methodModel, args);
+  }
+
   @SuppressWarnings("unchecked")
   @Override
   public Map<String, Object> resolve(MethodModel methodModel, Object... args) {
     return resolve(false, methodModel, args);
-  }
-
-  @Override
-  public Map<String, Object> resolveForTemplate(MethodModel methodModel, Object... args) {
-    return resolve(true, methodModel, args);
   }
 
   private Map<String, Object> resolve(boolean forTemplate,
