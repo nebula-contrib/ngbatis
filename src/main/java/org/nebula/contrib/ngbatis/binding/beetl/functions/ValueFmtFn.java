@@ -4,6 +4,7 @@ package org.nebula.contrib.ngbatis.binding.beetl.functions;
 //
 // This source code is licensed under Apache 2.0 License.
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -24,6 +25,10 @@ public class ValueFmtFn extends AbstractFunction<Object, Boolean, Void, Void, Vo
     }
     if (value instanceof String) {
       return ifStringLike ? "'.*" + value + ".*'" : "'" + value + "'";
+    }
+    
+    if (value instanceof BigDecimal) {
+      return ((BigDecimal) value).toPlainString();
     }
 
     if (value instanceof Date) {

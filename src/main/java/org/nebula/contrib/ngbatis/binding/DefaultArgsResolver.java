@@ -5,6 +5,7 @@ package org.nebula.contrib.ngbatis.binding;
 // This source code is licensed under Apache 2.0 License.
 
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.isCurrentTypeOrParentType;
+import static org.nebula.contrib.ngbatis.utils.ReflectUtil.typeArg;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeConfig;
@@ -36,9 +37,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.PostConstruct;
 import org.nebula.contrib.ngbatis.ArgsResolver;
 import org.nebula.contrib.ngbatis.models.MethodModel;
 import org.nebula.contrib.ngbatis.utils.ReflectUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
@@ -49,6 +52,16 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class DefaultArgsResolver implements ArgsResolver {
+    
+  @Autowired private List<Setter<?>> setters;
+  
+  @PostConstruct
+  public void init() {
+    setters.forEach((setter) -> {
+      Class<?> typeArg = typeArg(setter, Setter.class, 0);
+      LEAF_TYPE_AND_SETTER.put(typeArg, setter);
+    });
+  }
 
   public static Map<Class<?>, Setter<?>> LEAF_TYPE_AND_SETTER =
       new HashMap<Class<?>, Setter<?>>() {{
@@ -121,8 +134,11 @@ public class DefaultArgsResolver implements ArgsResolver {
         Class<?> paramType = obj.getClass();
         Field[] declaredFields = paramType.getDeclaredFields();
         for (Field declaredField : declaredFields) {
-          pojoFields.put(declaredField.getName(),
-              toNebulaValueType(ReflectUtil.getValue(obj, declaredField)));
+          Object nebulaValue = toNebulaValueType(
+            ReflectUtil.getValue(obj, declaredField),
+            declaredField
+          );
+          pojoFields.put(declaredField.getName(),nebulaValue);
         }
         return pojoFields;
       });
@@ -136,6 +152,18 @@ public class DefaultArgsResolver implements ArgsResolver {
    */
   @SuppressWarnings({"unchecked"})
   public static <T> T toNebulaValueType(Object param) {
+    return toNebulaValueType(param, null);
+  }
+
+  /**
+   * 将任意java对象转换成nebula-client可以接收的对象值。
+   * @param param 任意java对象
+   * @param field 当待转换值是POJO屬性类型时的属性类型
+   * @param <T> 调用方自定义接收类型
+   * @return nebula-client可接收对象
+   */
+  @SuppressWarnings({"unchecked"})
+  public static <T> T toNebulaValueType(Object param, Field field) {
     if (param == null) {
       return null;
     }
@@ -143,7 +171,7 @@ public class DefaultArgsResolver implements ArgsResolver {
     @SuppressWarnings("rawtypes")
     Setter setter = LEAF_TYPE_AND_SETTER.get(paramType);
     if (setter != null) {
-      return (T) setter.set(param);
+      return (T) setter.set(param, field);
     }
     for (Class<?> parentType : COMPLEX_TYPE_AND_SETTER.keySet()) {
       if (isCurrentTypeOrParentType(paramType, parentType)) {

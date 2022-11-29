@@ -8,6 +8,8 @@ import static org.springframework.util.ObjectUtils.nullSafeEquals;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -18,6 +20,8 @@ import javax.persistence.Id;
 import javax.persistence.Transient;
 import org.nebula.contrib.ngbatis.exception.ParseException;
 import org.nebula.contrib.ngbatis.models.MethodModel;
+import org.springframework.util.Assert;
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 /**
  * <p>反射工具类。</p>
@@ -44,7 +48,8 @@ public abstract class ReflectUtil {
       float.class, Float.class,
       double.class, Double.class,
       byte.class, Byte.class,
-      short.class, Short.class
+      short.class, Short.class,
+      BigDecimal.class
   );
 
   static {
@@ -128,7 +133,8 @@ public abstract class ReflectUtil {
           : (resultType == Double.class || resultType == double.class) ? n.doubleValue()
             : (resultType == Byte.class || resultType == byte.class) ? n.byteValue()
               : (resultType == Short.class || resultType == short.class) ? n.shortValue()
-                : n;
+                : resultType == BigDecimal.class ? new BigDecimal(n.toString())
+                  : n;
   }
 
   /**
@@ -385,6 +391,27 @@ public abstract class ReflectUtil {
         String.format("%s 必须有一个属性用 @Id 注解。（javax.persistence.Id）", type));
     }
     return pkField;
+  }
+  
+  public static Class<?> typeArg(Object o, Class<?> parent, int i) {
+    Assert.isTrue(o != null, "instance can not be null");
+    Class<?> insClass = o.getClass();
+    if (parent.isInterface()) {
+      Type[] interfaces = insClass.getGenericInterfaces();
+      for (Type anInterface : interfaces) {
+        boolean isType = anInterface instanceof ParameterizedTypeImpl;
+        if (isType) {
+          ParameterizedTypeImpl paramTypeInterface = (ParameterizedTypeImpl) anInterface;
+          boolean found = paramTypeInterface.getRawType() == parent;
+          if (found) {
+            Type[] actualTypeArguments = paramTypeInterface.getActualTypeArguments();
+            boolean noOut = actualTypeArguments.length > i;
+            return noOut ? (Class<?>)actualTypeArguments[i] : null;
+          }
+        }
+      }
+    }
+    return null;
   }
 
 }
