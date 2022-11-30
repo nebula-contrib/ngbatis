@@ -35,7 +35,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.annotation.PostConstruct;
 import org.nebula.contrib.ngbatis.ArgsResolver;
 import org.nebula.contrib.ngbatis.models.MethodModel;
@@ -97,50 +96,45 @@ public class DefaultArgsResolver implements ArgsResolver {
   @SuppressWarnings("rawtypes")
   public static Map<Class<?>, Setter> COMPLEX_TYPE_AND_SETTER =
       new LinkedHashMap<Class<?>, Setter>() {{
-      put(Set.class, (Setter<Set<?>>) (set) -> {
-        List<Object> values = new ArrayList<>();
-        set.forEach(el -> values.add(toNebulaValueType(el)));
-        return values;
-      });
 
-      put(Collection.class, (Setter<Collection<?>>) (collection) -> {
-        List<Object> list = new ArrayList<>();
-        collection.forEach(el -> list.add(toNebulaValueType(el)));
-        return list;
-      });
-
-      put(Map.class, (Setter<Map<?, ?>>) (map) -> {
-        Map<Object, Object> valueMap = new HashMap<>();
-        map.forEach((k, v) -> valueMap.put(k, toNebulaValueType(v)));
-        return valueMap;
-      });
-
-      put(Date.class, (Setter<Date>) (date) -> {
-        Calendar calendar = new Calendar.Builder().setInstant(date).build();
-        return Value.dtVal(new DateTime(
-          Short.parseShort(String.valueOf(calendar.get(Calendar.YEAR))),
-          Byte.parseByte(String.valueOf(calendar.get(Calendar.MONTH))),
-          Byte.parseByte(String.valueOf(calendar.get(Calendar.DATE))),
-          Byte.parseByte(String.valueOf(calendar.get(Calendar.HOUR))),
-          Byte.parseByte(String.valueOf(calendar.get(Calendar.MINUTE))),
-          Byte.parseByte(String.valueOf(calendar.get(Calendar.SECOND))),
-          Short.parseShort(String.valueOf(calendar.get(Calendar.MILLISECOND)))
-        ));
-      });
-
-      put(Object.class, (Setter<Object>) (obj) -> {
-        Map<String, Object> pojoFields = new HashMap<>();
-        Class<?> paramType = obj.getClass();
-        Field[] declaredFields = paramType.getDeclaredFields();
-        for (Field declaredField : declaredFields) {
-          Object nebulaValue = toNebulaValueType(
-            ReflectUtil.getValue(obj, declaredField),
-            declaredField
-          );
-          pojoFields.put(declaredField.getName(),nebulaValue);
-        }
-        return pojoFields;
-      });
+        put(Collection.class, (Setter<Collection<?>>) (collection) -> {
+          List<Object> list = new ArrayList<>();
+          collection.forEach(el -> list.add(toNebulaValueType(el)));
+          return list;
+        });
+  
+        put(Map.class, (Setter<Map<?, ?>>) (map) -> {
+          Map<Object, Object> valueMap = new HashMap<>();
+          map.forEach((k, v) -> valueMap.put(k, toNebulaValueType(v)));
+          return valueMap;
+        });
+  
+        put(Date.class, (Setter<Date>) (date) -> {
+          Calendar calendar = new Calendar.Builder().setInstant(date).build();
+          return Value.dtVal(new DateTime(
+            Short.parseShort(String.valueOf(calendar.get(Calendar.YEAR))),
+            Byte.parseByte(String.valueOf(calendar.get(Calendar.MONTH))),
+            Byte.parseByte(String.valueOf(calendar.get(Calendar.DATE))),
+            Byte.parseByte(String.valueOf(calendar.get(Calendar.HOUR))),
+            Byte.parseByte(String.valueOf(calendar.get(Calendar.MINUTE))),
+            Byte.parseByte(String.valueOf(calendar.get(Calendar.SECOND))),
+            Short.parseShort(String.valueOf(calendar.get(Calendar.MILLISECOND)))
+          ));
+        });
+  
+        put(Object.class, (Setter<Object>) (obj) -> {
+          Map<String, Object> pojoFields = new HashMap<>();
+          Class<?> paramType = obj.getClass();
+          Field[] declaredFields = paramType.getDeclaredFields();
+          for (Field declaredField : declaredFields) {
+            Object nebulaValue = toNebulaValueType(
+              ReflectUtil.getValue(obj, declaredField),
+              declaredField
+            );
+            pojoFields.put(declaredField.getName(),nebulaValue);
+          }
+          return pojoFields;
+        });
     }};
 
   /**
