@@ -46,6 +46,7 @@ public class MapperContext {
 
   /**
    * <p>创建mapper上下文单例。</p>
+   * @return 上下问实例
    */
   public static MapperContext newInstance() {
     if (INSTANCE == null) {

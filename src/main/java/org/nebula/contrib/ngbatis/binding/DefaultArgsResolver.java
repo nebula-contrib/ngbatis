@@ -5,6 +5,7 @@ package org.nebula.contrib.ngbatis.binding;
 // This source code is licensed under Apache 2.0 License.
 
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.isCurrentTypeOrParentType;
+import static org.nebula.contrib.ngbatis.utils.ReflectUtil.typeArg;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeConfig;
@@ -31,14 +32,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import javax.annotation.PostConstruct;
 import org.nebula.contrib.ngbatis.ArgsResolver;
 import org.nebula.contrib.ngbatis.models.MethodModel;
 import org.nebula.contrib.ngbatis.utils.ReflectUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
@@ -49,6 +50,16 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class DefaultArgsResolver implements ArgsResolver {
+    
+  @Autowired private List<Setter<?>> setters;
+  
+  @PostConstruct
+  public void init() {
+    setters.forEach((setter) -> {
+      Class<?> typeArg = typeArg(setter, Setter.class, 0);
+      LEAF_TYPE_AND_SETTER.put(typeArg, setter);
+    });
+  }
 
   public static Map<Class<?>, Setter<?>> LEAF_TYPE_AND_SETTER =
       new HashMap<Class<?>, Setter<?>>() {{
@@ -85,47 +96,45 @@ public class DefaultArgsResolver implements ArgsResolver {
   @SuppressWarnings("rawtypes")
   public static Map<Class<?>, Setter> COMPLEX_TYPE_AND_SETTER =
       new LinkedHashMap<Class<?>, Setter>() {{
-      put(Set.class, (Setter<Set<?>>) (set) -> {
-        HashSet<Object> values = new HashSet<>();
-        set.forEach(el -> values.add(toNebulaValueType(el)));
-        return values;
-      });
 
-      put(Collection.class, (Setter<Collection<?>>) (collection) -> {
-        List<Object> list = new ArrayList<>();
-        collection.forEach(el -> list.add(toNebulaValueType(el)));
-        return list;
-      });
-
-      put(Map.class, (Setter<Map<?, ?>>) (map) -> {
-        Map<Object, Object> valueMap = new HashMap<>();
-        map.forEach((k, v) -> valueMap.put(k, toNebulaValueType(v)));
-        return valueMap;
-      });
-
-      put(Date.class, (Setter<Date>) (date) -> {
-        Calendar calendar = new Calendar.Builder().setInstant(date).build();
-        return Value.dtVal(new DateTime(
-          Short.parseShort(String.valueOf(calendar.get(Calendar.YEAR))),
-          Byte.parseByte(String.valueOf(calendar.get(Calendar.MONTH))),
-          Byte.parseByte(String.valueOf(calendar.get(Calendar.DATE))),
-          Byte.parseByte(String.valueOf(calendar.get(Calendar.HOUR))),
-          Byte.parseByte(String.valueOf(calendar.get(Calendar.MINUTE))),
-          Byte.parseByte(String.valueOf(calendar.get(Calendar.SECOND))),
-          Short.parseShort(String.valueOf(calendar.get(Calendar.MILLISECOND)))
-        ));
-      });
-
-      put(Object.class, (Setter<Object>) (obj) -> {
-        Map<String, Object> pojoFields = new HashMap<>();
-        Class<?> paramType = obj.getClass();
-        Field[] declaredFields = paramType.getDeclaredFields();
-        for (Field declaredField : declaredFields) {
-          pojoFields.put(declaredField.getName(),
-              toNebulaValueType(ReflectUtil.getValue(obj, declaredField)));
-        }
-        return pojoFields;
-      });
+        put(Collection.class, (Setter<Collection<?>>) (collection) -> {
+          List<Object> list = new ArrayList<>();
+          collection.forEach(el -> list.add(toNebulaValueType(el)));
+          return list;
+        });
+  
+        put(Map.class, (Setter<Map<?, ?>>) (map) -> {
+          Map<Object, Object> valueMap = new HashMap<>();
+          map.forEach((k, v) -> valueMap.put(k, toNebulaValueType(v)));
+          return valueMap;
+        });
+  
+        put(Date.class, (Setter<Date>) (date) -> {
+          Calendar calendar = new Calendar.Builder().setInstant(date).build();
+          return Value.dtVal(new DateTime(
+            Short.parseShort(String.valueOf(calendar.get(Calendar.YEAR))),
+            Byte.parseByte(String.valueOf(calendar.get(Calendar.MONTH))),
+            Byte.parseByte(String.valueOf(calendar.get(Calendar.DATE))),
+            Byte.parseByte(String.valueOf(calendar.get(Calendar.HOUR))),
+            Byte.parseByte(String.valueOf(calendar.get(Calendar.MINUTE))),
+            Byte.parseByte(String.valueOf(calendar.get(Calendar.SECOND))),
+            Short.parseShort(String.valueOf(calendar.get(Calendar.MILLISECOND)))
+          ));
+        });
+  
+        put(Object.class, (Setter<Object>) (obj) -> {
+          Map<String, Object> pojoFields = new HashMap<>();
+          Class<?> paramType = obj.getClass();
+          Field[] declaredFields = paramType.getDeclaredFields();
+          for (Field declaredField : declaredFields) {
+            Object nebulaValue = toNebulaValueType(
+              ReflectUtil.getValue(obj, declaredField),
+              declaredField
+            );
+            pojoFields.put(declaredField.getName(),nebulaValue);
+          }
+          return pojoFields;
+        });
     }};
 
   /**
@@ -136,6 +145,18 @@ public class DefaultArgsResolver implements ArgsResolver {
    */
   @SuppressWarnings({"unchecked"})
   public static <T> T toNebulaValueType(Object param) {
+    return toNebulaValueType(param, null);
+  }
+
+  /**
+   * 将任意java对象转换成nebula-client可以接收的对象值。
+   * @param param 任意java对象
+   * @param field 当待转换值是POJO屬性类型时的属性类型
+   * @param <T> 调用方自定义接收类型
+   * @return nebula-client可接收对象
+   */
+  @SuppressWarnings({"unchecked"})
+  public static <T> T toNebulaValueType(Object param, Field field) {
     if (param == null) {
       return null;
     }
@@ -143,7 +164,7 @@ public class DefaultArgsResolver implements ArgsResolver {
     @SuppressWarnings("rawtypes")
     Setter setter = LEAF_TYPE_AND_SETTER.get(paramType);
     if (setter != null) {
-      return (T) setter.set(param);
+      return (T) setter.set(param, field);
     }
     for (Class<?> parentType : COMPLEX_TYPE_AND_SETTER.keySet()) {
       if (isCurrentTypeOrParentType(paramType, parentType)) {

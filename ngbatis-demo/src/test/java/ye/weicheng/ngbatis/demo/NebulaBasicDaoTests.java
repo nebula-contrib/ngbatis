@@ -5,6 +5,7 @@ package ye.weicheng.ngbatis.demo;
 // This source code is licensed under Apache 2.0 License.
 
 import com.alibaba.fastjson.JSON;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,6 +57,14 @@ public class NebulaBasicDaoTests {
     person.setName("赵小洋");
     person.setAge(18);
     person.setBirthday(new Date());
+    List<Person> people = repository.selectBySelective(person);
+    System.out.println(JSON.toJSONString(people));
+  }
+  
+  @Test
+  public void selectBySelectiveWithBigDecimal() {
+    Person person = new Person();
+    person.setHeight(new BigDecimal("155.55555"));
     List<Person> people = repository.selectBySelective(person);
     System.out.println(JSON.toJSONString(people));
   }
@@ -159,6 +168,14 @@ public class NebulaBasicDaoTests {
     Person person = new Person();
     person.setBirthday(new Date());
     person.setName("丁小碧");
+    repository.insertSelective(person);
+  }
+
+  @Test
+  public void insertSelectiveWithBigDecimal() {
+    Person person = new Person();
+    person.setHeight(new BigDecimal("155.55555"));
+    person.setName("丁小碧@");
     repository.insertSelective(person);
   }
 

@@ -4,9 +4,11 @@ package ye.weicheng.ngbatis.demo.pojo;
 //
 // This source code is licensed under Apache 2.0 License.
 
+import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import ye.weicheng.ngbatis.demo.annotations.ValueType;
 
 /**
  * <p>Person的实体类示例</p>
@@ -21,6 +23,9 @@ public class Person {
   private String name;
 
   private String gender;
+  
+  @ValueType(Double.class)
+  private BigDecimal height;
 
   private Integer age;
 
@@ -48,6 +53,14 @@ public class Person {
 
   public void setBirthday(Date birthday) {
     this.birthday = birthday;
+  }
+
+  public BigDecimal getHeight() {
+    return height;
+  }
+
+  public void setHeight(BigDecimal height) {
+    this.height = height;
   }
 
   public String getGender() {
