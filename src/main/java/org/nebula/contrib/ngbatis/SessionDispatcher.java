@@ -18,4 +18,6 @@ public interface SessionDispatcher {
   void offer(LocalSession session);
 
   LocalSession poll();
+
+  void release(LocalSession session);
 }

@@ -260,6 +260,9 @@ public class ResultSetUtil {
    * @return 是否命中session失效情况
    */
   public static boolean isSessionError(ResultSet resultSet) {
+    if (resultSet == null) {
+      return true;
+    }
     return isMatchedErrorCode(resultSet, ErrorCode.E_SESSION_INVALID,
             ErrorCode.E_SESSION_NOT_FOUND, ErrorCode.E_SESSION_TIMEOUT);
   }
