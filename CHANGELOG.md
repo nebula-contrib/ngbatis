@@ -18,6 +18,7 @@ This source code is licensed under Apache 2.0 License.
 - docs typo #52 
 
 ## Bugfix
+- fixed #89 Set serialization to NebulaValue #97
 - fixed #89 BigDecimal serialization to NebulaValue #97
 - fixed #89 splitting param serialization into two forms, json and NebulaValue #92 
 - fixed #78 use space and gql are executed together incorrect in 3.3.0 #87 

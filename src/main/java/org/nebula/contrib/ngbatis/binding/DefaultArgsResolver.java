@@ -32,7 +32,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,7 +98,7 @@ public class DefaultArgsResolver implements ArgsResolver {
   public static Map<Class<?>, Setter> COMPLEX_TYPE_AND_SETTER =
       new LinkedHashMap<Class<?>, Setter>() {{
       put(Set.class, (Setter<Set<?>>) (set) -> {
-        HashSet<Object> values = new HashSet<>();
+        List<Object> values = new ArrayList<>();
         set.forEach(el -> values.add(toNebulaValueType(el)));
         return values;
       });
