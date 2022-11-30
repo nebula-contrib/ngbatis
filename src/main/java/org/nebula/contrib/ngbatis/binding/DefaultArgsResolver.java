@@ -51,10 +51,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class DefaultArgsResolver implements ArgsResolver {
     
-  @Autowired private List<Setter<?>> setters;
+  @Autowired(required = false) private List<Setter<?>> setters;
   
   @PostConstruct
   public void init() {
+    if (setters == null) {
+      return;
+    }
     setters.forEach((setter) -> {
       Class<?> typeArg = typeArg(setter, Setter.class, 0);
       LEAF_TYPE_AND_SETTER.put(typeArg, setter);
