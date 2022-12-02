@@ -107,7 +107,8 @@ public class IntervalCheckSessionDispatcher implements Runnable, SessionDispatch
     session.getSession().release();
   }
 
-  private void release(LocalSession session) {
+  @Override
+  public void release(LocalSession session) {
     session.getSession().release();
     sessionQueue.remove(session);
   }

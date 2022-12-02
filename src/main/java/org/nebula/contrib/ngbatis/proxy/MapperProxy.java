@@ -20,6 +20,7 @@ import java.util.Objects;
 import org.nebula.contrib.ngbatis.ArgsResolver;
 import org.nebula.contrib.ngbatis.Env;
 import org.nebula.contrib.ngbatis.ResultResolver;
+import org.nebula.contrib.ngbatis.SessionDispatcher;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
 import org.nebula.contrib.ngbatis.exception.QueryException;
 import org.nebula.contrib.ngbatis.models.ClassModel;
@@ -206,8 +207,9 @@ public class MapperProxy {
     String proxyMethod = null;
     String localSessionSpace = null;
     String autoSwitch = null;
+    SessionDispatcher dispatcher = ENV.getDispatcher();
     try {
-      localSession = ENV.getDispatcher().poll();
+      localSession = dispatcher.poll();
       if (log.isDebugEnabled()) {
         StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[6];
         proxyClass = stackTraceElement.getClassName();
@@ -225,10 +227,6 @@ public class MapperProxy {
       if (result.isSucceeded()) {
         return result;
       } else {
-        if (ResultSetUtil.isSemanticError(result)) {
-          //after nebula restarts, the first gql executed by the session needs to select space
-          localSession.setCurrentSpace(null);
-        }
         throw new QueryException(" 数据查询失败" + result.getErrorMessage());
       }
     } catch (Exception e) {
@@ -243,8 +241,18 @@ public class MapperProxy {
                 + "\n\t- result：{}",
             proxyClass, proxyMethod, localSessionSpace, autoSwitch, gql, paramsForTemplate, result);
       }
-      if (localSession != null && !ResultSetUtil.isSessionError(result)) {
-        ENV.getDispatcher().offer(localSession);
+      handleSession(dispatcher, localSession, result);
+    }
+  }
+
+  private static void handleSession(SessionDispatcher dispatcher,
+      LocalSession localSession, ResultSet result) {
+    if (localSession != null) {
+      boolean sessionError = ResultSetUtil.isSessionError(result);
+      if (sessionError) {
+        dispatcher.release(localSession);
+      } else {
+        dispatcher.offer(localSession);
       }
     }
   }
