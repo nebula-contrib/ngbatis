@@ -19,6 +19,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,6 +39,20 @@ public class ResultSetUtil {
 
   private static Logger log = LoggerFactory.getLogger(ResultSetUtil.class);
 
+  public static boolean if_unknown_node_to_map = false;
+
+  public static boolean if_unknown_relation_to_map = false;
+
+  public static String _id = "_id_";
+
+  public static String ranking_id = "_ranking_";
+  
+  public static String src_id = "_src_id_";
+  
+  public static String dst_id = "_dst_id_";
+  
+  public static String edge_name = "_edge_name_";
+  
   /**
    * <p>根据nebula graph本身的类型说明，获取对应的 java对象值。</p>
    * @param value nebula graph 类型数据，（结果集的元素）
@@ -54,7 +69,7 @@ public class ResultSetUtil {
                 : value.isDate() ? transformDate(value.asDate())
                   : value.isDateTime() ? transformDateTime(value.asDateTime())
                     : value.isVertex() ? transformNode(value.asNode())
-                      : value.isEdge() ? value.asRelationship()
+                      : value.isEdge() ? transformRelationship(value)
                         : value.isPath() ? value.asPath()
                           : value.isList() ? transformList(value.asList())
                             : value.isSet() ? transformList(value.asList())
@@ -116,7 +131,7 @@ public class ResultSetUtil {
     if (nodeType != null) {
       return nodeToResultType(node, nodeType);
     }
-    return node;
+    return if_unknown_node_to_map ? nodeToMap(node) : node;
   }
 
   private static Object transformMap(HashMap<String, ValueWrapper> map) {
@@ -127,6 +142,55 @@ public class ResultSetUtil {
       javaResult.put(k, getValue(v));
     }
     return javaResult;
+  }
+
+  private static Object transformRelationship(ValueWrapper value) {
+    Relationship relationship = value.asRelationship();
+    Map<String, Object> result = new LinkedHashMap<>();
+    if (if_unknown_relation_to_map) {
+      try {
+        String edgeName = relationship.edgeName();
+        result.put(edge_name, edgeName);
+        
+        result.put(ranking_id, relationship.ranking());
+
+        ValueWrapper srcId = relationship.srcId();
+        result.put(src_id, getValue(srcId));
+
+        Map<String, ValueWrapper> props = relationship.properties();
+        props.forEach((k, v) -> result.put(k, getValue(v)));
+        
+        ValueWrapper dstId = relationship.dstId();
+        result.put(dst_id, getValue(dstId));
+      } catch (UnsupportedEncodingException e) {
+        throw new ResultHandleException(
+            String.format("%s : %s", e.getClass().toString(), e.getMessage()));
+      }
+      return result;
+    }
+    return relationship;
+  }
+
+
+  private static Object nodeToMap(Node node) {
+    Map<String, Object> result = new LinkedHashMap<>();
+    try {
+      result.put(_id, getValue(node.getId()));
+      List<String> tagNames = node.tagNames();
+      for (String tagName : tagNames) {
+        List<String> keys = node.keys(tagName);
+        List<ValueWrapper> values = node.values(tagName);
+        for (int i = 0; i < keys.size(); i++) {
+          String key = keys.get(i);
+          ValueWrapper value = values.get(i);
+          result.put(key, ResultSetUtil.getValue(value));
+        }
+      }
+    } catch (UnsupportedEncodingException e) {
+      throw new ResultHandleException(
+          String.format("%s : %s", e.getClass().toString(), e.getMessage()));
+    }
+    return result;
   }
 
   private static Object transformList(ArrayList<ValueWrapper> list) {
