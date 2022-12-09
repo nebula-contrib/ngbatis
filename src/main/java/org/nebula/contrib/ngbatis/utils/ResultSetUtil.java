@@ -6,6 +6,7 @@ package org.nebula.contrib.ngbatis.utils;
 
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.castNumber;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getPkField;
+import static org.nebula.contrib.ngbatis.utils.ReflectUtil.isCurrentTypeOrParentType;
 
 import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.client.graph.data.DateTimeWrapper;
@@ -19,6 +20,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,6 +40,30 @@ public class ResultSetUtil {
 
   private static Logger log = LoggerFactory.getLogger(ResultSetUtil.class);
 
+  public static boolean if_unknown_node_to_map = false;
+
+  public static boolean if_unknown_relation_to_map = false;
+
+  public static String v_id_key = "vId";
+  
+  public static String props_name_key = "properties";
+
+  public static String ranking_id_key = "rank";
+  
+  public static String src_id_key = "srcID";
+  
+  public static String dst_id_key = "dstID";
+  
+  public static String edge_name_key = "edgeName";
+  
+  public static String tags_key = "tags";
+  
+  public static String type_key = "type";
+  
+  public static String type_vertex_value = "vertex";
+  
+  public static String type_edge_value = "edge";
+  
   /**
    * <p>根据nebula graph本身的类型说明，获取对应的 java对象值。</p>
    * @param value nebula graph 类型数据，（结果集的元素）
@@ -54,7 +80,7 @@ public class ResultSetUtil {
                 : value.isDate() ? transformDate(value.asDate())
                   : value.isDateTime() ? transformDateTime(value.asDateTime())
                     : value.isVertex() ? transformNode(value.asNode())
-                      : value.isEdge() ? value.asRelationship()
+                      : value.isEdge() ? transformRelationship(value)
                         : value.isPath() ? value.asPath()
                           : value.isList() ? transformList(value.asList())
                             : value.isSet() ? transformList(value.asList())
@@ -101,22 +127,23 @@ public class ResultSetUtil {
 
 
   private static Object transformNode(Node node) {
-    List<String> tagNames = node.tagNames();
-    if (tagNames.size() != 1) {
-      log.warn("Sorry there is no parse implements for multi tags node: {}", node);
-      return node;
-    }
-
-    String tagName = tagNames.get(0);
-
     MapperContext mapperContext = MapperProxy.ENV.getMapperContext();
     Map<String, Class<?>> tagTypeMapping = mapperContext.getTagTypeMapping();
+    Class<?> nodeType = null;
+    List<String> tagNames = node.tagNames();
 
-    Class<?> nodeType = tagTypeMapping.get(tagName);
+    for (String tagName : tagNames) {
+      Class<?> tagType = tagTypeMapping.get(tagName);
+      boolean tagTypeIsSuperClass = isCurrentTypeOrParentType(nodeType, tagType);
+      if (!tagTypeIsSuperClass) {
+        nodeType = tagType;
+      }
+    }
+
     if (nodeType != null) {
       return nodeToResultType(node, nodeType);
     }
-    return node;
+    return if_unknown_node_to_map ? nodeToMap(node) : node;
   }
 
   private static Object transformMap(HashMap<String, ValueWrapper> map) {
@@ -127,6 +154,59 @@ public class ResultSetUtil {
       javaResult.put(k, getValue(v));
     }
     return javaResult;
+  }
+
+  private static Object transformRelationship(ValueWrapper value) {
+    Relationship relationship = value.asRelationship();
+    Map<String, Object> result = new LinkedHashMap<>();
+    if (if_unknown_relation_to_map) {
+      try {
+        String edgeName = relationship.edgeName();
+        result.put(type_key, type_edge_value);
+        result.put(edge_name_key, edgeName);
+        
+        result.put(ranking_id_key, relationship.ranking());
+
+        ValueWrapper srcId = relationship.srcId();
+        result.put(src_id_key, getValue(srcId));
+
+        Map<String, ValueWrapper> dbProps = relationship.properties();
+        Map<String, Object> resultProps = new LinkedHashMap<>();
+        result.put(props_name_key, resultProps);
+        dbProps.forEach((k, v) -> resultProps.put(k, getValue(v)));
+        
+        ValueWrapper dstId = relationship.dstId();
+        result.put(dst_id_key, getValue(dstId));
+      } catch (UnsupportedEncodingException e) {
+        throw new ResultHandleException(
+            String.format("%s : %s", e.getClass().toString(), e.getMessage()));
+      }
+      return result;
+    }
+    return relationship;
+  }
+
+
+  private static Object nodeToMap(Node node) {
+    Map<String, Object> result = new LinkedHashMap<>();
+    try {
+      result.put(type_key, type_vertex_value);
+      result.put(v_id_key, getValue(node.getId()));
+      List<String> tagNames = node.tagNames();
+      result.put(tags_key, tagNames);
+      Map<String, Object> vertexProps = new LinkedHashMap<>();
+      result.put(props_name_key, vertexProps);
+      for (String tagName : tagNames) {
+        Map<String, ValueWrapper> dbProps = node.properties(tagName);
+        Map<String, Object> labelProps = new LinkedHashMap<>();
+        dbProps.forEach((k, v) -> labelProps.put(k, getValue(v)));
+        vertexProps.put(tagName, labelProps);
+      }
+    } catch (UnsupportedEncodingException e) {
+      throw new ResultHandleException(
+          String.format("%s : %s", e.getClass().toString(), e.getMessage()));
+    }
+    return result;
   }
 
   private static Object transformList(ArrayList<ValueWrapper> list) {

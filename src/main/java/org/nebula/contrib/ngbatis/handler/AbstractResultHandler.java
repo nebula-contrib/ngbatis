@@ -11,8 +11,8 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -136,7 +136,7 @@ public abstract class AbstractResultHandler<T, Z> implements ResultHandler<T, Z>
     Object o = returnType == List.class ? new ArrayList<>()
         : returnType == Set.class ? new HashSet<>()
         : returnType == Queue.class ? new ConcurrentLinkedQueue<>()
-            : returnType == Map.class ? new HashMap<>()
+            : returnType == Map.class ? new LinkedHashMap<>()
             : null;
     return (T) o;
   }
