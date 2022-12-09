@@ -85,9 +85,9 @@ public class NgbatisContextInitializer implements ApplicationContextInitializer 
   private NebulaPoolConfig getNebulaPoolConfig(ConfigurableEnvironment environment) {
     NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig()
         .setMinConnSize(
-        environment.getProperty("nebula.pool-config.min-conn-size", Integer.class, 0))
+        environment.getProperty("nebula.pool-config.min-conns-size", Integer.class, 0))
         .setMaxConnSize(
-        environment.getProperty("nebula.pool-config.max-conn-size", Integer.class, 10))
+        environment.getProperty("nebula.pool-config.max-conns-size", Integer.class, 10))
         .setTimeout(environment.getProperty("nebula.pool-config.timeout", Integer.class, 0))
         .setIdleTime(environment.getProperty("nebula.pool-config.idle-time", Integer.class, 0))
         .setIntervalIdle(
