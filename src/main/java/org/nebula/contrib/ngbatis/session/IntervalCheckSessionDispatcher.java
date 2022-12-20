@@ -53,7 +53,6 @@ public class IntervalCheckSessionDispatcher implements Runnable, SessionDispatch
 
       boolean finished = timeToRelease(session);
       if (finished || !session.getSession().ping()) {
-        log.info("Release a session which created at {}", session.getBirth());
         release(session);
       }
     }
@@ -110,7 +109,16 @@ public class IntervalCheckSessionDispatcher implements Runnable, SessionDispatch
   @Override
   public void release(LocalSession session) {
     session.getSession().release();
+    log.info("Release a session which created at {}", session.getBirth());
     sessionQueue.remove(session);
+  }
+
+  @Override
+  public void releaseAll() {
+    while (sessionQueue.size() > 0) {
+      LocalSession poll = sessionQueue.poll();
+      release(poll);
+    }
   }
 
   private boolean timeToRelease(LocalSession session) {
