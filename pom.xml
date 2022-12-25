@@ -83,6 +83,14 @@
             <artifactId>beetl</artifactId>
             <version>3.1.8.RELEASE</version>
         </dependency>
+
+        <!-- for nGQL escape in xml  -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.10.0</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
