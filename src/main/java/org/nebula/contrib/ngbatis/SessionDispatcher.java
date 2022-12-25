@@ -20,4 +20,6 @@ public interface SessionDispatcher {
   LocalSession poll();
 
   void release(LocalSession session);
+  
+  void releaseAll();
 }

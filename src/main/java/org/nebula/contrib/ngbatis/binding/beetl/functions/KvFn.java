@@ -67,7 +67,6 @@ public class KvFn extends AbstractFunction<Object, String, Boolean, Boolean, Boo
         kv.columns.add(name);
         Object[] paras = {value};
         kv.values.add(fnCall(valueFmtFn, paras));
-        kv.values.add(fnCall(valueFmtFn, paras));
         Class<?> type = value == null ? null : value.getClass();
         kv.types.add(type);
         String valueName = isEmpty(prefix) ? name : String.format("%s.%s", prefix, name);

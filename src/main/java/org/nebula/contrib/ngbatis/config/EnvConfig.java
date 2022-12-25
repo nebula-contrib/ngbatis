@@ -4,6 +4,7 @@ package org.nebula.contrib.ngbatis.config;
 //
 // This source code is licensed under Apache 2.0 License.
 
+import javax.annotation.PreDestroy;
 import org.nebula.contrib.ngbatis.ArgNameFormatter;
 import org.nebula.contrib.ngbatis.ArgsResolver;
 import org.nebula.contrib.ngbatis.Env;
@@ -95,6 +96,15 @@ public class EnvConfig {
       pkGenerator,
       sessionDispatcher
     );
+  }
+
+  /**
+   * Release all sessions in the queue.
+   * Springboot生命周期结束时的回调，释放所有在队session。
+   */
+  @PreDestroy
+  public void releaseSessions() {
+    sessionDispatcher.releaseAll();
   }
 
 
