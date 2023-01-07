@@ -5,6 +5,7 @@ package org.nebula.contrib.ngbatis.handler;
 // This source code is licensed under Apache 2.0 License.
 
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.isBasicType;
+import static org.nebula.contrib.ngbatis.utils.ReflectUtil.typeToClass;
 
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import java.lang.reflect.ParameterizedType;
@@ -47,8 +48,8 @@ public abstract class AbstractResultHandler<T, Z> implements ResultHandler<T, Z>
     if (typeParameters != null && typeParameters.length == 2) {
       try {
         addHandler(
-            Class.forName(typeParameters[0].getTypeName()),
-            Class.forName(typeParameters[1].getTypeName())
+            typeToClass(typeParameters[0]),
+            typeToClass(typeParameters[1])
         );
       } catch (ClassNotFoundException e) {
         e.printStackTrace();

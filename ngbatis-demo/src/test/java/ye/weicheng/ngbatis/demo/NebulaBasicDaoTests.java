@@ -17,6 +17,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.util.Assert;
+import org.nebula.contrib.ngbatis.models.data.NgPath;
 import org.nebula.contrib.ngbatis.utils.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -459,6 +460,12 @@ public class NebulaBasicDaoTests {
   public void startNode() {
     Person whoIsStartForTest = repository.startNode(Like.class, "易小海");
     System.out.println(JSON.toJSONString(whoIsStartForTest));
+  }
+  
+  @Test
+  public void shortestPath() {
+    List<NgPath<String>> ngPaths = repository.shortestPath("吴小极", "刘小洲");
+    System.out.println(JSON.toJSONString(ngPaths));
   }
   // endregion
 

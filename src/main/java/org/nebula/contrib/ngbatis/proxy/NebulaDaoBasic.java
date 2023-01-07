@@ -23,6 +23,7 @@ import java.util.Map;
 import org.nebula.contrib.ngbatis.exception.QueryException;
 import org.nebula.contrib.ngbatis.models.ClassModel;
 import org.nebula.contrib.ngbatis.models.MethodModel;
+import org.nebula.contrib.ngbatis.models.data.NgPath;
 import org.nebula.contrib.ngbatis.utils.Page;
 import org.springframework.data.repository.query.Param;
 
@@ -441,6 +442,20 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     return (E) proxy(daoType, returnType, cqlTpl,
       new Class[]{Class.class, Class.class, Serializable.class}, startVertexName, edgeName,
       endId);
+  }
+
+  /**
+   * Find the shortest path by srcId and dstId.
+   * @param srcId the start node's id
+   * @param dstId the end node's id
+   * @return Shortest path list. 
+   */
+  default List<NgPath<I>> shortestPath(@Param("srcId") I srcId, @Param("dstId") I dstId) {
+    MethodModel methodModel = getMethodModel();
+    methodModel.setReturnType(Collection.class);
+    methodModel.setResultType(NgPath.class);
+    ClassModel classModel = getClassModel(this.getClass());
+    return (List<NgPath<I>>) MapperProxy.invoke(classModel, methodModel, srcId, dstId);
   }
   // endregion
 

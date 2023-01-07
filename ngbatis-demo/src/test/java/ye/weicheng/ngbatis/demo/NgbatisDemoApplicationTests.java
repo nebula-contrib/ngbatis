@@ -12,6 +12,9 @@ import java.util.Map;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.util.Assert;
+import org.nebula.contrib.ngbatis.models.data.NgEdge;
+import org.nebula.contrib.ngbatis.models.data.NgSubgraph;
+import org.nebula.contrib.ngbatis.models.data.NgVertex;
 import org.nebula.contrib.ngbatis.utils.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -137,6 +140,24 @@ class NgbatisDemoApplicationTests {
   public void selectPersonLikePersonLimit1() {
     PersonLikePerson nrn2 = repository.selectPersonLikePersonLimit1();
     System.out.println(JSON.toJSONString(nrn2));
+  }
+
+  @Test
+  public void selectVertexes() {
+    List<NgVertex<String>> ngVertices = repository.selectVertexes();
+    System.out.println(JSON.toJSONString(ngVertices));
+  }
+
+  @Test
+  public void selectEdges() {
+    List<NgEdge<String>> ngEdges = repository.selectEdges();
+    System.out.println(JSON.toJSONString(ngEdges));
+  }
+
+  @Test
+  public void selectSubgraph() {
+    List<NgSubgraph<String>> ngSubgraphs = repository.selectSubgraph();
+    System.out.println(JSON.toJSONString(ngSubgraphs));
   }
 
   @Test

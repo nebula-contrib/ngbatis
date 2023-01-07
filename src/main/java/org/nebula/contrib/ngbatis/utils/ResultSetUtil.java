@@ -170,10 +170,7 @@ public class ResultSetUtil {
         ValueWrapper srcId = relationship.srcId();
         result.put(src_id_key, getValue(srcId));
 
-        Map<String, ValueWrapper> dbProps = relationship.properties();
-        Map<String, Object> resultProps = new LinkedHashMap<>();
-        result.put(props_name_key, resultProps);
-        dbProps.forEach((k, v) -> resultProps.put(k, getValue(v)));
+        result.put(props_name_key, edgePropsToMap(relationship));
         
         ValueWrapper dstId = relationship.dstId();
         result.put(dst_id_key, getValue(dstId));
@@ -186,6 +183,13 @@ public class ResultSetUtil {
     return relationship;
   }
 
+  public static Map<String, Object> edgePropsToMap(Relationship relationship)
+      throws UnsupportedEncodingException {
+    Map<String, ValueWrapper> dbProps = relationship.properties();
+    Map<String, Object> resultProps = new LinkedHashMap<>();
+    dbProps.forEach((k, v) -> resultProps.put(k, getValue(v)));
+    return resultProps;
+  }
 
   private static Object nodeToMap(Node node) {
     Map<String, Object> result = new LinkedHashMap<>();
@@ -194,19 +198,25 @@ public class ResultSetUtil {
       result.put(v_id_key, getValue(node.getId()));
       List<String> tagNames = node.tagNames();
       result.put(tags_key, tagNames);
-      Map<String, Object> vertexProps = new LinkedHashMap<>();
-      result.put(props_name_key, vertexProps);
-      for (String tagName : tagNames) {
-        Map<String, ValueWrapper> dbProps = node.properties(tagName);
-        Map<String, Object> labelProps = new LinkedHashMap<>();
-        dbProps.forEach((k, v) -> labelProps.put(k, getValue(v)));
-        vertexProps.put(tagName, labelProps);
-      }
+      result.put(props_name_key, nodePropsToMap(node));
     } catch (UnsupportedEncodingException e) {
       throw new ResultHandleException(
           String.format("%s : %s", e.getClass().toString(), e.getMessage()));
     }
     return result;
+  }
+  
+  public static Map<String, Object> nodePropsToMap(Node node) 
+      throws UnsupportedEncodingException {
+    Map<String, Object> vertexProps = new LinkedHashMap<>();
+    List<String> tagNames = node.tagNames();
+    for (String tagName : tagNames) {
+      Map<String, ValueWrapper> dbProps = node.properties(tagName);
+      Map<String, Object> labelProps = new LinkedHashMap<>();
+      dbProps.forEach((k, v) -> labelProps.put(k, getValue(v)));
+      vertexProps.put(tagName, labelProps);
+    }
+    return vertexProps;
   }
 
   private static Object transformList(ArrayList<ValueWrapper> list) {

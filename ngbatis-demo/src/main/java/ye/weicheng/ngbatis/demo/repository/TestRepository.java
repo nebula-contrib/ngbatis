@@ -8,6 +8,9 @@ import com.vesoft.nebula.client.graph.data.ResultSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.nebula.contrib.ngbatis.models.data.NgEdge;
+import org.nebula.contrib.ngbatis.models.data.NgSubgraph;
+import org.nebula.contrib.ngbatis.models.data.NgVertex;
 import org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic;
 import org.nebula.contrib.ngbatis.utils.Page;
 import org.springframework.data.repository.query.Param;
@@ -65,5 +68,11 @@ public interface TestRepository extends NebulaDaoBasic<Person, String> {
   Integer testSpaceSwitchStep2();
 
   void insertWithTimestamp(@Param("person") Person person);
+
+  List<NgVertex<String>> selectVertexes();
+  
+  List<NgEdge<String>> selectEdges();
+  
+  List<NgSubgraph<String>> selectSubgraph(); 
 
 }
