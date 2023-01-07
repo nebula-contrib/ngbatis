@@ -7,6 +7,7 @@ package org.nebula.contrib.ngbatis.binding.beetl.functions;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import org.apache.commons.text.StringEscapeUtils;
 
 /**
  * 对传递给数据库的值进行不同类型的格式化
@@ -15,16 +16,25 @@ import java.util.Date;
  * @since 2022-08-24 15:52
  * <br>Now is history!
  */
-public class ValueFmtFn extends AbstractFunction<Object, Boolean, Void, Void, Void, Void> {
+public class ValueFmtFn extends AbstractFunction<Object, Boolean, Boolean, Void, Void, Void> {
+
+  private static boolean escape = true;
+  
+  public static void setEscape(boolean escape) {
+    ValueFmtFn.escape = escape;
+  }
 
   @Override
-  public Object call(Object value, Boolean ifStringLike) {
+  public Object call(Object value, Boolean ifStringLike, Boolean escape) {
     ifStringLike = ifStringLike != null && ifStringLike;
+    escape = escape != null ? escape : ValueFmtFn.escape;
     if (value == null) {
       return null;
     }
     if (value instanceof String) {
-      return ifStringLike ? "'.*" + value + ".*'" : "'" + value + "'";
+      return ifStringLike 
+        ? "'.*" + value + ".*'"
+        : "'" + (escape ? StringEscapeUtils.escapeJava((String) value) : value) + "'";
     }
     
     if (value instanceof BigDecimal) {

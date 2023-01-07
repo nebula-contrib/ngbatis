@@ -5,6 +5,9 @@ Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
 This source code is licensed under Apache 2.0 License.
 -->
 
+# 1.1.2-SNAPSHOT
+- feat: ng.valueFmt support escape ( default true ). Use `ValueFmtFn.setEscape( false );` to disable this feature.
+
 # 1.1.1
 - fixed #89 BigDecimal / Set / Collection serialization to NebulaValue #97
 
