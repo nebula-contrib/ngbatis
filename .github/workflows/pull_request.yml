@@ -45,7 +45,7 @@ jobs:
 
     - name: Build with Maven
       run: |
-        mvn -B package
+        mvn -B install
         cd ngbatis-demo
         mvn -B compile
 
