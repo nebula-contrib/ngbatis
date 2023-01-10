@@ -113,6 +113,24 @@
           ${ ng.valueFmt(person.birthday) }
         );
     </insert>
+    
+    <select id="selectVertexes" resultType="org.nebula.contrib.ngbatis.models.data.NgVertex">
+        MATCH (n)
+        RETURN n
+        LIMIT 10
+    </select>
+    
+    <select id="selectEdges" resultType="org.nebula.contrib.ngbatis.models.data.NgEdge">
+        MATCH (n: person)-[r]->(n2: person) 
+        RETURN r 
+        LIMIT 10
+    </select>
+    
+    <select id="selectSubgraph" resultType="org.nebula.contrib.ngbatis.models.data.NgSubgraph">
+        GET SUBGRAPH WITH PROP 3 STEPS FROM "叶小南"
+        BOTH like
+        YIELD VERTICES AS nodes, EDGES AS relationships
+    </select>
 
 </mapper>
 

@@ -414,4 +414,19 @@ public abstract class ReflectUtil {
     return null;
   }
 
+  /**
+   * Get class object through Type.
+   * 通过Type获取类对象
+   * @param type javaType
+   * @return class object
+   * @throws ClassNotFoundException 
+   *    when type is not ParameterizedTypeImpl and the type name can not get class object in jvm.
+   */
+  public static Class<?> typeToClass(Type type) throws ClassNotFoundException {
+    if (type instanceof ParameterizedTypeImpl) {
+      return ((ParameterizedTypeImpl) type).getRawType();
+    }
+    return Class.forName(type.getTypeName());
+  }
+
 }
