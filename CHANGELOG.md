@@ -6,6 +6,7 @@ This source code is licensed under Apache 2.0 License.
 -->
 
 # 1.1.2-SNAPSHOT
+- fix: `ng.join` bug [#122](https://github.com/nebula-contrib/ngbatis/issues/122)
 - feat: provide default data structure for edge \ vertex \ path \ sub-graph, and their result handler. #103 #118
 - feat: NebulaDaoBasic shortest path support. #118
 - feat: ng.valueFmt support escape ( default true ). Use `ValueFmtFn.setEscape( false );` to disable this feature.
