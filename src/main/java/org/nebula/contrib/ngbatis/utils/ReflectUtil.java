@@ -315,6 +315,12 @@ public abstract class ReflectUtil {
     return parents;
   }
 
+  /**
+   * 实体类获取全部属性，对父类获取 带 @Column 的属性
+   *
+   * @param clazz 实体类
+   * @return 当前类的属性及其父类中，带@Column注解的属性
+   */
   public static Field[] getAllColumnFields(Class<?> clazz) {
     return getAllColumnFields(clazz, false);
   }
@@ -323,6 +329,7 @@ public abstract class ReflectUtil {
    * 实体类获取全部属性，对父类获取 带 @Column 的属性
    *
    * @param clazz 实体类
+   * @param forValueSetting 用于设值时为 true，读取全属性
    * @return 当前类的属性及其父类中，带@Column注解的属性
    */
   public static Field[] getAllColumnFields(Class<?> clazz, boolean forValueSetting) {
@@ -424,7 +431,12 @@ public abstract class ReflectUtil {
     }
     return Class.forName(type.getTypeName());
   }
-  
+
+  /**
+   * 通过实体类获取 tagName 、edgeName
+   * @param entityType POJO 类型
+   * @return tagName | edgeName
+   */
   public static String schemaByEntityType(Class<?> entityType) {
     Table tableAnno = entityType.getAnnotation(Table.class);
     return tableAnno != null

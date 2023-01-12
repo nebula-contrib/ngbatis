@@ -19,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ye.weicheng.ngbatis.demo.pojo.Employee;
 
 /**
+ * Multi tags tests.
  * @author yeweicheng
  * @since 2023-01-12 14:04
  *   <br> Now is history!
@@ -41,7 +42,7 @@ class EmployeeDaoTest {
   @Test
   @Order(1)
   public void insert_multiTag() {
-    Assert.isTrue(dao.selectByIds(ids).size() ==0);;
+    Assert.isTrue(dao.selectByIds(ids).size() == 0);
     Employee employee = new Employee();
     employee.setName("TestMultiTag");
     employee.setPosition("Leader");
