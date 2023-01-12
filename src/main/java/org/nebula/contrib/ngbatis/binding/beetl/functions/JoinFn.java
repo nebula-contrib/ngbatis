@@ -31,7 +31,7 @@ public class JoinFn extends AbstractFunction<Iterable<?>, String, String, Void, 
     List<String> strs = new ArrayList<>();
     for (Object el : iterable) {
       String elStr = isEmpty(fnName) ? String.valueOf(el)
-          : fnCall(fnName, el);
+          : String.valueOf((Object)fnCall(fnName, el));
       strs.add(elStr);
     }
 
