@@ -152,10 +152,12 @@
     <insert id="insert">
         @var kv = ng.kv( ng_args[0] );
         @var id = ng.id( ng_args[0] );
-        @var tagName = ng.tagName( ng_args[0] );
-        INSERT VERTEX IF NOT EXISTS `${ tagName }` (
-            ${ ng.join( @kv.columns, ", ", "ng.schemaFmt" ) }
-        )
+        INSERT VERTEX IF NOT EXISTS 
+        @for ( entry in @kv.multiTagColumns ) {
+            `${ entry.key }` (
+                ${ ng.join( entry.value, ", ", "ng.schemaFmt" ) }
+            ) ${ entryLP.last ? '' : ','}
+        @}
         VALUES ${ id } : (
             ${ ng.join( @kv.values ) }
         );
@@ -164,10 +166,12 @@
     <insert id="insertSelective">
         @var kv = ng.kv( ng_args[0], '', true, true );
         @var id = ng.id( ng_args[0] );
-        @var tagName = ng.tagName( ng_args[0] );
-        INSERT VERTEX IF NOT EXISTS `${ tagName }` (
-            ${ ng.join( @kv.columns, ", ", "ng.schemaFmt" ) }
-        )
+        INSERT VERTEX IF NOT EXISTS
+        @for ( entry in @kv.multiTagColumns ) {
+            `${ entry.key }` (
+                ${ ng.join( entry.value, ", ", "ng.schemaFmt" ) }
+            ) ${ entryLP.last ? '' : ','}
+        @}
         VALUES ${ id } : (
             ${ ng.join( @kv.values ) }
         );
@@ -177,11 +181,13 @@
         @for ( row in ng_args[0] ) {
             @var kv = ng.kv( row );
             @var id = ng.id( row );
-            @var tagName = ng.tagName( row );
             @if (rowLP.first) {
-            INSERT VERTEX IF NOT EXISTS `${ tagName }` (
-                ${ ng.join( @kv.columns, ", ", "ng.schemaFmt" ) }
-            )
+            INSERT VERTEX IF NOT EXISTS
+            @for ( entry in @kv.multiTagColumns ) {
+                `${ entry.key }` (
+                    ${ ng.join( entry.value, ", ", "ng.schemaFmt" ) }
+                ) ${ entryLP.last ? '' : ','}
+            @}
             VALUES 
             @}
             ${ id } : ( ${ ng.join( @kv.values ) } ) ${ rowLP.last ? '' : ', ' }

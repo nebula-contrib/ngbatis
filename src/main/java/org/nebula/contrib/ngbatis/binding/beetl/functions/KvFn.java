@@ -6,9 +6,11 @@ package org.nebula.contrib.ngbatis.binding.beetl.functions;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getAllColumnFields;
+import static org.nebula.contrib.ngbatis.utils.ReflectUtil.schemaByEntityType;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -94,6 +96,13 @@ public class KvFn extends AbstractFunction<Object, String, Boolean, Boolean, Boo
         name = ReflectUtil.getNameByColumn(field);
       }
       if (name != null) {
+        
+        Class<?> entityType = field.getDeclaringClass();
+        String tagName = schemaByEntityType(entityType);
+        List<String> currentTagColumns = kv.multiTagColumns
+            .computeIfAbsent(tagName, (k) -> new ArrayList<>());
+        currentTagColumns.add(name);
+        
         kv.columns.add(name);
         Object[] paras = {value};
         kv.values.add(fnCall(valueFmtFn, paras));
@@ -106,6 +115,7 @@ public class KvFn extends AbstractFunction<Object, String, Boolean, Boolean, Boo
   }
 
   public static class KV {
+    public final Map<String, List<String>> multiTagColumns = new LinkedHashMap<>();
     public final List<String> columns = new ArrayList<>();
     public final List<String> valueNames = new ArrayList<>();
     public final List<Object> values = new ArrayList<>();

@@ -5,10 +5,9 @@ package org.nebula.contrib.ngbatis.binding.beetl.functions;
 // This source code is licensed under Apache 2.0 License.
 
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.entityType;
+import static org.nebula.contrib.ngbatis.utils.ReflectUtil.schemaByEntityType;
 
-import javax.persistence.Table;
 import org.nebula.contrib.ngbatis.models.ClassModel;
-import org.nebula.contrib.ngbatis.utils.StringUtil;
 
 /**
  * 通过实体对象，获取 vertexName 与 edgeName
@@ -27,9 +26,6 @@ public class TagNameFn extends AbstractFunction<Object, ClassModel, Void, Void, 
     } else {
       entityType = para.getClass();
     }
-    Table tableAnno = entityType.getAnnotation(Table.class);
-    return tableAnno != null
-      ? tableAnno.name()
-      : StringUtil.camelToUnderline(entityType.getSimpleName());
+    return schemaByEntityType(entityType);
   }
 }
