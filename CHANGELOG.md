@@ -6,7 +6,15 @@ This source code is licensed under Apache 2.0 License.
 -->
 
 # 1.1.2-SNAPSHOT
+## Develop behavior change.
+- If an entity type is another entity type's super class, all attribute are being required in database schema except `@Transient`
+    > 如果一个实体类是另一个实体类的父类，则其所有除了注解`@Transient` 了的属性，都需要在数据库中声明。
+
+## Bugfix
+- fix: when vertex has multi tags cannot set value properly.[#120](https://github.com/nebula-contrib/ngbatis/issues/120) 
 - fix: `ng.join` bug [#122](https://github.com/nebula-contrib/ngbatis/issues/122)
+## Features
+- feat: multi tags support for vertex inserting.
 - feat: provide default data structure for edge \ vertex \ path \ sub-graph, and their result handler. #103 #118
 - feat: NebulaDaoBasic shortest path support. #118
 - feat: ng.valueFmt support escape ( default true ). Use `ValueFmtFn.setEscape( false );` to disable this feature.

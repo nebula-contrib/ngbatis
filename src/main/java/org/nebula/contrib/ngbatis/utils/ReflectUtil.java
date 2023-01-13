@@ -12,11 +12,13 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.nebula.contrib.ngbatis.exception.ParseException;
 import org.nebula.contrib.ngbatis.models.MethodModel;
@@ -67,7 +69,7 @@ public abstract class ReflectUtil {
 
   public static void setValue(Object o, String prop, Object value)
       throws NoSuchFieldException, IllegalAccessException {
-    Field[] allColumnFields = getAllColumnFields(o.getClass());
+    Field[] allColumnFields = getAllColumnFields(o.getClass(), true);
     Field declaredField = null;
     for (Field columnField : allColumnFields) {
       if (getNameByColumn(columnField).equals(prop)) {
@@ -320,24 +322,25 @@ public abstract class ReflectUtil {
    * @return 当前类的属性及其父类中，带@Column注解的属性
    */
   public static Field[] getAllColumnFields(Class<?> clazz) {
-    Set<Field> fields = new HashSet<>();
-    boolean leaf = true;
+    return getAllColumnFields(clazz, false);
+  }
+
+  /**
+   * 实体类获取全部属性，对父类获取 带 @Column 的属性
+   *
+   * @param clazz 实体类
+   * @param forValueSetting 用于设值时为 true，读取全属性
+   * @return 当前类的属性及其父类中，带@Column注解的属性
+   */
+  public static Field[] getAllColumnFields(Class<?> clazz, boolean forValueSetting) {
+    Set<Field> fields = new LinkedHashSet<>();
     do {
       Field[] declaredFields = clazz.getDeclaredFields();
-      if (leaf) {
-        Set<Field> cols = Arrays.stream(declaredFields)
-          .filter(el -> !el.isAnnotationPresent(Transient.class))
+      Set<Field> cols = Arrays.stream(declaredFields)
+          .filter(el -> !el.isAnnotationPresent(Transient.class) || forValueSetting)
           .collect(Collectors.toSet());
-        fields.addAll(cols);
-      } else {
-        for (Field declaredField : declaredFields) {
-          if (declaredField.isAnnotationPresent(Column.class)) {
-            fields.add(declaredField);
-          }
-        }
-      }
+      fields.addAll(cols);
       clazz = clazz.getSuperclass();
-      leaf = false;
     } while (clazz != null);
     return fields.toArray(new Field[0]);
   }
@@ -427,6 +430,18 @@ public abstract class ReflectUtil {
       return ((ParameterizedTypeImpl) type).getRawType();
     }
     return Class.forName(type.getTypeName());
+  }
+
+  /**
+   * 通过实体类获取 tagName 、edgeName
+   * @param entityType POJO 类型
+   * @return tagName | edgeName
+   */
+  public static String schemaByEntityType(Class<?> entityType) {
+    Table tableAnno = entityType.getAnnotation(Table.class);
+    return tableAnno != null
+        ? tableAnno.name()
+        : StringUtil.camelToUnderline(entityType.getSimpleName());
   }
 
 }

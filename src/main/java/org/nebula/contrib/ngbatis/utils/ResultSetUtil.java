@@ -7,6 +7,7 @@ package org.nebula.contrib.ngbatis.utils;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.castNumber;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getPkField;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.isCurrentTypeOrParentType;
+import static org.nebula.contrib.ngbatis.utils.ReflectUtil.schemaByEntityType;
 
 import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.client.graph.data.DateTimeWrapper;
@@ -233,16 +234,16 @@ public class ResultSetUtil {
   public static <T> T nodeToResultType(Node v, Class<T> resultType) {
     T t = null;
     try {
-      List<ValueWrapper> values = v.values(v.tagNames().get(0));
-      List<String> keys = v.keys(v.tagNames().get(0));
+      Class<?> classOfTag = resultType;
+      // set attr value from current to super type.
       t = resultType.newInstance();
-      for (int i = 0; i < keys.size(); i++) {
-        String prop = keys.get(i);
-        ReflectUtil.setValue(t, prop, ResultSetUtil.getValue(values.get(i)));
+      while (classOfTag != null) {
+        String tagName = schemaByEntityType(classOfTag);
+        setAttrs(t, v, tagName);
+        classOfTag = classOfTag.getSuperclass();
       }
       setId(t, resultType, v);
-    } catch (UnsupportedEncodingException | InstantiationException
-      | IllegalAccessException | NoSuchFieldException e) {
+    } catch (InstantiationException | IllegalAccessException e) {
       throw new ResultHandleException(
         String.format("%s : %s", e.getClass().toString(), e.getMessage()));
     }
@@ -324,6 +325,30 @@ public class ResultSetUtil {
     ValueWrapper idWrapper = v.getId();
     Object id = ResultSetUtil.getValue(idWrapper);
     ReflectUtil.setValue(obj, pkField, id);
+  }
+
+  /**
+   * Set java entity attributes from Node's properties.
+   * 兼容多标签，对 java 对象进行按标签设属性值。
+   * @param t entity
+   * @param v Vertex
+   * @param tagName Vertex's tag name
+   */
+  public static void setAttrs(Object t, Node v, String tagName) {
+    try {
+      if (!v.tagNames().contains(tagName)) {
+        return;
+      }
+      List<ValueWrapper> values = v.values(tagName);
+      List<String> keys = v.keys(tagName);
+      for (int i = 0; i < keys.size(); i++) {
+        String prop = keys.get(i);
+        ReflectUtil.setValue(t, prop, ResultSetUtil.getValue(values.get(i)));
+      }
+    } catch (UnsupportedEncodingException | NoSuchFieldException | IllegalAccessException e) {
+      throw new ResultHandleException(
+          String.format("%s : %s", e.getClass().toString(), e.getMessage()));
+    }
   }
 
   /**
