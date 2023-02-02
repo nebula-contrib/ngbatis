@@ -38,7 +38,7 @@ See [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
     <dependency>
       <groupId>org.nebula-contrib</groupId>
       <artifactId>ngbatis</artifactId>
-      <version>1.1.0</version>
+      <version>1.1.1</version>
     </dependency>
 ```
 - Referring to [ngbatis-demo](./ngbatis-demo), which was smoothly integrated with spring-boot. The API examples could be found under the test of it for all features of ngbatis.
@@ -138,9 +138,9 @@ public interface TestRepository {
     </select>
 
     <!-- 
-        更多复杂的 nGQL 可能还需要充分的测试，
-        目前我自己在用的项目两层对象的数据结构也是可以满足的。
-        Path 因为开发中基本都可以用 n, r, n2 的结构处理，便还没来得及支持。
+        More complex `nGQL` may need to be fully tested.
+        The two-layer object data structure of the project I am currently using is also satisfying.
+        `Path` is not yet supported because it can basically be handled by the `n, r, n2` structure in development.
     -->
 
 </mapper>
@@ -217,7 +217,7 @@ public class PersonServiceImpl {
     @Autowired private PersonDao dao;
 
     public void demos() {
-        // 实现 两个节点插入
+        // Implement two node insertions
         Person tom = new Person();
         tom.setName("Tom");
         dao.insert( tom ); 
@@ -226,36 +226,36 @@ public class PersonServiceImpl {
         jerry.setName( "Jerry" );
         dao.insert( jerry );
 
-        // 建立两个节点的关系
+        // Establishing the relationship between two nodes
         Like like = new Like( 0.99999 );
         dao.insertEdge( tom, like, jerry );
 
-        // 查找喜欢 jerry 的人
+        // Find people who like jerry
         String jerryId = jerry.getName();
         List<Person> whoLikeJerry = dao.listStartNodes( Like.class, jerryId );
 
-        // 查找唯一喜欢 jerry 的人。非唯一时报错。（限定在特定关系仅有一个上游的场景）
+        // Find the only people who like jerry, Non-Unique Times Error。（Limited to scenarios where there is only one upstream for a given relationship）
         Person tom = dao.startNode( Like.class, jerryId );
 
-        // 查看 Tom 跟 Jerry 之间的 Like关系
+        // See the Like relationship between Tom and Jerry
         String tomId = tom.getName();
         Boolean tomLikeJerry = dao.existsEdge( tomId, Like.class, jerryId ); // true
         Boolean jerryLikeTom = dao.existsEdge( jerryId, Like.class, tomId ); // false
-        // 可怜的 Tom
+        // Poor Tom
 
-        // 根据 Tom 的名字查找全部信息
+        // Find all information by Tom's name
         Person tomDb = dao.selectById( "Tom" );
 
-        // 查找分页
+        // Search by page
         Page<Person> page = new Page<>();
         List<Person> personPage = dao.selectPage( page );
         page.getTotal(); // 2 rows， Tom and Jerry
         Boolean theyAreFamily = page.getRows() == personPage; // true
 
-        // 故事总想要有个好的结局
+        // The story always wants to have a good ending
         dao.insertEdge( jerry, like, tom );
 
-        // 更多 基类的操作还在开发中。期待
+        // More base class operations are still under development；Expectations
     }
 
 
