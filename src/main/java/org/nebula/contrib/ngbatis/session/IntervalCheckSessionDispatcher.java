@@ -13,6 +13,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import org.nebula.contrib.ngbatis.SessionDispatcher;
 import org.nebula.contrib.ngbatis.config.EnvConfig;
+import org.nebula.contrib.ngbatis.config.ParseCfgProps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,15 +37,18 @@ public class IntervalCheckSessionDispatcher implements Runnable, SessionDispatch
    * 具备间隔时间做连接可用性检查的会话调度器
    * @param nebulaPoolConfig 连接信息
    */
-  public IntervalCheckSessionDispatcher(NebulaPoolConfig nebulaPoolConfig) {
+  public IntervalCheckSessionDispatcher(NebulaPoolConfig nebulaPoolConfig, ParseCfgProps cfgProps) {
     this.nebulaPoolConfig = nebulaPoolConfig;
     this.sessionQueue = new ArrayBlockingQueue<>(nebulaPoolConfig.getMaxConnSize());
     threadPool = EnvConfig.reconnect ? Executors.newScheduledThreadPool(1) : null;
+    //使用自定义的 session存活有效期/健康检测间隔
+    SESSION_LIFE_LENGTH = cfgProps.getSessionLifeLength() == null ? SESSION_LIFE_LENGTH : cfgProps.getSessionLifeLength();
+    CHECK_FIXED_RATE = cfgProps.getCheckFixedRate() == null ? CHECK_FIXED_RATE : cfgProps.getCheckFixedRate();
     wakeUp();
   }
 
   @Override
-  public void run() {
+  public synchronized void run() {
     for (LocalSession session : sessionQueue) {
       log.info(
           "LocalSession in queue which created at {}, useCount: {}",
@@ -121,7 +125,8 @@ public class IntervalCheckSessionDispatcher implements Runnable, SessionDispatch
     }
   }
 
-  private boolean timeToRelease(LocalSession session) {
+  @Override
+  public boolean timeToRelease(LocalSession session) {
     long birth = session.getBirth();
     return System.currentTimeMillis() - birth > SESSION_LIFE_LENGTH;
   }

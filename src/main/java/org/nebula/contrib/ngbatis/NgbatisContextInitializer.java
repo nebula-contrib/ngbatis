@@ -58,7 +58,9 @@ public class NgbatisContextInitializer implements ApplicationContextInitializer 
       .setStatementStart(environment.getProperty("cql.parser.statement-start"))
       .setResourceRefresh(
         environment.getProperty("cql.parser.statement-start", Boolean.class)
-      );
+      )
+      .setSessionLifeLength(environment.getProperty("cql.parser.session-life-length", Long.class))
+      .setCheckFixedRate(environment.getProperty("cql.parser.check-fixed-rate", Long.class));
   }
 
   private NebulaJdbcProperties getNebulaJdbcProperties(ConfigurableEnvironment environment) {

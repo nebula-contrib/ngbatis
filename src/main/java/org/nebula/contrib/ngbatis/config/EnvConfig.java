@@ -81,7 +81,7 @@ public class EnvConfig {
   @Bean
   public Env getEnv() {
     sessionDispatcher =
-      new IntervalCheckSessionDispatcher(MapperContext.newInstance().getNebulaPoolConfig());
+      new IntervalCheckSessionDispatcher(MapperContext.newInstance().getNebulaPoolConfig(), cfgProps);
     return new Env(
       textResolver,
       resultResolver,

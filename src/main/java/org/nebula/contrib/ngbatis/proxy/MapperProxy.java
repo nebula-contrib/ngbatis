@@ -249,7 +249,7 @@ public class MapperProxy {
       LocalSession localSession, ResultSet result) {
     if (localSession != null) {
       boolean sessionError = ResultSetUtil.isSessionError(result);
-      if (sessionError) {
+      if (sessionError || dispatcher.timeToRelease(localSession)) {
         dispatcher.release(localSession);
       } else {
         dispatcher.offer(localSession);

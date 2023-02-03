@@ -22,4 +22,11 @@ public interface SessionDispatcher {
   void release(LocalSession session);
   
   void releaseAll();
+
+  /**
+   * 判断session是否需要被释放
+   * @param session 含有创建时间的session
+   * @return 需要释放-true,不需要释放-false
+   */
+  boolean timeToRelease(LocalSession session);
 }

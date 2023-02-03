@@ -6,7 +6,7 @@ server:
   port: 8083
 
 nebula:
-  hosts: 127.0.0.1:19669
+  hosts: 172.16.41.143:9669
   username: root
   password: nebula
   space: test
@@ -19,3 +19,9 @@ nebula:
     wait-time: 6000
     min-cluster-health-rate: 1.0
     enable-ssl: false
+
+logging:
+  level:
+    org:
+      nebula:
+        contrib: DEBUG
