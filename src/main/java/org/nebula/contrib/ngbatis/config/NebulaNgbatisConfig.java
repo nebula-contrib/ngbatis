@@ -1,5 +1,15 @@
 package org.nebula.contrib.ngbatis.config;
 
+// Copyright (c) 2022 All project authors. All rights reserved.
+//
+// This source code is licensed under Apache 2.0 License.
+
+/**
+ * yml 配置文件对应ngbatis属性的模型类
+ *
+ * @author gin soul
+ * @since 2023-02-06 18:00
+ */
 public class NebulaNgbatisConfig {
 
     /**
