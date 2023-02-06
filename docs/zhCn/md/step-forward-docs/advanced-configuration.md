@@ -37,9 +37,9 @@ cql:
 
 ## 使用自定义的 session存活有效期/健康检测间隔(单位毫秒)
 ```yml
-cql:
-  parser:
+nebula:
     # 建议少于nebula配置文件中失效时间
-    session-life-length: 18000000
-    check-fixed-rate: 3600000
+  ngbatis:
+    session-life-length: 2000
+    check-fixed-rate: 2000
 ```

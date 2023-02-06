@@ -37,6 +37,10 @@ public class NebulaJdbcProperties {
    */
   private NebulaPoolConfig poolConfig;
   /**
+   * ngbatis 自定义配置
+   */
+  private NebulaNgbatisConfig ngbatis;
+  /**
    * 数据库用户名
    */
   private String username;
@@ -111,6 +115,15 @@ public class NebulaJdbcProperties {
 
   public NebulaJdbcProperties setSpace(String space) {
     this.space = space;
+    return this;
+  }
+
+  public NebulaNgbatisConfig getNgbatis() {
+    return ngbatis;
+  }
+
+  public NebulaJdbcProperties setNgbatis(NebulaNgbatisConfig ngbatis) {
+    this.ngbatis = ngbatis;
     return this;
   }
 

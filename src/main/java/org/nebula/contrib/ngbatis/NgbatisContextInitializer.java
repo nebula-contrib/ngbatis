@@ -6,6 +6,7 @@ package org.nebula.contrib.ngbatis;
 
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import org.nebula.contrib.ngbatis.config.NebulaJdbcProperties;
+import org.nebula.contrib.ngbatis.config.NebulaNgbatisConfig;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -30,11 +31,14 @@ public class NgbatisContextInitializer implements ApplicationContextInitializer 
 
     NebulaPoolConfig nebulaPool = getNebulaPoolConfig(environment);
 
+    NebulaNgbatisConfig ngbatisConfig = getNebulaNgbatisConfig(environment);
+
     // @author: Szt-1 fix #https://github.com/nebula-contrib/ngbatis/pull/54
     if (environment.getProperty("nebula.hosts") != null) {
       NebulaJdbcProperties nebulaJdbcProperties =
               getNebulaJdbcProperties(environment)
-                      .setPoolConfig(nebulaPool);
+                      .setPoolConfig(nebulaPool)
+                      .setNgbatis(ngbatisConfig);
 
       ParseCfgProps parseCfgProps = readParseCfgProps(environment);
 
@@ -58,9 +62,7 @@ public class NgbatisContextInitializer implements ApplicationContextInitializer 
       .setStatementStart(environment.getProperty("cql.parser.statement-start"))
       .setResourceRefresh(
         environment.getProperty("cql.parser.statement-start", Boolean.class)
-      )
-      .setSessionLifeLength(environment.getProperty("cql.parser.session-life-length", Long.class))
-      .setCheckFixedRate(environment.getProperty("cql.parser.check-fixed-rate", Long.class));
+      );
   }
 
   private NebulaJdbcProperties getNebulaJdbcProperties(ConfigurableEnvironment environment) {
@@ -99,5 +101,13 @@ public class NgbatisContextInitializer implements ApplicationContextInitializer 
     return nebulaPoolConfig;
   }
 
+  /**
+   * 获取 ngbatis 自定义配置
+   */
+  private NebulaNgbatisConfig getNebulaNgbatisConfig(ConfigurableEnvironment environment) {
+    return new NebulaNgbatisConfig()
+            .setSessionLifeLength(environment.getProperty("nebula.ngbatis.session-life-length", Long.class))
+            .setCheckFixedRate(environment.getProperty("nebula.ngbatis.check-fixed-rate", Long.class));
+  }
 
 }
