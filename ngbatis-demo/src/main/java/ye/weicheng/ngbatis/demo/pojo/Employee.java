@@ -4,6 +4,7 @@ package ye.weicheng.ngbatis.demo.pojo;
 //
 // This source code is licensed under Apache 2.0 License.
 
+import org.nebula.contrib.ngbatis.annotations.Space;
 import javax.persistence.Table;
 
 /**
@@ -12,6 +13,7 @@ import javax.persistence.Table;
  *   <br> Now is history!
  */
 @Table(name = "employee")
+@Space(name = "test")
 public class Employee extends Person {
   public Employee() {
   }

@@ -107,7 +107,8 @@ public class NgbatisContextInitializer implements ApplicationContextInitializer 
   private NebulaNgbatisConfig getNebulaNgbatisConfig(ConfigurableEnvironment environment) {
     return new NebulaNgbatisConfig()
             .setSessionLifeLength(environment.getProperty("nebula.ngbatis.session-life-length", Long.class))
-            .setCheckFixedRate(environment.getProperty("nebula.ngbatis.check-fixed-rate", Long.class));
+            .setCheckFixedRate(environment.getProperty("nebula.ngbatis.check-fixed-rate", Long.class))
+            .setUseSessionPool(environment.getProperty("nebula.ngbatis.use-session-pool", Boolean.class));
   }
 
 }

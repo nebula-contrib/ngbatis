@@ -5,9 +5,14 @@ package org.nebula.contrib.ngbatis.models;
 // This source code is licensed under Apache 2.0 License.
 
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
+import com.vesoft.nebula.client.graph.SessionPool;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
+import org.nebula.contrib.ngbatis.config.NebulaNgbatisConfig;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * xml 中标签所声明的信息（方法）
@@ -36,9 +41,22 @@ public class MapperContext {
    */
   NebulaPool nebulaPool;
   /**
+   * Nebula space name set
+   */
+  Set<String> spaceNameSet = new HashSet<>();
+  /**
+   * Nebula SessionPool map
+   * key: spaceName
+   */
+  Map<String, SessionPool> nebulaSessionPoolMap = new ConcurrentHashMap<>();
+  /**
    * Nebula 连接配置
    */
   NebulaPoolConfig nebulaPoolConfig;
+  /**
+   * ngbatis 扩展参数
+   */
+  private NebulaNgbatisConfig ngbatisConfig;
   boolean resourceRefresh = false;
 
   private MapperContext() {
@@ -79,12 +97,36 @@ public class MapperContext {
     this.nebulaPool = nebulaPool;
   }
 
+  public Set<String> getSpaceNameSet() {
+    return spaceNameSet;
+  }
+
+  public void setSpaceNameSet(Set<String> spaceNameSet) {
+    this.spaceNameSet = spaceNameSet;
+  }
+
+  public Map<String, SessionPool> getNebulaSessionPoolMap() {
+    return nebulaSessionPoolMap;
+  }
+
+  public void setNebulaSessionPoolMap(Map<String, SessionPool> nebulaSessionPoolMap) {
+    this.nebulaSessionPoolMap = nebulaSessionPoolMap;
+  }
+
   public NebulaPoolConfig getNebulaPoolConfig() {
     return nebulaPoolConfig;
   }
 
   public void setNebulaPoolConfig(NebulaPoolConfig nebulaPoolConfig) {
     this.nebulaPoolConfig = nebulaPoolConfig;
+  }
+
+  public NebulaNgbatisConfig getNgbatisConfig() {
+    return ngbatisConfig;
+  }
+
+  public void setNgbatisConfig(NebulaNgbatisConfig ngbatisConfig) {
+    this.ngbatisConfig = ngbatisConfig;
   }
 
   public boolean isResourceRefresh() {

@@ -43,3 +43,13 @@ nebula:
     session-life-length: 2000
     check-fixed-rate: 2000
 ```
+
+## Whether to use the session pool of nebula-java
+**And please notice that SessionPool does not support reconnect for broken connection.**
+```yml
+nebula:
+  ngbatis:
+    # space name needs to be informed through annotations(@Space) or xml(space="test")
+    # default false(false: Session pool map will not be initialized)
+    use-session-pool: true
+```

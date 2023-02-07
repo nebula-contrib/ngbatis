@@ -4,12 +4,16 @@ import static org.nebula.contrib.ngbatis.models.ClassModel.PROXY_SUFFIX;
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.entityTypeAndIdType;
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.vertexName;
 
+import com.vesoft.nebula.client.graph.NebulaPoolConfig;
+import com.vesoft.nebula.client.graph.SessionPool;
+import com.vesoft.nebula.client.graph.SessionPoolConfig;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
 import java.lang.annotation.Annotation;
 import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.Map;
 import org.nebula.contrib.ngbatis.config.NebulaJdbcProperties;
+import org.nebula.contrib.ngbatis.config.NebulaNgbatisConfig;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
 import org.nebula.contrib.ngbatis.io.DaoResourceLoader;
 import org.nebula.contrib.ngbatis.models.ClassModel;
@@ -62,6 +66,7 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
     DaoResourceLoader daoBasicResourceLoader = new DaoResourceLoader(parseCfgProps);
     MapperContext context = MapperContext.newInstance();
     context.setResourceRefresh(parseCfgProps.isResourceRefresh());
+    context.setNgbatisConfig(nebulaJdbcProperties.getNgbatis());
     Map<String, ClassModel> interfaces = daoBasicResourceLoader.load();
     Map<String, String> daoBasicTpl = daoBasicResourceLoader.loadTpl();
     context.setDaoBasicTpl(daoBasicTpl);
@@ -69,6 +74,8 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
     context.setInterfaces(interfaces);
     context.setNebulaPoolConfig(nebulaJdbcProperties.getPoolConfig());
     figureTagTypeMapping(interfaces.values(), context.getTagTypeMapping());
+
+    setNebulaSessionPool(context);
 
     registerBean(context);
     return context;
@@ -175,6 +182,64 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
       throw new RuntimeException("Can not connect to Nebula Graph");
     }
     return pool;
+  }
+
+  /**
+   * create and init Nebula SessionPool
+   */
+  public void setNebulaSessionPool(MapperContext context) {
+    NebulaNgbatisConfig ngbatisConfig = nebulaJdbcProperties.getNgbatis();
+    if (ngbatisConfig.getUseSessionPool() == null || !ngbatisConfig.getUseSessionPool()) {
+      return;
+    }
+
+    Map<String, SessionPool> nebulaSessionPoolMap = context.getNebulaSessionPoolMap();
+    for (String spaceName : MapperContext.newInstance().getSpaceNameSet()) {
+      SessionPool sessionPool = initSessionPool(spaceName);
+      if (sessionPool == null) {
+        log.error("{} session pool init failed.", spaceName);
+        continue;
+      }
+      nebulaSessionPoolMap.put(spaceName, sessionPool);
+    }
+  }
+
+  /**
+   * session pool create and init
+   * @param spaceName nebula space name
+   * @return inited SessionPool
+   */
+  public SessionPool initSessionPool(String spaceName) {
+    NebulaNgbatisConfig ngbatisConfig = nebulaJdbcProperties.getNgbatis();
+    NebulaPoolConfig poolConfig = nebulaJdbcProperties.getPoolConfig();
+
+    SessionPoolConfig sessionPoolConfig = new SessionPoolConfig(
+            nebulaJdbcProperties.getHostAddresses(),
+            spaceName,
+            nebulaJdbcProperties.getUsername(),
+            nebulaJdbcProperties.getPassword()
+    );
+
+    if (poolConfig.getMinConnSize() <= 0) {
+      sessionPoolConfig.setMinSessionSize(1);
+    } else {
+      sessionPoolConfig.setMinSessionSize(poolConfig.getMinConnSize());
+    }
+    sessionPoolConfig.setMaxSessionSize(poolConfig.getMaxConnSize());
+    sessionPoolConfig.setTimeout(poolConfig.getTimeout());
+    sessionPoolConfig.setWaitTime(poolConfig.getWaitTime());
+    if (null != ngbatisConfig.getSessionLifeLength()) {
+      sessionPoolConfig.setCleanTime((int)(ngbatisConfig.getSessionLifeLength()/1000));
+    }
+    if (null != ngbatisConfig.getCheckFixedRate()) {
+      sessionPoolConfig.setHealthCheckTime((int)(ngbatisConfig.getCheckFixedRate()/1000));
+    }
+
+    SessionPool sessionPool = new SessionPool(sessionPoolConfig);
+    if (!sessionPool.init()) {
+      return null;
+    }
+    return sessionPool;
   }
 
   @Override

@@ -21,6 +21,10 @@ public class NebulaNgbatisConfig {
      * session健康检测间隔
      */
     public Long checkFixedRate;
+    /**
+     * Whether to use the session pool of nebula-java
+     */
+    public Boolean useSessionPool;
 
 
     public Long getSessionLifeLength() {
@@ -55,5 +59,24 @@ public class NebulaNgbatisConfig {
         }
         this.checkFixedRate = checkFixedRate;
         return this;
+    }
+
+    public Boolean getUseSessionPool() {
+        return useSessionPool;
+    }
+
+    /**
+     * 默认 false
+     * @param useSessionPool 是否使用 nebula-java 的 SessionPool
+     * @return true/false
+     */
+    public NebulaNgbatisConfig setUseSessionPool(Boolean useSessionPool) {
+        if (useSessionPool == null) {
+            this.useSessionPool = false;
+            return this;
+        }
+        this.useSessionPool = useSessionPool;
+        return this;
+
     }
 }
