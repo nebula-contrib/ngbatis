@@ -7,7 +7,7 @@ package org.nebula.contrib.ngbatis.models;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.SessionPool;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
-import org.nebula.contrib.ngbatis.config.NebulaNgbatisConfig;
+import org.nebula.contrib.ngbatis.config.NgbatisConfig;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -56,7 +56,7 @@ public class MapperContext {
   /**
    * ngbatis 扩展参数
    */
-  private NebulaNgbatisConfig ngbatisConfig;
+  private NgbatisConfig ngbatisConfig;
   boolean resourceRefresh = false;
 
   private MapperContext() {
@@ -121,11 +121,11 @@ public class MapperContext {
     this.nebulaPoolConfig = nebulaPoolConfig;
   }
 
-  public NebulaNgbatisConfig getNgbatisConfig() {
+  public NgbatisConfig getNgbatisConfig() {
     return ngbatisConfig;
   }
 
-  public void setNgbatisConfig(NebulaNgbatisConfig ngbatisConfig) {
+  public void setNgbatisConfig(NgbatisConfig ngbatisConfig) {
     this.ngbatisConfig = ngbatisConfig;
   }
 

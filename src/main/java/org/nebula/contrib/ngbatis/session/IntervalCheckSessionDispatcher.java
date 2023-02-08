@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 import org.nebula.contrib.ngbatis.SessionDispatcher;
 import org.nebula.contrib.ngbatis.config.EnvConfig;
 import org.nebula.contrib.ngbatis.config.NebulaJdbcProperties;
-import org.nebula.contrib.ngbatis.config.NebulaNgbatisConfig;
+import org.nebula.contrib.ngbatis.config.NgbatisConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +43,7 @@ public class IntervalCheckSessionDispatcher implements Runnable, SessionDispatch
     this.sessionQueue = new ArrayBlockingQueue<>(nebulaPoolConfig.getMaxConnSize());
     threadPool = EnvConfig.reconnect ? Executors.newScheduledThreadPool(1) : null;
     //使用自定义的 session存活有效期/健康检测间隔
-    NebulaNgbatisConfig ngbatis = properties.getNgbatis();
+    NgbatisConfig ngbatis = properties.getNgbatis();
     if (ngbatis != null) {
       SESSION_LIFE_LENGTH = ngbatis.getSessionLifeLength() == null ?
               SESSION_LIFE_LENGTH : ngbatis.getSessionLifeLength();

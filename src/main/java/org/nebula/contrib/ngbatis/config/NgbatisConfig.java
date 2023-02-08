@@ -10,7 +10,7 @@ package org.nebula.contrib.ngbatis.config;
  * @author gin soul
  * @since 2023-02-06 18:00
  */
-public class NebulaNgbatisConfig {
+public class NgbatisConfig {
 
     /**
      * session存活有效期
@@ -36,7 +36,7 @@ public class NebulaNgbatisConfig {
      * @param sessionLifeLength 单位毫秒
      * @return null 或者 正数
      */
-    public NebulaNgbatisConfig setSessionLifeLength(Long sessionLifeLength) {
+    public NgbatisConfig setSessionLifeLength(Long sessionLifeLength) {
         if (sessionLifeLength == null || sessionLifeLength <= 0) {
             return this;
         }
@@ -53,7 +53,7 @@ public class NebulaNgbatisConfig {
      * @param checkFixedRate 单位毫秒
      * @return null 或者 正数
      */
-    public NebulaNgbatisConfig setCheckFixedRate(Long checkFixedRate) {
+    public NgbatisConfig setCheckFixedRate(Long checkFixedRate) {
         if (checkFixedRate == null || checkFixedRate <= 0) {
             return this;
         }
@@ -70,7 +70,7 @@ public class NebulaNgbatisConfig {
      * @param useSessionPool 是否使用 nebula-java 的 SessionPool
      * @return true/false
      */
-    public NebulaNgbatisConfig setUseSessionPool(Boolean useSessionPool) {
+    public NgbatisConfig setUseSessionPool(Boolean useSessionPool) {
         if (useSessionPool == null) {
             this.useSessionPool = false;
             return this;

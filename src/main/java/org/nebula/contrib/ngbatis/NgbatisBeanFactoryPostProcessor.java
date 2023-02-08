@@ -13,7 +13,7 @@ import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.Map;
 import org.nebula.contrib.ngbatis.config.NebulaJdbcProperties;
-import org.nebula.contrib.ngbatis.config.NebulaNgbatisConfig;
+import org.nebula.contrib.ngbatis.config.NgbatisConfig;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
 import org.nebula.contrib.ngbatis.io.DaoResourceLoader;
 import org.nebula.contrib.ngbatis.models.ClassModel;
@@ -188,7 +188,7 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
    * create and init Nebula SessionPool
    */
   public void setNebulaSessionPool(MapperContext context) {
-    NebulaNgbatisConfig ngbatisConfig = nebulaJdbcProperties.getNgbatis();
+    NgbatisConfig ngbatisConfig = nebulaJdbcProperties.getNgbatis();
     if (ngbatisConfig.getUseSessionPool() == null || !ngbatisConfig.getUseSessionPool()) {
       return;
     }
@@ -210,7 +210,7 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
    * @return inited SessionPool
    */
   public SessionPool initSessionPool(String spaceName) {
-    NebulaNgbatisConfig ngbatisConfig = nebulaJdbcProperties.getNgbatis();
+    NgbatisConfig ngbatisConfig = nebulaJdbcProperties.getNgbatis();
     NebulaPoolConfig poolConfig = nebulaJdbcProperties.getPoolConfig();
 
     SessionPoolConfig sessionPoolConfig = new SessionPoolConfig(

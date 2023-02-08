@@ -39,7 +39,7 @@ public class NebulaJdbcProperties {
   /**
    * ngbatis 自定义配置
    */
-  private NebulaNgbatisConfig ngbatis;
+  private NgbatisConfig ngbatis;
   /**
    * 数据库用户名
    */
@@ -118,11 +118,11 @@ public class NebulaJdbcProperties {
     return this;
   }
 
-  public NebulaNgbatisConfig getNgbatis() {
+  public NgbatisConfig getNgbatis() {
     return ngbatis;
   }
 
-  public NebulaJdbcProperties setNgbatis(NebulaNgbatisConfig ngbatis) {
+  public NebulaJdbcProperties setNgbatis(NgbatisConfig ngbatis) {
     this.ngbatis = ngbatis;
     return this;
   }

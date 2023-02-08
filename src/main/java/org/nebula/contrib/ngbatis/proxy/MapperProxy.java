@@ -22,7 +22,7 @@ import org.nebula.contrib.ngbatis.ArgsResolver;
 import org.nebula.contrib.ngbatis.Env;
 import org.nebula.contrib.ngbatis.ResultResolver;
 import org.nebula.contrib.ngbatis.SessionDispatcher;
-import org.nebula.contrib.ngbatis.config.NebulaNgbatisConfig;
+import org.nebula.contrib.ngbatis.config.NgbatisConfig;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
 import org.nebula.contrib.ngbatis.exception.QueryException;
 import org.nebula.contrib.ngbatis.models.ClassModel;
@@ -125,11 +125,11 @@ public class MapperProxy {
 
     Map<String,Object> parasForDb = argsResolver.resolve(methodModel, args);
     final long step1 = System.currentTimeMillis();
-    NebulaNgbatisConfig ngbatisConfig = MapperContext.newInstance().getNgbatisConfig();
+    NgbatisConfig ngbatisConfig = MapperContext.newInstance().getNgbatisConfig();
     if (ngbatisConfig == null || !ngbatisConfig.getUseSessionPool()) {
       query = executeWithParameter(classModel, methodModel, gql, parasForDb, argMap);
     } else {
-      query = executeWithParameterBySessionPool(classModel, methodModel, gql, parasForDb, argMap);
+      query = executeBySessionPool(classModel, methodModel, gql, parasForDb, argMap);
     }
 
     final long step2 = System.currentTimeMillis();
@@ -259,7 +259,7 @@ public class MapperProxy {
    * @param params 待执行脚本的参数所需的参数
    * @return nebula-graph 的未被 orm 操作的原始结果集
    */
-  public static ResultSet executeWithParameterBySessionPool(ClassModel cm, MethodModel mm, String gql,
+  public static ResultSet executeBySessionPool(ClassModel cm, MethodModel mm, String gql,
       Map<String, Object> params, Map<String, Object> paramsForTemplate) {
 
     ResultSet result = null;

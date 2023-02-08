@@ -28,7 +28,7 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 import org.nebula.contrib.ngbatis.annotations.Space;
 import org.nebula.contrib.ngbatis.annotations.TimeLog;
-import org.nebula.contrib.ngbatis.config.NebulaNgbatisConfig;
+import org.nebula.contrib.ngbatis.config.NgbatisConfig;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
 import org.nebula.contrib.ngbatis.exception.ParseException;
 import org.nebula.contrib.ngbatis.exception.ResourceLoadException;
@@ -106,7 +106,7 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
       match(cm, element, "space", parseConfig.getSpace());
 
       // 从注解获取 space
-      NebulaNgbatisConfig ngbatisConfig = MapperContext.newInstance().getNgbatisConfig();
+      NgbatisConfig ngbatisConfig = MapperContext.newInstance().getNgbatisConfig();
       if (ngbatisConfig != null && ngbatisConfig.getUseSessionPool()) {
         if (null == cm.getSpace()) {
           setClassModelBySpaceAnnotation(cm);
