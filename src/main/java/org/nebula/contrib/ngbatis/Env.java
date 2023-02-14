@@ -5,6 +5,7 @@ package org.nebula.contrib.ngbatis;
 // This source code is licensed under Apache 2.0 License.
 
 import com.alibaba.fastjson.parser.ParserConfig;
+import com.vesoft.nebula.client.graph.SessionPool;
 import com.vesoft.nebula.client.graph.net.Session;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
 import org.nebula.contrib.ngbatis.models.MapperContext;
@@ -92,6 +93,14 @@ public class Env {
 
   public SessionDispatcher getDispatcher() {
     return dispatcher;
+  }
+
+  /**
+   * 获取 Nebula SessionPool
+   * @return SessionPool
+   */
+  public SessionPool getSessionPool(String spaceName) {
+    return mapperContext.getNebulaSessionPoolMap().get(spaceName);
   }
 
   /**

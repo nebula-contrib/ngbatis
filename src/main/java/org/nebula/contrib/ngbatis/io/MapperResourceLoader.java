@@ -11,6 +11,8 @@ import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getNameUniqueMethod;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -24,11 +26,14 @@ import org.jsoup.nodes.Entities;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
+import org.nebula.contrib.ngbatis.annotations.Space;
 import org.nebula.contrib.ngbatis.annotations.TimeLog;
+import org.nebula.contrib.ngbatis.config.NgbatisConfig;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
 import org.nebula.contrib.ngbatis.exception.ParseException;
 import org.nebula.contrib.ngbatis.exception.ResourceLoadException;
 import org.nebula.contrib.ngbatis.models.ClassModel;
+import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.nebula.contrib.ngbatis.models.MethodModel;
 import org.nebula.contrib.ngbatis.utils.Page;
 import org.slf4j.Logger;
@@ -99,6 +104,18 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
       // 获取 namespace
       match(cm, element, "namespace", parseConfig.getNamespace());
       match(cm, element, "space", parseConfig.getSpace());
+
+      // 从注解获取 space
+      NgbatisConfig ngbatisConfig = MapperContext.newInstance().getNgbatisConfig();
+      if (ngbatisConfig != null && ngbatisConfig.getUseSessionPool()) {
+        if (null == cm.getSpace()) {
+          setClassModelBySpaceAnnotation(cm);
+        }
+        if (null != cm.getSpace() && !cm.getSpace().equals("")) {
+          MapperContext.newInstance().getSpaceNameSet().add(cm.getSpace());
+        }
+      }
+
       // 获取 子节点
       List<Node> nodes = element.childNodes();
       // 便历子节点，获取 MethodModel
@@ -107,6 +124,31 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
       result.put(cm.getNamespace().getName() + PROXY_SUFFIX, cm);
     }
     return result;
+  }
+
+  /**
+   * 设置 space
+   * @param cm ClassModel
+   */
+  private void setClassModelBySpaceAnnotation(ClassModel cm) {
+    try {
+      Type[] genericInterfaces = cm.getNamespace().getGenericInterfaces();
+      if (genericInterfaces.length == 0) {
+        return;
+      }
+      ParameterizedType nebulaDaoBasicType = (ParameterizedType) genericInterfaces[0];
+      Type[] genericTypes = nebulaDaoBasicType.getActualTypeArguments();
+      if (genericTypes.length == 0) {
+        return;
+      }
+      String spaceClassName = genericTypes[0].getTypeName();
+      Space annotation = Class.forName(spaceClassName).getAnnotation(Space.class);
+      if (null != annotation && !annotation.name().equals("")) {
+        cm.setSpace(annotation.name());
+      }
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    }
   }
 
   /**

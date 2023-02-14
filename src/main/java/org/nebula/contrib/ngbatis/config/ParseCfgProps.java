@@ -273,4 +273,5 @@ public class ParseCfgProps {
     this.resourceRefresh = resourceRefresh;
     return this;
   }
+
 }

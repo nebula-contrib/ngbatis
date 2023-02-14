@@ -3,6 +3,6 @@
     
     This source code is licensed under Apache 2.0 License.
 -->
-<mapper namespace="ye.weicheng.ngbatis.demo.repository.ColumnAliasDao">
+<mapper namespace="ye.weicheng.ngbatis.demo.repository.ColumnAliasDao" space="test">
   
 </mapper>

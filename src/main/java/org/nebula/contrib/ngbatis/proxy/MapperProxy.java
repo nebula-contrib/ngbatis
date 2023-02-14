@@ -7,6 +7,7 @@ package org.nebula.contrib.ngbatis.proxy;
 import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 import static org.nebula.contrib.ngbatis.models.ClassModel.PROXY_SUFFIX;
 
+import com.vesoft.nebula.client.graph.SessionPool;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.net.Session;
@@ -21,6 +22,7 @@ import org.nebula.contrib.ngbatis.ArgsResolver;
 import org.nebula.contrib.ngbatis.Env;
 import org.nebula.contrib.ngbatis.ResultResolver;
 import org.nebula.contrib.ngbatis.SessionDispatcher;
+import org.nebula.contrib.ngbatis.config.NgbatisConfig;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
 import org.nebula.contrib.ngbatis.exception.QueryException;
 import org.nebula.contrib.ngbatis.models.ClassModel;
@@ -123,7 +125,12 @@ public class MapperProxy {
 
     Map<String,Object> parasForDb = argsResolver.resolve(methodModel, args);
     final long step1 = System.currentTimeMillis();
-    query = executeWithParameter(classModel, methodModel, gql, parasForDb, argMap);
+    NgbatisConfig ngbatisConfig = MapperContext.newInstance().getNgbatisConfig();
+    if (ngbatisConfig == null || !ngbatisConfig.getUseSessionPool()) {
+      query = executeWithParameter(classModel, methodModel, gql, parasForDb, argMap);
+    } else {
+      query = executeBySessionPool(classModel, methodModel, gql, parasForDb, argMap);
+    }
 
     final long step2 = System.currentTimeMillis();
     if (!query.isSucceeded()) {
@@ -245,11 +252,58 @@ public class MapperProxy {
     }
   }
 
+  /**
+   * 通过 nebula-graph 客户端执行数据库访问。被 invoke 所调用，间接为动态代理类服务。
+   *
+   * @param gql  待执行的查询脚本（模板）
+   * @param params 待执行脚本的参数所需的参数
+   * @return nebula-graph 的未被 orm 操作的原始结果集
+   */
+  public static ResultSet executeBySessionPool(ClassModel cm, MethodModel mm, String gql,
+      Map<String, Object> params, Map<String, Object> paramsForTemplate) {
+
+    ResultSet result = null;
+    String proxyClass = null;
+    String proxyMethod = null;
+    String currentSpace = null;
+
+    try {
+      if (log.isDebugEnabled()) {
+        StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[6];
+        proxyClass = stackTraceElement.getClassName();
+        proxyMethod = stackTraceElement.getMethodName();
+      }
+
+      currentSpace = getSpace(cm, mm);
+      SessionPool sessionPool = ENV.getSessionPool(currentSpace);
+      if (sessionPool == null) {
+        throw new QueryException(currentSpace + " sessionPool is null");
+      }
+      result = sessionPool.execute(gql, params);
+      if (result.isSucceeded()) {
+        return result;
+      } else {
+        throw new QueryException(" ResultSet error: " + result.getErrorMessage());
+      }
+    } catch (Exception e) {
+      throw new QueryException("execute failed: " + e.getMessage(), e);
+    } finally {
+      if (log.isDebugEnabled()) {
+        log.debug("\n\t- proxyMethod: {}#{}"
+                + "\n\t- session space: {}"
+                + "\n\t- nGql：{}"
+                + "\n\t- params: {}"
+                + "\n\t- result：{}",
+            proxyClass, proxyMethod, currentSpace, gql, paramsForTemplate, result);
+      }
+    }
+  }
+
   private static void handleSession(SessionDispatcher dispatcher,
       LocalSession localSession, ResultSet result) {
     if (localSession != null) {
       boolean sessionError = ResultSetUtil.isSessionError(result);
-      if (sessionError) {
+      if (sessionError || dispatcher.timeToRelease(localSession)) {
         dispatcher.release(localSession);
       } else {
         dispatcher.offer(localSession);
