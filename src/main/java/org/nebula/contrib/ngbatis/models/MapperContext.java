@@ -7,12 +7,12 @@ package org.nebula.contrib.ngbatis.models;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.SessionPool;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
-import org.nebula.contrib.ngbatis.config.NgbatisConfig;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import org.nebula.contrib.ngbatis.config.NgbatisConfig;
 
 /**
  * xml 中标签所声明的信息（方法）

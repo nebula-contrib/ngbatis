@@ -45,10 +45,10 @@ public class IntervalCheckSessionDispatcher implements Runnable, SessionDispatch
     //使用自定义的 session存活有效期/健康检测间隔
     NgbatisConfig ngbatis = properties.getNgbatis();
     if (ngbatis != null) {
-      SESSION_LIFE_LENGTH = ngbatis.getSessionLifeLength() == null ?
-              SESSION_LIFE_LENGTH : ngbatis.getSessionLifeLength();
-      CHECK_FIXED_RATE = ngbatis.getCheckFixedRate() == null ?
-              CHECK_FIXED_RATE : ngbatis.getCheckFixedRate();
+      SESSION_LIFE_LENGTH = ngbatis.getSessionLifeLength() == null
+        ? SESSION_LIFE_LENGTH : ngbatis.getSessionLifeLength();
+      CHECK_FIXED_RATE = ngbatis.getCheckFixedRate() == null
+        ? CHECK_FIXED_RATE : ngbatis.getCheckFixedRate();
     }
 
     wakeUp();

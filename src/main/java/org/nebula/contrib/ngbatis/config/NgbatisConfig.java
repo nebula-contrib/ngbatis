@@ -12,71 +12,71 @@ package org.nebula.contrib.ngbatis.config;
  */
 public class NgbatisConfig {
 
-    /**
-     * session存活有效期
-     */
-    public Long sessionLifeLength;
+  /**
+   * session存活有效期
+   */
+  public Long sessionLifeLength;
 
-    /**
-     * session健康检测间隔
-     */
-    public Long checkFixedRate;
-    /**
-     * Whether to use the session pool of nebula-java
-     */
-    public Boolean useSessionPool;
+  /**
+   * session健康检测间隔
+   */
+  public Long checkFixedRate;
+  /**
+   * Whether to use the session pool of nebula-java
+   */
+  public Boolean useSessionPool;
 
 
-    public Long getSessionLifeLength() {
-        return sessionLifeLength;
+  public Long getSessionLifeLength() {
+    return sessionLifeLength;
+  }
+
+  /**
+   * session存活有效期
+   * @param sessionLifeLength 单位毫秒
+   * @return null 或者 正数
+   */
+  public NgbatisConfig setSessionLifeLength(Long sessionLifeLength) {
+    if (sessionLifeLength == null || sessionLifeLength <= 0) {
+      return this;
     }
+    this.sessionLifeLength = sessionLifeLength;
+    return this;
+  }
 
-    /**
-     * session存活有效期
-     * @param sessionLifeLength 单位毫秒
-     * @return null 或者 正数
-     */
-    public NgbatisConfig setSessionLifeLength(Long sessionLifeLength) {
-        if (sessionLifeLength == null || sessionLifeLength <= 0) {
-            return this;
-        }
-        this.sessionLifeLength = sessionLifeLength;
-        return this;
+  public Long getCheckFixedRate() {
+    return checkFixedRate;
+  }
+
+  /**
+   * session健康检测间隔
+   * @param checkFixedRate 单位毫秒
+   * @return null 或者 正数
+   */
+  public NgbatisConfig setCheckFixedRate(Long checkFixedRate) {
+    if (checkFixedRate == null || checkFixedRate <= 0) {
+      return this;
     }
+    this.checkFixedRate = checkFixedRate;
+    return this;
+  }
 
-    public Long getCheckFixedRate() {
-        return checkFixedRate;
+  public Boolean getUseSessionPool() {
+    return useSessionPool;
+  }
+
+  /**
+   * 默认 false
+   * @param useSessionPool 是否使用 nebula-java 的 SessionPool
+   * @return true/false
+   */
+  public NgbatisConfig setUseSessionPool(Boolean useSessionPool) {
+    if (useSessionPool == null) {
+      this.useSessionPool = false;
+      return this;
     }
+    this.useSessionPool = useSessionPool;
+    return this;
 
-    /**
-     * session健康检测间隔
-     * @param checkFixedRate 单位毫秒
-     * @return null 或者 正数
-     */
-    public NgbatisConfig setCheckFixedRate(Long checkFixedRate) {
-        if (checkFixedRate == null || checkFixedRate <= 0) {
-            return this;
-        }
-        this.checkFixedRate = checkFixedRate;
-        return this;
-    }
-
-    public Boolean getUseSessionPool() {
-        return useSessionPool;
-    }
-
-    /**
-     * 默认 false
-     * @param useSessionPool 是否使用 nebula-java 的 SessionPool
-     * @return true/false
-     */
-    public NgbatisConfig setUseSessionPool(Boolean useSessionPool) {
-        if (useSessionPool == null) {
-            this.useSessionPool = false;
-            return this;
-        }
-        this.useSessionPool = useSessionPool;
-        return this;
-
-    }
+  }
 }
