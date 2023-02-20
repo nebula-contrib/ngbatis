@@ -210,7 +210,7 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
    * @return inited SessionPool
    */
   public SessionPool initSessionPool(String spaceName) {
-    NgbatisConfig ngbatisConfig = nebulaJdbcProperties.getNgbatis();
+    final NgbatisConfig ngbatisConfig = nebulaJdbcProperties.getNgbatis();
     NebulaPoolConfig poolConfig = nebulaJdbcProperties.getPoolConfig();
 
     SessionPoolConfig sessionPoolConfig = new SessionPoolConfig(
@@ -229,10 +229,12 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
     sessionPoolConfig.setTimeout(poolConfig.getTimeout());
     sessionPoolConfig.setWaitTime(poolConfig.getWaitTime());
     if (null != ngbatisConfig.getSessionLifeLength()) {
-      sessionPoolConfig.setCleanTime((int)(ngbatisConfig.getSessionLifeLength()/1000));
+      int cleanTime = (int) (ngbatisConfig.getSessionLifeLength() / 1000);
+      sessionPoolConfig.setCleanTime(cleanTime);
     }
     if (null != ngbatisConfig.getCheckFixedRate()) {
-      sessionPoolConfig.setHealthCheckTime((int)(ngbatisConfig.getCheckFixedRate()/1000));
+      int healthCheckTime = (int) (ngbatisConfig.getCheckFixedRate() / 1000);
+      sessionPoolConfig.setHealthCheckTime(healthCheckTime);
     }
 
     SessionPool sessionPool = new SessionPool(sessionPoolConfig);

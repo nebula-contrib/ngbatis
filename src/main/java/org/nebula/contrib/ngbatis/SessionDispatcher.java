@@ -4,6 +4,9 @@ package org.nebula.contrib.ngbatis;
 //
 // This source code is licensed under Apache 2.0 License.
 
+import org.apache.logging.log4j.util.Strings;
+import org.nebula.contrib.ngbatis.config.NgbatisConfig;
+import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.nebula.contrib.ngbatis.session.LocalSession;
 
 /**
@@ -29,4 +32,39 @@ public interface SessionDispatcher {
    * @return 需要释放-true,不需要释放-false
    */
   boolean timeToRelease(LocalSession session);
+
+  /**
+   * Add space name to init the session in session pool.<br>
+   * 将需要初始化的空间名添加到列表并在 sessionPool 中初始化 session.
+   *
+   * @author gin soul [create]
+   * @author CorvusYe [refac]
+   * @param space The session space in the session pool that needs to be init.
+   * @since 1.1.2
+   */
+  static void addSpaceToSessionPool(String space) {
+    boolean addable = useSessionPool() && Strings.isNotBlank(space);
+    if (addable) {
+      MapperContext.newInstance().getSpaceNameSet().add(space);
+    }
+  }
+  
+  /**
+   *  Is ngbatis use nebula-java session pool?
+   *  读取配置判断是否使用 nebula-java 的会话池
+   *  
+   *  <pre><code lang="yml">
+   *    nebula:
+   *      ngbatis:
+   *        use-session-pool: true
+   *  </code></pre>
+   *  
+   * @return Flag used by the session pool.
+   * @author gin soul [create]
+   * @author CorvusYe [refac]
+   */
+  static boolean useSessionPool() {
+    NgbatisConfig ngbatisConfig = MapperContext.newInstance().getNgbatisConfig();
+    return ngbatisConfig != null && ngbatisConfig.getUseSessionPool();
+  }
 }

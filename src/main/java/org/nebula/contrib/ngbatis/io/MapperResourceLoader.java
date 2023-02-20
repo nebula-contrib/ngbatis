@@ -4,6 +4,7 @@ package org.nebula.contrib.ngbatis.io;
 //
 // This source code is licensed under Apache 2.0 License.
 
+import static org.nebula.contrib.ngbatis.SessionDispatcher.addSpaceToSessionPool;
 import static org.nebula.contrib.ngbatis.models.ClassModel.PROXY_SUFFIX;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.NEED_SEALING_TYPES;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getNameUniqueMethod;
@@ -28,12 +29,10 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 import org.nebula.contrib.ngbatis.annotations.Space;
 import org.nebula.contrib.ngbatis.annotations.TimeLog;
-import org.nebula.contrib.ngbatis.config.NgbatisConfig;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
 import org.nebula.contrib.ngbatis.exception.ParseException;
 import org.nebula.contrib.ngbatis.exception.ResourceLoadException;
 import org.nebula.contrib.ngbatis.models.ClassModel;
-import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.nebula.contrib.ngbatis.models.MethodModel;
 import org.nebula.contrib.ngbatis.utils.Page;
 import org.slf4j.Logger;
@@ -106,15 +105,10 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
       match(cm, element, "space", parseConfig.getSpace());
 
       // 从注解获取 space
-      NgbatisConfig ngbatisConfig = MapperContext.newInstance().getNgbatisConfig();
-      if (ngbatisConfig != null && ngbatisConfig.getUseSessionPool()) {
-        if (null == cm.getSpace()) {
-          setClassModelBySpaceAnnotation(cm);
-        }
-        if (null != cm.getSpace() && !cm.getSpace().equals("")) {
-          MapperContext.newInstance().getSpaceNameSet().add(cm.getSpace());
-        }
+      if (null == cm.getSpace()) {
+        setClassModelBySpaceAnnotation(cm);
       }
+      addSpaceToSessionPool(cm.getSpace());
 
       // 获取 子节点
       List<Node> nodes = element.childNodes();
@@ -164,6 +158,7 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
     for (Node methodNode : nodes) {
       if (methodNode instanceof Element) {
         MethodModel methodModel = parseMethodModel(methodNode);
+        addSpaceToSessionPool(methodModel.getSpace());
         Method method = getNameUniqueMethod(namespace, methodModel.getId());
         methodModel.setMethod(method);
         Assert.notNull(method,

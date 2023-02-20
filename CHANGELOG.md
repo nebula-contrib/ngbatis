@@ -18,6 +18,15 @@ This source code is licensed under Apache 2.0 License.
 - feat: provide default data structure for edge \ vertex \ path \ sub-graph, and their result handler. #103 #118
 - feat: NebulaDaoBasic shortest path support. #118
 - feat: ng.valueFmt support escape ( default true ). Use `ValueFmtFn.setEscape( false );` to disable this feature.
+- feat: add config to use `nebula-java` session pool
+  ```
+  nebula:
+    ngbatis:
+      use-session-pool: true
+  ``` 
+
+## Dependencies upgrade
+- nebula-java: 3.3.0 -> 3.4.0
 
 # 1.1.1
 - fixed #89 BigDecimal / Set / Collection serialization to NebulaValue #97
