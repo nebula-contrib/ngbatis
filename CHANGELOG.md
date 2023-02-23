@@ -20,6 +20,8 @@ This source code is licensed under Apache 2.0 License.
   - [ ] Geography
   - [ ] Duration
 
+## Dependencies upgrade
+- [ ] Springboot 3.x support.
 
 # 1.1.2
 ## Develop behavior change.
