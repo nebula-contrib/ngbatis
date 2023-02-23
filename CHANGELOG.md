@@ -5,6 +5,24 @@ Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
 This source code is licensed under Apache 2.0 License.
 -->
 
+# 1.2.0-SNAPSHOT
+## Features
+- [ ] Expand the function of NebulaDaoBasic
+  - [ ] Add batch interface:
+    - [ ] insertTripletBatch
+    - [ ] insertEdgeBatch
+    - [ ] ...
+  - [ ] Schema support:
+    - [ ] show metas 
+    - [ ] create | alter tag & edge type
+    - [ ] index
+- [ ] ResultSetUtil more column types support
+  - [ ] Geography
+  - [ ] Duration
+
+## Dependencies upgrade
+- [ ] Springboot 3.x support.
+
 # 1.1.2
 ## Develop behavior change.
 - If an entity type is another entity type's super class, all attribute are being required in database schema except `@Transient`
