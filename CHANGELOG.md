@@ -5,7 +5,7 @@ Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
 This source code is licensed under Apache 2.0 License.
 -->
 
-# 1.1.2-SNAPSHOT
+# 1.1.2
 ## Develop behavior change.
 - If an entity type is another entity type's super class, all attribute are being required in database schema except `@Transient`
     > 如果一个实体类是另一个实体类的父类，则其所有除了注解`@Transient` 了的属性，都需要在数据库中声明。
