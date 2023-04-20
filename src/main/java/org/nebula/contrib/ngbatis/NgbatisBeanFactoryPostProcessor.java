@@ -193,8 +193,9 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
       return;
     }
 
+    context.getSpaceNameSet().add(nebulaJdbcProperties.getSpace());
     Map<String, SessionPool> nebulaSessionPoolMap = context.getNebulaSessionPoolMap();
-    for (String spaceName : MapperContext.newInstance().getSpaceNameSet()) {
+    for (String spaceName : context.getSpaceNameSet()) {
       SessionPool sessionPool = initSessionPool(spaceName);
       if (sessionPool == null) {
         log.error("{} session pool init failed.", spaceName);
