@@ -321,7 +321,7 @@ public class MapperProxy {
     if (!sameSpace) {
       qlAndSpace[0] = currentSpace;
       Session session = localSession.getSession();
-      ResultSet execute = session.execute(String.format("USE %s", currentSpace));
+      ResultSet execute = session.execute(String.format("USE `%s`", currentSpace));
       if (!execute.isSucceeded()) {
         throw new BindSpaceFailedException(
           String.format(" %s \"%s\"", execute.getErrorMessage(), currentSpace)
