@@ -18,7 +18,9 @@ This source code is licensed under Apache 2.0 License.
 **NGBATIS** 是一款针对 [Nebula Graph](https://github.com/vesoft-inc/nebula) + Springboot 的数据库 ORM 框架。借鉴于 [MyBatis](https://github.com/mybatis/mybatis-3) 的使用习惯进行开发。包含了一些类似于[mybatis-plus](https://github.com/baomidou/mybatis-plus)的单表操作，另外还有一些图特有的实体-关系基本操作。  
 如果使用上更习惯于JPA的方式，[graph-ocean](https://github.com/nebula-contrib/graph-ocean) 是个不错的选择。
 
-## NGBATIS 是怎么运行的？请看设计文档 [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
+## NGBATIS 是怎么运行的？
+
+请看设计文档 [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
 
 ## 项目要求
 - Springboot
@@ -27,13 +29,18 @@ This source code is licensed under Apache 2.0 License.
 
 ## 如何使用（可在克隆代码后，参考 ngbatis-demo 项目）
 ### 在项目引入
-```xml
-    <dependency>
-      <groupId>org.nebula-contrib</groupId>
-      <artifactId>ngbatis</artifactId>
-      <version>1.1.1</version>
-    </dependency>
-```
+  - Maven
+    ```xml
+        <dependency>
+          <groupId>org.nebula-contrib</groupId>
+          <artifactId>ngbatis</artifactId>
+          <version>1.1.3</version>
+        </dependency>
+    ```
+  - Gradle
+    ```groovy
+    implementation 'org.nebula-contrib:ngbatis:1.1.3'
+    ```
 ### 参考 [【ngbatis-demo】](./ngbatis-demo)，与springboot无缝集成。在该项目的 test 中还有api的样例。在开发过程中每增加一个特性也都会同步更新ngbatis-demo的用例。
 
 
@@ -41,6 +48,12 @@ This source code is licensed under Apache 2.0 License.
 在 application.yml 中添加配置 **将数据源修改成可访问到的NebulaGraph**
 ```yml
 nebula:
+  ngbatis:
+    session-life-length: 300000 # since v1.1.2
+    check-fixed-rate: 300000 # since v1.1.2
+    # `use-session-pool` 默认是 false，如开启，则 space 是必须指定的
+    # space除了使用当前文件的声明意外，还可以使用：(@Space) or xml(space="test")
+    use-session-pool: false # since v1.1.2
   hosts: 127.0.0.1:19669, 127.0.0.1:9669
   username: root
   password: nebula
@@ -57,13 +70,15 @@ nebula:
 ```
 ### 扫描动态代理的 bean
 ```java
-@SpringBootApplication(scanBasePackages = { "ye.weicheng", "org.nebula" })
+@SpringBootApplication(scanBasePackages = { "org.nebula", "your.domain"})
 public class YourApplication {
     public static void main(String[] args) {
         new SpringApplication(YourApplication.class).run(args);
     }
 }
 ```
+> 如果项目中使用的是 SpringCloud，
+> 请使用`@ComponentScan( basePackages = {"org.nebula.contrib", "your.domain"} )` 
 
 ## 日常开发示例
 ### 自己编写 nGQL (MyBatis的思路)
@@ -250,5 +265,9 @@ public class PersonServiceImpl {
 
 ```
 
-## License
-This code is under the [Apache License, Version 2.0, January 2004](https://www.apache.org/licenses/LICENSE-2.0).
+## 特别声明的上游项目
+- [beetl](https://gitee.com/xiandafu/beetl), BSD-3, Beetl模板引擎是项目很重要的组成部分(as is).
+
+
+## 开源协议
+项目遵循 [Apache License, Version 2.0, January 2004](https://www.apache.org/licenses/LICENSE-2.0) 开源协议。

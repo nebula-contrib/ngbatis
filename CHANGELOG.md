@@ -23,6 +23,13 @@ This source code is licensed under Apache 2.0 License.
 ## Dependencies upgrade
 - [ ] Springboot 3.x support.
 
+# 1.1.3
+## Bugfix
+- fix: make the error message clearer when 'use space' failed [#150](https://github.com/nebula-contrib/ngbatis/issues/150)
+- fix: sessionPool is null when the space name only declared in yml
+## Dependencies upgrade
+- nebula-java: 3.4.0 -> 3.5.0
+
 # 1.1.2
 ## Develop behavior change.
 - If an entity type is another entity type's super class, all attribute are being required in database schema except `@Transient`

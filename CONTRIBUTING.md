@@ -22,6 +22,6 @@ You should be having:
 
 ## Commit and pull request
 
-## Enjoy the praise
+## Experience the joy brought by sharing
 
 > If you have any questions, issue please.

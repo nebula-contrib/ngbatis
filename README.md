@@ -11,7 +11,7 @@ This source code is licensed under Apache 2.0 License.
   <br> English | <a href="README-CN.md">中文</a>
 </p>
 
-- [Ngbatis Docs](https://corvusye.github.io/ngbatis-docs/#/)
+- [Ngbatis Docs](https://graph-cn.github.io/ngbatis-docs/)
 
 ## What is NGBATIS
 
@@ -33,14 +33,19 @@ See [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
 > You could refer to ngbatis-demo in this repo.
 
 - Include in your `pom.xml`
+  - Maven
+    ```xml
+        <dependency>
+          <groupId>org.nebula-contrib</groupId>
+          <artifactId>ngbatis</artifactId>
+          <version>1.1.3</version>
+        </dependency>
+    ```
+  - Gradle
+    ```groovy
+    implementation 'org.nebula-contrib:ngbatis:1.1.3'
+    ```
 
-```xml
-    <dependency>
-      <groupId>org.nebula-contrib</groupId>
-      <artifactId>ngbatis</artifactId>
-      <version>1.1.1</version>
-    </dependency>
-```
 - Referring to [ngbatis-demo](./ngbatis-demo), which was smoothly integrated with spring-boot. The API examples could be found under the test of it for all features of ngbatis.
 
 - Configure the NebulaGraph Database
@@ -49,6 +54,12 @@ See [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
 
 ```yml
 nebula:
+  ngbatis:
+    session-life-length: 300000 # since v1.1.2
+    check-fixed-rate: 300000 # since v1.1.2
+    # space name needs to be informed through annotations(@Space) or xml(space="test")
+    # default false(false: Session pool map will not be initialized)
+    use-session-pool: false # since v1.1.2
   hosts: 127.0.0.1:19669, 127.0.0.1:9669
   username: root
   password: nebula
@@ -66,13 +77,15 @@ nebula:
 - Dynamically register beans
 
 ```java
-@SpringBootApplication(scanBasePackages = { "ye.weicheng", "org.nebula" })
+@SpringBootApplication(scanBasePackages = { "org.nebula", "your.domain"})
 public class YourApplication {
     public static void main(String[] args) {
         new SpringApplication(YourApplication.class).run(args);
     }
 }
 ```
+> If SpringCloud is used in your project,   
+> please use `@ComponentScan( basePackages = {"org.nebula.contrib", "your.domain"} )` instead.
 
 ## Examples
 ### a. The MyBatis fashion(compose nGQL queries)
