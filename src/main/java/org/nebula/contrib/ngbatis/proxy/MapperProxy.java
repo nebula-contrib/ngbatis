@@ -9,6 +9,7 @@ import static org.nebula.contrib.ngbatis.models.ClassModel.PROXY_SUFFIX;
 
 import com.vesoft.nebula.client.graph.SessionPool;
 import com.vesoft.nebula.client.graph.data.ResultSet;
+import com.vesoft.nebula.client.graph.exception.BindSpaceFailedException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.net.Session;
 import java.io.IOException;
@@ -312,7 +313,7 @@ public class MapperProxy {
   }
 
   private static String[] qlWithSpace(LocalSession localSession, String gql, String currentSpace)
-      throws IOErrorException {
+      throws IOErrorException, BindSpaceFailedException {
     String[] qlAndSpace = new String[2];
     gql = gql.trim();
     String sessionSpace = localSession.getCurrentSpace();
@@ -320,7 +321,12 @@ public class MapperProxy {
     if (!sameSpace) {
       qlAndSpace[0] = currentSpace;
       Session session = localSession.getSession();
-      session.execute(String.format("USE %s", currentSpace));
+      ResultSet execute = session.execute(String.format("USE `%s`", currentSpace));
+      if (!execute.isSucceeded()) {
+        throw new BindSpaceFailedException(
+          String.format(" %s \"%s\"", execute.getErrorMessage(), currentSpace)
+        );
+      }
     }
     qlAndSpace[1] = String.format("\n\t\t%s", gql);
     return qlAndSpace;
