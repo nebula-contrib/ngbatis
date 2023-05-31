@@ -58,4 +58,3 @@ sequenceDiagram
   MapperProxy_invoke->>MapperProxy: 
   MapperProxy->> XXXDao: 与 xml 返回值类型对应的结果
 ```
-

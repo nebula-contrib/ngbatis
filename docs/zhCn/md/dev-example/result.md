@@ -13,7 +13,7 @@
       RETURN 'You are best'
   </select>
   ```
-- > 如果在下列的几种类型中，不能满足开发所需的结果集处理，可以使用获取原始ResultSet类型的返回值，并自行做灵活处理。可阅读[ResultSet源码]((https://github.com/vesoft-inc/nebula-java/blob/master/client/src/main/java/com/vesoft/nebula/client/graph/data/ResultSet.java))做近一步了解。
+- > 如果在下列的几种类型中，不能满足开发所需的结果集处理，可以使用获取原始ResultSet类型的返回值，并自行做灵活处理。可阅读[ResultSet源码](https://github.com/vesoft-inc/nebula-java/blob/master/client/src/main/java/com/vesoft/nebula/client/graph/data/ResultSet.java)做近一步了解。
 
 ## 非集合类型
 此时，结果类型已经通过 方法的返回值类型告知 ngbatis，所以无需额外的配置，即可完成类型映射。
@@ -223,4 +223,4 @@
         LIMIT 10
     </select>
     ```
-  - > 使用 List<Map> 做为返回值同样奏效，n, r, n2 为 map 的 key
+  - > 使用 List<Map\> 做为返回值同样奏效，n, r, n2 为 map 的 key
