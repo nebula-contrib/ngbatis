@@ -8,6 +8,7 @@ import com.vesoft.nebula.client.graph.data.ResultSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.persistence.Id;
 import org.nebula.contrib.ngbatis.models.data.NgEdge;
 import org.nebula.contrib.ngbatis.models.data.NgSubgraph;
 import org.nebula.contrib.ngbatis.models.data.NgVertex;
@@ -73,6 +74,41 @@ public interface TestRepository extends NebulaDaoBasic<Person, String> {
   
   List<NgEdge<String>> selectEdges();
   
-  List<NgSubgraph<String>> selectSubgraph(); 
+  List<NgSubgraph<String>> selectSubgraph();
 
+  List<Person> selectByPerson(@Param("p") Person a);
+  
+  void insertDynamic(List<DynamicNode> list);
+
+  
+  class DynamicNode {
+    @Id
+    private String vid;
+    private String tagName;
+    private Map<String, Object> propertyList;
+
+    public String getVid() {
+      return vid;
+    }
+
+    public void setVid(String vid) {
+      this.vid = vid;
+    }
+
+    public String getTagName() {
+      return tagName;
+    }
+
+    public void setTagName(String tagName) {
+      this.tagName = tagName;
+    }
+
+    public Map<String, Object> getPropertyList() {
+      return propertyList;
+    }
+
+    public void setPropertyList(Map<String, Object> propertyList) {
+      this.propertyList = propertyList;
+    }
+  }
 }
