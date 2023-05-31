@@ -3,8 +3,8 @@
 ## 大致介绍
 Ngbatis 提供了两种方式为开发者提供便利
 - 类似于 Mybatis-plus 的方式，提供一个基类让业务的`DAO`进行继承，不需要自己写 `nGQL` 就能完成单顶点、单边的增删改查。  
-（详见[使用基类编写](./#?path=dev-example&file=dao-basic)）
-- 类似于 Mybatis 的方式，支持自己编写复杂的 `nGQL` 或 `Cypher` 来完成复杂的业务查询与数据写入。（详见[自定义nGQL](./#?path=dev-example&file=custom-crud)）
+（详见[使用基类编写](./dao-basic)）
+- 类似于 Mybatis 的方式，支持自己编写复杂的 `nGQL` 或 `Cypher` 来完成复杂的业务查询与数据写入。（详见[自定义nGQL](./custom-crud)）
   
 
 
@@ -16,7 +16,6 @@ Ngbatis 提供了两种方式为开发者提供便利
 CREATE tag `person` (
   `name` string NULL  , 
   `gender` string NULL  , 
-  `height` double NULL ,
   `age` int NULL  , 
   `birthday` date NULL  
 );
@@ -39,6 +38,7 @@ package your.domain;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Date;
 import lombok.Data;
 
@@ -47,11 +47,16 @@ import lombok.Data;
 public class Person {
     @Id
     private String name;
+
+    /** use @Column to declare field's schema name in database */
+    @Column("gender")
     private String gender;
-    @ValueType(Double.class)
-    private BigDecimal height;
     private Integer age;
     private Date birthday;
+
+    /** use @Transient to declare a field which is not exists in database */
+    @Transient
+    private String fieldDbNotExists;
 }
 ```
 

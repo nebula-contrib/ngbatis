@@ -21,7 +21,7 @@
     </select>
 
     <select id="selectPersonsMap" resultType="java.util.Map">
-        match (v:person) return v.person.name as name, v.person.age  as age limit 100
+        match (v:person) return v limit 100
     </select>
 
     <select id="selectPersons" resultType="ye.weicheng.ngbatis.demo.pojo.Person">
@@ -131,6 +131,29 @@
         BOTH like
         YIELD VERTICES AS nodes, EDGES AS relationships
     </select>
+    
+    <select id="selectByPerson" resultType="ye.weicheng.ngbatis.demo.pojo.Person">
+        MATCH (n: person)
+        WHERE 1 == 1
+        @for ( entry in p ) {
+            @if ( isNotEmpty( entry.value ) ) {
+                AND n.person.${ entry.key } == $p.${ entry.key }
+            @}
+        @}
+        RETURN n
+    </select>
+    
+    <insert id="insertDynamic" space="test">
+        @for( v in p0 ) {
+            @var javaV = @ng_args[0].get(vLP.dataIndex );
+            @var vid = ng.id( javaV );
+            @var kv = ng.kv( javaV.propertyList );
+            @var cols = ng.join( @kv.columns, ",", "ng.schemaFmt" );
+            @var vals = ng.join( @kv.values );
+            INSERT VERTEX IF NOT EXISTS `${ v.tagName }` ( ${ cols } ) VALUES ${ vid } : ( ${ vals } );
+        @}
+    </insert>
+    
 
 </mapper>
 

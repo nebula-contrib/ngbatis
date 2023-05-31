@@ -34,22 +34,3 @@ cql:
     statement-start: <% # 默认为 @
     statement-end: %> # 默认为 null
 ```
-
-## 使用自定义的 session存活有效期/健康检测间隔(单位毫秒)
-```yml
-nebula:
-    # 建议少于nebula配置文件中失效时间
-  ngbatis:
-    session-life-length: 2000
-    check-fixed-rate: 2000
-```
-
-## Whether to use the session pool of nebula-java
-**And please notice that SessionPool does not support reconnect for broken connection.**
-```yml
-nebula:
-  ngbatis:
-    # space name needs to be informed through annotations(@Space) or xml(space="test")
-    # default false(false: Session pool map will not be initialized)
-    use-session-pool: true
-```

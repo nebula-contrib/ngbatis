@@ -13,28 +13,29 @@
 
 ## 对Map的遍历，可用于动态查询
 - PersonDao.java
-    ```java
-        // org.springframework.data.repository.query.Param
-        // person: { "name": "张三", "gender": "F" }
-        Person selectByPerson( @Param("p") Person person );
-    ```
+  ```java
+  // org.springframework.data.repository.query.Param
+  // person: { "name": "张三", "gender": "F" }
+  Person selectByPerson( @Param("p") Person person );
+  ```
 
 - PersonDao.xml
     ```xml
-        <select id="selectByPerson">
-            MATCH (n: person)
-            WHERE 1 == 1 
-            @for ( entry in p ) {
-              @if ( isNotEmpty( entry.value ) ) {
-                AND n.person.`${ entry.key }` == $p.${ entry.key }
-              @}
-            @}
-            RETURN n
-            LIMIT 1
-        </select>
+    <select id="selectByPerson">
+        MATCH (n: person)
+        WHERE 1 == 1 
+        @for ( entry in p ) {
+          @if ( isNotEmpty( entry.value ) ) {
+            AND n.person.`${ entry.key }` == $p.${ entry.key }
+          @}
+        @}
+        RETURN n
+        LIMIT 1
+    </select>
     ```
 
 ## 对 List 遍历，可用于批处理
+
 - PersonDao.java
     ```java
         // org.springframework.data.repository.query.Param

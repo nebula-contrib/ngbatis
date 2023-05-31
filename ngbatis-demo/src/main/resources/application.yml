@@ -6,6 +6,12 @@ server:
   port: 8083
 
 nebula:
+  ngbatis:
+    session-life-length: 300000
+    check-fixed-rate: 300000
+    # space name needs to be informed through annotations(@Space) or xml(space="test")
+    # default false(false: Session pool map will not be initialized)
+    use-session-pool: false
   hosts: 127.0.0.1:19669
   username: root
   password: nebula
@@ -19,3 +25,8 @@ nebula:
     wait-time: 6000
     min-cluster-health-rate: 1.0
     enable-ssl: false
+    
+# 开启 nGQL 输出
+#logging:
+#  level:
+#    org.nebula.contrib: DEBUG

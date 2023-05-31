@@ -1,85 +1,42 @@
+# Ngbatis内置函数与变量
 
-<!--
-Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
+## 如何使用内置函数与变量
+```java
+package your.domain;
 
-This source code is licensed under Apache 2.0 License.
--->
+public interface PersonDao {
+  void insertPerson( Person person );
+}
+```
+```xml
+<mapper namespace="your.domain.PersonDao">
 
-# 1.2.0-SNAPSHOT
-## Features
-- [ ] Expand the function of NebulaDaoBasic
-  - [ ] Add batch interface:
-    - [ ] insertTripletBatch
-    - [ ] insertEdgeBatch
-    - [ ] ...
-  - [ ] Schema support:
-    - [ ] show metas 
-    - [ ] create | alter tag & edge type
-    - [ ] index
-- [ ] ResultSetUtil more column types support
-  - [ ] Geography
-  - [ ] Duration
+  <insert id="insertPerson">
+        @var kv = ng.kv( ng_args[0], '', true, true );
+        @var id = ng.id( ng_args[0] );
+        @var tagName = ng.tagName( ng_args[0] );
+        INSERT VERTEX `${ tagName }` (
+            ${ ng.join( @kv.columns, ",", "ng.schemaFmt" ) }
+        )
+        VALUES ${ id } : (
+            ${ ng.join( @kv.values ) }
+        );
+  </insert>
 
-## Dependencies upgrade
-- [ ] Springboot 3.x support.
+</mapper>
+```
+> 此出用到了 `ng.kv`、`ng.id`、`ng.tagName`、`ng.join`、`ng.schemaFmt`等内置函数，用到了`ng_args`内置参数。
+> 了解了使用的地方之后，咱们在往下的内容中，将对函数进一步介绍。
 
-# 1.1.3
-## Bugfix
-- fix: make the error message clearer when 'use space' failed [#150](https://github.com/nebula-contrib/ngbatis/issues/150)
-- fix: sessionPool is null when the space name only declared in yml
-## Dependencies upgrade
-- nebula-java: 3.4.0 -> 3.5.0
 
-# 1.1.2
-## Develop behavior change.
-- If an entity type is another entity type's super class, all attribute are being required in database schema except `@Transient`
-    > 如果一个实体类是另一个实体类的父类，则其所有除了注解`@Transient` 了的属性，都需要在数据库中声明。
+## 内置变量
+- ng_cm ClassModel Dao接口的类模型，便于在xml中拿到更多类信息 (1.1.0-rc)
+- ng_mm MethodModel Dao接口中某个方法的模型，便于在xml中拿到方法信息，包括入参类型。(1.1.0-rc)
+- ng_args 传入Dao接口的原始参数，未序列化前。(1.1.0-rc)
 
-## Bugfix
-- fix: when vertex has multi tags cannot set value properly.[#120](https://github.com/nebula-contrib/ngbatis/issues/120) 
-- fix: `ng.join` bug [#122](https://github.com/nebula-contrib/ngbatis/issues/122)
-## Features
-- feat: multi tags support for vertex inserting.
-- feat: provide default data structure for edge \ vertex \ path \ sub-graph, and their result handler. #103 #118
-- feat: NebulaDaoBasic shortest path support. #118
-- feat: ng.valueFmt support escape ( default true ). Use `ValueFmtFn.setEscape( false );` to disable this feature.
-- feat: add config to use `nebula-java` session pool
-  ```
-  nebula:
-    ngbatis:
-      use-session-pool: true
-  ``` 
+## 内置函数
 
-## Dependencies upgrade
-- nebula-java: 3.3.0 -> 3.4.0
 
-# 1.1.1
-- fixed #89 BigDecimal / Set / Collection serialization to NebulaValue #97
-
-# 1.1.0
-## Features
-- springcloud+nacos support #55 
-- add upsert tag/edge function #82 
-- support #39, use @javax.persistence.Transient #43
-
-## Enhancement
-- enhanced: #64 `debug log` print current space in session before switch #79 
-- enhanced: NebulaDaoBasic default impls can be overwritten by xml #76 
-- optimize #69 display exception detail & enable NebulaDaoBasic to support space switching #70 
-- docs typo #52 
-
-## Bugfix
-- fixed #89 splitting param serialization into two forms, json and NebulaValue #92 
-- fixed #78 use space and gql are executed together incorrect in 3.3.0 #87 
-- fixed #73 `selectById` use id value embedding instead of cypher parameter #74 
-- fixed #65 `selectByIds` use id values embedding instead of cypher param #67 
-- fixed the error of "ng.id" when id is in super class #62 
-- fixed #51 The node params support the direct use of the ID value when insert edge #60 
-- fixed #56 make it work well when returnType is Map and result is null #58 
-- fixed #47 console bug when result type is basic type #48 
-
-# 1.1.0-rc
-增加了一些内置函数可以在 xml 中使用：
 - ng.valueFmt
   > 对不定类型的数据值进行格式化，忽略是否追加单引号及日期格式化，直接传原始 java类型即可
 
@@ -87,6 +44,7 @@ This source code is licensed under Apache 2.0 License.
   ---|---|---|---|---
   1 | 值 | Object | Y | 
   2 | 如果是字符串是否在前后追加 .* 形成模糊查询 | boolean | N | false
+  > 自 v1.1.2 起，默认对字符串类型进行转义，可使用：`ValueFmtFn.setEscape( false )` 进行关闭
 
 - ng.schemaFmt
   > 对模式名前后追加 **`**，以避免与数据库关键字冲突
@@ -181,4 +139,3 @@ This source code is licensed under Apache 2.0 License.
   3 | 属性名，用于不将值明文写在 ngql 中，而使用参数名，让 nebula 在参数中取值 | String | N | null
 
 
-# 1.1.0-beta

@@ -7,6 +7,8 @@ package ye.weicheng.ngbatis.demo;
 import com.alibaba.fastjson.JSON;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,6 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 import ye.weicheng.ngbatis.demo.pojo.PersonLikePerson;
 import ye.weicheng.ngbatis.demo.repository.TestRepository;
+import ye.weicheng.ngbatis.demo.repository.TestRepository.DynamicNode;
 
 @SpringBootTest
 class NgbatisDemoApplicationTests {
@@ -160,6 +163,41 @@ class NgbatisDemoApplicationTests {
     System.out.println(JSON.toJSONString(ngSubgraphs));
   }
 
+  @Test
+  public void selectByPerson() {
+    Person p = new Person();
+    p.setName("叶小南");
+    p.setAge(18);
+    List<Person> persons = repository.selectByPerson(p);
+    System.out.println(persons);
+  }
+  
+  @Test
+  public void insertDynamic() {
+    DynamicNode node = new DynamicNode();
+    node.setTagName("person");
+    node.setPropertyList(new HashMap<String, Object>() {{
+        put("age", 18);
+      }}
+    );
+    DynamicNode node2 = new DynamicNode();
+    node2.setTagName("person");
+    node2.setPropertyList(new HashMap<String, Object>() {{
+        put("age", 18);
+      }}
+    );
+    DynamicNode node3 = new DynamicNode();
+    node3.setTagName("person");
+    node3.setPropertyList(new HashMap<String, Object>() {{
+        put("age", 18);
+      }}
+    );
+    List<DynamicNode> nodes = Arrays.asList(node, node2, node3);
+    repository.insertDynamic(nodes);
+  }
+
+  
+  
   @Test
   public void testMulti() {
     ResultSet resultSet = repository.testMulti();
