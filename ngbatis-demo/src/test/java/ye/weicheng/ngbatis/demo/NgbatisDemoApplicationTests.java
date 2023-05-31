@@ -177,18 +177,21 @@ class NgbatisDemoApplicationTests {
     DynamicNode node = new DynamicNode();
     node.setTagName("person");
     node.setPropertyList(new HashMap<String, Object>() {{
-      put("age", 18);
-    }});
+        put("age", 18);
+      }}
+    );
     DynamicNode node2 = new DynamicNode();
     node2.setTagName("person");
     node2.setPropertyList(new HashMap<String, Object>() {{
-      put("age", 18);
-    }});
+        put("age", 18);
+      }}
+    );
     DynamicNode node3 = new DynamicNode();
     node3.setTagName("person");
     node3.setPropertyList(new HashMap<String, Object>() {{
-      put("age", 18);
-    }});
+        put("age", 18);
+      }}
+    );
     List<DynamicNode> nodes = Arrays.asList(node, node2, node3);
     repository.insertDynamic(nodes);
   }
