@@ -1,0 +1,12 @@
+<!--
+    Copyright (c) 2022 All project authors. All rights reserved.
+    
+    This source code is licensed under Apache 2.0 License.
+-->
+<mapper namespace="ye.weicheng.ngbatis.demo.repository.TimeTestDao">
+    
+    <select id="selectTenDaysTwoSec">
+        RETURN duration({years: 0, months: 0, days: 10, hours: 0, minutes: 0, seconds: 2})
+    </select>
+    
+</mapper>

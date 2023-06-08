@@ -80,8 +80,12 @@ public abstract class ReflectUtil {
     if (declaredField == null) {
       throw new NoSuchFieldException(prop);
     }
-    //Field declaredField = o.getClass().getDeclaredField(prop);
-    setValue(o, declaredField, value);
+    if (declaredField.getType() == java.sql.Timestamp.class && value instanceof Long) {
+      setValue(o, declaredField, new java.sql.Timestamp((Long)value * 1000));
+    } else {
+      //Field declaredField = o.getClass().getDeclaredField(prop);
+      setValue(o, declaredField, value);
+    }
   }
 
   /**

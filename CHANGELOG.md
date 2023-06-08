@@ -18,10 +18,29 @@ This source code is licensed under Apache 2.0 License.
     - [ ] index
 - [ ] ResultSetUtil more column types support
   - [ ] Geography
-  - [ ] Duration
+  - [x] Duration
 
 ## Dependencies upgrade
 - [ ] Springboot 3.x support.
+
+# 1.1.4
+## Develop behavior change.
+- When a field is declared by java.util.Date, it is no longer allowed to set a value using Timestamp
+  > 当字段由java.util.Date声明时，不再允许使用java.sql.Timestamp设值
+
+## Bugfix
+- fix: data error for date type in the database.[#102](https://github.com/nebula-contrib/ngbatis/issues/102)
+
+## Feature
+- Clear time type mapping.
+
+  db type | java type
+  ---|---
+  datetime | java.util.Date
+  date | java.sql.Date
+  time | java.sql.Time
+  timestamp | java.sql.Timestamp
+  duration | java.time.Duration
 
 # 1.1.3
 ## Bugfix
