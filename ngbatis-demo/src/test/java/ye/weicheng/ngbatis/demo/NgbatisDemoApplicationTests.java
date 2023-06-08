@@ -6,8 +6,8 @@ package ye.weicheng.ngbatis.demo;
 
 import com.alibaba.fastjson.JSON;
 import com.vesoft.nebula.client.graph.data.ResultSet;
-import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -243,7 +243,7 @@ class NgbatisDemoApplicationTests {
     Person person = new Person();
     person.setAge(null);
     person.setName("赵小洋");
-    person.setBirthday(new Timestamp(System.currentTimeMillis()));
+    person.setBirthday(new Date());
     repository.insertWithTimestamp(person);
   }
 

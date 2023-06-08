@@ -38,12 +38,12 @@ See [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
         <dependency>
           <groupId>org.nebula-contrib</groupId>
           <artifactId>ngbatis</artifactId>
-          <version>1.1.3</version>
+          <version>1.1.4</version>
         </dependency>
     ```
   - Gradle
     ```groovy
-    implementation 'org.nebula-contrib:ngbatis:1.1.3'
+    implementation 'org.nebula-contrib:ngbatis:1.1.4'
     ```
 
 - Referring to [ngbatis-demo](./ngbatis-demo), which was smoothly integrated with spring-boot. The API examples could be found under the test of it for all features of ngbatis.

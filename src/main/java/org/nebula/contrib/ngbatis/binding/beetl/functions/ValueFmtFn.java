@@ -5,7 +5,9 @@ package org.nebula.contrib.ngbatis.binding.beetl.functions;
 // This source code is licensed under Apache 2.0 License.
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.Date;
 import org.apache.commons.text.StringEscapeUtils;
 
@@ -40,11 +42,28 @@ public class ValueFmtFn extends AbstractFunction<Object, Boolean, Boolean, Void,
     if (value instanceof BigDecimal) {
       return ((BigDecimal) value).toPlainString();
     }
+    
+    if (value instanceof Duration) {
+      return String.format(
+        "duration({seconds: %d})",
+        ((Duration) value).getSeconds()
+      );
+    }
 
     if (value instanceof Date) {
-      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
-      String fn = "datetime";
       Class<?> objClass = value.getClass();
+      if (objClass == Timestamp.class) {
+        // 数据库时间戳的单位是秒
+        return String.format("%s(%d)", "timestamp", (((Timestamp) value).getTime() / 1000));
+      }
+
+      String timePattern = objClass == java.util.Date.class ? "yyyy-MM-dd'T'HH:mm:ss.sss"
+        : objClass == java.sql.Date.class ? "yyyy-MM-dd"
+          : objClass == java.sql.Time.class ? "HH:mm:ss.sss"
+            : "yyyy-MM-dd'T'HH:mm:ss.sss";
+      SimpleDateFormat sdf = new SimpleDateFormat(timePattern);
+      
+      String fn = "datetime";
       fn = objClass == java.util.Date.class ? "datetime"
         : objClass == java.sql.Date.class ? "date"
           : objClass == java.sql.Time.class ? "time"

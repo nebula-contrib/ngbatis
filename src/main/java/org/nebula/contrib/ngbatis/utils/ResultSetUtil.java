@@ -12,9 +12,11 @@ import static org.nebula.contrib.ngbatis.utils.ReflectUtil.schemaByEntityType;
 import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.client.graph.data.DateTimeWrapper;
 import com.vesoft.nebula.client.graph.data.DateWrapper;
+import com.vesoft.nebula.client.graph.data.DurationWrapper;
 import com.vesoft.nebula.client.graph.data.Node;
 import com.vesoft.nebula.client.graph.data.Relationship;
 import com.vesoft.nebula.client.graph.data.ResultSet;
+import com.vesoft.nebula.client.graph.data.TimeWrapper;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
@@ -77,7 +79,7 @@ public class ResultSetUtil {
           : value.isBoolean() ? value.asBoolean()
           : value.isDouble() ? value.asDouble()
             : value.isString() ? value.asString()
-              : value.isTime() ? value.asTime()
+              : value.isTime() ? transformTime(value.asTime())
                 : value.isDate() ? transformDate(value.asDate())
                   : value.isDateTime() ? transformDateTime(value.asDateTime())
                     : value.isVertex() ? transformNode(value.asNode())
@@ -86,7 +88,8 @@ public class ResultSetUtil {
                           : value.isList() ? transformList(value.asList())
                             : value.isSet() ? transformList(value.asList())
                               : value.isMap() ? transformMap(value.asMap())
-                                : null;
+                                : value.isDuration() ? transformDuration(value.asDuration())
+                                  : null;
 
       return (T) o;
     } catch (UnsupportedEncodingException e) {
@@ -122,10 +125,16 @@ public class ResultSetUtil {
   }
 
   private static Object transformDate(DateWrapper date) {
-    return new GregorianCalendar(date.getYear() + 1900, date.getMonth() - 1, date.getDay())
-      .getTime();
+    return new java.sql.Date(date.getYear() - 1900, date.getMonth() - 1, date.getDay());
   }
 
+  private static Object transformTime(TimeWrapper time) {
+    return new java.sql.Time(time.getHour(), time.getMinute(), time.getSecond());
+  }
+
+  private static Object transformDuration(DurationWrapper du) {
+    return java.time.Duration.ofNanos(du.getSeconds() * 1000000000);
+  }
 
   private static Object transformNode(Node node) {
     MapperContext mapperContext = MapperProxy.ENV.getMapperContext();

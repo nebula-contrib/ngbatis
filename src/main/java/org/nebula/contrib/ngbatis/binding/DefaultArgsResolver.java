@@ -94,6 +94,14 @@ public class DefaultArgsResolver implements ArgsResolver {
       put(DataSet.class, (Setter<DataSet>) Value::gVal);
       put(Geography.class, (Setter<Geography>) Value::ggVal);
       put(Duration.class, (Setter<Duration>) Value::duVal);
+      put(
+        java.time.Duration.class, 
+        (java.time.Duration du) -> Value.duVal(
+          new Duration()
+            .setSeconds(du.getSeconds())
+            .setMicroseconds(du.getNano() * 1000)
+        )
+      );
     }};
 
   @SuppressWarnings("rawtypes")
