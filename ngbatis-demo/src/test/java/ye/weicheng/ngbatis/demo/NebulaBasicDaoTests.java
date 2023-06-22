@@ -142,7 +142,7 @@ public class NebulaBasicDaoTests {
   public void insert() {
     Person person = new Person();
     person.setAge(null);
-    person.setName("赵小洋");
+    person.setName("赵小洋' \" @$");
     repository.insert(person);
   }
 

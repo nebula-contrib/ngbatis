@@ -21,9 +21,15 @@ import org.apache.commons.text.StringEscapeUtils;
 public class ValueFmtFn extends AbstractFunction<Object, Boolean, Boolean, Void, Void, Void> {
 
   private static boolean escape = true;
+
+  private static String parameterQuote = "\"";
   
   public static void setEscape(boolean escape) {
     ValueFmtFn.escape = escape;
+  }
+  
+  public static void setParameterQuote(String parameterQuote) {
+    ValueFmtFn.parameterQuote = parameterQuote;
   }
 
   @Override
@@ -34,9 +40,10 @@ public class ValueFmtFn extends AbstractFunction<Object, Boolean, Boolean, Void,
       return null;
     }
     if (value instanceof String) {
+      value = (escape ? StringEscapeUtils.escapeJava((String) value) : value);
       return ifStringLike 
-        ? "'.*" + value + ".*'"
-        : "'" + (escape ? StringEscapeUtils.escapeJava((String) value) : value) + "'";
+        ? String.format("%s.*%s.*%s", parameterQuote, value, parameterQuote)
+        : String.format("%s%s%s", parameterQuote, value, parameterQuote);
     }
     
     if (value instanceof BigDecimal) {

@@ -35,7 +35,7 @@ public class IfStringLike extends AbstractFunction<Object, Class<?>, String, Voi
   public String call(Object value) {
     if (value != null) {
       if (value instanceof String) {
-        return "=~ '.*" + value + ".*'";
+        return "=~ " + fnCall(valueFmtFn, value, true);
       } else {
         return "==" + value;
       }
