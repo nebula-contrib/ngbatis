@@ -23,6 +23,15 @@ This source code is licensed under Apache 2.0 License.
 ## Dependencies upgrade
 - [ ] Springboot 3.x support.
 
+## Bugfix
+- fix: [#176](https://github.com/nebula-contrib/ngbatis/issues/176) use double quote instead of the original single quote in valuaFmt function
+- fix: [#181](https://github.com/nebula-contrib/ngbatis/issues/181) when node has multi tag, can not update by subclass
+  - updateById
+  - updateByIdSelective
+  - updateByIdBatchSelective
+  - updateByIdBatchSelective
+  - upsertByIdSelective
+
 # 1.1.4
 ## Develop behavior change.
 - When a field is declared by java.util.Date, it is no longer allowed to set a value using Timestamp
