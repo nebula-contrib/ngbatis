@@ -228,14 +228,15 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     methodModel.setReturnType(entityType);
     methodModel.setResultType(entityType);
     ClassModel classModel = getClassModel(this.getClass());
-    return (T) MapperProxy.invoke(classModel, methodModel, record);
+    MapperProxy.invoke(classModel, methodModel, record);
+    return record;
   }
 
   /**
    * <p>更新</p>
    *
    * @param record 节点
-   * @return 是否删除成功，成功 1，失败 0
+   * @return 原参数对象
    */
   default T updateByIdSelective(T record) {
     MethodModel methodModel = getMethodModel();
@@ -243,7 +244,8 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     methodModel.setReturnType(entityType);
     methodModel.setResultType(entityType);
     ClassModel classModel = getClassModel(this.getClass());
-    return (T) MapperProxy.invoke(classModel, methodModel, record);
+    MapperProxy.invoke(classModel, methodModel, record);
+    return record;
   }
 
   /**

@@ -202,15 +202,16 @@
         @var pkName = ng.pkName( ng_args[0] );
         @var tagName = ng.tagName( ng_args[0] );
         @var fields = ng.fieldNames( ng_args[0] );
-        UPDATE  VERTEX ON `${ tagName }` ${ id }
-        @if ( isNotEmpty( @kv.columns ) ) {
+        @for ( entry in @kv.multiTagColumns ) {
+            UPDATE  VERTEX ON `${ entry.key }` ${ id }
             SET
-            @for ( col in @kv.columns ) {
-                @var val = @kv.values.get(colLP.dataIndex);
-                `${ col }` = ${ nvl(@val, 'null') } ${ colLP.last ? '' : ',' }
-            @}
+                @for (col in entry.value ) {
+                    @var vIdx = @kv.columns.indexOf( col );
+                    @var val = @kv.values.get(@vIdx);
+                    `${ col }` = ${ nvl(val, "null") } ${ colLP.last ? '' : ','}
+                @}
+            ;
         @}
-        YIELD ${ id } as `${ pkName }`, ${ ng.join( fields, ',', 'ng.schemaFmt' ) }
     </update>
 
     <update id="updateByIdSelective">
@@ -219,15 +220,16 @@
         @var pkName = ng.pkName( ng_args[0] );
         @var tagName = ng.tagName( ng_args[0] );
         @var fields = ng.fieldNames( ng_args[0] );
-        UPDATE  VERTEX ON `${ tagName }` ${ id }
-        @if ( isNotEmpty( @kv.columns ) ) {
+        @for ( entry in @kv.multiTagColumns ) {
+            UPDATE  VERTEX ON `${ entry.key }` ${ id }
             SET
-            @for ( col in @kv.columns ) {
-                @var val = @kv.values.get(colLP.dataIndex);
-                `${ col }` = ${ val } ${ colLP.last ? '' : ',' }
+            @for (col in entry.value ) {
+                @var vIdx = @kv.columns.indexOf( col );
+                @var val = @kv.values.get(@vIdx);
+                `${ col }` = ${ nvl(val, "null") } ${ colLP.last ? '' : ','}
             @}
+            ;
         @}
-        YIELD ${ id } as `${ pkName }`, ${ ng.join( fields, ',', 'ng.schemaFmt' ) }
     </update>
 
     <update id="updateByIdBatchSelective">
@@ -236,15 +238,17 @@
             @var id = ng.id( row );
             @var pkName = ng.pkName( row );
             @var tagName = ng.tagName( row );
-            UPDATE  VERTEX ON `${ tagName }` ${ id }
-                @if ( isNotEmpty( @kv.columns ) ) {
-            SET
-            @for ( col in @kv.columns ) {
-                @var val = @kv.values.get(colLP.dataIndex);
-                    `${ col }` = ${ val } ${ colLP.last ? '' : ',' }
+
+            @for ( entry in @kv.multiTagColumns ) {
+                UPDATE  VERTEX ON `${ entry.key }` ${ id }
+                SET
+                @for (col in entry.value ) {
+                    @var vIdx = @kv.columns.indexOf( col );
+                    @var val = @kv.values.get(@vIdx);
+                    `${ col }` = ${ nvl(val, "null") } ${ colLP.last ? '' : ','}
                 @}
+                ;
             @}
-            ;
         @}
     </update>
 
@@ -255,13 +259,15 @@
         @var tagName = ng.tagName( ng_args[0] );
         @var fields = ng.fieldNames( ng_args[0] );
 
-        UPSERT VERTEX ON `${ tagName }` ${ id }
-        @if ( isNotEmpty( @kv.columns ) ) {
-        SET
-        @for ( col in @kv.columns ) {
-        @var val = @kv.values.get(colLP.dataIndex);
-        `${ col }` = ${ val } ${ colLP.last ? '' : ',' }
-        @}
+        @for ( entry in @kv.multiTagColumns ) {
+            UPSERT  VERTEX ON `${ entry.key }` ${ id }
+            SET
+            @for (col in entry.value ) {
+                @var vIdx = @kv.columns.indexOf( col );
+                @var val = @kv.values.get(@vIdx);
+                `${ col }` = ${ nvl(val, "null") } ${ colLP.last ? '' : ','}
+            @}
+            ;
         @}
     </update>
     <!--endregion-->

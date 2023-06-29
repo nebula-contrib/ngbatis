@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -84,6 +85,68 @@ class EmployeeDaoTest {
   
   @Test
   @Order(5)
+  public void updateById_multiTags() {
+    Integer rd = new Random().nextInt();
+    String position = "Leader" + rd;
+    Employee employee = new Employee();
+    employee.setName("TestMultiTag");
+    employee.setPosition(position);
+    employee.setAge(rd);
+    employee.setBirthday(new Date());
+    dao.updateById(employee);
+  }
+
+  @Test
+  @Order(6)
+  public void upsertByIdSelective_multiTags() {
+    Integer rd = new Random().nextInt();
+    String position = "Leader" + rd;
+    Employee employee = new Employee();
+    employee.setName("TestMultiTag");
+    employee.setPosition(position);
+    employee.setAge(rd);
+    employee.setBirthday(new Date());
+    dao.upsertByIdSelective(employee);
+  }
+
+  @Test
+  @Order(7)
+  public void updateByIdSelective_multiTags() {
+    Integer rd = new Random().nextInt();
+    String position = "Leader" + rd;
+    Employee employee = new Employee();
+    employee.setName("insertSelectiveMT");
+    employee.setPosition(position);
+    employee.setAge(rd);
+    employee.setBirthday(new Date());
+    dao.updateByIdSelective(employee);
+  }
+
+  @Test
+  @Order(8)
+  public void updateByIdBatchSelective_multiTags() {
+    List<Employee> employees = new ArrayList<>();
+    for (int i = 0; i < 3; i++) {
+      Integer rd = new Random().nextInt();
+      Employee employee = new Employee();
+      employee.setName("TestMultiTagBatch" + i);
+      employee.setPosition("Leader" + rd);
+      employee.setAge(25 + i);
+      employee.setBirthday(new Date());
+      employees.add(employee);
+    }
+    dao.updateByIdBatchSelective(employees);
+  }
+
+  @Test
+  @Order(9)
+  public void selectByIdsForUpdate() {
+    List<Employee> multiTagVertexes = dao.selectByIds(ids);
+    System.out.println(JSON.toJSONString(multiTagVertexes));
+  }
+
+  @Test
+  @Order(99)
   public void deleteById() {
     ids.forEach(dao::deleteById);
   }
