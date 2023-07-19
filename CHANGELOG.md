@@ -23,6 +23,7 @@ This source code is licensed under Apache 2.0 License.
 ## Dependencies upgrade
 - [ ] Springboot 3.x support.
 
+# 1.1.5
 ## Bugfix
 - fix: [#176](https://github.com/nebula-contrib/ngbatis/issues/176) use double quote instead of the original single quote in valuaFmt function
 - fix: [#181](https://github.com/nebula-contrib/ngbatis/issues/181) when node has multi tag, can not update by subclass
@@ -31,6 +32,7 @@ This source code is licensed under Apache 2.0 License.
   - updateByIdBatchSelective
   - updateByIdBatchSelective
   - upsertByIdSelective
+- fix: [#185](https://github.com/nebula-contrib/ngbatis/issues/185) improve the accuracy of datetime to milliseconds
 
 # 1.1.4
 ## Develop behavior change.

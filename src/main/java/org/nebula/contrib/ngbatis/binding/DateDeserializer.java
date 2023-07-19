@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
  * @since 2022-08-29 8:06
  *     Now is history!
  */
+@Deprecated
 public class DateDeserializer implements ObjectSerializer {
 
   @Override

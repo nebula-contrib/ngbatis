@@ -19,6 +19,7 @@ import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.data.TimeWrapper;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -66,7 +67,19 @@ public class ResultSetUtil {
   public static String type_vertex_value = "vertex";
   
   public static String type_edge_value = "edge";
-  
+
+  private static final Constructor<GregorianCalendar> CALENDAR_CONSTRUCTOR;
+
+  static {
+    try {
+      CALENDAR_CONSTRUCTOR = GregorianCalendar.class.getDeclaredConstructor(
+        int.class, int.class, int.class, int.class, int.class, int.class, int.class
+      );
+    } catch (NoSuchMethodException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   /**
    * <p>根据nebula graph本身的类型说明，获取对应的 java对象值。</p>
    * @param value nebula graph 类型数据，（结果集的元素）
@@ -112,16 +125,30 @@ public class ResultSetUtil {
     return value;
   }
 
-
   private static Object transformDateTime(DateTimeWrapper dateTime) {
-    return new GregorianCalendar(
-      dateTime.getYear(),
-      dateTime.getMonth() - 1,
-      dateTime.getDay(),
-      dateTime.getHour(),
-      dateTime.getMinute(),
-      dateTime.getSecond()
-    ).getTime();
+    try {
+      CALENDAR_CONSTRUCTOR.setAccessible(true);
+      GregorianCalendar calendar = CALENDAR_CONSTRUCTOR.newInstance(
+        dateTime.getYear(),
+        dateTime.getMonth() - 1,
+        dateTime.getDay(),
+        dateTime.getHour(),
+        dateTime.getMinute(),
+        dateTime.getSecond(),
+        Math.floorDiv(dateTime.getMicrosec(), 1000)
+      );
+      CALENDAR_CONSTRUCTOR.setAccessible(false);
+      return calendar.getTime();
+    } catch (Exception e) {
+      return new GregorianCalendar(
+        dateTime.getYear(),
+        dateTime.getMonth() - 1,
+        dateTime.getDay(),
+        dateTime.getHour(),
+        dateTime.getMinute(),
+        dateTime.getSecond()
+        ).getTime();
+    }
   }
 
   private static Object transformDate(DateWrapper date) {
