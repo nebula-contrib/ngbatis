@@ -65,7 +65,7 @@ class TimeTestDaoTest {
     );
     
     Assert.isTrue(
-      Objects.equals(timeTest.getDatetime().toString(), datetime.toString()),
+      Objects.equals(timeTest.getDatetime().getTime(), datetime.getTime()),
       "Datetime must be equal to the value before insertion"
     );
     

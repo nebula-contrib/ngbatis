@@ -20,6 +20,10 @@ import org.apache.commons.text.StringEscapeUtils;
  */
 public class ValueFmtFn extends AbstractFunction<Object, Boolean, Boolean, Void, Void, Void> {
 
+  private static final String DATE_FMT = "yyyy-MM-dd";
+  private static final String TIME_FMT = "HH:mm:ss.SSS";
+  private static final String DATETIME_FMT = String.format("%s'T'%s", DATE_FMT, TIME_FMT);
+  
   private static boolean escape = true;
 
   private static String parameterQuote = "\"";
@@ -64,10 +68,10 @@ public class ValueFmtFn extends AbstractFunction<Object, Boolean, Boolean, Void,
         return String.format("%s(%d)", "timestamp", (((Timestamp) value).getTime() / 1000));
       }
 
-      String timePattern = objClass == java.util.Date.class ? "yyyy-MM-dd'T'HH:mm:ss.sss"
-        : objClass == java.sql.Date.class ? "yyyy-MM-dd"
-          : objClass == java.sql.Time.class ? "HH:mm:ss.sss"
-            : "yyyy-MM-dd'T'HH:mm:ss.sss";
+      String timePattern = objClass == java.util.Date.class ? DATETIME_FMT
+        : objClass == java.sql.Date.class ? DATE_FMT
+          : objClass == java.sql.Time.class ? TIME_FMT
+            : DATETIME_FMT;
       SimpleDateFormat sdf = new SimpleDateFormat(timePattern);
       
       String fn = "datetime";

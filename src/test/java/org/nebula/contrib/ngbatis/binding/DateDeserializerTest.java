@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
  * @since 2022-06-22 4:44
  * <br>Now is history!
  */
+@Deprecated
 class DateDeserializerTest {
 
   @Test
