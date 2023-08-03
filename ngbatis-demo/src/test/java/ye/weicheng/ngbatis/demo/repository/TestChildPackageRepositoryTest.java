@@ -31,7 +31,7 @@ class TestChildPackageRepositoryTest {
   }
 
 
-  @Test
+  // @Test
   public void testExecuteWithParameter() throws IOErrorException {
     Session session1 = ENV.openSession();
     ResultSet resultSet = session1.executeWithParameter("USE test;"

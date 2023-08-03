@@ -5,7 +5,7 @@ Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
 This source code is licensed under Apache 2.0 License.
 -->
 
-# 1.2.0-SNAPSHOT
+# [TODO]
 ## Features
 - [ ] Expand the function of NebulaDaoBasic
   - [ ] Add batch interface:
@@ -22,6 +22,10 @@ This source code is licensed under Apache 2.0 License.
 
 ## Dependencies upgrade
 - [ ] Springboot 3.x support.
+
+# NEXT
+## Bugfix
+- fix: [#190](https://github.com/nebula-contrib/ngbatis/issues/190) Insert failed when tag has no attributes
 
 # 1.1.5
 ## Bugfix

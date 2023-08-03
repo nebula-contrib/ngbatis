@@ -6,6 +6,7 @@ package org.nebula.contrib.ngbatis.binding.beetl.functions;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getAllColumnFields;
+import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getAllTagName;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.schemaByEntityType;
 
 import java.lang.reflect.Field;
@@ -89,6 +90,7 @@ public class KvFn extends AbstractFunction<Object, String, Boolean, Boolean, Boo
    */
   public KV recordToKV(Object record, Iterable<Field> fields, boolean selective, String prefix) {
     KV kv = new KV();
+    initFieldGroups(record, kv);
     for (Field field : fields) {
       String name = null;
       Object value = ReflectUtil.getValue(record, field);
@@ -112,6 +114,28 @@ public class KvFn extends AbstractFunction<Object, String, Boolean, Boolean, Boo
       }
     }
     return kv;
+  }
+
+  /**
+   * 初始化属性分组的 key，即：tagName.
+   * <p>针对空属性类型，填充 tagName，避免生成的空属性节点无标签问题</p>
+   * 
+   * <p>Initialize the key of property group, that is: tagName.
+   * For empty property type, fill in tagName to avoid the problem 
+   *   that the generated empty property node has no tag </p>
+   *   
+   * <a href="https://github.com/nebula-contrib/ngbatis/issues/190">
+   *   Vertex必须有非@Id的属性才能正确生成insert语句
+   * </a>
+   * 
+   * @param record 实体类实例
+   * @param kv ng.kv函数的结果
+   */
+  private void initFieldGroups(Object record, KV kv) {
+    Set<String> tagNames = getAllTagName(record.getClass(), true);
+    tagNames.forEach(
+      tagName -> kv.multiTagColumns.putIfAbsent(tagName, new ArrayList<>())
+    );
   }
 
   public static class KV {
