@@ -4,7 +4,8 @@ package org.nebula.contrib.ngbatis;
 //
 // This source code is licensed under Apache 2.0 License.
 
-import org.apache.logging.log4j.util.Strings;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 import org.nebula.contrib.ngbatis.config.NgbatisConfig;
 import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.nebula.contrib.ngbatis.session.LocalSession;
@@ -43,7 +44,7 @@ public interface SessionDispatcher {
    * @since 1.1.2
    */
   static void addSpaceToSessionPool(String space) {
-    boolean addable = useSessionPool() && Strings.isNotBlank(space);
+    boolean addable = useSessionPool() && isNotBlank(space);
     if (addable) {
       MapperContext.newInstance().getSpaceNameSet().add(space);
     }

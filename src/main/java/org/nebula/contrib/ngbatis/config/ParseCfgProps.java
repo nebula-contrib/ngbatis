@@ -5,11 +5,11 @@ package org.nebula.contrib.ngbatis.config;
 // This source code is licensed under Apache 2.0 License.
 
 import static org.apache.commons.lang3.ObjectUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -62,7 +62,7 @@ public class ParseCfgProps {
    * @return
    */
   public ParseCfgProps setMapperTplLocation(String mapperTplLocation) {
-    if (Strings.isBlank(mapperTplLocation)) {
+    if (isBlank(mapperTplLocation)) {
       return this;
     }
     this.mapperTplLocation = mapperTplLocation;
@@ -83,7 +83,7 @@ public class ParseCfgProps {
    * @return 解析配置（本应是 void，为支持链式调用而改）
    */
   public ParseCfgProps setMapperLocations(String mapperLocations) {
-    if (Strings.isBlank(mapperLocations)) {
+    if (isBlank(mapperLocations)) {
       return this;
     }
     this.mapperLocations = mapperLocations;
@@ -105,7 +105,7 @@ public class ParseCfgProps {
    * @return 解析配置（本应是 void，为支持链式调用而改）
    */
   public ParseCfgProps setId(String id) {
-    if (Strings.isBlank(id)) {
+    if (isBlank(id)) {
       return this;
     }
     this.id = id;
@@ -122,7 +122,7 @@ public class ParseCfgProps {
    * @return 解析配置（本应是 void，为支持链式调用而改）
    */
   public ParseCfgProps setNamespace(String namespace) {
-    if (Strings.isBlank(namespace)) {
+    if (isBlank(namespace)) {
       return this;
     }
     this.namespace = namespace;
@@ -147,7 +147,7 @@ public class ParseCfgProps {
    * @return 解析配置（本应是 void，为支持链式调用而改）
    */
   public ParseCfgProps setResultType(String resultType) {
-    if (Strings.isBlank(resultType)) {
+    if (isBlank(resultType)) {
       return this;
     }
     this.resultType = resultType;
@@ -164,7 +164,7 @@ public class ParseCfgProps {
    * @return 解析配置（本应是 void，为支持链式调用而改）
    */
   public ParseCfgProps setParameterType(String parameterType) {
-    if (Strings.isBlank(parameterType)) {
+    if (isBlank(parameterType)) {
       return this;
     }
     this.parameterType = parameterType;
@@ -181,7 +181,7 @@ public class ParseCfgProps {
    * @return 解析配置（本应是 void，为支持链式调用而改）
    */
   public ParseCfgProps setMapper(String mapper) {
-    if (Strings.isBlank(mapper)) {
+    if (isBlank(mapper)) {
       return this;
     }
     this.mapper = mapper;
@@ -198,7 +198,7 @@ public class ParseCfgProps {
    * @return 解析配置（本应是 void，为支持链式调用而改）
    */
   public ParseCfgProps setStatementStart(String statementStart) {
-    if (Strings.isBlank(statementStart)) {
+    if (isBlank(statementStart)) {
       return this;
     }
     this.statementStart = statementStart;
@@ -215,7 +215,7 @@ public class ParseCfgProps {
    * @return 解析配置（本应是 void，为支持链式调用而改）
    */
   public ParseCfgProps setStatementEnd(String statementEnd) {
-    if (Strings.isBlank(statementEnd)) {
+    if (isBlank(statementEnd)) {
       return this;
     }
     this.statementEnd = statementEnd;
@@ -232,7 +232,7 @@ public class ParseCfgProps {
    * @return 解析配置（本应是 void，为支持链式调用而改）
    */
   public ParseCfgProps setLogShow(String logShow) {
-    if (Strings.isBlank(logShow)) {
+    if (isBlank(logShow)) {
       return this;
     }
     this.logShow = logShow;

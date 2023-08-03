@@ -26,6 +26,53 @@ This source code is licensed under Apache 2.0 License.
 # NEXT
 ## Bugfix
 - fix: [#190](https://github.com/nebula-contrib/ngbatis/issues/190) Insert failed when tag has no attributes
+- chore: removing and exclude some packages: log4j related or useless.
+
+## Develop behavior change.
+- Remove deprecated classes and methods:
+  - org.nebula.contrib.ngbatis.binding.DateDeserializer
+  - org.nebula.contrib.ngbatis.binding.DefaultArgsResolver#customToJson
+- Dependencies changing:
+  > 如果项目中有用到，且出现相关类找不到的情况，请自行引入
+  - Exclude:
+    ```xml
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter</artifactId>
+        <exclusions>
+            <exclusion>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-to-slf4j</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+            </exclusion>
+        </exclusions>
+    </dependency>
+    ```
+  
+  - Removing:
+    ```xml
+    <!-- Why: make it possible to use undertow as web server -->
+    <dependency> 
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <!-- Why: useless in NgBatis-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-jdbc</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-aop</artifactId>
+    </dependency>
+    ``` 
 
 # 1.1.5
 ## Bugfix

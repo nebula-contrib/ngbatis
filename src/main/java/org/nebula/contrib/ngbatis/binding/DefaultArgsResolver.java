@@ -8,9 +8,6 @@ import static org.nebula.contrib.ngbatis.utils.ReflectUtil.isCurrentTypeOrParent
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.typeArg;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializeConfig;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vesoft.nebula.DataSet;
 import com.vesoft.nebula.DateTime;
 import com.vesoft.nebula.Duration;
@@ -23,7 +20,6 @@ import com.vesoft.nebula.Path;
 import com.vesoft.nebula.Time;
 import com.vesoft.nebula.Value;
 import com.vesoft.nebula.Vertex;
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -236,29 +232,6 @@ public class DefaultArgsResolver implements ArgsResolver {
   
   private Object serialize(boolean forTemplate, Object o) {
     return forTemplate ? JSON.toJSON(o) : toNebulaValueType(o);
-  }
-
-  /**
-   * 自定义（任意）的java对象转换成json。
-   * @param o java对象
-   * @return json 对象
-   */
-  @Deprecated
-  public Object customToJson(Object o) {
-    try {
-      SerializeConfig parserConfig = new SerializeConfig();
-      parserConfig.put(Date.class, new DateDeserializer());
-      parserConfig.put(java.sql.Date.class, new DateDeserializer());
-      parserConfig.put(java.sql.Time.class, new DateDeserializer());
-      parserConfig.put(java.sql.Timestamp.class, new DateDeserializer());
-      String text = JSON.toJSONString(o, parserConfig, SerializerFeature.WriteMapNullValue);
-      text = text.replaceAll("\\\\n", "\\\\\\\\n");
-      ObjectMapper objectMapper = new ObjectMapper();
-      return objectMapper.readValue(text, Map.class);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return null;
   }
 
   private boolean isBaseType(Class<?> clazz) {
