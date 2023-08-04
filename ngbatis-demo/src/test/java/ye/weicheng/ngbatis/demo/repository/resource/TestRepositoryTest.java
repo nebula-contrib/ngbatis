@@ -16,8 +16,7 @@ import ye.weicheng.ngbatis.demo.repository.TestRepository;
 /**
  * @author yeweicheng
  * @since 2023-08-04 17:48
- * <p>
- * Now is history!
+ * <br>Now is history!
  */
 @SpringBootTest
 class TestRepositoryTest {
