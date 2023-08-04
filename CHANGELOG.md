@@ -27,6 +27,9 @@ This source code is licensed under Apache 2.0 License.
 ## Bugfix
 - fix: [#190](https://github.com/nebula-contrib/ngbatis/issues/190) Insert failed when tag has no attributes
 - chore: removing and exclude some packages: log4j related or useless.
+- fix: [#194](https://github.com/nebula-contrib/ngbatis/issues/194) we can name the interface by `@Component` and `@Resource`, for example:
+  - `@Component("namedMapper")`: use `@Resource("namedMapper$Proxy")` to inject. (since v1.0)
+  - `@Resource("namedComponent")`: use `@Resource("namedComponent")` to inject. (new feature)
 
 ## Develop behavior change.
 - Remove deprecated classes and methods:
