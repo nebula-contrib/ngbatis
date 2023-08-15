@@ -349,6 +349,31 @@ public abstract class ReflectUtil {
     return fields.toArray(new Field[0]);
   }
 
+
+  /**
+   * <p>通过实体类类型获取 tagName</p>
+   * <p>除了第一次调用的实体类型会根据类名自动转成 tagName 以外
+   * <br>其父类如果需要获取 tagName，需要加@{@link Table}进行注解（多标签场景）</p>
+   *
+   * <p>Get tagName by entity class type</p>
+   * <p>In addition to the entity type called for the first time,
+   * <br>its parent class needs to be annotated with @{@link Table} 
+   *     to get tagName (multi-label scenario)</p>
+   * 
+   * @param clazz 需要获取 tagName 的实体类型 
+   * @param isSubclass 是否是子类型
+   * @return 实体类型的 tagName （支持多标签）
+   */
+  public static Set<String> getAllTagName(Class<?> clazz, boolean isSubclass) {
+    Set<String> tagNames = new LinkedHashSet<>();
+    if (clazz.isAnnotationPresent(Table.class) || isSubclass) {
+      String tagName = schemaByEntityType(clazz);
+      tagNames.add(tagName);
+      tagNames.addAll(getAllTagName(clazz.getSuperclass(), false));
+    }
+    return tagNames;
+  }
+
   /**
    * 根据实体类类型，获取其带有 @Id 注解（有且仅有一个）的属性。
    *

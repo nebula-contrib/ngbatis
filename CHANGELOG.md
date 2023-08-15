@@ -5,7 +5,7 @@ Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
 This source code is licensed under Apache 2.0 License.
 -->
 
-# 1.2.0-SNAPSHOT
+# [TODO]
 ## Features
 - [ ] Expand the function of NebulaDaoBasic
   - [ ] Add batch interface:
@@ -22,6 +22,60 @@ This source code is licensed under Apache 2.0 License.
 
 ## Dependencies upgrade
 - [ ] Springboot 3.x support.
+
+# NEXT
+## Bugfix
+- fix: [#190](https://github.com/nebula-contrib/ngbatis/issues/190) Insert failed when tag has no attributes
+- chore: removing and exclude some packages: log4j related or useless.
+- fix: [#194](https://github.com/nebula-contrib/ngbatis/issues/194) we can name the interface by `@Component` and `@Resource`, for example:
+  - `@Component("namedMapper")`: use `@Resource("namedMapper$Proxy")` to inject. (since v1.0)
+  - `@Resource("namedComponent")`: use `@Resource("namedComponent")` to inject. (new feature)
+
+## Develop behavior change.
+- Remove deprecated classes and methods:
+  - org.nebula.contrib.ngbatis.binding.DateDeserializer
+  - org.nebula.contrib.ngbatis.binding.DefaultArgsResolver#customToJson
+- Dependencies changing:
+  > 如果项目中有用到，且出现相关类找不到的情况，请自行引入
+  - Exclude:
+    ```xml
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter</artifactId>
+        <exclusions>
+            <exclusion>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-to-slf4j</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+            </exclusion>
+        </exclusions>
+    </dependency>
+    ```
+  
+  - Removing:
+    ```xml
+    <!-- Why: make it possible to use undertow as web server -->
+    <dependency> 
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <!-- Why: useless in NgBatis-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-jdbc</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-aop</artifactId>
+    </dependency>
+    ``` 
 
 # 1.1.5
 ## Bugfix

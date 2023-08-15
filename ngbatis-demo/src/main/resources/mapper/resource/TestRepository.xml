@@ -1,0 +1,15 @@
+<!--
+    Copyright (c) 2022 All project authors. All rights reserved.
+    
+    This source code is licensed under Apache 2.0 License.
+-->
+<mapper
+    namespace=
+    "ye.weicheng.ngbatis.demo.repository.resource.TestRepository"
+>
+    <select id="testSameClassName">
+        RETURN 1
+    </select>
+
+</mapper>
+

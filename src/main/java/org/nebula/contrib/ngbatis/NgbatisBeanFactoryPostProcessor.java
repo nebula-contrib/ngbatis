@@ -1,5 +1,6 @@
 package org.nebula.contrib.ngbatis;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.nebula.contrib.ngbatis.models.ClassModel.PROXY_SUFFIX;
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.entityTypeAndIdType;
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.vertexName;
@@ -8,10 +9,10 @@ import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.SessionPool;
 import com.vesoft.nebula.client.graph.SessionPoolConfig;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
-import java.lang.annotation.Annotation;
 import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.Map;
+import javax.annotation.Resource;
 import org.nebula.contrib.ngbatis.config.NebulaJdbcProperties;
 import org.nebula.contrib.ngbatis.config.NgbatisConfig;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
@@ -135,7 +136,7 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
     BeanDefinitionBuilder beanDefinitionBuilder =
         BeanDefinitionBuilder.genericBeanDefinition(proxy);
     BeanDefinition beanDefinition = beanDefinitionBuilder.getRawBeanDefinition();
-    registerBean(getBeanName(cm) + PROXY_SUFFIX, beanDefinition);
+    registerBean(getBeanName(cm), beanDefinition);
   }
 
   /**
@@ -157,12 +158,15 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
    * @return 根据类模型生成的 bean名
    */
   private String getBeanName(ClassModel cm) {
-    Annotation annotation = cm.getNamespace().getAnnotation(Component.class);
-    if (annotation == null) {
-      return cm.getNamespace().getSimpleName();
-    } else {
-      return ((Component) annotation).value();
-    }
+    Class<?> namespace = cm.getNamespace();
+    Component cpnAnno = namespace.getAnnotation(Component.class);
+    Resource resAnno = namespace.getAnnotation(Resource.class);
+    boolean namedByComponent = cpnAnno != null && isNotBlank(cpnAnno.value());
+    boolean namedByResource = resAnno != null && isNotBlank(resAnno.name());
+    
+    return namedByResource ? resAnno.name()
+      : namedByComponent ? (cpnAnno.value() + PROXY_SUFFIX)
+        : namespace.getSimpleName() + PROXY_SUFFIX;
   }
 
 

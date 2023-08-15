@@ -4,10 +4,11 @@ package org.nebula.contrib.ngbatis.utils;
 //
 // This source code is licensed under Apache 2.0 License.
 
+import static org.apache.commons.lang3.StringUtils.join;
+
 import java.util.Arrays;
 import java.util.Iterator;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.util.Strings;
 
 /**
  * 字符串工具类。
@@ -28,7 +29,7 @@ public abstract class StringUtil {
     String[] splitByCamel =
       StringUtils.splitByCharacterTypeCamelCase(camel);
     Iterator<String> iterator = Arrays.stream(splitByCamel).iterator();
-    return Strings.join(iterator, '_').toLowerCase();
+    return join(iterator, '_').toLowerCase();
   }
 
 }

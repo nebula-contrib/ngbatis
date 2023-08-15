@@ -4,6 +4,7 @@ package org.nebula.contrib.ngbatis.io;
 //
 // This source code is licensed under Apache 2.0 License.
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.nebula.contrib.ngbatis.SessionDispatcher.addSpaceToSessionPool;
 import static org.nebula.contrib.ngbatis.models.ClassModel.PROXY_SUFFIX;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.NEED_SEALING_TYPES;
@@ -19,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.apache.logging.log4j.util.Strings;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -332,7 +332,7 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
     String attrTemp = null;
     try {
       String attrText = node.attr(attr);
-      if (Strings.isBlank(attrText)) {
+      if (isBlank(attrText)) {
         return;
       }
       attrTemp = attrText;
