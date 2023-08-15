@@ -24,6 +24,9 @@ This source code is licensed under Apache 2.0 License.
 - [ ] Springboot 3.x support.
 
 # NEXT
+## Dependencies upgrade
+- nebula-java: 3.5.0 -> 3.6.0
+
 ## Bugfix
 - fix: [#190](https://github.com/nebula-contrib/ngbatis/issues/190) Insert failed when tag has no attributes
 - chore: removing and exclude some packages: log4j related or useless.
