@@ -56,6 +56,11 @@ public class MethodModel {
    */
   private Class<?>[] parameterTypes;
 
+  /**
+   * {@link #method} 参数列表的参数注解
+   */
+  private Annotation[][] paramAnnotations;
+
   // ---------------- info in interface start ---------------------
   /**
    * 用于 asm 的方法签名。
@@ -127,6 +132,14 @@ public class MethodModel {
     this.parameterTypes = parameterTypes;
   }
 
+  public Annotation[][] getParamAnnotations() {
+    return paramAnnotations;
+  }
+
+  public void setParamAnnotations(Annotation[][] paramAnnotations) {
+    this.paramAnnotations = paramAnnotations;
+  }
+
   public int getParameterCount() {
     return method == null ? parameterTypes.length : method.getParameterCount();
   }
@@ -146,6 +159,8 @@ public class MethodModel {
   public Annotation[][] getParameterAnnotations() {
     if (method != null) {
       return method.getParameterAnnotations();
+    } else if (paramAnnotations != null) {
+      return paramAnnotations;
     }
     return new Annotation[getParameterCount()][];
   }

@@ -24,12 +24,18 @@ This source code is licensed under Apache 2.0 License.
 - [ ] Springboot 3.x support.
 
 # NEXT
+## Dependencies upgrade
+- nebula-java: 3.5.0 -> 3.6.0
+
 ## Bugfix
 - fix: [#190](https://github.com/nebula-contrib/ngbatis/issues/190) Insert failed when tag has no attributes
 - chore: removing and exclude some packages: log4j related or useless.
 - fix: [#194](https://github.com/nebula-contrib/ngbatis/issues/194) we can name the interface by `@Component` and `@Resource`, for example:
   - `@Component("namedMapper")`: use `@Resource("namedMapper$Proxy")` to inject. (since v1.0)
   - `@Resource("namedComponent")`: use `@Resource("namedComponent")` to inject. (new feature)
+- fix: when DAO/Mapper method has `Page` type param with `@Param`, the param name can not be use. 
+  > 如原来项目中分页相关接口，用了不起作用的 `@Param`, 但 xml 还是使用 p0, p1... 
+  > 需要将 `@Param` 移除，或者将 xml 中的参数名改成 注解的参数名，以保证参数名统一
 
 ## Develop behavior change.
 - Remove deprecated classes and methods:

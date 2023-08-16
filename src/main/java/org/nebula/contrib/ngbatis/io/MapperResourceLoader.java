@@ -5,12 +5,14 @@ package org.nebula.contrib.ngbatis.io;
 // This source code is licensed under Apache 2.0 License.
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.nebula.contrib.ngbatis.SessionDispatcher.addSpaceToSessionPool;
 import static org.nebula.contrib.ngbatis.models.ClassModel.PROXY_SUFFIX;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.NEED_SEALING_TYPES;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getNameUniqueMethod;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -39,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.data.repository.query.Param;
 import org.springframework.util.Assert;
 
 
@@ -78,7 +81,7 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
       for (Resource resource : resources) {
         resultClassModel.putAll(parseClassModel(resource));
       }
-    } catch (IOException e) {
+    } catch (IOException | NoSuchMethodException e) {
       throw new ResourceLoadException(e);
     }
     return resultClassModel;
@@ -91,7 +94,8 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
    * @return 单个 XXXDao 的全限定名 与 当前接口所对应 XXXDao.xml 解析后的全部信息
    * @throws IOException 读取xml时产生的io异常
    */
-  public Map<String, ClassModel> parseClassModel(Resource resource) throws IOException {
+  public Map<String, ClassModel> parseClassModel(Resource resource)
+      throws IOException, NoSuchMethodException {
     Map<String, ClassModel> result = new HashMap<>();
     // 从资源中获取文件信息，IO 读取
     Document doc = Jsoup.parse(resource.getInputStream(), "UTF-8", "http://example.com/");
@@ -152,7 +156,8 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
    * @param nodes   XXXDao.xml 中 &lt;mapper&gt; 下的子标签。即方法标签。
    * @return 返回当前XXXDao类的所有方法信息Map，k: 方法名，v：方法模型（即 xml 里一个方法标签的全部信息）
    */
-  private Map<String, MethodModel> parseMethodModel(Class namespace, List<Node> nodes) {
+  private Map<String, MethodModel> parseMethodModel(Class namespace, List<Node> nodes)
+      throws NoSuchMethodException {
     Map<String, MethodModel> methods = new HashMap<>();
     List<String> methodNames = getMethodNames(nodes);
     for (Node methodNode : nodes) {
@@ -164,7 +169,7 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
         Assert.notNull(method,
             "接口 " + namespace.getName() + " 中，未声明 xml 中的出现的方法：" + methodModel.getId());
         checkReturnType(method, namespace);
-        pageSupport(method, methodModel, methodNames, methods);
+        pageSupport(method, methodModel, methodNames, methods, namespace);
         methods.put(methodModel.getId(), methodModel);
       }
     }
@@ -212,16 +217,21 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
    * @param methods   用于将需要分页的接口，自动追加两个接口，用于生成动态代理
    */
   private void pageSupport(Method method, MethodModel methodModel, List<String> methodNames,
-      Map<String, MethodModel> methods) {
+      Map<String, MethodModel> methods, Class<?> namespace) throws NoSuchMethodException {
     Class<?>[] parameterTypes = method.getParameterTypes();
     List<Class<?>> parameterTypeList = Arrays.asList(parameterTypes);
     if (parameterTypeList.contains(Page.class)) {
       int pageParamIndex = parameterTypeList.indexOf(Page.class);
       MethodModel pageMethod =
-          createPageMethod(methodModel, methodNames, parameterTypes, pageParamIndex);
+          createPageMethod(
+            methodModel, methodNames, parameterTypes, pageParamIndex, namespace
+          );
       methods.put(pageMethod.getId(), pageMethod);
 
-      MethodModel countMethod = createCountMethod(methodModel, methodNames, parameterTypes);
+      MethodModel countMethod = createCountMethod(
+        methodModel, methodNames, parameterTypes, namespace
+      );
+      
       methods.put(countMethod.getId(), countMethod);
     }
   }
@@ -232,15 +242,17 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
    * @param methodModel  分页原始方法模型
    * @param methodNames  当前接口的所有方法名（用于判断自动生成的接口是否已经有同名，如果已有则不再重复创建）
    * @param parameterTypes 方法的全部参数类型
-   * @return
+   * @param namespace DAO 接口类
+   * @return 自动分页的计数方法
    */
   private MethodModel createCountMethod(MethodModel methodModel, List<String> methodNames,
-      Class<?>[] parameterTypes) {
+      Class<?>[] parameterTypes, Class<?> namespace) throws NoSuchMethodException {
     String methodName = methodModel.getId();
     String countMethodName = String.format("%s$Count", methodName);
     Assert.isTrue(!methodNames.contains(countMethodName),
         "There is a method name conflicts with " + countMethodName);
     MethodModel countMethodModel = new MethodModel();
+    setParamAnnotations(parameterTypes, namespace, methodName, countMethodModel);
     countMethodModel.setParameterTypes(parameterTypes);
     countMethodModel.setId(countMethodName);
     String cql = methodModel.getText();
@@ -261,21 +273,26 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
    * @param methodNames  当前接口的所有方法名（用于判断自动生成的接口是否已经有同名，如果已有则不再重复创建）
    * @param parameterTypes 方法的全部参数类型
    * @param pageParamIndex 分页参数处在参数列表中的下标位
+   * @param namespace DAO 接口类
    * @return 查询范围条目方法 的方法模型
    */
   private MethodModel createPageMethod(MethodModel methodModel, List<String> methodNames,
-      Class<?>[] parameterTypes, int pageParamIndex) {
+      Class<?>[] parameterTypes, int pageParamIndex, Class<?> namespace)
+      throws NoSuchMethodException {
     String methodName = methodModel.getId();
     String pageMethodName = String.format("%s$Page", methodName);
     Assert.isTrue(!methodNames.contains(pageMethodName),
         "There is a method name conflicts with " + pageMethodName);
     MethodModel pageMethodModel = new MethodModel();
+    Annotation[][] parameterAnnotations = setParamAnnotations(parameterTypes, namespace,
+      methodName, pageMethodModel);
+    String pageParamName = getPageParamName(parameterAnnotations, pageParamIndex);
     pageMethodModel.setParameterTypes(parameterTypes);
     pageMethodModel.setId(pageMethodName);
     String cql = methodModel.getText();
-    if (parameterTypes.length > 1) {
-      String format = "%s\t\tSKIP $p%d.startRow LIMIT $p%d.pageSize";
-      cql = String.format(format, cql, pageParamIndex, pageParamIndex);
+    if (pageParamName != null) {
+      String format = "%s\t\tSKIP $%s.startRow LIMIT $%s.pageSize";
+      cql = String.format(format, cql, pageParamName, pageParamName);
     } else {
       String format = "%s\t\tSKIP $startRow LIMIT $pageSize";
       cql = String.format(format, cql);
@@ -284,6 +301,35 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
     pageMethodModel.setResultType(methodModel.getResultType());
     pageMethodModel.setReturnType(methodModel.getMethod().getReturnType());
     return pageMethodModel;
+  }
+
+  private static Annotation[][] setParamAnnotations(Class<?>[] parameterTypes, Class<?> namespace,
+    String methodName, MethodModel methodModel) throws NoSuchMethodException {
+    Method declaredMethod = namespace.getDeclaredMethod(methodName, parameterTypes);
+    Annotation[][] parameterAnnotations = declaredMethod.getParameterAnnotations();
+    methodModel.setParamAnnotations(parameterAnnotations);
+    return parameterAnnotations;
+  }
+
+  private String getPageParamName(Annotation[][] parameterAnnotations, int pageParamIndex) {
+    if (parameterAnnotations.length > pageParamIndex) {
+      Annotation[] parameterAnnotation = parameterAnnotations[pageParamIndex];
+      for (int i = 0; i < parameterAnnotation.length; i++) {
+        Annotation ifParam = parameterAnnotation[i];
+        if (ifParam.annotationType() == Param.class) {
+          Param param = (Param) ifParam;
+          String paramName = param.value();
+          if (isNotBlank(paramName)) {
+            return paramName;
+          }
+        }
+      }
+    }
+    // 多参数，并且没有注解时，使用 pN 的参数格式来表示参数名
+    if (parameterAnnotations.length > 1) {
+      return "p" + pageParamIndex;
+    }
+    return null;
   }
 
   /**
