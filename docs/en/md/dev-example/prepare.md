@@ -3,8 +3,8 @@
 ## Summary
 
 Ngbatis provides two ways for developers to access nebula.
-- Close to Mybatis-plus, providing a basic `DAO` to be extends, unnecessary to write any `nGQL` to operate single table, include vertex and edge. (See [By Basic DAO](./#?path=dev-example&file=dao-basic) for more details)
-- Close to Mybatis, supporting developers to write complex `nGQL` or `Cypher` to finish read or write data. (See [By Custom nGQL](./#?path=dev-example&file=custom-crud) for more details)
+- Close to Mybatis-plus, providing a basic `DAO` to be extends, unnecessary to write any `nGQL` to operate single table, include vertex and edge. (See [By Basic DAO](./dao-basic) for more details)
+- Close to Mybatis, supporting developers to write complex `nGQL` or `Cypher` to finish read or write data. (See [By Custom nGQL](./custom-crud) for more details)
   
 
 Take  `Person` 与 `Like` as examples.
