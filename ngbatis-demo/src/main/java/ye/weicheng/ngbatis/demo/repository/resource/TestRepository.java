@@ -19,4 +19,6 @@ import ye.weicheng.ngbatis.demo.pojo.Person;
 public interface TestRepository extends NebulaDaoBasic<Person, String> {
   
   Integer testSameClassName();
+
+  Integer includeTest();
 }

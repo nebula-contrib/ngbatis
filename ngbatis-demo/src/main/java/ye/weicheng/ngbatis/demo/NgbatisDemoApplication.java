@@ -8,6 +8,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.ConfigurableApplicationContext;
+import ye.weicheng.ngbatis.demo.repository.resource.TestRepository;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class}, scanBasePackages = {
     "ye.weicheng", "org.nebula.contrib"})
@@ -17,7 +19,9 @@ public class NgbatisDemoApplication {
 
   public static void main(String[] args) {
     SpringApplication app = new SpringApplication(NgbatisDemoApplication.class);
-    app.run(args);
+    ConfigurableApplicationContext context = app.run(args);
+    TestRepository testRepository = context.getBean(TestRepository.class);
+    System.out.println("nGQL引用测试:" + testRepository.includeTest());
   }
 
 }
