@@ -1,6 +1,6 @@
 # Param Usage
 
-Through【[By Custom nGQL](./#/?path=dev-example&file=custom-crud)】, we have known how to make the `nGQL | cypher` written by ourselves call and execute it into Nebula through Java.
+Through【[By Custom nGQL](./custom-crud)】, we have known how to make the `nGQL | cypher` written by ourselves call and execute it into Nebula through Java.
 Next, in this section, we will introduce how to pass parameters to the statements.
 > **Attention**: The basic types of all parameters currently only support wrapper classes. For example, `int` needs to be written as `Integer`.
 
@@ -115,4 +115,4 @@ Next, in this section, we will introduce how to pass parameters to the statement
     ```
 
 ## Conclusion
-This completes the general introduction of parameter acquisition. If you have requirements for condition control and traversal after obtaining parameters, please move to【[Param Condition Control](./#/?path=dev-example&file=parameter-if)】、【[Param Loop](./#/?path=dev-example&file=parameter-for)】  
+This completes the general introduction of parameter acquisition. If you have requirements for condition control and traversal after obtaining parameters, please move to【[Param Condition Control](./parameter-if)】、【[Param Loop](./parameter-for)】  
