@@ -38,6 +38,7 @@ jobs:
       - name: Place markdown file
         run: |
           cp -r docs/en/md/* ngbatis-docs/docs
+          cp docs/en/vitepress.config.ts ngbatis-docs/docs/.vitepress/config.ts
 
       - name: Setup Node
         uses: actions/setup-node@v3
@@ -45,6 +46,7 @@ jobs:
           node-version: 18
           cache: npm
           cache-dependency-path: ngbatis-docs/package-lock.json
+          
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Build with VitePress
