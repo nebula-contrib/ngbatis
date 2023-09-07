@@ -25,3 +25,6 @@ build/
 .vscode/
 
 **/asm-debug/
+
+### vitepress ###
+.vitepress

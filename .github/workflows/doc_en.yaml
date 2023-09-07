@@ -1,0 +1,74 @@
+#
+name: Deploy VitePress site to Pages
+
+on:
+
+  push:
+    branches: [master]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  # Build job
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Checkout frontend code
+        uses: actions/checkout@v3
+        with:
+          repository: graph-cn/ngbatis-docs
+          path: ngbatis-docs
+      
+      - name: Place markdown file
+        run: |
+          cp -r docs/en/md/* ngbatis-docs/docs
+          cp docs/en/vitepress.config.ts ngbatis-docs/docs/.vitepress/config.ts
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+          cache-dependency-path: ngbatis-docs/package-lock.json
+          
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      - name: Build with VitePress
+        run: |
+          cd ngbatis-docs
+          npm ci
+          npm run docs:build
+          touch docs/.vitepress/dist/.nojekyll
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: ngbatis-docs/docs/.vitepress/dist
+
+  # Deployment job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
