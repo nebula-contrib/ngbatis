@@ -1,6 +1,7 @@
 package ye.weicheng.ngbatis.demo.repository;
 
 import org.springframework.data.repository.query.Param;
+import ye.weicheng.ngbatis.demo.pojo.Person;
 
 /**
  * nGQL片段引用测试
@@ -9,4 +10,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface NgqlIncludeDao {
   Integer testInclude(@Param("myInt") Integer myInt);
+
+  Integer returnAge(@Param("person")Person person);
 }

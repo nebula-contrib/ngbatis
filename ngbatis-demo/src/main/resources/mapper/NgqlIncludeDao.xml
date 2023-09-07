@@ -17,4 +17,12 @@
         ${myInt}
     </nGQL>
 
+    <select id="returnAge" resultType="java.lang.Integer">
+        @ng.include('ngql-return-age',person);
+    </select>
+
+    <nGQL id="ngql-return-age">
+        RETURN @ng.include('include-test-value',{'myInt':age});
+    </nGQL>
+
 </mapper>
