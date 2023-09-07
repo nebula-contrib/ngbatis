@@ -139,3 +139,9 @@ public interface PersonDao {
   3 | 属性名，用于不将值明文写在 ngql 中，而使用参数名，让 nebula 在参数中取值 | String | N | null
 
 
+- ng.include
+  > 引用nGQL片段
+
+  参数位 | 参数说明                                                                                      | 类型     | 必传 | 默认值
+    ---|-------------------------------------------------------------------------------------------|--------|---|---
+  1 | 要引用的nGQL片段ID.<br/>引用其他mapper的nGQL片段，片段ID前需要加上片段所在的namespace，例：your.domain.TestDao.nGQL-ID | String | Y 

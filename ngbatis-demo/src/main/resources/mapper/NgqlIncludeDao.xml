@@ -1,0 +1,20 @@
+<!--
+    Copyright (c) 2022 All project authors. All rights reserved.
+    
+    This source code is licensed under Apache 2.0 License.
+-->
+<mapper namespace="ye.weicheng.ngbatis.demo.repository.NgqlIncludeDao" space="test">
+
+    <select id="testInclude" resultType="java.lang.Integer">
+        @ng.include('include-test');
+    </select>
+
+    <nGQL id="include-test">
+        RETURN @ng.include('include-test-value');
+    </nGQL>
+
+    <nGQL id="include-test-value">
+        ${myInt}
+    </nGQL>
+
+</mapper>

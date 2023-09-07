@@ -1,0 +1,12 @@
+<!--
+    Copyright (c) 2022 All project authors. All rights reserved.
+    
+    This source code is licensed under Apache 2.0 License.
+-->
+<mapper namespace="ye.weicheng.ngbatis.demo.repository.NgqlInclude4diffMapperDao" space="test">
+
+    <select id="testInclude" resultType="java.lang.Integer">
+        RETURN @ng.include('ye.weicheng.ngbatis.demo.repository.NgqlIncludeDao.include-test-value');
+    </select>
+
+</mapper>
