@@ -11,5 +11,17 @@
         RETURN 1
     </select>
 
+    <nGQL id="ngql-include-test-value">
+        666
+    </nGQL>
+
+    <nGQL id="ngql-include-test">
+        RETURN @ng.include('ngql-include-test-value');
+    </nGQL>
+
+    <select id="includeTest" resultType="java.lang.Integer">
+        @ng.include('ngql-include-test');
+    </select>
+
 </mapper>
 

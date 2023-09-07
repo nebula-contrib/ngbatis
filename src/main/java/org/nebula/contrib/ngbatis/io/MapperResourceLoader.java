@@ -17,10 +17,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -36,6 +33,7 @@ import org.nebula.contrib.ngbatis.exception.ParseException;
 import org.nebula.contrib.ngbatis.exception.ResourceLoadException;
 import org.nebula.contrib.ngbatis.models.ClassModel;
 import org.nebula.contrib.ngbatis.models.MethodModel;
+import org.nebula.contrib.ngbatis.models.NgqlModel;
 import org.nebula.contrib.ngbatis.utils.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,7 +115,7 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
       // 获取 子节点
       List<Node> nodes = element.childNodes();
       // 便历子节点，获取 MethodModel
-      Map<String, MethodModel> methods = parseMethodModel(cm.getNamespace(), nodes);
+      Map<String, MethodModel> methods = parseMethodModel(cm, nodes);
       cm.setMethods(methods);
       result.put(cm.getNamespace().getName() + PROXY_SUFFIX, cm);
     }
@@ -156,21 +154,34 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
    * @param nodes   XXXDao.xml 中 &lt;mapper&gt; 下的子标签。即方法标签。
    * @return 返回当前XXXDao类的所有方法信息Map，k: 方法名，v：方法模型（即 xml 里一个方法标签的全部信息）
    */
-  private Map<String, MethodModel> parseMethodModel(Class namespace, List<Node> nodes)
+  private Map<String, MethodModel> parseMethodModel(ClassModel cm, List<Node> nodes)
       throws NoSuchMethodException {
+    Class namespace = cm.getNamespace();
     Map<String, MethodModel> methods = new HashMap<>();
     List<String> methodNames = getMethodNames(nodes);
     for (Node methodNode : nodes) {
       if (methodNode instanceof Element) {
-        MethodModel methodModel = parseMethodModel(methodNode);
-        addSpaceToSessionPool(methodModel.getSpace());
-        Method method = getNameUniqueMethod(namespace, methodModel.getId());
-        methodModel.setMethod(method);
-        Assert.notNull(method,
-            "接口 " + namespace.getName() + " 中，未声明 xml 中的出现的方法：" + methodModel.getId());
-        checkReturnType(method, namespace);
-        pageSupport(method, methodModel, methodNames, methods, namespace);
-        methods.put(methodModel.getId(), methodModel);
+
+
+        if(((Element) methodNode).tagName().equalsIgnoreCase("nGQL")){
+          if(Objects.isNull(cm.getNgqls())){
+            cm.setNgqls(new HashMap<>());
+          }
+          NgqlModel ngqlModel = parseNgqlModel((Element) methodNode);
+          cm.getNgqls().put(ngqlModel.getId(),ngqlModel);
+        }else{
+          MethodModel methodModel = parseMethodModel(methodNode);
+          addSpaceToSessionPool(methodModel.getSpace());
+          Method method = getNameUniqueMethod(namespace, methodModel.getId());
+          methodModel.setMethod(method);
+          Assert.notNull(method,
+                  "接口 " + namespace.getName() + " 中，未声明 xml 中的出现的方法：" + methodModel.getId());
+          checkReturnType(method, namespace);
+          pageSupport(method, methodModel, methodNames, methods, namespace);
+          methods.put(methodModel.getId(), methodModel);
+        }
+
+
       }
     }
     return methods;
@@ -192,6 +203,16 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
     List<Node> nodes = node.childNodes();
     model.setText(nodesToString(nodes));
     return model;
+  }
+
+
+  /**
+   * 解析nGQL语句片段
+   * @param ngqlEl
+   * @return
+   */
+  protected NgqlModel parseNgqlModel(Element ngqlEl){
+    return  new NgqlModel(ngqlEl.id(),ngqlEl.text());
   }
 
   /**
