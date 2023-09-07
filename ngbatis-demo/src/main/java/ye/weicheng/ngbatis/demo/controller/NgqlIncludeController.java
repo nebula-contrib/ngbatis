@@ -10,21 +10,19 @@ import ye.weicheng.ngbatis.demo.repository.NgqlIncludeDao;
  * nGQL片段引用测试
  * 2023-9-7 12:40 lyw.
  */
+
 @RestController
 @RequestMapping("/include")
 public class NgqlIncludeController {
+  @Autowired
+  private NgqlIncludeDao ngqlIncludeDao;
+  @Autowired
+   private NgqlInclude4diffMapperDao ngqlInclude4diffMapperDao;
 
-    @Autowired
-    private NgqlIncludeDao ngqlIncludeDao;
-
-    @Autowired
-    private NgqlInclude4diffMapperDao ngqlInclude4diffMapperDao;
-
-    @RequestMapping("/test")
-    public String test(){
-        int a = ngqlIncludeDao.testInclude(1);
-        int b = ngqlInclude4diffMapperDao.testInclude(2);
-        return a + "," + b;
-    }
-
+  @RequestMapping("/test")
+  public String test() {
+    int a = ngqlIncludeDao.testInclude(1);
+    int b = ngqlInclude4diffMapperDao.testInclude(2);
+    return a + "," + b;
+  }
 }
