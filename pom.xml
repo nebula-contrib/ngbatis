@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.0</version>
+        <version>3.0.7</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <name>ngbatis</name>
@@ -74,16 +74,30 @@
             <artifactId>asm</artifactId>
             <version>8.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>13.0</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
             <version>1.15.3</version>
         </dependency>
+
+        <!-- Beetl project -->
         <dependency>
             <groupId>com.ibeetl</groupId>
-            <artifactId>beetl</artifactId>
-            <version>3.1.8.RELEASE</version>
+            <artifactId>beetl-spring-jdk17</artifactId>
+            <version>3.15.8.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ibeetl</groupId>
+            <artifactId>beetl-springboot-starter-jdk17</artifactId>
+            <version>3.15.8.RELEASE</version>
         </dependency>
 
         <!-- for nGQL escape in xml  -->
@@ -168,6 +182,7 @@
                 <version>3.2.0</version>
                 <configuration>
                     <excludePackageNames>com.facebook.thrift:com.facebook.thrift.*</excludePackageNames>
+                    <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
                 </configuration>
                 <executions>
                     <execution>

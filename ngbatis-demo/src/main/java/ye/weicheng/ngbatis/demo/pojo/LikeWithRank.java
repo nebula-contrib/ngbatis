@@ -4,8 +4,8 @@ package ye.weicheng.ngbatis.demo.pojo;
 //
 // This source code is licensed under Apache 2.0 License.
 
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 /**
  * <p>关系实体类示例。</p>

@@ -16,15 +16,14 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import org.nebula.contrib.ngbatis.exception.ParseException;
 import org.nebula.contrib.ngbatis.models.MethodModel;
 import org.springframework.util.Assert;
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
-
+import java.lang.reflect.ParameterizedType;
 /**
  * <p>反射工具类。</p>
  *
@@ -431,9 +430,9 @@ public abstract class ReflectUtil {
     if (parent.isInterface()) {
       Type[] interfaces = insClass.getGenericInterfaces();
       for (Type anInterface : interfaces) {
-        boolean isType = anInterface instanceof ParameterizedTypeImpl;
+        boolean isType = anInterface instanceof ParameterizedType;
         if (isType) {
-          ParameterizedTypeImpl paramTypeInterface = (ParameterizedTypeImpl) anInterface;
+          ParameterizedType paramTypeInterface = (ParameterizedType) anInterface;
           boolean found = paramTypeInterface.getRawType() == parent;
           if (found) {
             Type[] actualTypeArguments = paramTypeInterface.getActualTypeArguments();
@@ -455,8 +454,8 @@ public abstract class ReflectUtil {
    *    when type is not ParameterizedTypeImpl and the type name can not get class object in jvm.
    */
   public static Class<?> typeToClass(Type type) throws ClassNotFoundException {
-    if (type instanceof ParameterizedTypeImpl) {
-      return ((ParameterizedTypeImpl) type).getRawType();
+    if (type instanceof ParameterizedType) {
+      return ((ParameterizedType) type).getRawType().getClass();
     }
     return Class.forName(type.getTypeName());
   }
