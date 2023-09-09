@@ -3,8 +3,9 @@
 
     This source code is licensed under Apache 2.0 License.
 -->
+<!DOCTYPE mapper SYSTEM "https://nebula-contrib.github.io/ngbatis/ngbatis-mapper.dtd" >
 <mapper namespace="org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic">
-    
+
     <!--region query zoom-->
     <select id="selectById">
         match (n) where id(n) == ${ ng.valueFmt( id ) } return n
