@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 
+
 /**
  * 数据访问层 样例。
  *<p/>
@@ -19,4 +20,5 @@ import ye.weicheng.ngbatis.demo.pojo.Person;
 public interface TestRepository extends NebulaDaoBasic<Person, String> {
   
   Integer testSameClassName();
+
 }

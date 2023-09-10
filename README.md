@@ -11,7 +11,8 @@ This source code is licensed under Apache 2.0 License.
   <br> English | <a href="README-CN.md">中文</a>
 </p>
 
-- [Ngbatis Docs](https://graph-cn.github.io/ngbatis-docs/)
+- [Ngbatis Docs](https://nebula-contrib.github.io/ngbatis/)
+- [Ngbatis 文档](https://corvusye.github.io/ngbatis-docs/)
 
 ## What is NGBATIS
 
