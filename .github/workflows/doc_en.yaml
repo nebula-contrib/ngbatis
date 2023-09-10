@@ -34,7 +34,8 @@ jobs:
         with:
           repository: graph-cn/ngbatis-docs
           path: ngbatis-docs
-      
+          ref: 7b17bd88148d39643185ba218e3a18ceb3877428
+
       - name: Place markdown file
         run: |
           cp -r docs/en/md/* ngbatis-docs/docs
