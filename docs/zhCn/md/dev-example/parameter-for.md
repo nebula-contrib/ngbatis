@@ -2,6 +2,7 @@
 
 > 遍历的部分跟 mybatis 的差异比较大，使用了 Beetl 的遍历语法。具体可参考官方文档【[1.10 循环语句](https://www.kancloud.cn/xiandafu/beetl3_guide/2138952)】
 > 因配置的差异，文档中如涉及界定符，则由文档中的 <% %> 替换成 @ \n，如：
+
   ```diff
   - <%for ( item in list ) { 
   -                         
@@ -12,7 +13,9 @@
   ```
 
 ## 对Map的遍历，可用于动态查询
+
 - PersonDao.java
+
   ```java
   // org.springframework.data.repository.query.Param
   // person: { "name": "张三", "gender": "F" }
@@ -20,6 +23,7 @@
   ```
 
 - PersonDao.xml
+
     ```xml
     <select id="selectByPerson">
         MATCH (n: person)
@@ -37,6 +41,7 @@
 ## 对 List 遍历，可用于批处理
 
 - PersonDao.java
+
     ```java
         // org.springframework.data.repository.query.Param
         // personList: [{"gender":"F","name":"张三"},{"gender":"M","name":"王五"},{"gender":"F","name":"赵六"}]
@@ -44,11 +49,13 @@
     ```
 
 - 参数为：
+
     ```json
       :param personList => [{"gender":"F","name":"张三"},{"gender":"M","name":"王五"},{"gender":"F","name":"赵六"}]
     ```
 
 - PersonDao.xml
+
     ```xml
         <insert id="insertPersonList">
             @for ( p in personList ) {
@@ -58,6 +65,7 @@
     ```
 
 - 执行的语句为：
+
     ```sql
         INSERT VERTEX `person` ( name, gender ) VALUES '张三' : ( '张三', 'F' );
         INSERT VERTEX `person` ( name, gender ) VALUES '王五' : ( '王五', 'M' );
