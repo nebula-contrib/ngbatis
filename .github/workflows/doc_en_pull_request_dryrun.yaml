@@ -1,9 +1,9 @@
 #
-name: Deploy VitePress site to Pages
+name: Dry run Docs Build in PR
 
 on:
 
-  push:
+  pull_request:
     branches: [master]
     paths:
       - 'docs/**'
@@ -16,14 +16,12 @@ on:
 permissions:
   contents: read
   pages: write
-  id-token: write
 
 concurrency:
   group: pages
   cancel-in-progress: false
 
 jobs:
-  # Build job
   build:
     runs-on: ubuntu-latest
     steps:
@@ -59,20 +57,3 @@ jobs:
           npm ci
           npm run docs:build
           touch docs/.vitepress/dist/.nojekyll
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
-        with:
-          path: ngbatis-docs/docs/.vitepress/dist
-
-  # Deployment job
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    needs: build
-    runs-on: ubuntu-latest
-    name: Deploy
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
