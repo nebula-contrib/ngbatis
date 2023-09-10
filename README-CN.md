@@ -24,13 +24,17 @@ This source code is licensed under Apache 2.0 License.
 请看设计文档 [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
 
 ## 项目要求
+
 - Springboot
 - Maven
 - Java 8+
 
 ## 如何使用（可在克隆代码后，参考 ngbatis-demo 项目）
+
 ### 在项目引入
-  - Maven
+
+- Maven
+
     ```xml
         <dependency>
           <groupId>org.nebula-contrib</groupId>
@@ -38,15 +42,19 @@ This source code is licensed under Apache 2.0 License.
           <version>1.1.5</version>
         </dependency>
     ```
-  - Gradle
+
+- Gradle
+
     ```groovy
     implementation 'org.nebula-contrib:ngbatis:1.1.5'
     ```
-### 参考 [【ngbatis-demo】](./ngbatis-demo)，与springboot无缝集成。在该项目的 test 中还有api的样例。在开发过程中每增加一个特性也都会同步更新ngbatis-demo的用例。
 
+### 参考 [【ngbatis-demo】](./ngbatis-demo)，与springboot无缝集成。在该项目的 test 中还有api的样例。在开发过程中每增加一个特性也都会同步更新ngbatis-demo的用例
 
 ### 配置数据库
+
 在 application.yml 中添加配置 **将数据源修改成可访问到的NebulaGraph**
+
 ```yml
 nebula:
   ngbatis:
@@ -69,7 +77,9 @@ nebula:
     min-cluster-health-rate: 1.0
     enable-ssl: false
 ```
+
 ### 扫描动态代理的 bean
+
 ```java
 @SpringBootApplication(scanBasePackages = { "org.nebula", "your.domain"})
 public class YourApplication {
@@ -78,12 +88,16 @@ public class YourApplication {
     }
 }
 ```
+
 > 如果项目中使用的是 SpringCloud，
-> 请使用`@ComponentScan( basePackages = {"org.nebula.contrib", "your.domain"} )` 
+> 请使用`@ComponentScan( basePackages = {"org.nebula.contrib", "your.domain"} )`
 
 ## 日常开发示例
+
 ### 自己编写 nGQL (MyBatis的思路)
+
 #### 声明数据访问接口
+
 ```java
 package ye.weicheng.ngbatis.demo.repository;
 
@@ -102,8 +116,11 @@ public interface TestRepository {
 }
 
 ```
+
 #### 编写数据访问语句
+
 resource/mapper/TestRepository.xml
+
 ```xml
 <mapper
     namespace=
@@ -155,6 +172,7 @@ resource/mapper/TestRepository.xml
 ### 使用基类自带的 nGQL 实现图的基本操作（MyBatis-plus）的思路
 
 #### model-vertex
+
 ```java
 package com.example.model.vertex.Person;
 
@@ -170,7 +188,9 @@ public class Person {
     private Integer age;
 }
 ```
+
 #### model-edge
+
 ```java
 package com.example.model.edge.Like;
 
@@ -189,6 +209,7 @@ public class Like {
 ```
 
 #### dao
+
 ```java
 package com.example.dao;
 
@@ -197,7 +218,9 @@ import com.example.model.vertex.Person;
 
 public interface PersonDao extends NebulaDaoBasic<Person, String>{}
 ```
+
 #### xml（不可缺少）
+
 ```xml
 <mapper
     namespace=
@@ -205,7 +228,9 @@ public interface PersonDao extends NebulaDaoBasic<Person, String>{}
 >
 </mapper>
 ```
+
 #### service
+
 ```java
 package com.example.service;
 
@@ -267,8 +292,9 @@ public class PersonServiceImpl {
 ```
 
 ## 特别声明的上游项目
+
 - [beetl](https://gitee.com/xiandafu/beetl), BSD-3, Beetl模板引擎是项目很重要的组成部分(as is).
 
-
 ## 开源协议
+
 项目遵循 [Apache License, Version 2.0, January 2004](https://www.apache.org/licenses/LICENSE-2.0) 开源协议。

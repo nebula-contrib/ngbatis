@@ -1,6 +1,7 @@
 # By Basic DAO
 
 ## Create a Dao corresponding to `Person` and extends NebulaDaoBasic
+
 ```java
 package your.domain;
 
@@ -12,6 +13,7 @@ public interface PersonDao extends NebulaDaoBasic<Person, String> {
 ```
 
 ## Create a file named `PersonDao.xml`. The default location is `/resources/mapper`
+
 ```xml
 <mapper namespace="your.domain.PersonDao">
 
@@ -19,6 +21,7 @@ public interface PersonDao extends NebulaDaoBasic<Person, String> {
 ```
 
 ## Examples in the service layer
+
 ```java
 
 @Service

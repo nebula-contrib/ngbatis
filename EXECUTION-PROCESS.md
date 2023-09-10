@@ -6,7 +6,9 @@ This source code is licensed under Apache 2.0 License.
 -->
 
 # 框架执行过程详述
+
 ## 初始化
+
 1. 交由Springboot启动扫描，入口声明配置为：[spring.factories](./src/main/resources/META-INF/spring.factories) ，
 2. 启动类为：[NgbatisContextInitialize](src/main/java/org/nebula/contrib/ngbatis/NgbatisContextInitializer.java)
 3. 初始化过程
@@ -35,9 +37,11 @@ This source code is licensed under Apache 2.0 License.
 > 至此完成 ngbatis 动态代理的初始化过程
 
 ## 应用配置，主类 [Env](src/main/java/org/nebula/contrib/ngbatis/Env.java)
+
 1. 声明nGQL参数解析器，默认方案使用 beetl 模板引擎进行解析。[BeetlTextRender](./src/main/java/org/nebula/contrib/ngbatis/binding/BeetlTextRender.java)
     > 替换方式为：自行实现 [TextResolver](src/main/java/org/nebula/contrib/ngbatis/TextResolver.java)并以 @Primary 的方式交由spring管理
 2. 指定主键生成器（vertex id 与 edge rank 值设置器），可使用时间戳主键生成来获取主键，但建议按自身应用的架构自行实现主键生成。
+
     ```java
     @Configuration
     public class PkGeneratorConfig {
@@ -47,10 +51,11 @@ This source code is licensed under Apache 2.0 License.
         }
     }
     ```
+
 3. 可通过继承[AbstractResultHandler](./src/main/java/org/nebula/contrib/ngbatis/handler/AbstractResultHandler.java)进行更多类型结果的实体化
 
-
 ## 运行时
+
 1. 业务方通过反转注入的方式，将动态代理类注入到业务类中。
 2. 业务类调用实际方法，并传入参数
 3. 动态代理执行 MapperProxy.invoke( 接口名, 方法名, 参数列表 )
@@ -60,13 +65,9 @@ This source code is licensed under Apache 2.0 License.
     4. 结果集处理，结果集处理器路由[ResultResolver](src/main/java/org/nebula/contrib/ngbatis/ResultResolver.java)，默认为 [DefaultResultResolver](./src/main/java/org/nebula/contrib/ngbatis/binding/DefaultResultResolver.java)，由方法模型中接口声明的返回值与额外声明的泛型resultType共同决定采用何种[ResultHandler](src/main/java/org/nebula/contrib/ngbatis/ResultHandler.java)对结果进行处理。**在这个小步骤中，完成 ORM 过程。**
 
 ## 开发者使用思路（如无特殊需求，复杂拓展请见【应用配置】）
+
 1. 指定主键生成器，参考【应用配置.2】
-2. 创建 XXXDao.java 
+2. 创建 XXXDao.java
 3. 创建 XXXDao.xml 并指定 namespace 为 XXXDao.java
 4. 在 XXXDao.xml 中编写 nGQL
 5. 业务调用时直接注入 XXXDao，调用对应方法即可获取并执行对应 nGQL，无需处理结果集，便能拿到所需 实体对象
-
-
-
-
-    

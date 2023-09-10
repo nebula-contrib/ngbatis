@@ -7,15 +7,20 @@ Next, in this section, we will introduce how to pass parameters to the statement
 ## Read Parameters in `nGQL | cypher`
 
 ### Named Parameters
+>
 > The parameters are annotated by @Param. ( org.springframework.data.repository.query.Param )
+>
 #### Basic Types
+
 - PersonDao.java
+
     ```java
         // org.springframework.data.repository.query.Param
         Person selectByName( @Param("name") String param );
     ```
 
 - PersonDao.xml
+
     ```xml
     <select id="selectByName">
         MATCH (n: person)
@@ -26,12 +31,16 @@ Next, in this section, we will introduce how to pass parameters to the statement
     ```
 
 #### POJO or Map
+
 - PersonDao.java
+
     ```java
         // org.springframework.data.repository.query.Param
         Person selectByName( @Param("person") Person person );
     ```
+
 - PersonDao.xml
+
     ```xml
     <select id="selectByName">
         MATCH (n: person)
@@ -40,20 +49,24 @@ Next, in this section, we will introduce how to pass parameters to the statement
         LIMIT 1
     </select>
     ```
+
 > Parameter reading supports `.` operator
 
 ### Anonymous Parameters
+
 - If there is no @Param annotation in the parameters declared in the interface, the index is used to obtain, that is: $p0、$p1、$p2、$p3 ...
 - When the length of the parameter list is 1 and the type is POJO or Map, the attribute can be read directly
 
+#### Basic Type
 
-#### Basic Types
 - PersonDao.java
+
     ```java
     Person selectByName( String name );
     ```
 
 - PersonDao.xml
+
     ```xml
     <select id="selectByName">
         MATCH (n: person)
@@ -64,12 +77,17 @@ Next, in this section, we will introduce how to pass parameters to the statement
     ```
 
 #### POJO or Map
-##### When there is only one parameter:
+
+##### When there is only one parameter
+
 - PersonDao.java
+
     ```java
         Person selectByName( Person person );
     ```
+
 - PersonDao.xml
+
     ```xml
     <select id="selectByName">
         MATCH (n: person)
@@ -79,13 +97,17 @@ Next, in this section, we will introduce how to pass parameters to the statement
     </select>
     ```
 
-##### When there are two or more parameters:
+##### When there are two or more parameters
+
 - PersonDao.java
+
     ```java
         // params = { age: 18 }
         Person selectByName( Person person, Map<String, Object> params );
     ```
+
 - PersonDao.xml
+
     ```xml
         <select id="selectByName">
             MATCH (n: person)
@@ -96,16 +118,22 @@ Next, in this section, we will introduce how to pass parameters to the statement
         </select>
     ```
 
-### The parameter acquisition of the collection type is consistent with the basic types.
+### The parameter acquisition of the collection type is consistent with the basic types
+
 - When anonymous, use $p0，$p1，...;
 - When naming, directly use the parameter name in the annotation;
 - If it is a collection of basic types, it can be directly passed in without complex processing.
+
 ---
+
 - PersonDao.java
+
     ```java
         List<Person> findByIds( List<String> names );
     ```
+
 - PersonDao.xml
+
     ```xml
         <select id="findByIds" resultType="your.domain.Person">
             MATCH (n: person)
@@ -115,4 +143,5 @@ Next, in this section, we will introduce how to pass parameters to the statement
     ```
 
 ## Conclusion
+
 This completes the general introduction of parameter acquisition. If you have requirements for condition control and traversal after obtaining parameters, please move to【[Param Condition Control](./parameter-if)】、【[Param Loop](./parameter-for)】  

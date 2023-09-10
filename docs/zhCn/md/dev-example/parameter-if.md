@@ -2,6 +2,7 @@
 
 > 语法参考【[Beetl 条件控制](https://www.kancloud.cn/xiandafu/beetl3_guide/2138953)】
 > 因配置的差异，文档中如涉及界定符，则由文档中的 <% %> 替换成 @，如：
+
   ```diff
   - <%if ( aBool ) { 
   -                         
@@ -12,12 +13,15 @@
   ```
 
 ## 三元表达式的使用
+
 - PersonDao.java
+
     ```java
         Person selectByNameIfNotEmpty( String name );
     ```
 
 - PersonDao.xml
+
     ```xml
         <select id="selectByNameIfNotEmpty">
             MATCH (n: person)
@@ -29,12 +33,16 @@
     ```
 
 ## if 的使用
+
 - PersonDao.java
+
     ```java
         // params = { age: 18 }
         Person selectByNameAndAge( Person person, Map<String, Object> params );
     ```
+
 - PersonDao.xml
+
     ```xml
       <select id="selectByNameAndAge">
           MATCH (n: person)
@@ -49,14 +57,18 @@
           LIMIT 1
       </select>
     ```
+
 ## if-else 的使用
+
 - PersonDao.java
+
     ```java
         // org.springframework.data.repository.query.Param
         Person selectMarriageable( @Param("gender") String gender );
     ```
 
 - PersonDao.xml
+
     ```xml
         <select id="selectMarriageable">
             MATCH (n: person)
@@ -72,13 +84,16 @@
     ```
 
 ## switch case的使用
+
 - PersonDao.java
+
     ```java
         // org.springframework.data.repository.query.Param
         Person selectMarriageable( @Param("gender") String gender );
     ```
 
 - PersonDao.xml
+
     ```xml
         <select id="selectMarriageable">
             MATCH (n: person)
@@ -97,16 +112,20 @@
             LIMIT 1
         </select>
     ```
+
 - > **注意**: 此处放入 switch 的变量，不可为 null
 
 ## select case 的使用
+
 - PersonDao.java
+
     ```java
         // org.springframework.data.repository.query.Param
         Person selectByGender( @Param("gender") String gender );
     ```
 
 - PersonDao.xml
+
     ```xml
         <select id="selectMarriageable">
             MATCH (n: person)
@@ -122,15 +141,17 @@
         </select>
     ```
 
-
 ## decode 函数的使用
+
 - PersonDao.java
+
     ```java
         // org.springframework.data.repository.query.Param
         Person selectMarriageable( @Param("gender") String gender );
     ```
 
 - PersonDao.xml
+
     ```xml
         <select id="selectMarriageable">
             MATCH (n: person)
@@ -144,5 +165,7 @@
             LIMIT 1
         </select>
     ```
+
 ## 总结
+
 到此，可用于条件判断的方式基本介绍完成。只能用于入参时的判断。返回值不能使用条件控制。

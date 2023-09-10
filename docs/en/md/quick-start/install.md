@@ -1,6 +1,7 @@
 # Import and Config
 
-## Adding in `pom.xml`：
+## Adding in `pom.xml`
+
 ```xml
     <dependency>
         <groupId>org.nebula-contrib</groupId>
@@ -10,6 +11,7 @@
 ```
 
 ## Adding  data source configuration in `application.yml`
+
 ```yml
 nebula:
   hosts: 127.0.0.1:19669, ip:port, ....
@@ -28,27 +30,31 @@ nebula:
 ```
 
 ## Import ngbatis bean
+
 ### Nebula only, in your project
+
 ```java
 @SpringBootApplication(
   exclude={ DataSourceAutoConfiguration.class }, 
   scanBasePackages = { "your.domain", "org.nebula.contrib" }  )
 public class YourSpringbootApplication {
 
-	public static void main(String[] args) {
-		new SpringApplication(YourSpringbootApplication.class).run(args);
-	}
+ public static void main(String[] args) {
+  new SpringApplication(YourSpringbootApplication.class).run(args);
+ }
 
 }
 ```
+
 ### Multi database including Nebula
+
 ```java
 @SpringBootApplication( scanBasePackages = { "your.domain", "org.nebula.contrib" } )
 public class YourSpringbootApplication {
 
-	public static void main(String[] args) {
-		new SpringApplication(YourSpringbootApplication.class).run(args);
-	}
+ public static void main(String[] args) {
+  new SpringApplication(YourSpringbootApplication.class).run(args);
+ }
 
 }
 ```
@@ -56,6 +62,7 @@ public class YourSpringbootApplication {
 ### Primary key generator
 
 #### Declare primary key generator
+
 ```java
 import org.nebula.contrib.ngbatis.PkGenerator;
 
@@ -71,6 +78,7 @@ public class CustomPkGenerator implements PkGenerator {
 ```
 
 #### Register primary key generator as bean
+
 ```java
 @Configuration
 public class PkGeneratorConfig {

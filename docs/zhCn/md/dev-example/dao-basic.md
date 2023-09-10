@@ -1,6 +1,7 @@
 # 使用基类读写
 
 ## 创建一个Person对应的Dao，并继承 NebulaDaoBasic
+
 ```java
 package your.domain;
 
@@ -12,6 +13,7 @@ public interface PersonDao extends NebulaDaoBasic<Person, String> {
 ```
 
 ## 创建一个名为 PersonDao.xml 的文件，默认位置为：`/resources/mapper`
+
 ```xml
 <mapper namespace="your.domain.PersonDao">
 
@@ -19,6 +21,7 @@ public interface PersonDao extends NebulaDaoBasic<Person, String> {
 ```
 
 ## 在 Service 层中举例
+
 ```java
 
 @Service

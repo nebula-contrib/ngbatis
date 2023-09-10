@@ -1,0 +1,20 @@
+{
+  "name": "ngbatis",
+  "version": "1.0.0",
+  "description": "<!--\r Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "lint-md": "markdownlint *.md docs",
+    "format-md": "markdownlint --fix *.md docs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "markdownlint": "^0.31.0",
+    "markdownlint-cli": "^0.36.0"
+  }
+}

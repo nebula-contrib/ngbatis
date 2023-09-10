@@ -2,8 +2,8 @@
 
 如果项目中不建立实体，都是动态查询的话，可以考虑使用内置的返回值类型。数据结构如下：
 
-
 ## NgVertex
+
 ```json
 {
     "properties":{ // Map, key 是 tag 名称，keys 的长度与本级的 tags 的长度一致
@@ -20,6 +20,7 @@
 ```
 
 ## NgEdge
+
 ```json
 {
     "dstID":"1670225547548",
@@ -33,6 +34,7 @@
 ```
 
 ## NgSubgraph
+
 ```json
 {
     "edges":[

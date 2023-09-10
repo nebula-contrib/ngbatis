@@ -1,4 +1,5 @@
 # Operatior Sequence
+
 ## Initialization process at service startup
 
 ```mermaid
@@ -39,6 +40,7 @@ sequenceDiagram
 ```
 
 ## When the proxy method is called
+
 ```mermaid
 sequenceDiagram
   XXXDao->>MapperProxy: invoke( namespace, methodName, args )
@@ -58,4 +60,3 @@ sequenceDiagram
   MapperProxy_invoke->>MapperProxy: 
   MapperProxy->> XXXDao: The result corresponding to the XML return value type
 ```
-
