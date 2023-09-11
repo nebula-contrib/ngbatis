@@ -6,6 +6,7 @@ package org.nebula.contrib.ngbatis.models.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A common pojo for paths.
@@ -29,9 +30,12 @@ public class NgPath<I> {
 
   public static class Relationship<I> {
     private I dstID;
+    private NgVertex<I> dst = new NgVertex<>();
     private String edgeName;
     private Long rank;
     private I srcID;
+    private NgVertex<I> src = new NgVertex<>();
+    private Map<String,Object> properties;
 
     public I getDstID() {
       return dstID;
@@ -63,6 +67,30 @@ public class NgPath<I> {
 
     public void setSrcID(I srcID) {
       this.srcID = srcID;
+    }
+
+    public Map<String, Object> getProperties() {
+      return properties;
+    }
+
+    public void setProperties(Map<String, Object> properties) {
+      this.properties = properties;
+    }
+
+    public NgVertex<I> getDst() {
+      return dst;
+    }
+
+    public void setDst(NgVertex<I> dst) {
+      this.dst = dst;
+    }
+
+    public NgVertex<I> getSrc() {
+      return src;
+    }
+
+    public void setSrc(NgVertex<I> src) {
+      this.src = src;
     }
   }
   
