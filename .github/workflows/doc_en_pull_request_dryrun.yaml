@@ -2,8 +2,8 @@
 name: Dry run Docs Build in PR
 
 on:
-
   pull_request:
+    types: [opened, synchronize, reopened]
     branches: [master]
     paths:
       - 'docs/**'
@@ -48,10 +48,8 @@ jobs:
           node-version: 18
           cache: npm
           cache-dependency-path: ngbatis-docs/package-lock.json
-          
-      - name: Setup Pages
-        uses: actions/configure-pages@v3
-      - name: Build with VitePress
+
+      - name: Dryrun Build with VitePress
         run: |
           cd ngbatis-docs
           npm ci
