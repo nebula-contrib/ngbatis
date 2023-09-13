@@ -28,6 +28,10 @@
             <name>soul-gin</name>
             <email>1533119789@qq.com</email>
         </developer>
+        <developer>
+            <name>dieyi</name>
+            <email>admin@zendee.cn</email>
+        </developer>
     </developers>
 
     <properties>
