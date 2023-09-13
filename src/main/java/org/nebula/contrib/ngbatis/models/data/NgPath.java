@@ -4,6 +4,9 @@ package org.nebula.contrib.ngbatis.models.data;
 //
 // This source code is licensed under Apache 2.0 License.
 
+import org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,11 +33,28 @@ public class NgPath<I> {
 
   public static class Relationship<I> {
     private I dstID;
+    /**
+     * Dest vertex entity. If you want to obtain attributes within an entity, you need to use “with prop” in the nGQL.
+     * <br/>
+     * {@link NebulaDaoBasic#shortestPath} default without prop
+     */
     private NgVertex<I> dst = new NgVertex<>();
     private String edgeName;
     private Long rank;
     private I srcID;
+
+    /**
+     * Source vertex entity. If you want to obtain attributes within an entity, you need to use “with prop” in the nGQL.
+     * <br/>
+     * {@link NebulaDaoBasic#shortestPath} default without prop
+     */
     private NgVertex<I> src = new NgVertex<>();
+
+    /**
+     * Attribute of edge. If you want to obtain attributes in an edge, you need to use “with prop” in the nGQL.
+     * <br/>
+     * {@link NebulaDaoBasic#shortestPath} default without prop
+     */
     private Map<String,Object> properties;
 
     public I getDstID() {
