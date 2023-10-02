@@ -12,9 +12,11 @@ nebula:
     # space name needs to be informed through annotations(@Space) or xml(space="test")
     # default false(false: Session pool map will not be initialized)
     use-session-pool: false
-  hosts: 127.0.0.1:19669
+  hosts: 127.0.0.1:9669
   username: root
   password: nebula
+  # create test space according to resources/testgraph.ngql script
+  # Specific steps refer to https://github.com/vesoft-inc/nebula-console
   space: test
   pool-config:
     min-conns-size: 0
