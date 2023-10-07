@@ -9,6 +9,7 @@ import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getPkField;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.isCurrentTypeOrParentType;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.schemaByEntityType;
 
+import com.vesoft.nebula.DateTime;
 import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.client.graph.data.DateTimeWrapper;
 import com.vesoft.nebula.client.graph.data.DateWrapper;
@@ -126,27 +127,28 @@ public class ResultSetUtil {
   }
 
   private static Object transformDateTime(DateTimeWrapper dateTime) {
+    DateTime localDateTime = dateTime.getLocalDateTime();
     try {
       CALENDAR_CONSTRUCTOR.setAccessible(true);
       GregorianCalendar calendar = CALENDAR_CONSTRUCTOR.newInstance(
-        dateTime.getYear(),
-        dateTime.getMonth() - 1,
-        dateTime.getDay(),
-        dateTime.getHour(),
-        dateTime.getMinute(),
-        dateTime.getSecond(),
-        Math.floorDiv(dateTime.getMicrosec(), 1000)
+        localDateTime.getYear(),
+        localDateTime.getMonth() - 1,
+        localDateTime.getDay(),
+        localDateTime.getHour(),
+        localDateTime.getMinute(),
+        localDateTime.getSec(),
+        Math.floorDiv(localDateTime.getMicrosec(), 1000)
       );
       CALENDAR_CONSTRUCTOR.setAccessible(false);
       return calendar.getTime();
     } catch (Exception e) {
       return new GregorianCalendar(
-        dateTime.getYear(),
-        dateTime.getMonth() - 1,
-        dateTime.getDay(),
-        dateTime.getHour(),
-        dateTime.getMinute(),
-        dateTime.getSecond()
+        localDateTime.getYear(),
+        localDateTime.getMonth() - 1,
+        localDateTime.getDay(),
+        localDateTime.getHour(),
+        localDateTime.getMinute(),
+        localDateTime.getSec()
         ).getTime();
     }
   }
