@@ -1,0 +1,7 @@
+create space if not exists test (vid_type = fixed_string(32))
+:sleep 20
+use test
+create tag if not exists person(name string,gender string,height double,age int32 ,birthday datetime)
+create tag if not exists employee(name string,gender string,height double,age int32 ,birthday datetime,position string)
+create edge if not exists like(likeness double)
+create tag index person_index_1 on person(age,birthday)
