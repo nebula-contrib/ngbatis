@@ -332,7 +332,19 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     ClassModel classModel = getClassModel(this.getClass());
     MapperProxy.invoke(classModel, methodModel, v1, e, v2);
   }
-
+  /**
+   * @Author sunhb
+   * @Description 根据三元组列表的头结点，尾节点和尾节点进行插入
+   * @Date 2023/10/10 上午11:03
+   * @Param
+   * @param triplets 三元组列表
+   * @return void
+   **/
+  default void insertEdgeBatch(List triplets){
+    MethodModel methodModel = getMethodModel();
+    ClassModel classModel = getClassModel(this.getClass());
+    MapperProxy.invoke(classModel, methodModel, triplets);
+  }
   /**
    * 根据三元组值, 插入关系
    * <p>Selective: 仅处理非空字段</p>
