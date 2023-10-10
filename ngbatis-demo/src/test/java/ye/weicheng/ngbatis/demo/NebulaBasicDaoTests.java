@@ -16,12 +16,14 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.util.Assert;
+import org.nebula.contrib.ngbatis.models.data.NgEdge;
 import org.nebula.contrib.ngbatis.models.data.NgPath;
 import org.nebula.contrib.ngbatis.utils.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ye.weicheng.ngbatis.demo.pojo.Like;
 import ye.weicheng.ngbatis.demo.pojo.LikeWithRank;
+import ye.weicheng.ngbatis.demo.pojo.NgTriplet;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 import ye.weicheng.ngbatis.demo.repository.TestRepository;
 
@@ -60,7 +62,7 @@ public class NebulaBasicDaoTests {
     List<Person> people = repository.selectBySelective(person);
     System.out.println(JSON.toJSONString(people));
   }
-  
+
   @Test
   public void selectBySelectiveWithBigDecimal() {
     Person person = new Person();
@@ -68,7 +70,7 @@ public class NebulaBasicDaoTests {
     List<Person> people = repository.selectBySelective(person);
     System.out.println(JSON.toJSONString(people));
   }
-  
+
   /**
    * https://github.com/nebula-contrib/ngbatis/issues/35.
    */
@@ -107,7 +109,7 @@ public class NebulaBasicDaoTests {
     List<String> people = repository.selectIdBySelectiveStringLike(person);
     System.out.println(people);
   }
-  
+
   @Test
   public void selectByMap() {
     Map<String, Object> query = new HashMap<>();
@@ -182,7 +184,7 @@ public class NebulaBasicDaoTests {
   @Test
   public void insertBatch() {
     long now = System.currentTimeMillis();
-    
+
     Person person1 = new Person();
     person1.setName("IB" + now);
     person1.setGender("M");
@@ -192,7 +194,7 @@ public class NebulaBasicDaoTests {
     person2.setName("IB" + (now + 1));
     person2.setAge(18);
     person2.setBirthday(new Date());
-    
+
     Person person3 = new Person();
     person3.setName("IB" + (now + 2));
     person3.setGender("M");
@@ -202,7 +204,7 @@ public class NebulaBasicDaoTests {
     people.add(person1);
     people.add(person2);;
     people.add(person3);
-    
+
     repository.insertBatch(people);
   }
   // endregion
@@ -215,14 +217,14 @@ public class NebulaBasicDaoTests {
     Person person = new Person();
     person.setName(name);
     repository.insert(person);
-    
+
     Integer newAge = randomAge();
     person.setAge(newAge);
     person.setGender("F");
     repository.updateById(person);
-    
+
     Person personDb = repository.selectById(name);
-    
+
     Assert.isTrue(newAge.equals(personDb.getAge()));
   }
 
@@ -276,17 +278,17 @@ public class NebulaBasicDaoTests {
 
     Integer newAge2 = randomAge();
     person2.setAge(newAge2);
-    
+
     Integer newAge3 = randomAge();
     person3.setAge(newAge3);
-    
+
     repository.updateByIdBatchSelective(people);
-    
+
     List<String> ids = people.stream().map(Person::getName).collect(Collectors.toList());
     List<Person> peopleDb = repository.selectByIds(ids);
 
     Assert.isTrue(peopleDb.size() == 3);
-    
+
     for (Person personDb : peopleDb) {
       for (Person person : people) {
         if (Objects.equals(personDb.getName(), person.getName())) {
@@ -384,7 +386,7 @@ public class NebulaBasicDaoTests {
     like.setLikeness(0.202210171102);
     repository.insertEdge("吴小极", like, "刘小洲");
   }
-  
+
   @Test
   public void insertEdgeUseNodeId2() {
     LikeWithRank like = new LikeWithRank();
@@ -424,7 +426,25 @@ public class NebulaBasicDaoTests {
 
     repository.insertEdgeSelective(person1, likeWithRank, person2);
   }
+  @Test
+  public void insertEdgeBatch(){
+      List<NgTriplet> ngTripletList = new ArrayList<>();
+      for (int i = 0; i < 3; i++) {
+          Person person1 = new Person();
+          person1.setName("p1_"+i);
+          repository.insertSelective(person1);
 
+          Person person2 = new Person();
+          person2.setName("p2_"+i);
+          repository.insertSelective(person2);
+
+          Like like = new Like();
+          like.setLikeness(0.87);
+
+          ngTripletList.add(new NgTriplet(person1,like,person2));
+      }
+      repository.insertEdgeBatch(ngTripletList);
+  }
   @Test
   public void upsertEdgeSelective() {
     Person person1 = new Person();
@@ -460,7 +480,7 @@ public class NebulaBasicDaoTests {
     Person whoIsStartForTest = repository.startNode(Like.class, "易小海");
     System.out.println(JSON.toJSONString(whoIsStartForTest));
   }
-  
+
   @Test
   public void shortestPath() {
     List<NgPath<String>> ngPaths = repository.shortestPath("吴小极", "刘小洲");
