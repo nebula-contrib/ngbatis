@@ -16,14 +16,13 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.util.Assert;
-import org.nebula.contrib.ngbatis.models.data.NgEdge;
 import org.nebula.contrib.ngbatis.models.data.NgPath;
 import org.nebula.contrib.ngbatis.utils.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ye.weicheng.ngbatis.demo.pojo.Like;
 import ye.weicheng.ngbatis.demo.pojo.LikeWithRank;
-import ye.weicheng.ngbatis.demo.pojo.NgTriplet;
+import org.nebula.contrib.ngbatis.models.data.NgTriplet;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 import ye.weicheng.ngbatis.demo.repository.TestRepository;
 
@@ -202,7 +201,7 @@ public class NebulaBasicDaoTests {
 
     List<Person> people = new ArrayList<>();
     people.add(person1);
-    people.add(person2);;
+    people.add(person2);
     people.add(person3);
 
     repository.insertBatch(people);
@@ -268,7 +267,7 @@ public class NebulaBasicDaoTests {
 
     List<Person> people = new ArrayList<>();
     people.add(person1);
-    people.add(person2);;
+    people.add(person2);
     people.add(person3);
 
     repository.insertBatch(people);
