@@ -1,10 +1,6 @@
-package ye.weicheng.ngbatis.demo.pojo;
+package org.nebula.contrib.ngbatis.models.data;
 
-/**
- * @author: SunHB
- * @createTime: 2023/10/10 上午12:41
- * @description:
- */
+
 public class NgTriplet<I> {
     private I srcId;
     private I dstId;
