@@ -17,12 +17,12 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.util.Assert;
 import org.nebula.contrib.ngbatis.models.data.NgPath;
+import org.nebula.contrib.ngbatis.models.data.NgTriplet;
 import org.nebula.contrib.ngbatis.utils.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ye.weicheng.ngbatis.demo.pojo.Like;
 import ye.weicheng.ngbatis.demo.pojo.LikeWithRank;
-import org.nebula.contrib.ngbatis.models.data.NgTriplet;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 import ye.weicheng.ngbatis.demo.repository.TestRepository;
 
@@ -425,25 +425,27 @@ public class NebulaBasicDaoTests {
 
     repository.insertEdgeSelective(person1, likeWithRank, person2);
   }
+
   @Test
-  public void insertEdgeBatch(){
-      List<NgTriplet> ngTripletList = new ArrayList<>();
-      for (int i = 0; i < 3; i++) {
-          Person person1 = new Person();
-          person1.setName("p1_"+i);
-          repository.insertSelective(person1);
+  public void insertEdgeBatch() {
+    List<NgTriplet<String>> ngTripletList = new ArrayList<>();
+    for (int i = 0; i < 3; i++) {
+      Person person1 = new Person();
+      person1.setName("p1_" + i);
+      repository.insertSelective(person1);
 
-          Person person2 = new Person();
-          person2.setName("p2_"+i);
-          repository.insertSelective(person2);
+      Person person2 = new Person();
+      person2.setName("p2_" + i);
+      repository.insertSelective(person2);
 
-          Like like = new Like();
-          like.setLikeness(0.87);
+      Like like = new Like();
+      like.setLikeness(0.87);
 
-          ngTripletList.add(new NgTriplet(person1,like,person2));
-      }
-      repository.insertEdgeBatch(ngTripletList);
+      ngTripletList.add(new NgTriplet<>(person1,like,person2));
+    }
+    repository.insertEdgeBatch(ngTripletList);
   }
+
   @Test
   public void upsertEdgeSelective() {
     Person person1 = new Person();
