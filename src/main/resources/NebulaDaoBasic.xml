@@ -285,7 +285,11 @@
         DELETE VERTEX ${ ng.valueFmt( p0 ) }
     </delete>
     <!--endregion-->
-
+    <delete id="deleteByIdBatch">
+        @for ( v in ng_args[0] ) {
+            DELETE VERTEX ${ ng.valueFmt( v )};
+        @}
+    </delete>
     <!--region graph special-->
     <insert id="insertEdge">
         @var kv = ng.kv( ng_args[1], '', null, null, false );

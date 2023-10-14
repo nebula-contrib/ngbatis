@@ -314,7 +314,22 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     ResultSet resultSet = (ResultSet) MapperProxy.invoke(classModel, methodModel, id);
     return resultSet.isSucceeded() ? 1 : 0;
   }
+
   // endregion
+  /**
+   * <p>通过 主键批量删除当前记录</p>
+   *
+   * @param ids 表记录主键列表
+   * @return 是否删除成功，成功 1，失败 0
+   */
+  default int deleteByIdBatch(List<I> ids) {
+    MethodModel methodModel = getMethodModel();
+    methodModel.setReturnType(ResultSet.class);
+    methodModel.setResultType(ResultSet.class);
+    ClassModel classModel = getClassModel(this.getClass());
+    ResultSet resultSet = (ResultSet) MapperProxy.invoke(classModel, methodModel, ids);
+    return resultSet.isSucceeded() ? 1 : 0;
+  }
 
   // region graph special
   /**
@@ -332,19 +347,18 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     ClassModel classModel = getClassModel(this.getClass());
     MapperProxy.invoke(classModel, methodModel, v1, e, v2);
   }
+
   /**
    * @Author sunhb
    * @Description 根据三元组列表的头结点，尾节点和尾节点进行插入
    * @Date 2023/10/10 上午11:03
-   * @Param
-   * @param triplets 三元组列表
-   * @return void
    **/
-  default void insertEdgeBatch(List triplets){
+  default void insertEdgeBatch(List triplets) {
     MethodModel methodModel = getMethodModel();
     ClassModel classModel = getClassModel(this.getClass());
     MapperProxy.invoke(classModel, methodModel, triplets);
   }
+
   /**
    * 根据三元组值, 插入关系
    * <p>Selective: 仅处理非空字段</p>
@@ -462,7 +476,9 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    * Find the shortest path by srcId and dstId.
    * @param srcId the start node's id
    * @param dstId the end node's id
-   * @return Shortest path list. entities containing vertext in path. If you want to obtain attributes within an entity, you need to use “with prop” in the nGQL.
+   * @return Shortest path list. entities containing vertext in path.
+   *         If you want to obtain attributes within an entity,
+   *         you need to use “with prop” in the nGQL.
    */
   default List<NgPath<I>> shortestPath(@Param("srcId") I srcId, @Param("dstId") I dstId) {
     MethodModel methodModel = getMethodModel();
@@ -471,6 +487,8 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     ClassModel classModel = getClassModel(this.getClass());
     return (List<NgPath<I>>) MapperProxy.invoke(classModel, methodModel, srcId, dstId);
   }
+
+
   // endregion
 
 }
