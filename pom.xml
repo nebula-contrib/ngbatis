@@ -32,6 +32,10 @@
             <name>dieyi</name>
             <email>admin@zendee.cn</email>
         </developer>
+        <developer>
+            <name>shbone</name>
+            <email>598924626@qq.com</email>
+        </developer>
     </developers>
 
     <properties>

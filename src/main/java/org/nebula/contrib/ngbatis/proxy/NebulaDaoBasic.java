@@ -314,6 +314,22 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     ResultSet resultSet = (ResultSet) MapperProxy.invoke(classModel, methodModel, id);
     return resultSet.isSucceeded() ? 1 : 0;
   }
+
+
+  /**
+   * <p>通过 主键批量删除当前记录</p>
+   *
+   * @param ids 表记录主键列表
+   * @return 是否删除成功，成功 1，失败 0
+   */
+  default int deleteByIdBatch(List<I> ids) {
+    MethodModel methodModel = getMethodModel();
+    methodModel.setReturnType(ResultSet.class);
+    methodModel.setResultType(ResultSet.class);
+    ClassModel classModel = getClassModel(this.getClass());
+    ResultSet resultSet = (ResultSet) MapperProxy.invoke(classModel, methodModel, ids);
+    return resultSet.isSucceeded() ? 1 : 0;
+  }
   // endregion
 
   // region graph special
@@ -450,7 +466,9 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    * Find the shortest path by srcId and dstId.
    * @param srcId the start node's id
    * @param dstId the end node's id
-   * @return Shortest path list. entities containing vertext in path. If you want to obtain attributes within an entity, you need to use “with prop” in the nGQL.
+   * @return Shortest path list. entities containing vertext in path.
+   *          If you want to obtain attributes within an entity,
+   *          you need to use “with prop” in the nGQL.
    */
   default List<NgPath<I>> shortestPath(@Param("srcId") I srcId, @Param("dstId") I dstId) {
     MethodModel methodModel = getMethodModel();
