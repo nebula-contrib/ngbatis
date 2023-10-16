@@ -477,8 +477,6 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     ClassModel classModel = getClassModel(this.getClass());
     return (List<NgPath<I>>) MapperProxy.invoke(classModel, methodModel, srcId, dstId);
   }
-
-
   // endregion
 
 }
