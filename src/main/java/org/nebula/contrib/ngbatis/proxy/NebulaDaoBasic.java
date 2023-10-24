@@ -322,7 +322,7 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    * @param ids 表记录主键列表
    * @return 是否删除成功，成功 1，失败 0
    */
-  default int deleteByIdBatch(@Param("ids") Collection<I> ids) {
+  default int deleteByIdBatch (Collection<I> ids) {
     MethodModel methodModel = getMethodModel();
     methodModel.setReturnType(ResultSet.class);
     methodModel.setResultType(ResultSet.class);
