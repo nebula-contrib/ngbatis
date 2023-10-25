@@ -1,4 +1,4 @@
-# Operatior Sequence
+# Operation Sequence
 
 ## Initialization process at service startup
 
