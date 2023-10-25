@@ -284,12 +284,13 @@
     <delete id="deleteById">
         DELETE VERTEX ${ ng.valueFmt( p0 ) }
     </delete>
-    <!--endregion-->
+
+
     <delete id="deleteByIdBatch">
-        @for ( v in ng_args[0] ) {
-            DELETE VERTEX ${ ng.valueFmt( v )};
-        @}
+	DELETE VERTEX  ${ ng.join( p0, ", ", "ng.valueFmt" ) }
     </delete>
+    <!--endregion-->
+
     <!--region graph special-->
     <insert id="insertEdge">
         @var kv = ng.kv( ng_args[1], '', null, null, false );
@@ -319,6 +320,7 @@
         ${ ng.join( @kv.values ) }
         );
     </insert>
+
     <insert id="insertEdgeBatch">
         @for ( row in ng_args[0] ) {
         @var kv = ng.kv( row.edge, '', null, null, false );
@@ -334,6 +336,7 @@
         );
         @}
     </insert>
+
     <insert id="upsertEdgeSelective">
         @var kv = ng.kv( ng_args[1], '', null, true, false );
         @var rank = ng.id( ng_args[1] );

@@ -1,8 +1,8 @@
-package org.nebula.contrib.ngbatis.proxy;
-
 // Copyright (c) 2022 All project authors. All rights reserved.
 //
 // This source code is licensed under Apache 2.0 License.
+
+package org.nebula.contrib.ngbatis.proxy;
 
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.edgeName;
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.entityType;
@@ -322,7 +322,7 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    * @param ids 表记录主键列表
    * @return 是否删除成功，成功 1，失败 0
    */
-  default int deleteByIdBatch(List<I> ids) {
+  default int deleteByIdBatch (Collection<I> ids) {
     MethodModel methodModel = getMethodModel();
     methodModel.setReturnType(ResultSet.class);
     methodModel.setResultType(ResultSet.class);
@@ -492,6 +492,3 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   // endregion
 
 }
-
-
-
