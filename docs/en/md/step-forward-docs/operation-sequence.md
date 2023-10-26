@@ -71,7 +71,6 @@ This source code is licensed under Apache 2.0 License.
 4. Write nGQL in XXXDao.xml.
 5. When calling the business logic, inject XXXDao directly and call the corresponding method to retrieve and execute the nGQL without handling the result set, thus obtaining the required entity objects.
 
-
 # Operation Sequence
 
 ## Initialization process at service startup
