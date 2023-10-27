@@ -61,7 +61,7 @@ This source code is licensed under Apache 2.0 License.
     1. Read interface parameter serializers and serialize interface parameters to match placeholders in XML with key-value pairs.
     2. Replace placeholders in the XML.
     3. Retrieve a session and execute executeWithParameter.
-    4. Result handling: Result handlers are routed through [ResultResolver](src/main/java/org/nebula/contrib/ngbatis/ResultResolver), with the choice determined by the return value declared in the method model and the declared generic resultType. In this step, the ORM process is completed.
+    4. Result handling: Result handlers are routed through [ResultResolver](src/main/java/org/nebula/contrib/ngbatis/ResultResolver.java), with the choice determined by the return value declared in the method model and the declared generic resultType. In this step, the ORM process is completed.
 
 ## Developer Usage Approach (for complex extensions, see [Application Configuration] if there are no specific requirements)
 
