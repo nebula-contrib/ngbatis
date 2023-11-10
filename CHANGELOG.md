@@ -33,6 +33,15 @@ This source code is licensed under Apache 2.0 License.
 - nebula-java: 3.5.0 -> 3.6.0
 
 ## Bugfix
+- fix: support methods in mapper tags to set space to null.
+  - Such as: 
+  ```xml
+  <mapper namespace="...">
+    <create id="createSpace" space="null">
+      create space new_space ( vid_type  = INT64 );
+    </create>
+  </mapper>
+  ```
 
 - fix: [#190](https://github.com/nebula-contrib/ngbatis/issues/190) Insert failed when tag has no attributes
 - chore: removing and exclude some packages: log4j related or useless.

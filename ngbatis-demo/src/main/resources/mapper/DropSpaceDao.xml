@@ -1,0 +1,20 @@
+<!--
+    Copyright (c) 2023 All project authors. All rights reserved.
+    
+    This source code is licensed under Apache 2.0 License.
+-->
+<mapper namespace="ye.weicheng.ngbatis.demo.repository.DropSpaceDao" space="test_drop">
+  
+  <delete id="dropSpace">
+    drop space ${ p0 };
+  </delete>
+  
+  <select id="createSpace" space="null">
+    create space ${ p0 } ( vid_type  = INT64 );
+  </select>
+  
+  <select id="showTags" resultType="java.lang.String">
+    SHOW TAGS;
+  </select>
+  
+</mapper>
