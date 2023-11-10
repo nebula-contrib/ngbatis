@@ -33,8 +33,10 @@ This source code is licensed under Apache 2.0 License.
 - nebula-java: 3.5.0 -> 3.6.0
 
 ## Bugfix
+
 - fix: support methods in mapper tags to set space to null.
-  - Such as: 
+  - Such as:
+
   ```xml
   <mapper namespace="...">
     <create id="createSpace" space="null">
