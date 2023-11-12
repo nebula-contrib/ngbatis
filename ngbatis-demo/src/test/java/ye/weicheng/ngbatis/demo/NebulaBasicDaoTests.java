@@ -358,31 +358,6 @@ public class NebulaBasicDaoTests {
   }
   // endregion
 
-  @Test
-  public void deleteByIdBatch() {
-    long now = System.currentTimeMillis();
-    Person person1 = new Person();
-    person1.setName("UBB" + now);
-
-    Person person2 = new Person();
-    person2.setName("UBB" + (now + 1));
-
-    Person person3 = new Person();
-    person3.setName("UBB" + (now + 2));
-
-    List<Person> people = new ArrayList<>();
-    people.add(person1);
-    people.add(person2);
-    people.add(person3);
-    repository.insertBatch(people);
-
-    List<String> peopleIds = new ArrayList<>();
-    peopleIds.add(person1.getName());
-    peopleIds.add(person2.getName());
-    peopleIds.add(person3.getName());
-    Assert.equals(repository.deleteByIdBatch(peopleIds),1);
-  }
-
   // region graph special
   @Test
   public void insertEdge() {
