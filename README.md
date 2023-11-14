@@ -12,7 +12,7 @@ This source code is licensed under Apache 2.0 License.
 </p>
 
 - [Ngbatis Docs](https://nebula-contrib.github.io/ngbatis/)
-- [Ngbatis 文档](https://corvusye.github.io/ngbatis-docs/)
+- [Ngbatis 文档](https://graph-cn.github.io/ngbatis-docs/)
 
 ## What is NGBATIS
 

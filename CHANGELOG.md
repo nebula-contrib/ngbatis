@@ -26,13 +26,20 @@ This source code is licensed under Apache 2.0 License.
 
 - [ ] Springboot 3.x support.
 
-# NEXT
+# 1.2.0-beta
 
 ## Dependencies upgrade
 
 - nebula-java: 3.5.0 -> 3.6.0
 - beetl: 3.1.8-RELEASE -> 3.15.10.RELEASE
 - antlr4: 4.7.2 -> 4.11.1
+
+## Feature
+
+- feat: support `<nGQL>` include query pieces. ([#212](https://github.com/nebula-contrib/ngbatis/pull/212), via [dieyi](https://github.com/1244453393))
+- feat: extending `NgPath`, when 'with prop' is used in nGQL, edge attributes can be obtained from NgPath. ([#212](https://github.com/nebula-contrib/ngbatis/pull/212), via [dieyi](https://github.com/1244453393))
+- feat: expanding the `insertEdgeBatch` interface in `NebulaDaoBasic`. ([#244](https://github.com/nebula-contrib/ngbatis/pull/244), via [Sunhb](https://github.com/shbone))
+- feat: expanding the `deleteByIdBatch` interface in `NebulaDaoBasic`. ([#247](https://github.com/nebula-contrib/ngbatis/pull/244), via [Sunhb](https://github.com/shbone))
 
 ## Bugfix
 
@@ -55,6 +62,7 @@ This source code is licensed under Apache 2.0 License.
 - fix: when DAO/Mapper method has `Page` type param with `@Param`, the param name can not be use.
   > 如原来项目中分页相关接口，用了不起作用的 `@Param`, 但 xml 还是使用 p0, p1...
   > 需要将 `@Param` 移除，或者将 xml 中的参数名改成 注解的参数名，以保证参数名统一
+- fix:class 'ResultSetUtil.java' parse datetime type error. ([#241](https://github.com/nebula-contrib/ngbatis/pull/241), via [爱吃辣条的Jerry](https://github.com/bobobod))
 
 ## Develop behavior change
 
