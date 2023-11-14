@@ -14,9 +14,11 @@ import java.util.List;
  */
 public interface DropSpaceDao {
   
-  void createSpace(String name);
+  void useTestSpace();
   
-  void dropSpace(String name);
+  void createSpace();
+  
+  void dropSpace();
   
   List<String> showTags();
   

@@ -319,7 +319,7 @@ public class MapperProxy {
     gql = gql.trim();
     String sessionSpace = localSession.getCurrentSpace();
     boolean sameSpace = Objects.equals(sessionSpace, currentSpace);
-    if (!sameSpace) {
+    if (!sameSpace && currentSpace !=  null) {
       qlAndSpace[0] = currentSpace;
       Session session = localSession.getSession();
       ResultSet execute = session.execute(String.format("USE `%s`", currentSpace));
