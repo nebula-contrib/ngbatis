@@ -12,7 +12,7 @@ This source code is licensed under Apache 2.0 License.
 - [ ] Expand the function of NebulaDaoBasic
   - [ ] Add batch interface:
     - [ ] insertTripletBatch
-    - [ ] insertEdgeBatch
+    - [x] insertEdgeBatch
     - [ ] ...
   - [ ] Schema support:
     - [ ] show metas
