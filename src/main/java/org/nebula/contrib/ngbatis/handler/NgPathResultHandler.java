@@ -7,18 +7,18 @@ package org.nebula.contrib.ngbatis.handler;
 import com.vesoft.nebula.client.graph.data.PathWrapper;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.data.ResultSet.Record;
+import java.io.UnsupportedEncodingException;
+import javax.annotation.Resource;
 import org.nebula.contrib.ngbatis.models.data.NgPath;
 import org.nebula.contrib.ngbatis.utils.ResultSetUtil;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-import java.io.UnsupportedEncodingException;
-
 /**
- * Convert the path data from ResultSet to NgPath. 
+ * Convert the path data from ResultSet to NgPath.
+ *
  * @author yeweicheng
  * @since 2023-01-07 4:54
- *   <br> Now is history!
+ * <br> Now is history!
  */
 @Component
 public class NgPathResultHandler extends AbstractResultHandler<NgPath<?>, NgPath<?>> {

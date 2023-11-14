@@ -31,6 +31,8 @@ This source code is licensed under Apache 2.0 License.
 ## Dependencies upgrade
 
 - nebula-java: 3.5.0 -> 3.6.0
+- beetl: 3.1.8-RELEASE -> 3.15.10.RELEASE
+- antlr4: 4.7.2 -> 4.11.1
 
 ## Bugfix
 
