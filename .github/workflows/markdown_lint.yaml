@@ -3,7 +3,7 @@ name: Lint Markdown
 
 on:
   pull_request:
-    branches: [master]
+    branches: [ for-jdk17 ]
     paths:
       - 'docs/**'
       - '*.md'

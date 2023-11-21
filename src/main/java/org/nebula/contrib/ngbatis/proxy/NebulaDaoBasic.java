@@ -13,13 +13,13 @@ import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.pkType;
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.proxy;
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.vertexName;
 
-import com.sun.istack.NotNull;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 import org.nebula.contrib.ngbatis.exception.QueryException;
 import org.nebula.contrib.ngbatis.models.ClassModel;
 import org.nebula.contrib.ngbatis.models.MethodModel;
