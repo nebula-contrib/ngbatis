@@ -8,6 +8,7 @@ import jakarta.annotation.Resource;
 import org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 
+
 /**
  * 数据访问层 样例。
  *<p/>

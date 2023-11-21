@@ -18,6 +18,7 @@ npm run format-md
 ## Version base
 
 You should be having:
+
 - JDK >= 17
 - NebulaGraph > v3.0
 - Springboot 3.x
