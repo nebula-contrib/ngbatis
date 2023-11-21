@@ -1,0 +1,57 @@
+#
+name: Dry run Docs Build in PR
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [master]
+    paths:
+      - 'docs/**'
+      - '.github/workflows/**'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Checkout frontend code
+        uses: actions/checkout@v3
+        with:
+          repository: graph-cn/ngbatis-docs
+          path: ngbatis-docs
+          ref: 7b17bd88148d39643185ba218e3a18ceb3877428
+
+      - name: Place markdown file
+        run: |
+          cp -r docs/en/md/* ngbatis-docs/docs
+          cp docs/en/vitepress.config.ts ngbatis-docs/docs/.vitepress/config.ts
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+          cache-dependency-path: ngbatis-docs/package-lock.json
+
+      - name: Dryrun Build with VitePress
+        run: |
+          cd ngbatis-docs
+          npm ci
+          npm run docs:build
+          touch docs/.vitepress/dist/.nojekyll

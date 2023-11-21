@@ -1,4 +1,5 @@
 # 运行时序
+
 ## 服务启动时的初始化过程
 
 ```mermaid
@@ -39,6 +40,7 @@ sequenceDiagram
 ```
 
 ## 当代理方法被调用时
+
 ```mermaid
 sequenceDiagram
   XXXDao->>MapperProxy: invoke( 接口名, 方法名, 参数列表 )

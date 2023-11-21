@@ -28,3 +28,4 @@ build/
 
 ### vitepress ###
 .vitepress
+node_modules/

@@ -3,12 +3,11 @@
 ## Summary
 
 Ngbatis provides two ways for developers to access nebula.
+
 - Close to Mybatis-plus, providing a basic `DAO` to be extends, unnecessary to write any `nGQL` to operate single table, include vertex and edge. (See [By Basic DAO](./dao-basic) for more details)
 - Close to Mybatis, supporting developers to write complex `nGQL` or `Cypher` to finish read or write data. (See [By Custom nGQL](./custom-crud) for more details)
   
-
 Take  `Person` 与 `Like` as examples.
-
 
 ## Create Schema in Nebula (refer [CREATE TAG](https://docs.nebula-graph.com.cn/3.1.0/3.ngql-guide/10.tag-statements/1.create-tag/)、[CREATE EDGE](https://docs.nebula-graph.com.cn/3.1.0/3.ngql-guide/11.edge-type-statements/1.create-edge/)、[CREATE INDEX](https://docs.nebula-graph.com.cn/3.1.0/3.ngql-guide/14.native-index-statements/1.create-native-index/))
 
@@ -33,7 +32,9 @@ CREATE TAG INDEX `i_person_name` on `person`(`name`(50));
 ```
 
 ## Necessary `POJO` for two ways'
+
 ### Person.java
+
 ```java
 package your.domain;
 
@@ -56,6 +57,7 @@ public class Person {
 ```
 
 ### Like.java
+
 ```java
 package your.domain;
 
@@ -71,6 +73,7 @@ public class Like {
 ```
 
 ### LikeWithRank.java
+
 ```java
 package your.domain;
 

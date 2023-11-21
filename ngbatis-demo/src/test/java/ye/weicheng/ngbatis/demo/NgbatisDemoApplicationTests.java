@@ -174,24 +174,17 @@ class NgbatisDemoApplicationTests {
   
   @Test
   public void insertDynamic() {
+    Map<String, Object> props = new HashMap<>();
+    props.put("age", 18);
     DynamicNode node = new DynamicNode();
     node.setTagName("person");
-    node.setPropertyList(new HashMap<String, Object>() {{
-        put("age", 18);
-      }}
-    );
+    node.setPropertyList(props);
     DynamicNode node2 = new DynamicNode();
     node2.setTagName("person");
-    node2.setPropertyList(new HashMap<String, Object>() {{
-        put("age", 18);
-      }}
-    );
+    node2.setPropertyList(props);
     DynamicNode node3 = new DynamicNode();
     node3.setTagName("person");
-    node3.setPropertyList(new HashMap<String, Object>() {{
-        put("age", 18);
-      }}
-    );
+    node3.setPropertyList(props);
     List<DynamicNode> nodes = Arrays.asList(node, node2, node3);
     repository.insertDynamic(nodes);
   }

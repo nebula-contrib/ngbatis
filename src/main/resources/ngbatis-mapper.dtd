@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!ELEMENT mapper (insert* | update* | delete* | select* | nGQL*)*>
+<!ATTLIST mapper
+namespace CDATA #IMPLIED
+space CDATA
+>
+
+<!ELEMENT insert (#PCDATA)*>
+<!ATTLIST insert
+id CDATA #REQUIRED
+parameterType CDATA #IMPLIED
+space CDATA
+>
+
+<!ELEMENT update (#PCDATA)*>
+<!ATTLIST update
+id CDATA #REQUIRED
+parameterType CDATA #IMPLIED
+space CDATA
+>
+
+<!ELEMENT delete (#PCDATA)*>
+<!ATTLIST delete
+id CDATA #REQUIRED
+parameterType CDATA #IMPLIED
+space CDATA
+>
+
+<!ELEMENT select (#PCDATA)*>
+<!ATTLIST select
+id CDATA #REQUIRED
+parameterType CDATA #IMPLIED
+resultType CDATA #IMPLIED
+space CDATA
+>
+
+<!ELEMENT nGQL (#PCDATA)*>
+<!ATTLIST nGQL
+id CDATA #REQUIRED
+>

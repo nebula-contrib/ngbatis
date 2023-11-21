@@ -5,6 +5,7 @@ package org.nebula.contrib.ngbatis.proxy;
 // This source code is licensed under Apache 2.0 License.
 
 import static org.apache.commons.lang3.ObjectUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.nebula.contrib.ngbatis.models.ClassModel.PROXY_SUFFIX;
 
 import com.vesoft.nebula.client.graph.SessionPool;
@@ -231,7 +232,7 @@ public class MapperProxy {
       autoSwitch = qlAndSpace[0] == null ? "" : qlAndSpace[0];
       session = localSession.getSession();
       result = session.executeWithParameter(gql, params);
-      localSession.setCurrentSpace(result.getSpaceName());
+      localSession.setCurrentSpace(getSpace(result));
       if (result.isSucceeded()) {
         return result;
       } else {
@@ -318,7 +319,7 @@ public class MapperProxy {
     gql = gql.trim();
     String sessionSpace = localSession.getCurrentSpace();
     boolean sameSpace = Objects.equals(sessionSpace, currentSpace);
-    if (!sameSpace) {
+    if (!sameSpace && currentSpace !=  null) {
       qlAndSpace[0] = currentSpace;
       Session session = localSession.getSession();
       ResultSet execute = session.execute(String.format("USE `%s`", currentSpace));
@@ -339,9 +340,23 @@ public class MapperProxy {
    * @return 目标space
    */
   public static String getSpace(ClassModel cm, MethodModel mm) {
-    return mm != null && mm.getSpace() != null ? mm.getSpace()
+    String methodSpace;
+    return (mm != null && (methodSpace = mm.getSpace()) != null) 
+      ? (
+        "null".equals(methodSpace.trim()) ? null : methodSpace
+      )
       : cm != null && cm.getSpace() != null ? cm.getSpace()
         : ENV.getSpace();
+  }
+
+  /**
+   * 从结果集中获取当前的 space
+   * @param result 脚本执行之后的结果集
+   * @return 结果集所对应的 space
+   */
+  private static String getSpace(ResultSet result) {
+    String spaceName = result.getSpaceName();
+    return isBlank(spaceName) ? null : spaceName;
   }
 
   public static Logger getLog() {

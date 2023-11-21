@@ -4,10 +4,9 @@ package ye.weicheng.ngbatis.demo.pojo;
 //
 // This source code is licensed under Apache 2.0 License.
 
-import org.nebula.contrib.ngbatis.annotations.Space;
-
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.nebula.contrib.ngbatis.annotations.Space;
 
 /**
  * @author yeweicheng

@@ -5,6 +5,7 @@ package org.nebula.contrib.ngbatis.binding;
 // This source code is licensed under Apache 2.0 License.
 
 import com.alibaba.fastjson.JSON;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -74,11 +75,13 @@ class BeetlTextRenderTest {
       + "    @}\n" 
       + "    RETURN n\n" 
       + "    LIMIT 4000";
+    List<String> n = new ArrayList<>();
+    n.add("name");
     String cql = render.resolve(
       text,
       new HashMap<String, Object>() {{
-          put("columns", Arrays.asList("name"));
-          put("valueColumns", Arrays.asList("'$name'"));
+          put("columns", n);
+          put("valueColumns", n);
           put("tag", "person");
         }}
     );

@@ -1,5 +1,8 @@
+
 # Advanced Configuration
+
 ## How to display SQL on the console
+
 ```yml
 logging:
   level:
@@ -7,6 +10,7 @@ logging:
 ```
 
 ## How to change location of XXXDao.xml
+
 ```yml
 cql:
   parser:
@@ -15,6 +19,7 @@ cql:
 ```
 
 ## How to modify the statement of the NebulaBasicDao
+
 ```yml
 cql:
   parser:
@@ -24,6 +29,7 @@ cql:
 ```
 
 ## When writing statements in XML, what if `if` and `for` are involved and @if / @for is not preferred
+
 ```yaml
 cql:
   parser:

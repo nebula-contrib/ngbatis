@@ -5,6 +5,10 @@ package ye.weicheng.ngbatis.demo.repository;
 // This source code is licensed under Apache 2.0 License.
 
 import com.vesoft.nebula.client.graph.data.ResultSet;
+import jakarta.persistence.Id;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.nebula.contrib.ngbatis.models.data.NgEdge;
 import org.nebula.contrib.ngbatis.models.data.NgSubgraph;
 import org.nebula.contrib.ngbatis.models.data.NgVertex;
@@ -13,11 +17,6 @@ import org.nebula.contrib.ngbatis.utils.Page;
 import org.springframework.data.repository.query.Param;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 import ye.weicheng.ngbatis.demo.pojo.PersonLikePerson;
-
-import jakarta.persistence.Id;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * 数据访问层 样例。

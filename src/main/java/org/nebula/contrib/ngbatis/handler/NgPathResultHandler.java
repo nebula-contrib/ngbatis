@@ -7,18 +7,24 @@ package org.nebula.contrib.ngbatis.handler;
 import com.vesoft.nebula.client.graph.data.PathWrapper;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.data.ResultSet.Record;
+import jakarta.annotation.Resource;
+import java.io.UnsupportedEncodingException;
 import org.nebula.contrib.ngbatis.models.data.NgPath;
 import org.nebula.contrib.ngbatis.utils.ResultSetUtil;
 import org.springframework.stereotype.Component;
 
 /**
- * Convert the path data from ResultSet to NgPath. 
+ * Convert the path data from ResultSet to NgPath.
+ *
  * @author yeweicheng
  * @since 2023-01-07 4:54
- *   <br> Now is history!
+ * <br> Now is history!
  */
 @Component
 public class NgPathResultHandler extends AbstractResultHandler<NgPath<?>, NgPath<?>> {
+
+  @Resource
+  private NgVertexResultHandler ngVertexResultHandler;
 
   @Override
   public NgPath<?> handle(NgPath<?> newResult, ResultSet result, Class resultType)
@@ -29,20 +35,26 @@ public class NgPathResultHandler extends AbstractResultHandler<NgPath<?>, NgPath
 
   public NgPath<?> handle(NgPath<?> newResult, Record record) {
     PathWrapper pathWrapper = ResultSetUtil.getValue(record.values().get(0));
-    
-    pathWrapper.getRelationships().forEach(relationship -> {
-      NgPath.Relationship ngRelationship = new NgPath.Relationship();
-      long ranking = relationship.ranking();
-      Object srcId = ResultSetUtil.getValue(relationship.srcId());
-      Object dstId = ResultSetUtil.getValue(relationship.dstId());
-      String edgeName = relationship.edgeName();
-      
-      ngRelationship.setRank(ranking);
-      ngRelationship.setSrcID(srcId);
-      ngRelationship.setDstID(dstId);
-      ngRelationship.setEdgeName(edgeName);
-      
-      newResult.getRelationships().add(ngRelationship);
+    pathWrapper.getSegments().forEach(segment -> {
+      try {
+        NgPath.Relationship ngRelationship = new NgPath.Relationship();
+        long ranking = segment.getRelationShip().ranking();
+        Object srcId = ResultSetUtil.getValue(segment.getStartNode().getId());
+        Object dstId = ResultSetUtil.getValue(segment.getEndNode().getId());
+        String edgeName = segment.getRelationShip().edgeName();
+        ngRelationship.setRank(ranking);
+        ngRelationship.setSrcID(srcId);
+        ngRelationship.setDstID(dstId);
+        ngRelationship.setEdgeName(edgeName);
+        ngRelationship.setProperties(ResultSetUtil.edgePropsToMap(segment.getRelationShip()));
+
+        ngVertexResultHandler.handle(ngRelationship.getDst(), segment.getEndNode());
+        ngVertexResultHandler.handle(ngRelationship.getSrc(), segment.getStartNode());
+
+        newResult.getRelationships().add(ngRelationship);
+      } catch (UnsupportedEncodingException e) {
+        throw new RuntimeException(e);
+      }
     });
     return newResult;
   }

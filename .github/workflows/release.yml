@@ -11,12 +11,6 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v3
 
-      - name: Install Java and Maven
-        uses: actions/setup-java@v3
-        with:
-          java-version: '8'
-          distribution: 'temurin'
-
       - name: Install nebula-graph
         run: |
           mkdir tmp
@@ -30,10 +24,20 @@ jobs:
           popd
           popd
 
-      - name: Release Maven package
-        uses: samuelmeuli/action-maven-publish@v1
+      - name: Setup Java and Apache Maven Central
+        uses: actions/setup-java@v3
         with:
-          gpg_private_key: ${{ secrets.GPG_SECRET }}
-          gpg_passphrase: ${{ secrets.GPG_PASSWORD }}
-          nexus_username: ${{ secrets.OSSRH_USER }}
-          nexus_password: ${{ secrets.OSSRH_PASSWORD }}
+          java-version: '17'
+          distribution: 'temurin'
+          gpg-private-key: ${{ secrets.GPG_SECRET }}  # Import GPG key
+          gpg-passphrase: ${{ secrets.GPG_PASSWORD }}  # GPG passphrase
+          server-id: ossrh  # Server ID for Maven Central
+          server-username: MAVEN_USERNAME  # Environment variable for Maven username
+          server-password: MAVEN_PASSWORD  # Environment variable for Maven password
+
+      - name: Publish package
+        run: mvn --batch-mode deploy
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USER }}
+          MAVEN_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSWORD }}

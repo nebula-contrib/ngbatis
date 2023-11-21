@@ -4,15 +4,14 @@ package ye.weicheng.ngbatis.demo.repository.resource;
 //
 // This source code is licensed under Apache 2.0 License.
 
+import static org.springframework.util.Assert.isTrue;
+
+import jakarta.annotation.Resource;
+import java.util.Objects;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ye.weicheng.ngbatis.demo.repository.TestRepository;
-
-import jakarta.annotation.Resource;
-import java.util.Objects;
-
-import static org.springframework.util.Assert.isTrue;
 
 /**
  * @author yeweicheng

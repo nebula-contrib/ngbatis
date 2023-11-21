@@ -6,6 +6,8 @@ package org.nebula.contrib.ngbatis.models.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic;
 
 /**
  * A common pojo for paths.
@@ -15,7 +17,7 @@ import java.util.List;
  *   <br> Now is history!
  */
 public class NgPath<I> {
-  
+
   private List<Relationship<I>> relationships = new ArrayList<>();
 
   public List<Relationship<I>> getRelationships() {
@@ -23,15 +25,38 @@ public class NgPath<I> {
   }
 
   public void setRelationships(
-      List<Relationship<I>> relationships) {
+    List<Relationship<I>> relationships) {
     this.relationships = relationships;
   }
 
   public static class Relationship<I> {
     private I dstID;
+    /**
+     * Dest vertex entity. If you want to obtain attributes within an entity, 
+     * you need to use “with prop” in the nGQL.
+     * <br/>
+     * {@link NebulaDaoBasic#shortestPath} default without prop
+     */
+    private NgVertex<I> dst = new NgVertex<>();
     private String edgeName;
     private Long rank;
     private I srcID;
+
+    /**
+     * Source vertex entity. If you want to obtain attributes within an entity, 
+     * you need to use “with prop” in the nGQL.
+     * <br/>
+     * {@link NebulaDaoBasic#shortestPath} default without prop
+     */
+    private NgVertex<I> src = new NgVertex<>();
+
+    /**
+     * Attribute of edge. If you want to obtain attributes in an edge, 
+     * you need to use “with prop” in the nGQL.
+     * <br/>
+     * {@link NebulaDaoBasic#shortestPath} default without prop
+     */
+    private Map<String,Object> properties;
 
     public I getDstID() {
       return dstID;
@@ -64,6 +89,30 @@ public class NgPath<I> {
     public void setSrcID(I srcID) {
       this.srcID = srcID;
     }
+
+    public Map<String, Object> getProperties() {
+      return properties;
+    }
+
+    public void setProperties(Map<String, Object> properties) {
+      this.properties = properties;
+    }
+
+    public NgVertex<I> getDst() {
+      return dst;
+    }
+
+    public void setDst(NgVertex<I> dst) {
+      this.dst = dst;
+    }
+
+    public NgVertex<I> getSrc() {
+      return src;
+    }
+
+    public void setSrc(NgVertex<I> src) {
+      this.src = src;
+    }
   }
-  
+
 }

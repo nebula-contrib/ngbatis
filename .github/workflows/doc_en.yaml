@@ -28,13 +28,14 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      
+
       - name: Checkout frontend code
         uses: actions/checkout@v3
         with:
           repository: graph-cn/ngbatis-docs
           path: ngbatis-docs
-      
+          ref: 7b17bd88148d39643185ba218e3a18ceb3877428
+
       - name: Place markdown file
         run: |
           cp -r docs/en/md/* ngbatis-docs/docs
@@ -46,7 +47,7 @@ jobs:
           node-version: 18
           cache: npm
           cache-dependency-path: ngbatis-docs/package-lock.json
-          
+
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Build with VitePress

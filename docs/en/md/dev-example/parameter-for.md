@@ -2,6 +2,7 @@
 
 > There is a big difference between ngbatis and mybatis in the loop part, and the loop syntax of Beetl is used. Please refer to official documents for details.【[1.10 Loop statement](https://www.kancloud.cn/xiandafu/beetl3_guide/2138952)】
 > Due to the difference in configuration of `Beetl` in `ngbatis`, the `<% %>` will be replaced by `@ \n`, for example：
+
   ```diff
   - <%for ( item in list ) { 
   -                         
@@ -12,7 +13,9 @@
   ```
 
 ## Looping in Map , which can be used for dynamic query
+
 - PersonDao.java
+
     ```java
         // org.springframework.data.repository.query.Param
         // person: { "name": "Diana", "gender": "F" }
@@ -20,6 +23,7 @@
     ```
 
 - PersonDao.xml
+
     ```xml
         <select id="selectByPerson">
             MATCH (n: person)
@@ -35,7 +39,9 @@
     ```
 
 ## Looping in List , which can be used for batch processing
+
 - PersonDao.java
+
     ```java
         // org.springframework.data.repository.query.Param
         // personList: [{"gender":"F","name":"Diana"},{"gender":"M","name":"Tom"},{"gender":"F","name":"Jerry"}]
@@ -43,11 +49,13 @@
     ```
 
 - The parameter is :
+
     ```json
       :param personList => [{"gender":"F","name":"Diana"},{"gender":"M","name":"Tom"},{"gender":"F","name":"Jerry"}]
     ```
 
 - PersonDao.xml
+
     ```xml
         <insert id="insertPersonList">
             @for ( p in personList ) {
@@ -56,7 +64,8 @@
         </insert>
     ```
 
-- The statements to be executed are: 
+- The statements to be executed are:
+
     ```sql
         INSERT VERTEX `person` ( name, gender ) VALUES 'Diana' : ( 'Diana', 'F' );
         INSERT VERTEX `person` ( name, gender ) VALUES 'Tom' : ( 'Tom', 'M' );

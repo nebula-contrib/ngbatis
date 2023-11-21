@@ -18,7 +18,7 @@ import org.nebula.contrib.ngbatis.utils.ResultSetUtil;
 import org.springframework.stereotype.Component;
 
 /**
- * Convert the vertex data from ResultSet to NgVertex. 
+ * Convert the vertex data from ResultSet to NgVertex.
  * @author yeweicheng
  * @since 2023-01-07 4:55
  *   <br> Now is history!
@@ -38,10 +38,17 @@ public class NgVertexResultHandler extends AbstractResultHandler<NgVertex<?>, Ng
     handle(newResult, node);
     return newResult;
   }
-  
+
   public NgVertex<?> handle(NgVertex<?> newResult, ValueWrapper nodeValueWrapper) {
     try {
-      Node node = nodeValueWrapper.asNode();
+      return handle(newResult, nodeValueWrapper.asNode());
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public NgVertex<?> handle(NgVertex<?> newResult, Node node) {
+    try {
       ValueWrapper id = node.getId();
       newResult.setVid(ResultSetUtil.getValue(id));
       List<String> tags = node.tagNames();
@@ -50,7 +57,7 @@ public class NgVertexResultHandler extends AbstractResultHandler<NgVertex<?>, Ng
       return newResult;
     } catch (UnsupportedEncodingException e) {
       throw new ResultHandleException(
-          String.format("%s : %s", e.getClass().toString(), e.getMessage()));
+        String.format("%s : %s", e.getClass().toString(), e.getMessage()));
     }
   }
 }

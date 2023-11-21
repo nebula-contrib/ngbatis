@@ -1,5 +1,7 @@
 # 安装与使用
-## 在 `pom.xml` 中添加：
+
+## 在 `pom.xml` 中添加
+
 ```xml
     <dependency>
         <groupId>org.nebula-contrib</groupId>
@@ -9,6 +11,7 @@
 ```
 
 ### SNAPSHOT 版本
+
 ```xml
     <dependency>
         <groupId>org.nebula-contrib</groupId>
@@ -16,22 +19,24 @@
         <version>1.2.0-SNAPSHOT</version>
     </dependency>
 ```
+
 ```xml
-	<repositories>
-		<repository>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-				<checksumPolicy>warn</checksumPolicy>
-			</snapshots>
-			<id>ossrh</id>
-			<name>Nexus Snapshot Repository</name>
-			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-		</repository>
-	</repositories>
+ <repositories>
+  <repository>
+   <snapshots>
+    <enabled>true</enabled>
+    <updatePolicy>always</updatePolicy>
+    <checksumPolicy>warn</checksumPolicy>
+   </snapshots>
+   <id>ossrh</id>
+   <name>Nexus Snapshot Repository</name>
+   <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+  </repository>
+ </repositories>
 ```
 
-## 在 `application.yml` 配置数据源 
+## 在 `application.yml` 配置数据源
+
 ```yml
 nebula:
   ngbatis:
@@ -58,27 +63,31 @@ nebula:
 ```
 
 ## 引入 ngbatis bean
+
 ### 项目中，只用到的 Nebula Graph 数据库
+
 ```java
 @SpringBootApplication(
   exclude={ DataSourceAutoConfiguration.class }, 
   scanBasePackages = { "org.nebula.contrib", "your.domain" }  )
 public class YourSpringbootApplication {
 
-	public static void main(String[] args) {
-		new SpringApplication(YourSpringbootApplication.class).run(args);
-	}
+ public static void main(String[] args) {
+  new SpringApplication(YourSpringbootApplication.class).run(args);
+ }
 
 }
 ```
+
 ### 项目中还有其他数据库
+
 ```java
 @SpringBootApplication( scanBasePackages = { "org.nebula.contrib", "your.domain" } )
 public class YourSpringbootApplication {
 
-	public static void main(String[] args) {
-		new SpringApplication(YourSpringbootApplication.class).run(args);
-	}
+ public static void main(String[] args) {
+  new SpringApplication(YourSpringbootApplication.class).run(args);
+ }
 
 }
 ```
@@ -86,6 +95,7 @@ public class YourSpringbootApplication {
 ## 主键生成器
 
 #### 创建并注册主键生成器
+
 ```java
 import org.nebula.contrib.ngbatis.PkGenerator;
 
