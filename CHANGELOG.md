@@ -22,10 +22,10 @@ This source code is licensed under Apache 2.0 License.
   - [ ] Geography
   - [x] Duration
 
+# 1.2.0-jdk-17-beta
+
 ## Dependencies upgrade
-- [x] Springboot 3.x support.
-# 1.2.0-JDK-17-beta
-## Dependencies upgrade
+
 - Upgrade to `JDK 17` and SpringBoot `3.x`
 - nebula-java: 3.5.0 -> 3.6.0
 - beetl: 3.1.8-RELEASE -> 3.15.10.RELEASE
@@ -57,7 +57,7 @@ This source code is licensed under Apache 2.0 License.
   - `@Component("namedMapper")`: use `@Resource("namedMapper$Proxy")` to inject. (since v1.0)
   - `@Resource("namedComponent")`: use `@Resource("namedComponent")` to inject. (new feature)
 - fix: when DAO/Mapper method has `Page` type param with `@Param`, the param name can not be use.
-  > 如原来项目中分页相关接口，用了不起作用的 `@Param`, 但 xml 还是使用 p0, p1... 
+  > 如原来项目中分页相关接口，用了不起作用的 `@Param`, 但 xml 还是使用 p0, p1...
   > 需要将 `@Param` 移除，或者将 xml 中的参数名改成 注解的参数名，以保证参数名统一
 - fix:class 'ResultSetUtil.java' parse datetime type error. ([#241](https://github.com/nebula-contrib/ngbatis/pull/241), via [爱吃辣条的Jerry](https://github.com/bobobod))
 
@@ -108,7 +108,6 @@ This source code is licensed under Apache 2.0 License.
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-aop</artifactId>
     </dependency>
-
 
 # 1.1.5
 
@@ -305,7 +304,7 @@ This source code is licensed under Apache 2.0 License.
   > 对集合进行格式化
 
   参数位 | 参数说明 | 类型 | 必传 | 默认值
-  ---|---|---|---|--- 
+  ---|---|---|---|---
   1 | 待格式化的集合 | Iterable | Y
   2 | 元素间的分隔符 | String | N | `,`
   3 | 函数名，各元素拼接前，可进行函数名指定的格式化函数先行格式化，再拼接 | String | N | null
