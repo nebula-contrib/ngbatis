@@ -4,10 +4,10 @@ package ye.weicheng.ngbatis.demo.repository.resource;
 //
 // This source code is licensed under Apache 2.0 License.
 
+import jakarta.annotation.Resource;
 import org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 
-import jakarta.annotation.Resource;
 
 /**
  * 数据访问层 样例。
@@ -20,4 +20,5 @@ import jakarta.annotation.Resource;
 public interface TestRepository extends NebulaDaoBasic<Person, String> {
   
   Integer testSameClassName();
+
 }

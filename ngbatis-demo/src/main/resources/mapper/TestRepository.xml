@@ -45,7 +45,7 @@
     </select>
 
     <select id="selectString">
-        match (v:person) return v.person.name as name limit 1
+        match (v:person) where v.person.name is not null return v.person.name as name limit 1
     </select>
 
     <select id="selectStringParam">
@@ -145,7 +145,7 @@
     
     <insert id="insertDynamic" space="test">
         @for( v in p0 ) {
-            @var javaV = @ng_args[0].get(vLP.dataIndex );
+            @var javaV = ng.get( ng_args[0], vLP.dataIndex );
             @var vid = ng.id( javaV );
             @var kv = ng.kv( javaV.propertyList );
             @var cols = ng.join( @kv.columns, ",", "ng.schemaFmt" );

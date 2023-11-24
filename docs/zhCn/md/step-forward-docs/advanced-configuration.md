@@ -1,6 +1,8 @@
 
 # 进阶配置
-## 如何在控制台打印 sql 
+
+## 如何在控制台打印 sql
+
 ```yml
 logging:
   level:
@@ -8,6 +10,7 @@ logging:
 ```
 
 ## 如何更改 XXXDao.xml 的位置
+
 ```yml
 cql:
   parser:
@@ -16,6 +19,7 @@ cql:
 ```
 
 ## 如何修改基类的语句
+
 ```yml
 cql:
   parser:
@@ -27,6 +31,7 @@ cql:
 ```
 
 ## 在 xml 写语句时，如果涉及 if 跟 for，又不喜欢用 @if / @for 怎么办
+
 ```yml
 cql:
   parser:

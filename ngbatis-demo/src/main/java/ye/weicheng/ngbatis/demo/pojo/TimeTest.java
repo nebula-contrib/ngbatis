@@ -7,7 +7,6 @@ package ye.weicheng.ngbatis.demo.pojo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.Duration;

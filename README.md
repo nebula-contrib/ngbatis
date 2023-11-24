@@ -12,7 +12,7 @@ This source code is licensed under Apache 2.0 License.
 </p>
 
 - [Ngbatis Docs](https://nebula-contrib.github.io/ngbatis/)
-- [Ngbatis 文档](https://corvusye.github.io/ngbatis-docs/)
+- [Ngbatis 文档](https://graph-cn.github.io/ngbatis-docs/)
 
 ## What is NGBATIS
 
@@ -25,6 +25,7 @@ If you prefer JPA, [graph-ocean](https://github.com/nebula-contrib/graph-ocean) 
 See [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
 
 ## Requirements
+
 - Springboot
 - Maven
 - Java 8+
@@ -35,6 +36,7 @@ See [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
 
 - Include in your `pom.xml`
   - Maven
+
     ```xml
         <dependency>
           <groupId>org.nebula-contrib</groupId>
@@ -42,7 +44,9 @@ See [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
           <version>1.1.5</version>
         </dependency>
     ```
+
   - Gradle
+
     ```groovy
     implementation 'org.nebula-contrib:ngbatis:1.1.5'
     ```
@@ -75,6 +79,7 @@ nebula:
     min-cluster-health-rate: 1.0
     enable-ssl: false
 ```
+
 - Dynamically register beans
 
 ```java
@@ -85,12 +90,16 @@ public class YourApplication {
     }
 }
 ```
-> If SpringCloud is used in your project,   
+
+> If SpringCloud is used in your project,
 > please use `@ComponentScan( basePackages = {"org.nebula.contrib", "your.domain"} )` instead.
 
 ## Examples
+
 ### a. The MyBatis fashion(compose nGQL queries)
+
 #### a.1 Declare the data access interface
+
 ```java
 package ye.weicheng.ngbatis.demo.repository;
 
@@ -109,7 +118,9 @@ public interface TestRepository {
 }
 
 ```
+
 #### a.2 The query statments
+
 `resource/mapper/TestRepository.xml`
 
 ```xml
@@ -163,6 +174,7 @@ public interface TestRepository {
 ### b. The MyBatis-plus fashion
 
 #### b.1 model-vertex
+
 ```java
 package com.example.model.vertex.Person;
 
@@ -178,7 +190,9 @@ public class Person {
     private Integer age;
 }
 ```
+
 #### b.2 model-edge
+
 ```java
 package com.example.model.edge.Like;
 
@@ -197,6 +211,7 @@ public class Like {
 ```
 
 #### b.3 dao
+
 ```java
 package com.example.dao;
 
@@ -205,6 +220,7 @@ import com.example.model.vertex.Person;
 
 public interface PersonDao extends NebulaDaoBasic<Person, String>{}
 ```
+
 #### b.4 xml
 
 > Note, this is a mandatory requirement.
@@ -216,7 +232,9 @@ public interface PersonDao extends NebulaDaoBasic<Person, String>{}
 >
 </mapper>
 ```
+
 #### b.5 service
+
 ```java
 package com.example.service;
 
@@ -280,7 +298,6 @@ public class PersonServiceImpl {
 ## Upstream projects
 
 - [beetl](https://gitee.com/xiandafu/beetl), BSD-3, we proudly use the beetl template language as our template engine, which is consumed in binary package(as is).
-
 
 ## License
 

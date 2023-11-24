@@ -4,12 +4,11 @@ package ye.weicheng.ngbatis.demo.pojo;
 //
 // This source code is licensed under Apache 2.0 License.
 
-import ye.weicheng.ngbatis.demo.annotations.ValueType;
-
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
+import ye.weicheng.ngbatis.demo.annotations.ValueType;
 
 /**
  * <p>Person的实体类示例</p>

@@ -2,7 +2,7 @@ name: snapshot
 
 on:
   push:
-    branches: [ master ]
+    branches: [ for-jdk17 ]
   schedule:
     - cron: '0 6 * * *'
 
@@ -13,10 +13,10 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v3
 
-      - name: Install Java and Maven
+      - name: Setup Java
         uses: actions/setup-java@v3
         with:
-          java-version: '8'
+          java-version: '17'
           distribution: 'temurin'
 
       - name: Install nebula-graph
@@ -32,10 +32,20 @@ jobs:
           popd
           popd
 
-      - name: Deploy Snapshot to Maven package
-        uses: samuelmeuli/action-maven-publish@v1
+      - name: Set up Apache Maven Central
+        uses: actions/setup-java@v3
         with:
-          gpg_private_key: ${{ secrets.GPG_SECRET }}
-          gpg_passphrase: ${{ secrets.GPG_PASSWORD }}
-          nexus_username: ${{ secrets.OSSRH_USER }}
-          nexus_password: ${{ secrets.OSSRH_PASSWORD }}
+          java-version: '17'
+          distribution: 'temurin'
+          gpg-private-key: ${{ secrets.GPG_SECRET }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+          server-id: ossrh
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+
+      - name: Publish package
+        run: mvn --batch-mode deploy -Dmaven.javadoc.skip=true
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USER }}
+          MAVEN_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSWORD }}

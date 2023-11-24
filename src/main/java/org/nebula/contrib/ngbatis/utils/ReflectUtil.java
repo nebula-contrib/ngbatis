@@ -455,7 +455,7 @@ public abstract class ReflectUtil {
    */
   public static Class<?> typeToClass(Type type) throws ClassNotFoundException {
     if (type instanceof ParameterizedType) {
-      return ((ParameterizedType) type).getRawType().getClass();
+      return (Class<?>)((ParameterizedType) type).getRawType();
     }
     return Class.forName(type.getTypeName());
   }

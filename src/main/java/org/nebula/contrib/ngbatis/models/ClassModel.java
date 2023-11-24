@@ -22,6 +22,7 @@ public class ClassModel {
   private String space;
 
   private Map<String, MethodModel> methods;
+  private Map<String,NgqlModel> ngqls;
   private ResourceLoader resourceLoader;
 
   private Resource resource;
@@ -86,5 +87,13 @@ public class ClassModel {
 
   public void setClazz(Class clazz) {
     this.clazz = clazz;
+  }
+
+  public Map<String, NgqlModel> getNgqls() {
+    return ngqls;
+  }
+
+  public void setNgqls(Map<String, NgqlModel> ngqls) {
+    this.ngqls = ngqls;
   }
 }
