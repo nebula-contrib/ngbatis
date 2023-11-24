@@ -4,10 +4,10 @@ package ye.weicheng.ngbatis.demo.pojo;
 //
 // This source code is licensed under Apache 2.0 License.
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 /**
  * 列别名测试用例-实体类

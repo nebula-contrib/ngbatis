@@ -12,7 +12,7 @@ import com.vesoft.nebula.client.graph.net.NebulaPool;
 import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.Map;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import org.nebula.contrib.ngbatis.config.NebulaJdbcProperties;
 import org.nebula.contrib.ngbatis.config.NgbatisConfig;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;

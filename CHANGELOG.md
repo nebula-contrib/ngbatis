@@ -21,7 +21,7 @@ This source code is licensed under Apache 2.0 License.
   - [x] Duration
 
 ## Dependencies upgrade
-- [ ] Springboot 3.x support.
+- [x] Springboot 3.x support.
 
 # NEXT
 ## Dependencies upgrade
@@ -82,6 +82,11 @@ This source code is licensed under Apache 2.0 License.
         <artifactId>spring-boot-starter-aop</artifactId>
     </dependency>
     ``` 
+    
+# 1.1.6
+## Dependencies 
+- Upgrade to `JDK 17` and SpringBoot `3.x`.
+
 
 # 1.1.5
 ## Bugfix

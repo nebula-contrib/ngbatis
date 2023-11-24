@@ -2,9 +2,9 @@
 
 ## Version base
 You should be having:
-- JDK >= 8
+- JDK >= 17
 - NebulaGraph > v3.0
-- Springboot 2.x
+- Springboot 3.x
 - Maven
 
 ## Clone the repository

@@ -4,7 +4,7 @@ package org.nebula.contrib.ngbatis.config;
 //
 // This source code is licensed under Apache 2.0 License.
 
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 import org.nebula.contrib.ngbatis.ArgNameFormatter;
 import org.nebula.contrib.ngbatis.ArgsResolver;
 import org.nebula.contrib.ngbatis.Env;

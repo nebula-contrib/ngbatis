@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
-import javax.persistence.Table;
+import jakarta.persistence.Table;
 import org.nebula.contrib.ngbatis.models.ClassModel;
 import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.nebula.contrib.ngbatis.models.MethodModel;
