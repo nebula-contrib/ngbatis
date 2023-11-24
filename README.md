@@ -41,14 +41,14 @@ See [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
         <dependency>
           <groupId>org.nebula-contrib</groupId>
           <artifactId>ngbatis</artifactId>
-          <version>1.1.5</version>
+          <version>1.2.0</version>
         </dependency>
     ```
 
   - Gradle
 
     ```groovy
-    implementation 'org.nebula-contrib:ngbatis:1.1.5'
+    implementation 'org.nebula-contrib:ngbatis:1.2.0'
     ```
 
 - Referring to [ngbatis-demo](./ngbatis-demo), which was smoothly integrated with spring-boot. The API examples could be found under the test of it for all features of ngbatis.
@@ -109,6 +109,9 @@ import java.util.Map;
 import java.util.Set;
 
 public interface TestRepository {
+    // new features from v1.2.0
+    Integer returnAge(@Param("person")Person person);
+
     Person selectPerson();
     Person selectByPerson(Person person);
     List<Person> selectAgeGt(Integer age);
@@ -128,6 +131,24 @@ public interface TestRepository {
     namespace=
     "ye.weicheng.ngbatis.demo.repository.TestRepository"
 >
+    <!-- new features from v1.2.0 start -->
+    <nGQL id="include-test-value">
+        ${myInt}
+    </nGQL>
+
+    <nGQL id="ngql-return-age">
+        RETURN @ng.include('include-test-value',{'myInt':age});
+    </nGQL>
+
+    <!--
+    The same as: 
+        RETURN ${person.age};
+    You can try extracting more common and meaningful scripts.
+    -->
+    <select id="returnAge" resultType="java.lang.Integer">
+        @ng.include('ngql-return-age',person);
+    </select>
+    <!-- new features from v1.2.0 end -->
 
     <select id="selectPerson" resultType="ye.weicheng.ngbatis.demo.pojo.Person">
         match (v:person) return v.person.name as name, v.person.age as age limit 1
