@@ -226,7 +226,7 @@ public class MapperProxy {
         localSessionSpace = localSession.getCurrentSpace();
       }
 
-      String currentSpace = getSpace(cm, mm);
+      String currentSpace = getSpace(cm, mm, paramsForTemplate);
       String[] qlAndSpace = qlWithSpace(localSession, gql, currentSpace);
       gql = qlAndSpace[1];
       autoSwitch = qlAndSpace[0] == null ? "" : qlAndSpace[0];
@@ -244,7 +244,7 @@ public class MapperProxy {
       if (log.isDebugEnabled()) {
         log.debug("\n\t- proxyMethod: {}#{}"
                 + "\n\t- session space: {}"
-                + (isEmpty(autoSwitch) ? "{}" : "\n\t- auto switch to: {}")
+                + (isEmpty(autoSwitch) ? "\n\t- {}" : "\n\t- auto switch to: {}")
                 + "\n\t- nGql：{}"
                 + "\n\t- params: {}"
                 + "\n\t- result：{}",
@@ -276,7 +276,7 @@ public class MapperProxy {
         proxyMethod = stackTraceElement.getMethodName();
       }
 
-      currentSpace = getSpace(cm, mm);
+      currentSpace = getSpace(cm, mm, paramsForTemplate);
       SessionPool sessionPool = ENV.getSessionPool(currentSpace);
       if (sessionPool == null) {
         throw new QueryException(currentSpace + " sessionPool is null");
@@ -347,6 +347,20 @@ public class MapperProxy {
       )
       : cm != null && cm.getSpace() != null ? cm.getSpace()
         : ENV.getSpace();
+  }
+
+  /**
+   * 支持space从参数中获取
+   * @param cm 当前接口的类模型
+   * @param mm 当前接口方法的方法模型
+   * @param paramsForTemplate 从模板参数中获取空间名
+   * @return 目标space
+   */
+  public static String getSpace(ClassModel cm, MethodModel mm, Map<String, Object> paramsForTemplate) {
+    boolean spaceFromParam = mm.isSpaceFromParam();
+    String space = getSpace(cm, mm);
+    if (spaceFromParam && space != null) return ENV.getTextResolver().resolve(space, paramsForTemplate);
+    return space;
   }
 
   /**
