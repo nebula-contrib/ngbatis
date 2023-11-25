@@ -26,7 +26,7 @@ This source code is licensed under Apache 2.0 License.
 
 - [ ] Springboot 3.x support.
 
-# 1.2.0-beta
+# 1.2.0
 
 ## Dependencies upgrade
 
