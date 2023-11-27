@@ -47,6 +47,11 @@ public class MethodModel {
   private Class returnType;
 
   /**
+   * 是否从参数中设置空间
+   */
+  private boolean spaceFromParam;
+
+  /**
    * XXXDao 的方法对象
    */
   private Method method;
@@ -150,6 +155,14 @@ public class MethodModel {
 
   public void setReturnType(Class returnType) {
     this.returnType = returnType;
+  }
+
+  public boolean isSpaceFromParam() {
+    return spaceFromParam;
+  }
+
+  public void setSpaceFromParam(boolean spaceFromParam) {
+    this.spaceFromParam = spaceFromParam;
   }
 
   /**

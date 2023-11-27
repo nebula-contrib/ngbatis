@@ -39,6 +39,7 @@ import org.nebula.contrib.ngbatis.models.ClassModel;
 import org.nebula.contrib.ngbatis.models.MethodModel;
 import org.nebula.contrib.ngbatis.models.NgqlModel;
 import org.nebula.contrib.ngbatis.utils.Page;
+import org.nebula.contrib.ngbatis.utils.ReflectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -154,7 +155,6 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
   /**
    * 解析 一个 XXXDao 的多个方法。
    *
-   * @param namespace XXXDao 类
    * @param nodes   XXXDao.xml 中 &lt;mapper&gt; 下的子标签。即方法标签。
    * @return 返回当前XXXDao类的所有方法信息Map，k: 方法名，v：方法模型（即 xml 里一个方法标签的全部信息）
    */
@@ -201,6 +201,7 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
     match(model, node, "parameterType", parseConfig.getParameterType());
     match(model, node, "resultType", parseConfig.getResultType());
     match(model, node, "space", parseConfig.getSpace());
+    match(model, node, "spaceFromParam", parseConfig.getSpaceFromParam());
 
     List<Node> nodes = node.childNodes();
     model.setText(nodesToString(nodes));
@@ -401,23 +402,29 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
     String attrTemp = null;
     try {
       String attrText = node.attr(attr);
+      System.out.println(attrText);
       if (isBlank(attrText)) {
         return;
       }
       attrTemp = attrText;
       Field field = model.getClass().getDeclaredField(javaAttr);
       Class<?> type = field.getType();
-      field.setAccessible(true);
-      if (type == Class.class) {
-        field.set(model, Class.forName(attrText));
-      } else {
-        field.set(model, attrText);
-      }
-      field.setAccessible(false);
+      Object value = castValue(attrText, type);
+      ReflectUtil.setValue(model, field, value);
     } catch (ClassNotFoundException e) {
       throw new ParseException("类型 " + attrTemp + " 未找到");
     } catch (Exception e) {
       e.printStackTrace();
+    }
+  }
+
+  private Object castValue(String attrText, Class<?> type) throws ClassNotFoundException {
+    if (type == Class.class) {
+      return Class.forName(attrText);
+    } else if (boolean.class.equals(type)) {
+      return Boolean.valueOf(attrText);
+    } else {
+      return attrText;
     }
   }
 
