@@ -26,7 +26,7 @@ This source code is licensed under Apache 2.0 License.
 
 - [ ] Springboot 3.x support.
 
-# 1.2.0
+# 1.2.0-SNAPSHOT
 
 ## Dependencies upgrade
 
@@ -63,6 +63,7 @@ This source code is licensed under Apache 2.0 License.
   > 如原来项目中分页相关接口，用了不起作用的 `@Param`, 但 xml 还是使用 p0, p1...
   > 需要将 `@Param` 移除，或者将 xml 中的参数名改成 注解的参数名，以保证参数名统一
 - fix:class 'ResultSetUtil.java' parse datetime type error. ([#241](https://github.com/nebula-contrib/ngbatis/pull/241), via [爱吃辣条的Jerry](https://github.com/bobobod))
+- fix: remove unnecessary reflections in transformDateTime, and prevents errors in the millisecond bit in jdk17.
 
 ## Develop behavior change
 
