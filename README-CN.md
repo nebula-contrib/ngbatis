@@ -25,9 +25,9 @@ This source code is licensed under Apache 2.0 License.
 
 ## 项目要求
 
-- Springboot
+- Springboot3.x
 - Maven
-- Java 8+
+- Java 17+
 
 ## 如何使用（可在克隆代码后，参考 ngbatis-demo 项目）
 
@@ -36,10 +36,25 @@ This source code is licensed under Apache 2.0 License.
 - Maven
 
     ```xml
+    	<repositories>
+            <repository>
+                <snapshots>
+                    <enabled>true</enabled>
+                    <updatePolicy>always</updatePolicy>
+                    <checksumPolicy>warn</checksumPolicy>
+                </snapshots>
+                <id>ossrh</id>
+                <name>Nexus Snapshot Repository</name>
+                <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+            </repository>
+        </repositories>
+    ```
+
+    ```xml
         <dependency>
           <groupId>org.nebula-contrib</groupId>
           <artifactId>ngbatis</artifactId>
-          <version>1.2.0</version>
+          <version>1.2.0-jdk17-SNAPSHOT</version>
         </dependency>
     ```
 

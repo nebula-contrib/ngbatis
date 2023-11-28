@@ -26,9 +26,9 @@ See [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
 
 ## Requirements
 
-- Springboot
+- Springboot3.x
 - Maven
-- Java 8+
+- Java 17+
 
 ## How to use
 
@@ -38,17 +38,32 @@ See [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
   - Maven
 
     ```xml
+    	<repositories>
+            <repository>
+                <snapshots>
+                    <enabled>true</enabled>
+                    <updatePolicy>always</updatePolicy>
+                    <checksumPolicy>warn</checksumPolicy>
+                </snapshots>
+                <id>ossrh</id>
+                <name>Nexus Snapshot Repository</name>
+                <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+            </repository>
+        </repositories>
+    ```
+
+    ```xml
         <dependency>
           <groupId>org.nebula-contrib</groupId>
           <artifactId>ngbatis</artifactId>
-          <version>1.2.0</version>
+          <version>1.2.0-jdk17-SNAPSHOT</version>
         </dependency>
     ```
 
   - Gradle
 
     ```groovy
-    implementation 'org.nebula-contrib:ngbatis:1.2.0'
+    implementation 'org.nebula-contrib:ngbatis:1.2.0-jdk17-SNAPSHOT'
     ```
 
 - Referring to [ngbatis-demo](./ngbatis-demo), which was smoothly integrated with spring-boot. The API examples could be found under the test of it for all features of ngbatis.
