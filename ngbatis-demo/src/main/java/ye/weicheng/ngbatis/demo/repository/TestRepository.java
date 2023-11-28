@@ -80,6 +80,7 @@ public interface TestRepository extends NebulaDaoBasic<Person, String> {
   
   void insertDynamic(List<DynamicNode> list);
 
+  Boolean spaceFromParam(@Param("specifySpace") String specifySpace);
   
   class DynamicNode {
     @Id

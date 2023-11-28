@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.util.Assert;
+import org.nebula.contrib.ngbatis.exception.QueryException;
 import org.nebula.contrib.ngbatis.models.data.NgEdge;
 import org.nebula.contrib.ngbatis.models.data.NgSubgraph;
 import org.nebula.contrib.ngbatis.models.data.NgVertex;
@@ -228,6 +229,16 @@ class NgbatisDemoApplicationTests {
           break;
         default: break;
       }
+    }
+  }
+
+  @Test
+  public void spaceFromParam() {
+    String spaceName = "test" + System.currentTimeMillis();
+    try {
+      repository.spaceFromParam(spaceName);
+    } catch (Exception e) {
+      Assert.isTrue(e instanceof QueryException && e.getMessage().contains("SpaceNotFound"));
     }
   }
   

@@ -32,6 +32,8 @@ public class ParseCfgProps {
   private String namespace = "namespace";
 
   private String space = "space";
+  
+  private String spaceFromParam = "spaceFromParam";
 
   private String resultType = "resultType";
 
@@ -135,6 +137,15 @@ public class ParseCfgProps {
 
   public void setSpace(String space) {
     this.space = space;
+  }
+
+  public String getSpaceFromParam() {
+    return spaceFromParam;
+  }
+
+  public ParseCfgProps setSpaceFromParam(String spaceFromParam) {
+    this.spaceFromParam = spaceFromParam;
+    return this;
   }
 
   public String getResultType() {
