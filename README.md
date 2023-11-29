@@ -331,6 +331,11 @@ public class PersonServiceImpl {
 
 - [beetl](https://gitee.com/xiandafu/beetl), BSD-3, we proudly use the beetl template language as our template engine, which is consumed in binary package(as is).
 
+## Community
+
+- English: [![Slack](https://img.shields.io/badge/Slack-9F2B68?style=for-the-badge&logo=slack&logoColor=white)](https://join.slack.com/t/nebulagraph/shared_invite/zt-7ybejuqa-NCZBroh~PCh66d9kOQj45g)
+- Chinese: [![WeChat](https://img.shields.io/badge/WeChat-7BB32E?style=for-the-badge&logo=wechat&logoColor=white)](https://github.com/nebula-contrib/ngbatis/issues/270)
+
 ## License
 
 NGBATIS is under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0).
