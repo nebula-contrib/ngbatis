@@ -402,7 +402,6 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
     String attrTemp = null;
     try {
       String attrText = node.attr(attr);
-      System.out.println(attrText);
       if (isBlank(attrText)) {
         return;
       }
