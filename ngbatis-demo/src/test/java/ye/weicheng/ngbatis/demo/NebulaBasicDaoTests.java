@@ -503,7 +503,7 @@ public class NebulaBasicDaoTests {
 
   @Test
   public void listEndNodes() {
-    List<Person> personList = repository.listEndNodes(Like.class, "易小海");
+    List<Person> personList = repository.listEndNodes("易小海", Like.class);
     System.out.println(JSON.toJSONString(personList));
   }
 
