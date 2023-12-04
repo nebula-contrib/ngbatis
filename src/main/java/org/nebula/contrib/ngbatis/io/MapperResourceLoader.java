@@ -17,7 +17,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -35,6 +39,7 @@ import org.nebula.contrib.ngbatis.models.ClassModel;
 import org.nebula.contrib.ngbatis.models.MethodModel;
 import org.nebula.contrib.ngbatis.models.NgqlModel;
 import org.nebula.contrib.ngbatis.utils.Page;
+import org.nebula.contrib.ngbatis.utils.ReflectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -150,7 +155,6 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
   /**
    * 解析 一个 XXXDao 的多个方法。
    *
-   * @param namespace XXXDao 类
    * @param nodes   XXXDao.xml 中 &lt;mapper&gt; 下的子标签。即方法标签。
    * @return 返回当前XXXDao类的所有方法信息Map，k: 方法名，v：方法模型（即 xml 里一个方法标签的全部信息）
    */
@@ -163,25 +167,23 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
       if (methodNode instanceof Element) {
 
 
-        if(((Element) methodNode).tagName().equalsIgnoreCase("nGQL")){
-          if(Objects.isNull(cm.getNgqls())){
+        if (((Element) methodNode).tagName().equalsIgnoreCase("nGQL")) {
+          if (Objects.isNull(cm.getNgqls())) {
             cm.setNgqls(new HashMap<>());
           }
           NgqlModel ngqlModel = parseNgqlModel((Element) methodNode);
           cm.getNgqls().put(ngqlModel.getId(),ngqlModel);
-        }else{
+        } else {
           MethodModel methodModel = parseMethodModel(methodNode);
           addSpaceToSessionPool(methodModel.getSpace());
           Method method = getNameUniqueMethod(namespace, methodModel.getId());
           methodModel.setMethod(method);
           Assert.notNull(method,
-                  "接口 " + namespace.getName() + " 中，未声明 xml 中的出现的方法：" + methodModel.getId());
+            "接口 " + namespace.getName() + " 中，未声明 xml 中的出现的方法：" + methodModel.getId());
           checkReturnType(method, namespace);
           pageSupport(method, methodModel, methodNames, methods, namespace);
           methods.put(methodModel.getId(), methodModel);
         }
-
-
       }
     }
     return methods;
@@ -199,6 +201,7 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
     match(model, node, "parameterType", parseConfig.getParameterType());
     match(model, node, "resultType", parseConfig.getResultType());
     match(model, node, "space", parseConfig.getSpace());
+    match(model, node, "spaceFromParam", parseConfig.getSpaceFromParam());
 
     List<Node> nodes = node.childNodes();
     model.setText(nodesToString(nodes));
@@ -208,10 +211,10 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
 
   /**
    * 解析nGQL语句片段
-   * @param ngqlEl
+   * @param ngqlEl   xml 中的 &lt;nGQL&gt;标签
    * @return
    */
-  protected NgqlModel parseNgqlModel(Element ngqlEl){
+  protected NgqlModel parseNgqlModel(Element ngqlEl) {
     return  new NgqlModel(ngqlEl.id(),ngqlEl.text());
   }
 
@@ -238,21 +241,21 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
    * @param methods   用于将需要分页的接口，自动追加两个接口，用于生成动态代理
    */
   private void pageSupport(Method method, MethodModel methodModel, List<String> methodNames,
-      Map<String, MethodModel> methods, Class<?> namespace) throws NoSuchMethodException {
+    Map<String, MethodModel> methods, Class<?> namespace) throws NoSuchMethodException {
     Class<?>[] parameterTypes = method.getParameterTypes();
     List<Class<?>> parameterTypeList = Arrays.asList(parameterTypes);
     if (parameterTypeList.contains(Page.class)) {
       int pageParamIndex = parameterTypeList.indexOf(Page.class);
       MethodModel pageMethod =
-          createPageMethod(
-            methodModel, methodNames, parameterTypes, pageParamIndex, namespace
-          );
+        createPageMethod(
+          methodModel, methodNames, parameterTypes, pageParamIndex, namespace
+        );
       methods.put(pageMethod.getId(), pageMethod);
 
       MethodModel countMethod = createCountMethod(
         methodModel, methodNames, parameterTypes, namespace
       );
-      
+
       methods.put(countMethod.getId(), countMethod);
     }
   }
@@ -267,11 +270,11 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
    * @return 自动分页的计数方法
    */
   private MethodModel createCountMethod(MethodModel methodModel, List<String> methodNames,
-      Class<?>[] parameterTypes, Class<?> namespace) throws NoSuchMethodException {
+    Class<?>[] parameterTypes, Class<?> namespace) throws NoSuchMethodException {
     String methodName = methodModel.getId();
     String countMethodName = String.format("%s$Count", methodName);
     Assert.isTrue(!methodNames.contains(countMethodName),
-        "There is a method name conflicts with " + countMethodName);
+      "There is a method name conflicts with " + countMethodName);
     MethodModel countMethodModel = new MethodModel();
     setParamAnnotations(parameterTypes, namespace, methodName, countMethodModel);
     countMethodModel.setParameterTypes(parameterTypes);
@@ -298,12 +301,12 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
    * @return 查询范围条目方法 的方法模型
    */
   private MethodModel createPageMethod(MethodModel methodModel, List<String> methodNames,
-      Class<?>[] parameterTypes, int pageParamIndex, Class<?> namespace)
+    Class<?>[] parameterTypes, int pageParamIndex, Class<?> namespace)
       throws NoSuchMethodException {
     String methodName = methodModel.getId();
     String pageMethodName = String.format("%s$Page", methodName);
     Assert.isTrue(!methodNames.contains(pageMethodName),
-        "There is a method name conflicts with " + pageMethodName);
+      "There is a method name conflicts with " + pageMethodName);
     MethodModel pageMethodModel = new MethodModel();
     Annotation[][] parameterAnnotations = setParamAnnotations(parameterTypes, namespace,
       methodName, pageMethodModel);
@@ -405,17 +408,22 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
       attrTemp = attrText;
       Field field = model.getClass().getDeclaredField(javaAttr);
       Class<?> type = field.getType();
-      field.setAccessible(true);
-      if (type == Class.class) {
-        field.set(model, Class.forName(attrText));
-      } else {
-        field.set(model, attrText);
-      }
-      field.setAccessible(false);
+      Object value = castValue(attrText, type);
+      ReflectUtil.setValue(model, field, value);
     } catch (ClassNotFoundException e) {
       throw new ParseException("类型 " + attrTemp + " 未找到");
     } catch (Exception e) {
       e.printStackTrace();
+    }
+  }
+
+  private Object castValue(String attrText, Class<?> type) throws ClassNotFoundException {
+    if (type == Class.class) {
+      return Class.forName(attrText);
+    } else if (boolean.class.equals(type)) {
+      return Boolean.valueOf(attrText);
+    } else {
+      return attrText;
     }
   }
 

@@ -6,11 +6,15 @@
 <mapper namespace="ye.weicheng.ngbatis.demo.repository.DropSpaceDao" space="test_drop">
   
   <delete id="dropSpace">
-    drop space ${ p0 };
+    drop space test_drop;
   </delete>
   
+  <select id="useTestSpace" space="test">
+    RETURN 1;
+  </select>
+  
   <select id="createSpace" space="null">
-    create space ${ p0 } ( vid_type  = INT64 );
+    create space test_drop ( vid_type  = INT64 );
   </select>
   
   <select id="showTags" resultType="java.lang.String">

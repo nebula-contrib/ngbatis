@@ -41,6 +41,7 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <beetl.version>3.15.10.RELEASE</beetl.version>
     </properties>
 
     <dependencies>
@@ -91,7 +92,22 @@
         <dependency>
             <groupId>com.ibeetl</groupId>
             <artifactId>beetl</artifactId>
-            <version>3.1.8.RELEASE</version>
+            <version>${beetl.version}</version>
+            <exclusions>
+              <exclusion>
+                  <groupId>com.ibeetl</groupId>
+                  <artifactId>beetl-default-antlr4.9-support</artifactId>
+              </exclusion>
+              <exclusion>
+                  <groupId>org.antlr</groupId>
+                  <artifactId>antlr4-runtime</artifactId>
+              </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.ibeetl</groupId>
+            <artifactId>beetl-antlr4.11-support</artifactId>
+            <version>${beetl.version}</version>
         </dependency>
 
         <!-- for nGQL escape in xml  -->

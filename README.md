@@ -12,7 +12,7 @@ This source code is licensed under Apache 2.0 License.
 </p>
 
 - [Ngbatis Docs](https://nebula-contrib.github.io/ngbatis/)
-- [Ngbatis 文档](https://corvusye.github.io/ngbatis-docs/)
+- [Ngbatis 文档](https://graph-cn.github.io/ngbatis-docs/)
 
 ## What is NGBATIS
 
@@ -30,6 +30,17 @@ See [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
 - Maven
 - Java 8+
 
+## Version matching
+
+  NgBatis | nebula-java | JDK | Springboot | Beetl
+  ---|-------------|---|------------|---
+  1.2.0-jdk17-SNAPSHOT | 3.6.0       | 17 | 3.0.7 | 3.15.10.RELEASE
+  1.2.0-SNAPSHOT | 3.6.0       | 8 | 2.7.0 | 3.1.8.RELEASE
+  1.1.5 | 3.5.0       | 8 | 2.7.0 | 3.1.8.RELEASE
+  1.1.4 | 3.5.0       | 8 | 2.7.0 | 3.1.8.RELEASE
+  1.1.3 | 3.5.0       | 8 | 2.7.0 | 3.1.8.RELEASE
+  1.1.2 | 3.4.0       | 8 | 2.7.0 | 3.1.8.RELEASE
+
 ## How to use
 
 > You could refer to ngbatis-demo in this repo.
@@ -41,14 +52,14 @@ See [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
         <dependency>
           <groupId>org.nebula-contrib</groupId>
           <artifactId>ngbatis</artifactId>
-          <version>1.1.5</version>
+          <version>1.2.0</version>
         </dependency>
     ```
 
   - Gradle
 
     ```groovy
-    implementation 'org.nebula-contrib:ngbatis:1.1.5'
+    implementation 'org.nebula-contrib:ngbatis:1.2.0'
     ```
 
 - Referring to [ngbatis-demo](./ngbatis-demo), which was smoothly integrated with spring-boot. The API examples could be found under the test of it for all features of ngbatis.
@@ -109,6 +120,9 @@ import java.util.Map;
 import java.util.Set;
 
 public interface TestRepository {
+    // new features from v1.2.0
+    Integer returnAge(@Param("person")Person person);
+
     Person selectPerson();
     Person selectByPerson(Person person);
     List<Person> selectAgeGt(Integer age);
@@ -128,6 +142,24 @@ public interface TestRepository {
     namespace=
     "ye.weicheng.ngbatis.demo.repository.TestRepository"
 >
+    <!-- new features from v1.2.0 start -->
+    <nGQL id="include-test-value">
+        ${myInt}
+    </nGQL>
+
+    <nGQL id="ngql-return-age">
+        RETURN @ng.include('include-test-value',{'myInt':age});
+    </nGQL>
+
+    <!--
+    The same as: 
+        RETURN ${person.age};
+    You can try extracting more common and meaningful scripts.
+    -->
+    <select id="returnAge" resultType="java.lang.Integer">
+        @ng.include('ngql-return-age',person);
+    </select>
+    <!-- new features from v1.2.0 end -->
 
     <select id="selectPerson" resultType="ye.weicheng.ngbatis.demo.pojo.Person">
         match (v:person) return v.person.name as name, v.person.age as age limit 1
@@ -298,6 +330,11 @@ public class PersonServiceImpl {
 ## Upstream projects
 
 - [beetl](https://gitee.com/xiandafu/beetl), BSD-3, we proudly use the beetl template language as our template engine, which is consumed in binary package(as is).
+
+## Community
+
+- English: [![Slack](https://img.shields.io/badge/Slack-9F2B68?style=for-the-badge&logo=slack&logoColor=white)](https://join.slack.com/t/nebulagraph/shared_invite/zt-7ybejuqa-NCZBroh~PCh66d9kOQj45g)
+- Chinese: [![WeChat](https://img.shields.io/badge/WeChat-7BB32E?style=for-the-badge&logo=wechat&logoColor=white)](https://github.com/nebula-contrib/ngbatis/issues/270)
 
 ## License
 

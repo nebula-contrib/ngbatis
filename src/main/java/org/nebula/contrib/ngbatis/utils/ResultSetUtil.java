@@ -23,6 +23,8 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -68,18 +70,6 @@ public class ResultSetUtil {
   public static String type_vertex_value = "vertex";
   
   public static String type_edge_value = "edge";
-
-  private static final Constructor<GregorianCalendar> CALENDAR_CONSTRUCTOR;
-
-  static {
-    try {
-      CALENDAR_CONSTRUCTOR = GregorianCalendar.class.getDeclaredConstructor(
-        int.class, int.class, int.class, int.class, int.class, int.class, int.class
-      );
-    } catch (NoSuchMethodException e) {
-      throw new RuntimeException(e);
-    }
-  }
 
   /**
    * <p>根据nebula graph本身的类型说明，获取对应的 java对象值。</p>
@@ -128,29 +118,20 @@ public class ResultSetUtil {
 
   private static Object transformDateTime(DateTimeWrapper dateTime) {
     DateTime localDateTime = dateTime.getLocalDateTime();
-    try {
-      CALENDAR_CONSTRUCTOR.setAccessible(true);
-      GregorianCalendar calendar = CALENDAR_CONSTRUCTOR.newInstance(
-        localDateTime.getYear(),
-        localDateTime.getMonth() - 1,
-        localDateTime.getDay(),
-        localDateTime.getHour(),
-        localDateTime.getMinute(),
-        localDateTime.getSec(),
-        Math.floorDiv(localDateTime.getMicrosec(), 1000)
-      );
-      CALENDAR_CONSTRUCTOR.setAccessible(false);
-      return calendar.getTime();
-    } catch (Exception e) {
-      return new GregorianCalendar(
-        localDateTime.getYear(),
-        localDateTime.getMonth() - 1,
-        localDateTime.getDay(),
-        localDateTime.getHour(),
-        localDateTime.getMinute(),
-        localDateTime.getSec()
-        ).getTime();
-    }
+
+    int month = localDateTime.getMonth() - 1;
+    GregorianCalendar calendar = new GregorianCalendar(
+      localDateTime.getYear(),
+      month,
+      localDateTime.getDay(),
+      localDateTime.getHour(),
+      localDateTime.getMinute(),
+      localDateTime.getSec()
+    );
+    
+    calendar.set(Calendar.MILLISECOND, Math.floorDiv(localDateTime.getMicrosec(), 1000));
+
+    return calendar.getTime();
   }
 
   private static Object transformDate(DateWrapper date) {

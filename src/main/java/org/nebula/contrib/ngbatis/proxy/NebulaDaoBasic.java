@@ -291,7 +291,7 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    * @param id 表记录主键
    * @return 是否执行成功，成功 1 ，失败 0
    */
-  default int deleteWithEdgeById(I id) {
+  default Integer deleteWithEdgeById(I id) {
     MethodModel methodModel = getMethodModel();
     methodModel.setReturnType(ResultSet.class);
     methodModel.setResultType(ResultSet.class);
@@ -306,7 +306,7 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    * @param id 表记录主键
    * @return 是否删除成功，成功 1，失败 0
    */
-  default int deleteById(I id) {
+  default Integer deleteById(I id) {
     MethodModel methodModel = getMethodModel();
     methodModel.setReturnType(ResultSet.class);
     methodModel.setResultType(ResultSet.class);
@@ -322,7 +322,7 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    * @param ids 表记录主键列表
    * @return 是否删除成功，成功 1，失败 0
    */
-  default int deleteByIdBatch (Collection<I> ids) {
+  default Integer deleteByIdBatch(Collection<I> ids) {
     MethodModel methodModel = getMethodModel();
     methodModel.setReturnType(ResultSet.class);
     methodModel.setResultType(ResultSet.class);

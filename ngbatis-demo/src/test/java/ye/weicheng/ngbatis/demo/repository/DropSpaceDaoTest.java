@@ -22,14 +22,14 @@ class DropSpaceDaoTest {
   
   @Test
   void dropSpace() throws InterruptedException {
-    String spaceName = "test_drop";
-    dao.createSpace(spaceName);
+    dao.useTestSpace();
+    dao.createSpace();
     Thread.sleep(10 * 1000);
     
     List<String> tags = dao.showTags();
     System.out.println(tags);
     
-    dao.dropSpace(spaceName);
+    dao.dropSpace();
   }
 
 }

@@ -29,6 +29,17 @@ This source code is licensed under Apache 2.0 License.
 - Maven
 - Java 8+
 
+## 版本匹配
+
+  NgBatis | nebula-java | JDK | Springboot | Beetl
+  ---|-------------|---|------------|---
+  1.2.0-jdk17-SNAPSHOT | 3.6.0       | 17 | 3.0.7 | 3.15.10.RELEASE
+  1.2.0-SNAPSHOT | 3.6.0       | 8 | 2.7.0 | 3.1.8.RELEASE
+  1.1.5 | 3.5.0       | 8 | 2.7.0 | 3.1.8.RELEASE
+  1.1.4 | 3.5.0       | 8 | 2.7.0 | 3.1.8.RELEASE
+  1.1.3 | 3.5.0       | 8 | 2.7.0 | 3.1.8.RELEASE
+  1.1.2 | 3.4.0       | 8 | 2.7.0 | 3.1.8.RELEASE
+
 ## 如何使用（可在克隆代码后，参考 ngbatis-demo 项目）
 
 ### 在项目引入
@@ -39,14 +50,14 @@ This source code is licensed under Apache 2.0 License.
         <dependency>
           <groupId>org.nebula-contrib</groupId>
           <artifactId>ngbatis</artifactId>
-          <version>1.1.5</version>
+          <version>1.2.0</version>
         </dependency>
     ```
 
 - Gradle
 
     ```groovy
-    implementation 'org.nebula-contrib:ngbatis:1.1.5'
+    implementation 'org.nebula-contrib:ngbatis:1.2.0'
     ```
 
 ### 参考 [【ngbatis-demo】](./ngbatis-demo)，与springboot无缝集成。在该项目的 test 中还有api的样例。在开发过程中每增加一个特性也都会同步更新ngbatis-demo的用例
@@ -107,6 +118,9 @@ import java.util.Map;
 import java.util.Set;
 
 public interface TestRepository {
+    // new features from v1.2.0
+    Integer returnAge(@Param("person")Person person);
+  
     Person selectPerson();
     Person selectByPerson(Person person);
     List<Person> selectAgeGt(Integer age);
@@ -126,6 +140,24 @@ resource/mapper/TestRepository.xml
     namespace=
     "ye.weicheng.ngbatis.demo.repository.TestRepository"
 >
+    <!-- v1.2.0 新特性 start -->
+    <nGQL id="include-test-value">
+        ${myInt}
+    </nGQL>
+
+    <nGQL id="ngql-return-age">
+        RETURN @ng.include('include-test-value',{'myInt':age});
+    </nGQL>
+
+    <!--
+    等同于: 
+        RETURN ${person.age};
+    你可以试着提取更多有意义的公共脚本.
+    -->
+    <select id="returnAge" resultType="java.lang.Integer">
+        @ng.include('ngql-return-age',person);
+    </select>
+    <!-- v1.2.0 新特性 v1.2.0 end -->
 
     <select id="selectPerson" resultType="ye.weicheng.ngbatis.demo.pojo.Person">
         match (v:person) return v.person.name as name, v.person.age as age limit 1

@@ -4,19 +4,18 @@ package org.nebula.contrib.ngbatis.handler;
 //
 // This source code is licensed under Apache 2.0 License.
 
+import static org.nebula.contrib.ngbatis.utils.ResultSetUtil.nodePropsToMap;
+
 import com.vesoft.nebula.client.graph.data.Node;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.data.ResultSet.Record;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
 import org.nebula.contrib.ngbatis.exception.ResultHandleException;
 import org.nebula.contrib.ngbatis.models.data.NgVertex;
 import org.nebula.contrib.ngbatis.utils.ResultSetUtil;
 import org.springframework.stereotype.Component;
-
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-
-import static org.nebula.contrib.ngbatis.utils.ResultSetUtil.nodePropsToMap;
 
 /**
  * Convert the vertex data from ResultSet to NgVertex.
@@ -58,7 +57,7 @@ public class NgVertexResultHandler extends AbstractResultHandler<NgVertex<?>, Ng
       return newResult;
     } catch (UnsupportedEncodingException e) {
       throw new ResultHandleException(
-              String.format("%s : %s", e.getClass().toString(), e.getMessage()));
+        String.format("%s : %s", e.getClass().toString(), e.getMessage()));
     }
   }
 }
