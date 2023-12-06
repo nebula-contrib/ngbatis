@@ -467,8 +467,8 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     Class<? extends NebulaDaoBasic> daoType = this.getClass();
     Class<?> returnType = entityType(daoType);
     return (List<?>) proxy(daoType, returnType, cqlTpl,
-            new Class[]{Serializable.class, Class.class, Class.class}, endVertexName, edgeName,
-            startId);
+            new Class[]{Serializable.class, Class.class, Class.class}, startId, edgeName,
+            endVertexName);
   }
 
   /**
