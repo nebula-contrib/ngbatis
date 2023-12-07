@@ -23,6 +23,7 @@ This source code is licensed under Apache 2.0 License.
   - [x] Duration
 
 # 1.2.0-jdk17-snapshot
+
 - [x] Springboot 3.x support.
 
 ## Dependencies upgrade

@@ -49,7 +49,7 @@ See [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
   - Maven
 
     ```xml
-    	<repositories>
+        <repositories>
             <repository>
                 <snapshots>
                     <enabled>true</enabled>

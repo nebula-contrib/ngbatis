@@ -47,7 +47,7 @@ This source code is licensed under Apache 2.0 License.
 - Maven
 
     ```xml
-    	<repositories>
+        <repositories>
             <repository>
                 <snapshots>
                     <enabled>true</enabled>
