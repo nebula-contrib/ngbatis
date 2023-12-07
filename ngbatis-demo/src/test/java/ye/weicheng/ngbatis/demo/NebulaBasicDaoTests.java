@@ -502,6 +502,12 @@ public class NebulaBasicDaoTests {
   }
 
   @Test
+  public void listEndNodes() {
+    List<Person> personList = repository.listEndNodes("易小海", Like.class);
+    System.out.println(JSON.toJSONString(personList));
+  }
+
+  @Test
   public void startNode() {
     Person whoIsStartForTest = repository.startNode(Like.class, "易小海");
     System.out.println(JSON.toJSONString(whoIsStartForTest));

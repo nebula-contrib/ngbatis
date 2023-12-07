@@ -30,6 +30,17 @@ See [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
 - Maven
 - Java 17+
 
+## Version matching
+
+  NgBatis | nebula-java | JDK | Springboot | Beetl
+  ---|-------------|---|------------|---
+  1.2.0-jdk17-SNAPSHOT | 3.6.0       | 17 | 3.0.7 | 3.15.10.RELEASE
+  1.2.0-SNAPSHOT | 3.6.0       | 8 | 2.7.0 | 3.1.8.RELEASE
+  1.1.5 | 3.5.0       | 8 | 2.7.0 | 3.1.8.RELEASE
+  1.1.4 | 3.5.0       | 8 | 2.7.0 | 3.1.8.RELEASE
+  1.1.3 | 3.5.0       | 8 | 2.7.0 | 3.1.8.RELEASE
+  1.1.2 | 3.4.0       | 8 | 2.7.0 | 3.1.8.RELEASE
+
 ## How to use
 
 > You could refer to ngbatis-demo in this repo.
@@ -334,6 +345,11 @@ public class PersonServiceImpl {
 ## Upstream projects
 
 - [beetl](https://gitee.com/xiandafu/beetl), BSD-3, we proudly use the beetl template language as our template engine, which is consumed in binary package(as is).
+
+## Community
+
+- English: [![Slack](https://img.shields.io/badge/Slack-9F2B68?style=for-the-badge&logo=slack&logoColor=white)](https://join.slack.com/t/nebulagraph/shared_invite/zt-7ybejuqa-NCZBroh~PCh66d9kOQj45g)
+- Chinese: [![WeChat](https://img.shields.io/badge/WeChat-7BB32E?style=for-the-badge&logo=wechat&logoColor=white)](https://github.com/nebula-contrib/ngbatis/issues/270)
 
 ## License
 
