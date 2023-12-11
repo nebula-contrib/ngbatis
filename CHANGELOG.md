@@ -33,6 +33,8 @@ This source code is licensed under Apache 2.0 License.
 - nebula-java: 3.5.0 -> 3.6.0
 - beetl: 3.1.8-RELEASE -> 3.15.10.RELEASE
 - antlr4: 4.7.2 -> 4.11.1
+- asm: 8.0 -> 9.4
+- jsoup: 1.15.3 -> 1.15.4
 
 ## Feature
 
@@ -40,6 +42,8 @@ This source code is licensed under Apache 2.0 License.
 - feat: extending `NgPath`, when 'with prop' is used in nGQL, edge attributes can be obtained from NgPath. ([#228](https://github.com/nebula-contrib/ngbatis/pull/228), via [dieyi](https://github.com/1244453393))
 - feat: expanding the `insertEdgeBatch` interface in `NebulaDaoBasic`. ([#244](https://github.com/nebula-contrib/ngbatis/pull/244), via [Sunhb](https://github.com/shbone))
 - feat: expanding the `deleteByIdBatch` interface in `NebulaDaoBasic`. ([#247](https://github.com/nebula-contrib/ngbatis/pull/244), via [Sunhb](https://github.com/shbone))
+- feat: expanding the `listEndNodes` interface in `NebulaDaoBasic`. ([#247](https://github.com/nebula-contrib/ngbatis/pull/272), via [knqiufan](https://github.com/knqiufan))
+- feat: support specify space by param
 
 ## Bugfix
 
