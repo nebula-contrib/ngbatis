@@ -356,10 +356,14 @@ public class MapperProxy {
    * @param paramsForTemplate 从模板参数中获取空间名
    * @return 目标space
    */
-  public static String getSpace(ClassModel cm, MethodModel mm, Map<String, Object> paramsForTemplate) {
+  public static String getSpace(
+    ClassModel cm, MethodModel mm, Map<String, Object> paramsForTemplate
+  ) {
     boolean spaceFromParam = mm.isSpaceFromParam();
     String space = getSpace(cm, mm);
-    if (spaceFromParam && space != null) return ENV.getTextResolver().resolve(space, paramsForTemplate);
+    if (spaceFromParam && space != null) {
+      return ENV.getTextResolver().resolve(space, paramsForTemplate);
+    }
     return space;
   }
 
