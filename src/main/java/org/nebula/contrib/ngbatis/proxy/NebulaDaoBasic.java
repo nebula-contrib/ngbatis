@@ -422,18 +422,6 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   }
 
   /**
-   * 通过开始节点id与关系类型获取所有结束节点，<br> 结束节点类型为当前接口实现类所管理的实体对应的类型
-   *
-   * @param startId 开始节点id
-   * @param edgeType 关系类型
-   * @return 结束节点列表
-   */
-  default List<T> listEndNodes(I startId, Class<?> edgeType) {
-    Class<?> endType = entityType(this.getClass());
-    return (List<T>) listEndNodes(startId, edgeType, endType);
-  }
-
-  /**
    * 指定开始节点类型，并通过结束节点id与关系类型获取所有开始节点
    *
    * @param startType 开始节点的类型
@@ -450,6 +438,18 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     return (List<?>) proxy(daoType, returnType, cqlTpl,
       new Class[]{Class.class, Class.class, Serializable.class}, startVertexName, edgeName,
       endId);
+  }
+
+  /**
+   * 通过开始节点id与关系类型获取所有结束节点，<br> 结束节点类型为当前接口实现类所管理的实体对应的类型
+   *
+   * @param startId 开始节点id
+   * @param edgeType 关系类型
+   * @return 结束节点列表
+   */
+  default List<T> listEndNodes(I startId, Class<?> edgeType) {
+    Class<?> endType = entityType(this.getClass());
+    return (List<T>) listEndNodes(startId, edgeType, endType);
   }
 
   /**
