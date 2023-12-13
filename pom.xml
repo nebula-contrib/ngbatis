@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-<!--    <packaging>jar</packaging>-->
+    <packaging>jar</packaging>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -13,7 +13,19 @@
     <name>ngbatis</name>
     <groupId>org.nebula-contrib</groupId>
     <artifactId>ngbatis</artifactId>
-    <version>1.2.0-jdk17-SNAPSHOT</version>
+    <version>1.2.0-jdk17</version>
+    
+    <description>
+        NgBatis is a database ORM framework base NebulaGraph + spring-boot,
+        which takes advantage of the mybatis’ fashion development,
+        including some de-factor operations in single table and vertex-edge,
+        like mybatis-plus.
+        NgBatis 是一款针对 NebulaGraph + Springboot 的数据库 ORM 框架。
+        借鉴于 MyBatis 的使用习惯进行开发。
+    </description>
+    
+    <url>https://github.com/nebula-contrib/ngbatis</url>
+
     <developers>
         <developer>
             <name>CorvusYe</name>
@@ -80,7 +92,7 @@
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm</artifactId>
-            <version>8.0</version>
+            <version>9.4</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
@@ -92,7 +104,7 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.15.3</version>
+            <version>1.15.4</version>
         </dependency>
 
         <!-- Beetl project -->
@@ -138,7 +150,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.13.1</version>
+            <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -148,7 +160,7 @@
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.8</version>
+                <version>1.6.13</version>
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>ossrh</serverId>
