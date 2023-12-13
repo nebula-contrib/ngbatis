@@ -12,7 +12,7 @@ This source code is licensed under Apache 2.0 License.
 </p>
 
 - [Ngbatis Docs](https://nebula-contrib.github.io/ngbatis/)
-- [Ngbatis 文档](https://corvusye.github.io/ngbatis-docs/)
+- [Ngbatis 文档](https://graph-cn.github.io/ngbatis-docs/)
 
 ## NGBATIS是什么？
 
@@ -33,12 +33,21 @@ This source code is licensed under Apache 2.0 License.
 
   NgBatis | nebula-java | JDK | Springboot | Beetl
   ---|-------------|---|------------|---
-  1.2.0-jdk17-SNAPSHOT | 3.6.0       | 17 | 3.0.7 | 3.15.10.RELEASE
-  1.2.0-SNAPSHOT | 3.6.0       | 8 | 2.7.0 | 3.1.8.RELEASE
+  1.2.0-jdk17 | 3.6.0       | 17 | 3.0.7 | 3.15.10.RELEASE
+  1.2.0 | 3.6.0       | 8 | 2.7.0 | 3.15.10.RELEASE
   1.1.5 | 3.5.0       | 8 | 2.7.0 | 3.1.8.RELEASE
   1.1.4 | 3.5.0       | 8 | 2.7.0 | 3.1.8.RELEASE
   1.1.3 | 3.5.0       | 8 | 2.7.0 | 3.1.8.RELEASE
   1.1.2 | 3.4.0       | 8 | 2.7.0 | 3.1.8.RELEASE
+
+### 快照版
+
+  NgBatis | nebula-java | JDK | Springboot | Beetl
+  ---|-------------|---|------------|---
+  1.2.1-jdk17-SNAPSHOT | 3.6.0       | 17 | 3.0.7 | 3.15.10.RELEASE
+  1.2.1-SNAPSHOT | 3.6.0       | 8 | 2.7.0 | 3.15.10.RELEASE
+
+> 在同版本号快照版中，依赖的第三方可能会随时升级
 
 ## 如何使用（可在克隆代码后，参考 ngbatis-demo 项目）
 

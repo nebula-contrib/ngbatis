@@ -24,9 +24,15 @@ This source code is licensed under Apache 2.0 License.
 
 ## Dependencies upgrade
 
-- [ ] Springboot 3.x support.
+- [x] Springboot 3.x support. (lastest-jdk17)
 
-# 1.2.0-SNAPSHOT
+# NEXT (1.2.1-SNAPSHOT)
+
+## Dependencies upgrade
+
+- [ ] nebula-java: 3.6.0 -> 3.6.1
+
+# 1.2.0
 
 ## Dependencies upgrade
 

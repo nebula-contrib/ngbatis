@@ -34,12 +34,21 @@ See [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
 
   NgBatis | nebula-java | JDK | Springboot | Beetl
   ---|-------------|---|------------|---
-  1.2.0-jdk17-SNAPSHOT | 3.6.0       | 17 | 3.0.7 | 3.15.10.RELEASE
-  1.2.0-SNAPSHOT | 3.6.0       | 8 | 2.7.0 | 3.1.8.RELEASE
+  1.2.0-jdk17 | 3.6.0       | 17 | 3.0.7 | 3.15.10.RELEASE
+  1.2.0 | 3.6.0       | 8 | 2.7.0 | 3.15.10.RELEASE
   1.1.5 | 3.5.0       | 8 | 2.7.0 | 3.1.8.RELEASE
   1.1.4 | 3.5.0       | 8 | 2.7.0 | 3.1.8.RELEASE
   1.1.3 | 3.5.0       | 8 | 2.7.0 | 3.1.8.RELEASE
   1.1.2 | 3.4.0       | 8 | 2.7.0 | 3.1.8.RELEASE
+
+### SNAPSHOT
+
+  NgBatis | nebula-java | JDK | Springboot | Beetl
+  ---|-------------|---|------------|---
+  1.2.1-jdk17-SNAPSHOT | 3.6.0       | 17 | 3.0.7 | 3.15.10.RELEASE
+  1.2.1-SNAPSHOT | 3.6.0       | 8 | 2.7.0 | 3.15.10.RELEASE
+
+> The third-party dependencies may differ within the same snapshot version.
 
 ## How to use
 
