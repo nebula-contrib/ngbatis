@@ -6,11 +6,11 @@ package org.nebula.contrib.ngbatis.proxy;
 
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.isCurrentTypeOrParentType;
 
+import jakarta.persistence.Table;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
-import jakarta.persistence.Table;
 import org.nebula.contrib.ngbatis.models.ClassModel;
 import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.nebula.contrib.ngbatis.models.MethodModel;

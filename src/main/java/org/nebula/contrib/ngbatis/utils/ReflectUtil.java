@@ -6,8 +6,13 @@ package org.nebula.contrib.ngbatis.utils;
 
 import static org.springframework.util.ObjectUtils.nullSafeEquals;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -16,14 +21,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import org.nebula.contrib.ngbatis.exception.ParseException;
 import org.nebula.contrib.ngbatis.models.MethodModel;
 import org.springframework.util.Assert;
-import java.lang.reflect.ParameterizedType;
+
 /**
  * <p>反射工具类。</p>
  *
