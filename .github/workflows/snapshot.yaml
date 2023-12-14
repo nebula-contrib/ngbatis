@@ -11,13 +11,12 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
-      - name: Setup Java
-        uses: actions/setup-java@v3
+      - name: Install Java and Maven
+        uses: actions/setup-java@v1
         with:
-          java-version: '17'
-          distribution: 'temurin'
+          java-version: 17
 
       - name: Install nebula-graph
         run: |
@@ -32,20 +31,10 @@ jobs:
           popd
           popd
 
-      - name: Set up Apache Maven Central
-        uses: actions/setup-java@v3
+      - name: Deploy Snapshot to Maven package
+        uses: samuelmeuli/action-maven-publish@v1
         with:
-          java-version: '17'
-          distribution: 'temurin'
-          gpg-private-key: ${{ secrets.GPG_SECRET }}
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE
-          server-id: ossrh
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_PASSWORD
-
-      - name: Publish package
-        run: mvn --batch-mode deploy -Dmaven.javadoc.skip=true
-        env:
-          MAVEN_USERNAME: ${{ secrets.OSSRH_USER }}
-          MAVEN_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSWORD }}
+          gpg_private_key: ${{ secrets.GPG_SECRET }}
+          gpg_passphrase: ${{ secrets.GPG_PASSWORD }}
+          nexus_username: ${{ secrets.OSSRH_USER }}
+          nexus_password: ${{ secrets.OSSRH_PASSWORD }}
