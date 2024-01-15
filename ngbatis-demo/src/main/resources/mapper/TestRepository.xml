@@ -157,6 +157,11 @@
     <select id="spaceFromParam" space="${specifySpace}" spaceFromParam="true">
         RETURN true;
     </select>
+
+    <select id="dynamicSpaceWithPage" space="${space}" spaceFromParam="true" resultType="ye.weicheng.ngbatis.demo.pojo.Person">
+        MATCH (n: person)
+        RETURN n
+    </select>
     
 
 </mapper>
