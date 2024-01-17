@@ -315,7 +315,6 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
     MethodModel pageMethodModel = new MethodModel();
     Annotation[][] parameterAnnotations = setParamAnnotations(parameterTypes, namespace,
       methodName, pageMethodModel);
-    String pageParamName = getPageParamName(parameterAnnotations, pageParamIndex);
     pageMethodModel.setParameterTypes(parameterTypes);
     pageMethodModel.setId(pageMethodName);
 
@@ -324,6 +323,7 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
     pageMethodModel.setSpace(methodModel.getSpace());
 
     String cql = methodModel.getText();
+    String pageParamName = getPageParamName(parameterAnnotations, pageParamIndex);
     if (pageParamName != null) {
       String format = "%s\t\tSKIP $%s.startRow LIMIT $%s.pageSize";
       cql = String.format(format, cql, pageParamName, pageParamName);
