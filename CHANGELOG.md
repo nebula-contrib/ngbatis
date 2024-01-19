@@ -26,11 +26,17 @@ This source code is licensed under Apache 2.0 License.
 
 - [x] Springboot 3.x support. (lastest-jdk17)
 
-# NEXT (1.2.1-SNAPSHOT)
+# NEXT (1.2.2-SNAPSHOT)
 
 ## Dependencies upgrade
 
 - [ ] nebula-java: 3.6.0 -> 3.6.1
+
+# 1.2.1
+
+## Bugfix
+
+- fix: set the specified space in the original method to the proxy method for paging. ([#282](https://github.com/nebula-contrib/ngbatis/pull/282))
 
 # 1.2.0
 
