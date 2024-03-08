@@ -46,8 +46,8 @@ This source code is licensed under Apache 2.0 License.
 
   NgBatis | nebula-java | JDK | Springboot | Beetl
   ---|-------------|---|------------|---
-  1.2.1-jdk17-SNAPSHOT | 3.6.0       | 17 | 3.0.7 | 3.15.10.RELEASE
-  1.2.1-SNAPSHOT | 3.6.0       | 8 | 2.7.0 | 3.15.10.RELEASE
+  1.2.2-jdk17-SNAPSHOT | 3.6.0       | 17 | 3.0.7 | 3.15.10.RELEASE
+  1.2.2-SNAPSHOT | 3.6.0       | 8 | 2.7.0 | 3.15.10.RELEASE
 
 > 在同版本号快照版中，依赖的第三方可能会随时升级
 

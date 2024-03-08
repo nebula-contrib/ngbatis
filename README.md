@@ -47,8 +47,8 @@ See [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
 
   NgBatis | nebula-java | JDK | Springboot | Beetl
   ---|-------------|---|------------|---
-  1.2.1-jdk17-SNAPSHOT | 3.6.0       | 17 | 3.0.7 | 3.15.10.RELEASE
-  1.2.1-SNAPSHOT | 3.6.0       | 8 | 2.7.0 | 3.15.10.RELEASE
+  1.2.2-jdk17-SNAPSHOT | 3.6.0       | 17 | 3.0.7 | 3.15.10.RELEASE
+  1.2.2-SNAPSHOT | 3.6.0       | 8 | 2.7.0 | 3.15.10.RELEASE
 
 > The third-party dependencies may differ within the same snapshot version.
 
