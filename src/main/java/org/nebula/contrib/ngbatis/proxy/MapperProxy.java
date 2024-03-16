@@ -236,7 +236,10 @@ public class MapperProxy {
       if (result.isSucceeded()) {
         return result;
       } else {
-        throw new QueryException(" 数据查询失败" + result.getErrorMessage());
+        throw new QueryException(
+          " 数据查询失败" + result.getErrorMessage(),
+          result.getErrorCode()
+        );
       }
     } catch (Exception e) {
       throw new QueryException("数据查询失败：" + e.getMessage(), e);
@@ -285,7 +288,10 @@ public class MapperProxy {
       if (result.isSucceeded()) {
         return result;
       } else {
-        throw new QueryException(" ResultSet error: " + result.getErrorMessage());
+        throw new QueryException(
+          " ResultSet error: " + result.getErrorMessage(),
+          result.getErrorCode()
+        );
       }
     } catch (Exception e) {
       throw new QueryException("execute failed: " + e.getMessage(), e);

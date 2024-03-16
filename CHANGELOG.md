@@ -28,6 +28,10 @@ This source code is licensed under Apache 2.0 License.
 
 # NEXT (1.2.2-SNAPSHOT)
 
+## Bugfix
+
+- fix: complete the error code of ResultSet into QueryException.
+
 ## Dependencies upgrade
 
 - [ ] nebula-java: 3.6.0 -> 3.6.1

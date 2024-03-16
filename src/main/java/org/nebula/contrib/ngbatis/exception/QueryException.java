@@ -12,11 +12,23 @@ package org.nebula.contrib.ngbatis.exception;
  */
 public class QueryException extends RuntimeException {
 
+  /**
+   * Set by {@link com.vesoft.nebula.client.graph.data.ResultSet#getErrorCode()}
+   * <br>
+   * Will be null when the exception is not caused by nGQL
+   */
+  private Integer code;
+
   public QueryException() {
   }
 
   public QueryException(String o) {
     super(o);
+  }
+
+  public QueryException(String o, Integer code) {
+    super(o);
+    this.code = code;
   }
 
   public QueryException(String o, Throwable e) {
