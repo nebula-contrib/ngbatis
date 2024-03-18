@@ -31,6 +31,7 @@ This source code is licensed under Apache 2.0 License.
 ## Bugfix
 
 - fix: complete the error code of ResultSet into QueryException.
+- fix: the issue of not being able to handle Set type.
 
 ## Dependencies upgrade
 

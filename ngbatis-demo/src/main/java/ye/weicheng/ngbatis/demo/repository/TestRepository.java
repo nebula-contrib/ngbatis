@@ -83,7 +83,9 @@ public interface TestRepository extends NebulaDaoBasic<Person, String> {
   Boolean spaceFromParam(@Param("specifySpace") String specifySpace);
 
   List<Person> dynamicSpaceWithPage(Page<Person> page, @Param("space") String space);
-  
+
+  NgSubgraph<String> resultContainingSet();
+
   class DynamicNode {
     @Id
     private String vid;

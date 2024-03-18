@@ -271,5 +271,11 @@ class NgbatisDemoApplicationTests {
     person.setBirthday(new Date());
     repository.insertWithTimestamp(person);
   }
+  
+  @Test
+  public void testResultContainingSet() {
+    NgSubgraph<String> rs = repository.resultContainingSet();
+    System.out.println(JSON.toJSONString(rs));
+  }
 
 }

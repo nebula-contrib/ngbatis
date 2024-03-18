@@ -163,6 +163,14 @@
         RETURN n
     </select>
     
+    <select id="resultContainingSet" resultType="org.nebula.contrib.ngbatis.models.data.NgSubgraph">
+        GO 1 STEPS FROM "Tom" OVER like REVERSELY
+        YIELD $^ AS src, EDGE AS destination, $$ AS dst
+        | YIELD
+            toSet( collect( $-.dst ) ) AS nodes,
+            toSet( collect( $-.destination ) ) AS relationships
+    </select>
+    
 
 </mapper>
 

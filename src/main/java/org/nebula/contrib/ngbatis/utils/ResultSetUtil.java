@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.nebula.contrib.ngbatis.exception.ResultHandleException;
 import org.nebula.contrib.ngbatis.models.MapperContext;
@@ -90,7 +91,7 @@ public class ResultSetUtil {
                       : value.isEdge() ? transformRelationship(value)
                         : value.isPath() ? value.asPath()
                           : value.isList() ? transformList(value.asList())
-                            : value.isSet() ? transformList(value.asList())
+                            : value.isSet() ? transformSet(value.asSet())
                               : value.isMap() ? transformMap(value.asMap())
                                 : value.isDuration() ? transformDuration(value.asDuration())
                                   : null;
@@ -241,6 +242,10 @@ public class ResultSetUtil {
 
   private static Object transformList(ArrayList<ValueWrapper> list) {
     return list.stream().map(ResultSetUtil::getValue).collect(Collectors.toList());
+  }
+
+  private static Set<Object> transformSet(Set<ValueWrapper> set) {
+    return set.stream().map(ResultSetUtil::getValue).collect(Collectors.toSet());
   }
 
   /**
