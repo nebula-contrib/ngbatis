@@ -32,6 +32,7 @@ This source code is licensed under Apache 2.0 License.
 
 - fix: complete the error code of ResultSet into QueryException.
 - fix: the issue of not being able to handle Set type.
+- fix: the issue of the ranking value of the edge object cannot be filled.
 
 ## Dependencies upgrade
 

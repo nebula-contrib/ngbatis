@@ -20,11 +20,9 @@ import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.data.TimeWrapper;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -307,6 +305,7 @@ public class ResultSetUtil {
       for (Map.Entry<String, ValueWrapper> entry : properties.entrySet()) {
         ReflectUtil.setValue(t, entry.getKey(), ResultSetUtil.getValue(entry.getValue()));
       }
+      setRanking(t, resultType, r);
     } catch (UnsupportedEncodingException | InstantiationException
       | NoSuchFieldException | IllegalAccessException e) {
       e.printStackTrace();
@@ -344,11 +343,29 @@ public class ResultSetUtil {
    *     v 中，通过 id(n) 获取到的类型不匹配时报错
    */
   public static void setId(Object obj, Class<?> resultType, Node v)
-      throws IllegalAccessException {
+    throws IllegalAccessException {
     Field pkField = getPkField(resultType);
     ValueWrapper idWrapper = v.getId();
     Object id = ResultSetUtil.getValue(idWrapper);
     ReflectUtil.setValue(obj, pkField, id);
+  }
+
+  /**
+   * <p> 从 resultType 中获取到用 @Id 注解的属性，
+   * 并将 relationship 对象的 ranking 属性的值填入 </p>
+   * @param obj 边的 java 对象
+   * @param resultType 边的 java 对象的类型
+   * @param e nebula 中的关系对象
+   * @throws IllegalAccessException
+   */
+  public static void setRanking(Object obj, Class<?> resultType, Relationship e)
+    throws IllegalAccessException {
+    Field pkField = getPkField(resultType, false);
+    if (pkField == null) {
+      return;
+    }
+    long ranking = e.ranking();
+    ReflectUtil.setValue(obj, pkField, ranking);
   }
 
   /**
