@@ -340,10 +340,10 @@ public class ResultSetUtil {
    *                   当returnType是集合时，为范型。否则与 returnType 相同
    * @param v 节点类型
    * @throws IllegalAccessException 当 id 值的类型，与
-   *     v 中，通过 id(n) 获取到的类型不匹配时报错
+   *     v 中，通过 id(n) 获取到的类型不匹配时报错，当属性被 final 修饰时报错
    */
   public static void setId(Object obj, Class<?> resultType, Node v)
-    throws IllegalAccessException {
+      throws IllegalAccessException {
     Field pkField = getPkField(resultType);
     ValueWrapper idWrapper = v.getId();
     Object id = ResultSetUtil.getValue(idWrapper);
@@ -356,10 +356,11 @@ public class ResultSetUtil {
    * @param obj 边的 java 对象
    * @param resultType 边的 java 对象的类型
    * @param e nebula 中的关系对象
-   * @throws IllegalAccessException
+   * @throws IllegalAccessException 当 ranking 值的类型，与
+   *    e 中的 ranking 值的类型不匹配时报错，当属性被 final 修饰时报错
    */
   public static void setRanking(Object obj, Class<?> resultType, Relationship e)
-    throws IllegalAccessException {
+      throws IllegalAccessException {
     Field pkField = getPkField(resultType, false);
     if (pkField == null) {
       return;
