@@ -20,16 +20,15 @@ import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.data.TimeWrapper;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.nebula.contrib.ngbatis.exception.ResultHandleException;
 import org.nebula.contrib.ngbatis.models.MapperContext;
@@ -90,7 +89,7 @@ public class ResultSetUtil {
                       : value.isEdge() ? transformRelationship(value)
                         : value.isPath() ? value.asPath()
                           : value.isList() ? transformList(value.asList())
-                            : value.isSet() ? transformList(value.asList())
+                            : value.isSet() ? transformSet(value.asSet())
                               : value.isMap() ? transformMap(value.asMap())
                                 : value.isDuration() ? transformDuration(value.asDuration())
                                   : null;
@@ -243,6 +242,10 @@ public class ResultSetUtil {
     return list.stream().map(ResultSetUtil::getValue).collect(Collectors.toList());
   }
 
+  private static Set<Object> transformSet(Set<ValueWrapper> set) {
+    return set.stream().map(ResultSetUtil::getValue).collect(Collectors.toSet());
+  }
+
   /**
    * <p>数据库中的节点类型转接口类型（节点orm）</p>
    * @param v 结果集中的 node 数据值
@@ -302,6 +305,7 @@ public class ResultSetUtil {
       for (Map.Entry<String, ValueWrapper> entry : properties.entrySet()) {
         ReflectUtil.setValue(t, entry.getKey(), ResultSetUtil.getValue(entry.getValue()));
       }
+      setRanking(t, resultType, r);
     } catch (UnsupportedEncodingException | InstantiationException
       | NoSuchFieldException | IllegalAccessException e) {
       e.printStackTrace();
@@ -339,11 +343,29 @@ public class ResultSetUtil {
    *     v 中，通过 id(n) 获取到的类型不匹配时报错
    */
   public static void setId(Object obj, Class<?> resultType, Node v)
-      throws IllegalAccessException {
+    throws IllegalAccessException {
     Field pkField = getPkField(resultType);
     ValueWrapper idWrapper = v.getId();
     Object id = ResultSetUtil.getValue(idWrapper);
     ReflectUtil.setValue(obj, pkField, id);
+  }
+
+  /**
+   * <p> 从 resultType 中获取到用 @Id 注解的属性，
+   * 并将 relationship 对象的 ranking 属性的值填入 </p>
+   * @param obj 边的 java 对象
+   * @param resultType 边的 java 对象的类型
+   * @param e nebula 中的关系对象
+   * @throws IllegalAccessException
+   */
+  public static void setRanking(Object obj, Class<?> resultType, Relationship e)
+    throws IllegalAccessException {
+    Field pkField = getPkField(resultType, false);
+    if (pkField == null) {
+      return;
+    }
+    long ranking = e.ranking();
+    ReflectUtil.setValue(obj, pkField, ranking);
   }
 
   /**
