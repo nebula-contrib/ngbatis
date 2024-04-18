@@ -357,7 +357,7 @@ public class ResultSetUtil {
    * @param resultType 边的 java 对象的类型
    * @param e nebula 中的关系对象
    * @throws IllegalAccessException 当 ranking 值的类型，与
-   *    e 中的 ranking 值的类型不匹配时报错，当属性被 final 修饰时报错
+   *     e 中的 ranking 值的类型不匹配时报错，当属性被 final 修饰时报错
    */
   public static void setRanking(Object obj, Class<?> resultType, Relationship e)
       throws IllegalAccessException {
