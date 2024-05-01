@@ -26,17 +26,25 @@ This source code is licensed under Apache 2.0 License.
 
 - [x] Springboot 3.x support. (lastest-jdk17)
 
-# NEXT (1.2.2-SNAPSHOT)
+# 1.2.2
 
 ## Bugfix
 
 - fix: complete the error code of ResultSet into QueryException.
 - fix: the issue of not being able to handle Set type.
 - fix: the issue of the ranking value of the edge object cannot be filled.
+- fix: when the field is aliased by `@Column`, the param name is incorrect. (multi tags support)
+  - selectBySelective
+  - selectIdBySelective
+  - selectBySelectiveStringLike
+  - selectIdBySelectiveStringLike
+- fix: unable to read the correct value of id, the value of the subclass' id is used now. (multi tag scene)
+- fix: do not generate asg debug when the log level is not debug, now.
 
-## Dependencies upgrade
+## Develop behavior change
 
-- [ ] nebula-java: 3.6.0 -> 3.6.1
+- No longer verifying the number of `@Id` in the entity, please keep the number to 1 on your own.
+  > 不再对实体中的`@Id`个数进行校验，请注意保持个数为1 （含父类）
 
 # 1.2.1
 

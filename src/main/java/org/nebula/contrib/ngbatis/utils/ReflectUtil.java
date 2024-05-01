@@ -323,7 +323,7 @@ public abstract class ReflectUtil {
    * 实体类获取全部属性，对父类获取 带 @Column 的属性
    *
    * @param clazz 实体类
-   * @return 当前类的属性及其父类中，带@Column注解的属性
+   * @return 当前类及其父类的属性，排除 {@link Transient} 注解的属性
    */
   public static Field[] getAllColumnFields(Class<?> clazz) {
     return getAllColumnFields(clazz, false);
@@ -334,7 +334,8 @@ public abstract class ReflectUtil {
    *
    * @param clazz 实体类
    * @param forValueSetting 用于设值时为 true，读取全属性
-   * @return 当前类的属性及其父类中，带@Column注解的属性
+   *                        否则只过滤{@link Transient}注解的属性
+   * @return 当前类及其父类的属性
    */
   public static Field[] getAllColumnFields(Class<?> clazz, boolean forValueSetting) {
     Set<Field> fields = new LinkedHashSet<>();
@@ -413,10 +414,18 @@ public abstract class ReflectUtil {
    */
   public static Field getPkField(Field[] fields, Class<?> type, boolean canNotNull) {
     Field pkField = null;
+    Field typePkField = null;
     for (Field field : fields) {
       if (field.isAnnotationPresent(Id.class)) {
         pkField = field;
+        if (field.getDeclaringClass().equals(type)) {
+          typePkField = field;
+        }
       }
+    }
+    // 多标签时，以运行时类中的 @Id 注解为准
+    if (typePkField != null) {
+      pkField = typePkField;
     }
     if (canNotNull && pkField == null) {
       throw new ParseException(
