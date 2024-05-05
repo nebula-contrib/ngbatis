@@ -5,21 +5,21 @@ Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
 This source code is licensed under Apache 2.0 License.
 -->
 
-# NGBATIS
+# NgBatis
 
 <p align="center">
   <br> <a href="README.md">English</a> | 中文
 </p>
 
-- [Ngbatis Docs](https://nebula-contrib.github.io/ngbatis/)
-- [Ngbatis 文档](https://graph-cn.github.io/ngbatis-docs/)
+- [NgBatis Docs](https://nebula-contrib.github.io/ngbatis/)
+- [NgBatis 文档](https://graph-cn.github.io/ngbatis-docs/)
 
 ## NGBATIS是什么？
 
-**NGBATIS** 是一款针对 [Nebula Graph](https://github.com/vesoft-inc/nebula) + Springboot 的数据库 ORM 框架。借鉴于 [MyBatis](https://github.com/mybatis/mybatis-3) 的使用习惯进行开发。包含了一些类似于[mybatis-plus](https://github.com/baomidou/mybatis-plus)的单表操作，另外还有一些图特有的实体-关系基本操作。  
+**NgBatis** 是一款针对 [Nebula Graph](https://github.com/vesoft-inc/nebula) + Springboot 的数据库 ORM 框架。借鉴于 [MyBatis](https://github.com/mybatis/mybatis-3) 的使用习惯进行开发。包含了一些类似于[mybatis-plus](https://github.com/baomidou/mybatis-plus)的单表操作，另外还有一些图特有的实体-关系基本操作。  
 如果使用上更习惯于JPA的方式，[graph-ocean](https://github.com/nebula-contrib/graph-ocean) 是个不错的选择。
 
-## NGBATIS 是怎么运行的？
+## NgBatis 是怎么运行的？
 
 请看设计文档 [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
 
@@ -33,6 +33,7 @@ This source code is licensed under Apache 2.0 License.
 
   NgBatis | nebula-java | JDK | Springboot | Beetl
   ---|-------------|---|------------|---
+  1.2.2 | 3.6.0       | 8 | 2.7.0 | 3.15.10.RELEASE
   1.2.1-jdk17 | 3.6.0       | 17 | 3.0.7 | 3.15.10.RELEASE
   1.2.1 | 3.6.0       | 8 | 2.7.0 | 3.15.10.RELEASE
   1.2.0-jdk17 | 3.6.0       | 17 | 3.0.7 | 3.15.10.RELEASE

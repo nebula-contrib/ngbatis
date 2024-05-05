@@ -344,10 +344,15 @@ public class ResultSetUtil {
    */
   public static void setId(Object obj, Class<?> resultType, Node v)
       throws IllegalAccessException {
-    Field pkField = getPkField(resultType);
-    ValueWrapper idWrapper = v.getId();
-    Object id = ResultSetUtil.getValue(idWrapper);
-    ReflectUtil.setValue(obj, pkField, id);
+    Field pkField = getPkField(resultType, false);
+    if (pkField  != null) {
+      ValueWrapper idWrapper = v.getId();
+      Object id = ResultSetUtil.getValue(idWrapper);
+      ReflectUtil.setValue(obj, pkField, id);
+    }
+    if (resultType.getSuperclass() != null) {
+      setId(obj, resultType.getSuperclass(), v);
+    }
   }
 
   /**
@@ -362,11 +367,13 @@ public class ResultSetUtil {
   public static void setRanking(Object obj, Class<?> resultType, Relationship e)
       throws IllegalAccessException {
     Field pkField = getPkField(resultType, false);
-    if (pkField == null) {
-      return;
+    if (pkField != null) {
+      long ranking = e.ranking();
+      ReflectUtil.setValue(obj, pkField, ranking);
     }
-    long ranking = e.ranking();
-    ReflectUtil.setValue(obj, pkField, ranking);
+    if (resultType.getSuperclass() != null) {
+      setRanking(obj, resultType.getSuperclass(), e);
+    }
   }
 
   /**

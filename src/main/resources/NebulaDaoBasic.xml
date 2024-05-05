@@ -20,13 +20,16 @@
     <select id="selectBySelective">
         @var kv = ng.kv( ng_args[0], '', true, true, false );
         @var id = ng.id( ng_args[0], true, false );
-        @var pkName = ng.pkName( ng_args[0] );
+        @var pkName = ng.pkName( ng_args[0], false );
         @var tagName = ng.tagName( ng_args[0] );
+        @var columns = @kv.multiTagColumns.get( tagName );
         MATCH (n:`${ tagName }`)
         WHERE 1 == 1 ${ isNotEmpty( id ) ? ('\n                and id(n) == $' + pkName) : '' }
-        @if ( isNotEmpty( @kv.columns ) ) {
-            @for ( col in @kv.columns ) {
-                and n.`${ tagName }`.${ col } == $${ @kv.valueNames.get( colLP.index - 1 ) }
+        @if ( isNotEmpty( @kv.multiTagColumns ) ) {
+            @for ( tagEntry in @kv.multiTagColumns ) {
+                @for ( col in tagEntry.value ) {
+                and n.`${ tagEntry.key }`.`${ col }` == $${ @kv.multiTagFields.get( tagEntry.key ).get(colLP.index - 1) }
+                @}
             @}
         @}
         RETURN n
@@ -36,19 +39,23 @@
     <select id="selectBySelectiveStringLike">
         @var kv = ng.kv( ng_args[0], '', true, true, false );
         @var id = ng.id( ng_args[0], true, false );
-        @var pkName = ng.pkName( ng_args[0] );
+        @var pkName = ng.pkName( ng_args[0], false );
         @var tagName = ng.tagName( ng_args[0] );
+        @var columns = @kv.multiTagColumns.get( tagName );
         MATCH (n:`${ tagName }`)
-        WHERE 1 == 1 ${ isNotEmpty( id ) ? ('\n                and id(n) == $' + pkName) : '' }
-        @if ( isNotEmpty( @kv.columns ) ) {
-            @for ( col in @kv.columns ) {
-                and n.`${ tagName }`.${ col } ${ 
-                    ng.ifStringLike(
-                        @kv.values.get( colLP.dataIndex ),
-                        @kv.types.get( colLP.dataIndex ),
-                        @kv.valueNames.get( colLP.dataIndex )
-                    )
-                }
+        WHERE 1 == 1 ${ isNotEmpty( id ) ? ('\n                and id(n)' + ng.ifStringLike( id )) : '' }
+        @if ( isNotEmpty( @kv.multiTagColumns ) ) {
+            @for ( tagEntry in @kv.multiTagColumns ) {
+                @for ( col in tagEntry.value ) {
+                    @var vIdx = @kv.columns.indexOf( col );
+                    and n.`${ tagEntry.key }`.`${ col }` ${ 
+                        ng.ifStringLike(
+                            @kv.values.get( vIdx ),
+                            @kv.types.get( vIdx ),
+                            @kv.multiTagFields.get( tagEntry.key ).get(colLP.index - 1) 
+                        )
+                    }
+                @}
             @}
         @}
         RETURN n
@@ -58,13 +65,16 @@
     <select id="selectIdBySelective">
         @var kv = ng.kv( ng_args[0], '', true, true, false );
         @var id = ng.id( ng_args[0], true, false );
-        @var pkName = ng.pkName( ng_args[0] );
+        @var pkName = ng.pkName( ng_args[0], false );
         @var tagName = ng.tagName( ng_args[0] );
+        @var columns = @kv.multiTagColumns.get( tagName );
         MATCH (n:`${ tagName }`)
         WHERE 1 == 1 ${ isNotEmpty( id ) ? ('\n                and id(n) == $' + pkName) : '' }
-        @if ( isNotEmpty( @kv.columns ) ) {
-            @for ( col in @kv.columns ) {
-                and n.`${ tagName }`.${ col } == $${ @kv.valueNames.get( colLP.index - 1 ) }
+        @if ( isNotEmpty( @kv.multiTagColumns ) ) {
+            @for ( tagEntry in @kv.multiTagColumns ) {
+                @for ( col in tagEntry.value ) {
+                    and n.`${ tagEntry.key }`.`${ col }` == $${ @kv.multiTagFields.get( tagEntry.key ).get(colLP.index - 1) }
+                @}
             @}
         @}
         RETURN id(n)
@@ -74,19 +84,23 @@
     <select id="selectIdBySelectiveStringLike">
         @var kv = ng.kv( ng_args[0], '', true, true, false );
         @var id = ng.id( ng_args[0], true, false );
-        @var pkName = ng.pkName( ng_args[0] );
+        @var pkName = ng.pkName( ng_args[0], false );
         @var tagName = ng.tagName( ng_args[0] );
+        @var columns = @kv.multiTagColumns.get( tagName );
         MATCH (n:`${ tagName }`)
         WHERE 1 == 1 ${ isNotEmpty( id ) ? ('\n                and id(n)' + ng.ifStringLike( id )) : '' }
-        @if ( isNotEmpty( @kv.columns ) ) {
-            @for ( col in @kv.columns ) {
-            and n.`${ tagName }`.${ col } ${ 
-                    ng.ifStringLike(
-                        @kv.values.get( colLP.dataIndex ),
-                        @kv.types.get( colLP.dataIndex ),
-                        @kv.valueNames.get( colLP.dataIndex )
-                    )
-                }
+        @if ( isNotEmpty( @kv.multiTagColumns ) ) {
+        @for ( tagEntry in @kv.multiTagColumns ) {
+            @for ( col in tagEntry.value ) {
+                @var vIdx = @kv.columns.indexOf( col );
+                    and n.`${ tagEntry.key }`.`${ col }` ${ 
+                        ng.ifStringLike(
+                            @kv.values.get( vIdx ),
+                            @kv.types.get( vIdx ),
+                            @kv.multiTagFields.get( tagEntry.key ).get(colLP.index - 1) 
+                        )
+                    }
+                @}
             @}
         @}
         RETURN id(n)

@@ -5,18 +5,18 @@ Copyright (c) 2022 All project authors and nebula-contrib. All rights reserved.
 This source code is licensed under Apache 2.0 License.
 -->
 
-# NGBATIS
+# NgBatis
 
 <p align="center">
   <br> English | <a href="README-CN.md">中文</a>
 </p>
 
-- [Ngbatis Docs](https://nebula-contrib.github.io/ngbatis/)
-- [Ngbatis 文档](https://graph-cn.github.io/ngbatis-docs/)
+- [NgBatis Docs](https://nebula-contrib.github.io/ngbatis/)
+- [NgBatis 文档](https://graph-cn.github.io/ngbatis-docs/)
 
-## What is NGBATIS
+## What is NgBatis
 
-**NGBATIS** is a database ORM framework base [NebulaGraph](https://github.com/vesoft-inc/nebula) + spring-boot, which takes advantage of the [mybatis’](https://github.com/mybatis/mybatis-3) fashion development, including some de-factor operations in single table and vertex-edge, like [mybatis-plus](https://github.com/baomidou/mybatis-plus).
+**NgBatis** is a database ORM framework base [NebulaGraph](https://github.com/vesoft-inc/nebula) + spring-boot, which takes advantage of the [mybatis’](https://github.com/mybatis/mybatis-3) fashion development, including some de-factor operations in single table and vertex-edge, like [mybatis-plus](https://github.com/baomidou/mybatis-plus).
 
 If you prefer JPA, [graph-ocean](https://github.com/nebula-contrib/graph-ocean) is a good choice.
 
@@ -34,6 +34,7 @@ See [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
 
   NgBatis | nebula-java | JDK | Springboot | Beetl
   ---|-------------|---|------------|---
+  1.2.2 | 3.6.0       | 8 | 2.7.0 | 3.15.10.RELEASE
   1.2.1-jdk17 | 3.6.0       | 17 | 3.0.7 | 3.15.10.RELEASE
   1.2.1 | 3.6.0       | 8 | 2.7.0 | 3.15.10.RELEASE
   1.2.0-jdk17 | 3.6.0       | 17 | 3.0.7 | 3.15.10.RELEASE

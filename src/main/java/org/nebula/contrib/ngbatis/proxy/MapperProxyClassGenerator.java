@@ -17,6 +17,8 @@ import org.nebula.contrib.ngbatis.utils.ReflectUtil;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 基于 ASM 对接口进行动态代理，并生成 Bean 代理的实现类
@@ -25,6 +27,8 @@ import org.objectweb.asm.Opcodes;
  * <br>Now is history!
  */
 public class MapperProxyClassGenerator implements Opcodes {
+  
+  private final Logger log = LoggerFactory.getLogger(MapperProxyClassGenerator.class);
 
   /**
    * 获取DAO接口对应的动态代理类名称
@@ -74,7 +78,9 @@ public class MapperProxyClassGenerator implements Opcodes {
     byte[] code = cw.toByteArray();
     cm.setClassByte(code);
 
-    writeFile(cm);
+    if (log.isDebugEnabled()) {
+      writeFile(cm);
+    }
 
     return code;
   }

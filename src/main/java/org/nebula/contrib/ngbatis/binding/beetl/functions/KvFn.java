@@ -104,6 +104,10 @@ public class KvFn extends AbstractFunction<Object, String, Boolean, Boolean, Boo
         List<String> currentTagColumns = kv.multiTagColumns
             .computeIfAbsent(tagName, (k) -> new ArrayList<>());
         currentTagColumns.add(name);
+
+        List<String> currentTagFields = kv.multiTagFields
+            .computeIfAbsent(tagName, (k) -> new ArrayList<>());
+        currentTagFields.add(field.getName());
         
         kv.columns.add(name);
         Object[] paras = {value};
@@ -139,7 +143,11 @@ public class KvFn extends AbstractFunction<Object, String, Boolean, Boolean, Boo
   }
 
   public static class KV {
+    // 以 tagName 为 key，列名列表为 value
+    // 使用 LinkedHashMap 保证顺序，使得推入字段的顺序与 columns、values、types 一致
     public final Map<String, List<String>> multiTagColumns = new LinkedHashMap<>();
+    // 以 tagName 为 key，属性名列表为 value
+    public final Map<String, List<String>> multiTagFields = new LinkedHashMap<>();
     public final List<String> columns = new ArrayList<>();
     public final List<String> valueNames = new ArrayList<>();
     public final List<Object> values = new ArrayList<>();
