@@ -13,7 +13,7 @@
     <name>ngbatis</name>
     <groupId>org.nebula-contrib</groupId>
     <artifactId>ngbatis</artifactId>
-    <version>1.2.0-jdk17</version>
+    <version>1.2.2-jdk17</version>
     
     <description>
         NgBatis is a database ORM framework base NebulaGraph + spring-boot,

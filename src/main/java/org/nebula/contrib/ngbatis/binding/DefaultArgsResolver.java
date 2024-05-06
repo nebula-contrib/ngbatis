@@ -4,6 +4,7 @@ package org.nebula.contrib.ngbatis.binding;
 //
 // This source code is licensed under Apache 2.0 License.
 
+import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getAllColumnFields;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.isCurrentTypeOrParentType;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.typeArg;
 
@@ -132,8 +133,8 @@ public class DefaultArgsResolver implements ArgsResolver {
         put(Object.class, (Setter<Object>) (obj) -> {
           Map<String, Object> pojoFields = new HashMap<>();
           Class<?> paramType = obj.getClass();
-          Field[] declaredFields = paramType.getDeclaredFields();
-          for (Field declaredField : declaredFields) {
+          Field[] allFields = getAllColumnFields(paramType);
+          for (Field declaredField : allFields) {
             Object nebulaValue = toNebulaValueType(
               ReflectUtil.getValue(obj, declaredField),
               declaredField

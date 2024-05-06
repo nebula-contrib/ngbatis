@@ -22,9 +22,37 @@ This source code is licensed under Apache 2.0 License.
   - [ ] Geography
   - [x] Duration
 
-# 1.2.0-jdk17-snapshot
+## Dependencies upgrade
 
-- [x] Springboot 3.x support.
+- [x] Springboot 3.x support. (lastest-jdk17)
+
+# 1.2.2
+
+## Bugfix
+
+- fix: complete the error code of ResultSet into QueryException.
+- fix: the issue of not being able to handle Set type.
+- fix: the issue of the ranking value of the edge object cannot be filled.
+- fix: when the field is aliased by `@Column`, the param name is incorrect. (multi tags support)
+  - selectBySelective
+  - selectIdBySelective
+  - selectBySelectiveStringLike
+  - selectIdBySelectiveStringLike
+- fix: unable to read the correct value of id, the value of the subclass' id is used now. (multi tag scene)
+- fix: do not generate asg debug when the log level is not debug, now.
+
+## Develop behavior change
+
+- No longer verifying the number of `@Id` in the entity, please keep the number to 1 on your own.
+  > 不再对实体中的`@Id`个数进行校验，请注意保持个数为1 （含父类）
+
+# 1.2.1
+
+## Bugfix
+
+- fix: set the specified space in the original method to the proxy method for paging. ([#282](https://github.com/nebula-contrib/ngbatis/pull/282))
+
+# 1.2.0
 
 ## Dependencies upgrade
 

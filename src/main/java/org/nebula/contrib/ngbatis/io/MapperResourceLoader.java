@@ -279,6 +279,11 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
     setParamAnnotations(parameterTypes, namespace, methodName, countMethodModel);
     countMethodModel.setParameterTypes(parameterTypes);
     countMethodModel.setId(countMethodName);
+    
+    // Fix: Set the specified space in the original method to the proxy method for paging,
+    countMethodModel.setSpaceFromParam(methodModel.isSpaceFromParam());
+    countMethodModel.setSpace(methodModel.getSpace());
+
     String cql = methodModel.getText();
 
     String with = cql.replaceAll("(RETURN)|(return)", "WITH");
@@ -310,10 +315,15 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
     MethodModel pageMethodModel = new MethodModel();
     Annotation[][] parameterAnnotations = setParamAnnotations(parameterTypes, namespace,
       methodName, pageMethodModel);
-    String pageParamName = getPageParamName(parameterAnnotations, pageParamIndex);
     pageMethodModel.setParameterTypes(parameterTypes);
     pageMethodModel.setId(pageMethodName);
+
+    // Fix: Set the specified space in the original method to the proxy method for paging,
+    pageMethodModel.setSpaceFromParam(methodModel.isSpaceFromParam());
+    pageMethodModel.setSpace(methodModel.getSpace());
+
     String cql = methodModel.getText();
+    String pageParamName = getPageParamName(parameterAnnotations, pageParamIndex);
     if (pageParamName != null) {
       String format = "%s\t\tSKIP $%s.startRow LIMIT $%s.pageSize";
       cql = String.format(format, cql, pageParamName, pageParamName);

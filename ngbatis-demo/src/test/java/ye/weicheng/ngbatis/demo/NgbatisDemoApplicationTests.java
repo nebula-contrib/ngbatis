@@ -241,6 +241,20 @@ class NgbatisDemoApplicationTests {
       Assert.isTrue(e instanceof QueryException && e.getMessage().contains("SpaceNotFound"));
     }
   }
+
+  @Test
+  public void dynamicSpaceWithPage() {
+    String spaceName = "test" + System.currentTimeMillis();
+    try {
+      Page<Person> page = new Page<>();
+      page.setPageSize(3);
+      page.setPageNo(1);
+      repository.dynamicSpaceWithPage(page, spaceName);
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      Assert.isTrue(e instanceof QueryException && e.getMessage().contains("SpaceNotFound"));
+    }
+  }
   
   @Test
   public void insertWithTimestamp() {
@@ -249,6 +263,12 @@ class NgbatisDemoApplicationTests {
     person.setName("赵小洋");
     person.setBirthday(new Date());
     repository.insertWithTimestamp(person);
+  }
+  
+  @Test
+  public void testResultContainingSet() {
+    NgSubgraph<String> rs = repository.resultContainingSet();
+    System.out.println(JSON.toJSONString(rs));
   }
 
 }
