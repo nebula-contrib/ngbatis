@@ -8,3 +8,9 @@ create tag index person_index_1 on person(age,birthday);
 
 CREATE tag `column_alias` (`first_name` string NULL  , `last_name` string NULL  );
 CREATE TAG  INDEX `i_column_alias_first_name` ON `column_alias`(`first_name`(50));
+CREATE tag `time_test` (`t_date` date NULL  , `t_datetime` datetime NULL  , `t_time` time NULL  , `t_timestamp` timestamp NULL  , `t_duration` duration NULL  ) ;
+CREATE tag `no_properties_vertex` ()  COMMENT = "无属性标签";
+
+create space if not exists  `cmqa` (vid_type = INT64);
+:sleep 20
+ CREATE tag `paragraph` (`name` string NULL  );
