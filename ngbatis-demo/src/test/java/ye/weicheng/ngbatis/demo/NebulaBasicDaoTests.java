@@ -21,6 +21,7 @@ import org.nebula.contrib.ngbatis.models.data.NgTriplet;
 import org.nebula.contrib.ngbatis.utils.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import ye.weicheng.ngbatis.demo.pojo.Employee;
 import ye.weicheng.ngbatis.demo.pojo.Like;
 import ye.weicheng.ngbatis.demo.pojo.LikeWithRank;
 import ye.weicheng.ngbatis.demo.pojo.Person;
@@ -161,6 +162,7 @@ public class NebulaBasicDaoTests {
     Person person = new Person();
     person.setAge(20);
     person.setName("王小冰");
+    person.setGender(null);
     repository.insertSelective(person);
   }
 
@@ -205,6 +207,54 @@ public class NebulaBasicDaoTests {
     people.add(person3);
 
     repository.insertBatch(people);
+  }
+
+  @Test
+  public void insertSelectiveBatch() {
+    Person person1 = new Person();
+    person1.setName("IB111");
+    person1.setGender("M");
+    person1.setAge(null);
+
+    Person person2 = new Person();
+    person2.setName("IB222");
+    person2.setAge(18);
+    person2.setBirthday(new Date());
+
+    Person person3 = new Person();
+    person3.setName("IB333");
+    person3.setGender("M");
+    person3.setBirthday(new Date());
+
+    List<Person> people = new ArrayList<>();
+    people.add(person1);
+    people.add(person2);
+    people.add(person3);
+    repository.insertSelectiveBatch(people);
+  }
+  @Test
+  public void insertSelectiveBatchMultiTag(){
+    Employee employee1 = new Employee();
+    employee1.setName("职员1");
+    employee1.setGender("F");
+    employee1.setPosition("后端");
+
+    Employee employee2 = new Employee();
+    employee2.setName("职员2");
+    employee2.setGender("M");
+    employee2.setPosition("前端");
+
+    Employee employee3 = new Employee();
+    employee3.setName("职员3");
+    employee3.setGender("F");
+    employee3.setPosition("测试");
+
+    List<Employee> employees = new ArrayList<>();
+    employees.add(employee1);
+    employees.add(employee2);
+    employees.add(employee3);
+    repository.insertSelectiveBatch(employees);
+
   }
   // endregion
 

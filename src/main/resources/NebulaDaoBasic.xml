@@ -194,6 +194,22 @@
             ${ id } : ( ${ ng.join( @kv.values ) } ) ${ rowLP.last ? '' : ', ' }
         @}
     </insert>
+
+    <insert id="insertSelectiveBatch">
+        @for ( row in ng_args[0] ) {
+            @var kv = ng.kv( row, '', true, true );
+            @var id = ng.id( row );
+            INSERT VERTEX IF NOT EXISTS
+            @for ( entry in @kv.multiTagColumns ) {
+                `${ entry.key }` (
+                    ${ ng.join( entry.value, ", ", "ng.schemaFmt" ) }
+                ) ${ entryLP.last ? '' : ','}
+            @}
+            VALUES
+            ${ id } : ( ${ ng.join( @kv.values ) } ) ;
+        @}
+    </insert>
+
     <!--endregion-->
     
     <!--region update zoom -->
