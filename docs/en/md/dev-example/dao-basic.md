@@ -29,9 +29,8 @@ public class PersonServiceImpl {
 
   @Autowired private PersonDao dao;
 
-  // Regardless of whether the attribute is empty or not, 
-  // if there is a corresponding ID value in the database, 
-  // other properties will be overwritten
+    //If there is already a corresponding ID value
+    //the insert operation will not be performed.
   public void insert( Person person ) {
     dao.insert( person );
   }
