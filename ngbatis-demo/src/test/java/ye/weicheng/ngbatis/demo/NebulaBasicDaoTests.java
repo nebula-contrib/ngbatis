@@ -230,10 +230,12 @@ public class NebulaBasicDaoTests {
     people.add(person1);
     people.add(person2);
     people.add(person3);
+
     repository.insertSelectiveBatch(people);
   }
+
   @Test
-  public void insertSelectiveBatchMultiTag(){
+  public void insertSelectiveBatchMultiTag() {
     Employee employee1 = new Employee();
     employee1.setName("职员1");
     employee1.setGender("F");
@@ -253,8 +255,8 @@ public class NebulaBasicDaoTests {
     employees.add(employee1);
     employees.add(employee2);
     employees.add(employee3);
-    repository.insertSelectiveBatch(employees);
 
+    repository.insertSelectiveBatch(employees);
   }
   // endregion
 
