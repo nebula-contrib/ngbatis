@@ -24,6 +24,7 @@ import org.nebula.contrib.ngbatis.proxy.RamClassLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -59,8 +60,17 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
   @Override
   public void postProcessBeanFactory(
       ConfigurableListableBeanFactory configurableListableBeanFactory) throws BeansException {
+    setBeans(configurableListableBeanFactory);
     NebulaPool nebulaPool = nebulaPool();
     mapperContext(nebulaPool);
+  }
+
+  private void setBeans(ConfigurableListableBeanFactory beanFactory) {
+    ObjectProvider<PasswordDecoder> passwordDecoders =
+      beanFactory.getBeanProvider(PasswordDecoder.class);
+
+    PasswordDecoder passwordDecoder = passwordDecoders.getIfAvailable();
+    nebulaJdbcProperties.setPasswordDecoder(passwordDecoder);
   }
 
   public MapperContext mapperContext(NebulaPool nebulaPool) {

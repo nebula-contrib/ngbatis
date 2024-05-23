@@ -8,6 +8,8 @@ import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import java.util.ArrayList;
 import java.util.List;
+import org.nebula.contrib.ngbatis.PasswordDecoder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -52,6 +54,9 @@ public class NebulaJdbcProperties {
    * 当前所有的数据库空间
    */
   private String space;
+
+  @Autowired(required = false)
+  private PasswordDecoder passwordDecoder;
 
   public NebulaJdbcProperties() {
   }
@@ -101,7 +106,7 @@ public class NebulaJdbcProperties {
   }
 
   public String getPassword() {
-    return password;
+    return passwordDecoder == null ? password : passwordDecoder.decode(password);
   }
 
   public NebulaJdbcProperties setPassword(String password) {
@@ -127,5 +132,13 @@ public class NebulaJdbcProperties {
     return this;
   }
 
+
+  public PasswordDecoder getPasswordDecoder() {
+    return passwordDecoder;
+  }
+
+  public void setPasswordDecoder(PasswordDecoder passwordDecoder) {
+    this.passwordDecoder = passwordDecoder;
+  }
 }
 

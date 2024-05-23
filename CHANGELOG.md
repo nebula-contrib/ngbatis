@@ -32,6 +32,9 @@ This source code is licensed under Apache 2.0 License.
 
 ## Feature
 
+- feat: support the use of ciphertext passwords in yml.
+- feat: expanding the `insertSelectiveBatch` interface in `NebulaDaoBasic`.
+
 # 1.2.2
 
 ## Bugfix
@@ -73,8 +76,8 @@ This source code is licensed under Apache 2.0 License.
 - feat: support `<nGQL>` include query pieces. ([#212](https://github.com/nebula-contrib/ngbatis/pull/212), via [dieyi](https://github.com/1244453393))
 - feat: extending `NgPath`, when 'with prop' is used in nGQL, edge attributes can be obtained from NgPath. ([#228](https://github.com/nebula-contrib/ngbatis/pull/228), via [dieyi](https://github.com/1244453393))
 - feat: expanding the `insertEdgeBatch` interface in `NebulaDaoBasic`. ([#244](https://github.com/nebula-contrib/ngbatis/pull/244), via [Sunhb](https://github.com/shbone))
-- feat: expanding the `deleteByIdBatch` interface in `NebulaDaoBasic`. ([#247](https://github.com/nebula-contrib/ngbatis/pull/244), via [Sunhb](https://github.com/shbone))
-- feat: expanding the `listEndNodes` interface in `NebulaDaoBasic`. ([#247](https://github.com/nebula-contrib/ngbatis/pull/272), via [knqiufan](https://github.com/knqiufan))
+- feat: expanding the `deleteByIdBatch` interface in `NebulaDaoBasic`. ([#247](https://github.com/nebula-contrib/ngbatis/pull/247), via [Sunhb](https://github.com/shbone))
+- feat: expanding the `listEndNodes` interface in `NebulaDaoBasic`. ([#272](https://github.com/nebula-contrib/ngbatis/pull/272), via [knqiufan](https://github.com/knqiufan))
 - feat: support specify space by param
 
 ## Bugfix
