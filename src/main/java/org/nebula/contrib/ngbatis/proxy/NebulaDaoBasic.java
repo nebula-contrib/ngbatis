@@ -224,7 +224,7 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    * 批量插入非空字段
    * @param ts 当前Tag下多个顶点
    */
-  default void insertSelectiveBatch(List<? extends T> ts){
+  default void insertSelectiveBatch(List<? extends T> ts) {
     MethodModel methodModel = getMethodModel();
     ClassModel classModel = getClassModel(this.getClass());
     MapperProxy.invoke(classModel,methodModel,ts);
