@@ -189,7 +189,6 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   default Integer insert(T record) {
     MethodModel methodModel = getMethodModel();
     methodModel.setReturnType(ResultSet.class);
-    methodModel.setResultType(ResultSet.class);
     ClassModel classModel = getClassModel(this.getClass());
     ResultSet resultSet = (ResultSet) MapperProxy.invoke(classModel, methodModel, record);
     return resultSet.isSucceeded() ? 1 : 0;
@@ -204,7 +203,6 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   default Integer insertSelective(T record) {
     MethodModel methodModel = getMethodModel();
     methodModel.setReturnType(ResultSet.class);
-    methodModel.setResultType(ResultSet.class);
     ClassModel classModel = getClassModel(this.getClass());
     ResultSet resultSet = (ResultSet) MapperProxy.invoke(classModel, methodModel, record);
     return resultSet.isSucceeded() ? 1 : 0;
@@ -226,7 +224,6 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     MethodModel methodModel = getMethodModel();
     Class<?> entityType = record.getClass();
     methodModel.setReturnType(entityType);
-    methodModel.setResultType(entityType);
     ClassModel classModel = getClassModel(this.getClass());
     MapperProxy.invoke(classModel, methodModel, record);
     return record;
@@ -242,7 +239,6 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     MethodModel methodModel = getMethodModel();
     Class<?> entityType = record.getClass();
     methodModel.setReturnType(entityType);
-    methodModel.setResultType(entityType);
     ClassModel classModel = getClassModel(this.getClass());
     MapperProxy.invoke(classModel, methodModel, record);
     return record;
@@ -268,7 +264,6 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     MethodModel methodModel = getMethodModel();
     Class<?> entityType = record.getClass();
     methodModel.setReturnType(entityType);
-    methodModel.setResultType(entityType);
     ClassModel classModel = getClassModel(this.getClass());
     MapperProxy.invoke(classModel, methodModel, record);
   }
@@ -294,7 +289,6 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   default Integer deleteWithEdgeById(I id) {
     MethodModel methodModel = getMethodModel();
     methodModel.setReturnType(ResultSet.class);
-    methodModel.setResultType(ResultSet.class);
     ClassModel classModel = getClassModel(this.getClass());
     ResultSet resultSet = (ResultSet) MapperProxy.invoke(classModel, methodModel, id);
     return resultSet.isSucceeded() ? 1 : 0;
@@ -309,7 +303,6 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   default Integer deleteById(I id) {
     MethodModel methodModel = getMethodModel();
     methodModel.setReturnType(ResultSet.class);
-    methodModel.setResultType(ResultSet.class);
     ClassModel classModel = getClassModel(this.getClass());
     ResultSet resultSet = (ResultSet) MapperProxy.invoke(classModel, methodModel, id);
     return resultSet.isSucceeded() ? 1 : 0;
@@ -325,7 +318,6 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   default Integer deleteByIdBatch(Collection<I> ids) {
     MethodModel methodModel = getMethodModel();
     methodModel.setReturnType(ResultSet.class);
-    methodModel.setResultType(ResultSet.class);
     ClassModel classModel = getClassModel(this.getClass());
     ResultSet resultSet = (ResultSet) MapperProxy.invoke(classModel, methodModel, ids);
     return resultSet.isSucceeded() ? 1 : 0;
