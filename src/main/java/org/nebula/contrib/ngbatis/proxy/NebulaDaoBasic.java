@@ -511,6 +511,24 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     return (List<NgPath<I>>) MapperProxy.invoke(classModel, methodModel, srcId, dstId);
   }
 
+  /**
+   * 查找指定起始点和目的点之间的最短路径
+   * @param srcId 起始点id
+   * @param dstId 目的点id
+   * @param edgeTypeList Edge type 列表
+   * @param direction REVERSELY表示反向，BIDIRECT表示双向
+   * @return 起始点和目的点之间的最短路径
+   */
+  default List<NgPath<I>> shortestOptionalPath(@Param("srcId") I srcId,@Param("dstId") I dstId,
+          @Param("edgeTypeList") List<String> edgeTypeList,
+          @Param("direction") String direction
+  ) {
+    MethodModel methodModel = getMethodModel();
+    methodModel.setReturnType(Collection.class);
+    methodModel.setResultType(NgPath.class);
+    ClassModel classModel = getClassModel(this.getClass());
+    return (List<NgPath<I>>) MapperProxy.invoke(classModel, methodModel, srcId, dstId,edgeTypeList,direction);
+  }
 
   // endregion
 
