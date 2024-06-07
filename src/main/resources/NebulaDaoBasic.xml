@@ -389,9 +389,10 @@
     <select id="shortestOptionalPath" resultType="org.nebula.contrib.ngbatis.models.data.NgPath">
         @var srcId = ng.valueFmt( srcId );
         @var dstId = ng.valueFmt( dstId );
-        @for ( e in edgeTypeList ) {
-        FIND SHORTEST PATH FROM ${ srcId } TO ${ dstId } OVER ${e} ${direction} YIELD path AS p;
-        @}
+
+        FIND SHORTEST PATH FROM ${ srcId } TO ${ dstId }
+        OVER ${ isNotEmpty(edgeTypeList) ? ng.join(edgeTypeList) : '*' } ${ isNotEmpty( direction ) ? direction : ''  }
+        YIELD path AS p;
     </select>
     <!--endregion-->
 
