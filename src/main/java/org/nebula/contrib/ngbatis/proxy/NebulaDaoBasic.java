@@ -541,4 +541,19 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
 
   // endregion
 
+
+  /**
+   * 列出所有图空间
+   * @return 所有图空间
+   */
+  default String showSpaces() {
+    MethodModel methodModel = getMethodModel();
+    methodModel.setReturnType(ResultSet.class);
+    methodModel.setResultType(ResultSet.class);
+    ClassModel classModel = getClassModel(this.getClass());
+    ResultSet resultSet = (ResultSet) MapperProxy.invoke(classModel, methodModel);
+    return resultSet.toString();
+  }
+
+
 }

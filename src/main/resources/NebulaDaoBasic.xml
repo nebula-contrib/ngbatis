@@ -396,4 +396,9 @@
     </select>
     <!--endregion-->
 
+    <select id="showSpaces">
+        SHOW SPACES;
+    </select>
+
+
 </mapper>
