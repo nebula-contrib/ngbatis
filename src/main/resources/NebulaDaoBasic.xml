@@ -317,7 +317,7 @@
 
 
     <delete id="deleteByIdBatch">
-	DELETE VERTEX  ${ ng.join( p0, ", ", "ng.valueFmt" ) }
+        DELETE VERTEX  ${ ng.join( p0, ", ", "ng.valueFmt" ) }
     </delete>
     <!--endregion-->
 
@@ -414,6 +414,15 @@
         @var srcId = ng.valueFmt( srcId );
         @var dstId = ng.valueFmt( dstId );
         FIND SHORTEST PATH FROM ${ srcId } TO ${ dstId } OVER * YIELD path AS p
+    </select>
+
+    <select id="shortestOptionalPath" resultType="org.nebula.contrib.ngbatis.models.data.NgPath">
+        @var srcId = ng.valueFmt( srcId );
+        @var dstId = ng.valueFmt( dstId );
+
+        FIND SHORTEST PATH FROM ${ srcId } TO ${ dstId }
+        OVER ${ isNotEmpty(edgeTypeList) ? ng.join(edgeTypeList) : '*' } ${ isNotEmpty( direction ) ? direction : ''  }
+        YIELD path AS p;
     </select>
     <!--endregion-->
 

@@ -570,6 +570,13 @@ public class NebulaBasicDaoTests {
     List<NgPath<String>> ngPaths = repository.shortestPath("吴小极", "刘小洲");
     System.out.println(JSON.toJSONString(ngPaths));
   }
+
+  @Test
+  public void shortestOptionalPath() {
+    List<NgPath<String>> ngPaths = repository.shortestOptionalPath("吴小极", "刘小洲",
+            Arrays.asList("like"),"BIDIRECT");
+    System.out.println(JSON.toJSONString(ngPaths));
+  }
   // endregion
 
   @Test
