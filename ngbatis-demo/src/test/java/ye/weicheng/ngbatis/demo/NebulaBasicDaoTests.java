@@ -541,7 +541,7 @@ public class NebulaBasicDaoTests {
 
   @Test
   public void showSpacesTest() {
-    String spaces = repository.showSpaces();
+    List<String> spaces = repository.showSpaces();
     System.out.println(spaces);
   }
 }

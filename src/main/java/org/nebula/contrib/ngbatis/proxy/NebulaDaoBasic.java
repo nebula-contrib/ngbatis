@@ -16,8 +16,10 @@ import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.vertexName;
 import com.sun.istack.NotNull;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.nebula.contrib.ngbatis.exception.QueryException;
@@ -546,13 +548,17 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    * 列出所有图空间
    * @return 所有图空间
    */
-  default String showSpaces() {
+  default List<String> showSpaces() {
     MethodModel methodModel = getMethodModel();
     methodModel.setReturnType(ResultSet.class);
     methodModel.setResultType(ResultSet.class);
     ClassModel classModel = getClassModel(this.getClass());
     ResultSet resultSet = (ResultSet) MapperProxy.invoke(classModel, methodModel);
-    return resultSet.toString();
+    List<String> spaceNames = new ArrayList();
+    for (int i = 0; i < resultSet.rowsSize(); i++) {
+      spaceNames.add(resultSet.rowValues(i).get("Name").toString());
+    }
+    return spaceNames;
   }
 
 
