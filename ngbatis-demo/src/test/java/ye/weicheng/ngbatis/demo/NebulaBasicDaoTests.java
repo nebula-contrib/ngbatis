@@ -590,4 +590,10 @@ public class NebulaBasicDaoTests {
     double randomAge = Math.random() * 140;
     return (int) randomAge;
   }
+
+  @Test
+  public void showSpacesTest() {
+    List<String> spaces = repository.showSpaces();
+    System.out.println(spaces);
+  }
 }
