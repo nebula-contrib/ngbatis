@@ -4,30 +4,19 @@
 
 package org.nebula.contrib.ngbatis.proxy;
 
-import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.edgeName;
-import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.entityType;
-import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.getClassModel;
-import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.getCqlTpl;
-import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.getMethodModel;
-import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.pkType;
-import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.proxy;
-import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.vertexName;
-
 import com.sun.istack.NotNull;
 import com.vesoft.nebula.client.graph.data.ResultSet;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import org.nebula.contrib.ngbatis.exception.QueryException;
 import org.nebula.contrib.ngbatis.models.ClassModel;
 import org.nebula.contrib.ngbatis.models.MethodModel;
 import org.nebula.contrib.ngbatis.models.data.NgPath;
 import org.nebula.contrib.ngbatis.utils.Page;
 import org.springframework.data.repository.query.Param;
+
+import java.io.Serializable;
+import java.util.*;
+
+import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.*;
 
 /**
  * 数据访问的基类，用于提供单表 CRUD 与基本的节点关系操作<br>
@@ -40,6 +29,7 @@ import org.springframework.data.repository.query.Param;
 public interface NebulaDaoBasic<T, I extends Serializable> {
 
   // region query zoom
+
   /**
    * <p>通过主键查询对应表的单条记录</p>
    *
@@ -182,6 +172,7 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   // endregion
 
   // region insert zoom
+
   /**
    * <p>插入一条记录，全属性插入</p>
    *
@@ -214,6 +205,7 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
 
   /**
    * 批量插入全字段
+   *
    * @param ts 当前Tag下的多节点
    */
   default void insertBatch(List<T> ts) {
@@ -224,12 +216,13 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
 
   /**
    * 批量插入非空字段
+   *
    * @param ts 当前Tag下多个顶点
    */
   default void insertSelectiveBatch(List<? extends T> ts) {
     MethodModel methodModel = getMethodModel();
     ClassModel classModel = getClassModel(this.getClass());
-    MapperProxy.invoke(classModel,methodModel,ts);
+    MapperProxy.invoke(classModel, methodModel, ts);
   }
   // endregion
 
@@ -262,6 +255,7 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
 
   /**
    * 批量更新行记录，selective
+   *
    * @param ts 当前Tag下的多节点
    */
   default void updateByIdBatchSelective(List<T> ts) {
@@ -287,6 +281,7 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   // endregion
 
   // region delete zoom
+
   /**
    * <p>数据操作，逻辑删除接口，前提当前类 有字段 is_del </p>
    *
@@ -328,6 +323,7 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   }
 
   // endregion
+
   /**
    * <p>通过 主键批量删除当前记录</p>
    *
@@ -344,6 +340,7 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   }
 
   // region graph special
+
   /**
    * 根据三元组值，插入关系
    *
@@ -375,9 +372,9 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    * 根据三元组值, 插入关系
    * <p>Selective: 仅处理非空字段</p>
    *
-   * @param src 开始节点值
-   * @param edge  关系值
-   * @param dst 结束节点值
+   * @param src  开始节点值
+   * @param edge 关系值
+   * @param dst  结束节点值
    */
   default void insertEdgeSelective(@NotNull Object src, @NotNull Object edge, @NotNull Object dst) {
     if (dst == null || src == null || edge == null) {
@@ -392,9 +389,9 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    * 根据三元组值, 插入关系
    * <p>Selective: 仅处理非空字段</p>
    *
-   * @param src 开始节点值
-   * @param edge  关系值
-   * @param dst 结束节点值
+   * @param src  开始节点值
+   * @param edge 关系值
+   * @param dst  结束节点值
    */
   default void upsertEdgeSelective(@NotNull Object src, @NotNull Object edge, @NotNull Object dst) {
     if (dst == null || src == null || edge == null) {
@@ -410,22 +407,22 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    *
    * @param startId  开始节点的 id
    * @param edgeType 关系类型
-   * @param endId  结束节点的 id
+   * @param endId    结束节点的 id
    * @return 数据库中，两个 id 的节点是否有关系
    */
   default Boolean existsEdge(I startId, Class<?> edgeType, I endId) {
     String cqlTpl = getCqlTpl();
     String edgeName = edgeName(edgeType);
     return (Boolean) proxy(this.getClass(), Boolean.class, cqlTpl,
-      new Class[]{Serializable.class, Class.class, Serializable.class}, startId, edgeName,
-      endId);
+            new Class[]{Serializable.class, Class.class, Serializable.class}, startId, edgeName,
+            endId);
   }
 
   /**
    * 通过结束节点id与关系类型获取所有开始节点，<br> 开始节点类型为当前接口实现类所管理的实体对应的类型
    *
    * @param edgeType 关系类型
-   * @param endId  结束节点的 id
+   * @param endId    结束节点的 id
    * @return 开始节点列表
    */
   default List<T> listStartNodes(Class<?> edgeType, I endId) {
@@ -438,7 +435,7 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    *
    * @param startType 开始节点的类型
    * @param edgeType  关系类型
-   * @param endId   结束节点的 id
+   * @param endId     结束节点的 id
    * @return 开始节点列表
    */
   default List<?> listStartNodes(Class<?> startType, Class<?> edgeType, I endId) {
@@ -448,14 +445,14 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     Class<? extends NebulaDaoBasic> daoType = this.getClass();
     Class<?> returnType = entityType(daoType);
     return (List<?>) proxy(daoType, returnType, cqlTpl,
-      new Class[]{Class.class, Class.class, Serializable.class}, startVertexName, edgeName,
-      endId);
+            new Class[]{Class.class, Class.class, Serializable.class}, startVertexName, edgeName,
+            endId);
   }
 
   /**
    * 通过开始节点id与关系类型获取所有结束节点，<br> 结束节点类型为当前接口实现类所管理的实体对应的类型
    *
-   * @param startId 开始节点id
+   * @param startId  开始节点id
    * @param edgeType 关系类型
    * @return 结束节点列表
    */
@@ -467,9 +464,9 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   /**
    * 指定结束节点类型 并通过开始节点id与关系类型获取所有结束节点
    *
-   * @param startId 开始节点的id
+   * @param startId  开始节点的id
    * @param edgeType 关系类型
-   * @param endType 结束节点的类型
+   * @param endType  结束节点的类型
    * @return 结束节点列表
    */
   default List<?> listEndNodes(I startId, Class<?> edgeType, Class<?> endType) {
@@ -487,7 +484,7 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    * 通过结束节点id与关系类型获取第一个开始节点，<br> 开始节点类型为当前接口实现类所管理的实体对应的类型 （对应类型）
    *
    * @param edgeType 关系类型
-   * @param endId  结束节点的 id
+   * @param endId    结束节点的 id
    * @return 开始节点
    */
   default T startNode(Class<?> edgeType, I endId) {
@@ -500,8 +497,8 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    *
    * @param startType 开始节点的类型
    * @param edgeType  关系类型
-   * @param endId   结束节点的 id
-   * @param <E>     开始节点的类型
+   * @param endId     结束节点的 id
+   * @param <E>       开始节点的类型
    * @return 开始节点
    */
   default <E> E startNode(Class<E> startType, Class<?> edgeType, I endId) {
@@ -511,17 +508,18 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     Class<? extends NebulaDaoBasic> daoType = this.getClass();
     Class<?> returnType = entityType(daoType);
     return (E) proxy(daoType, returnType, cqlTpl,
-      new Class[]{Class.class, Class.class, Serializable.class}, startVertexName, edgeName,
-      endId);
+            new Class[]{Class.class, Class.class, Serializable.class}, startVertexName, edgeName,
+            endId);
   }
 
   /**
    * Find the shortest path by srcId and dstId.
+   *
    * @param srcId the start node's id
    * @param dstId the end node's id
    * @return Shortest path list. entities containing vertext in path.
-   *         If you want to obtain attributes within an entity,
-   *         you need to use “with prop” in the nGQL.
+   * If you want to obtain attributes within an entity,
+   * you need to use “with prop” in the nGQL.
    */
   default List<NgPath<I>> shortestPath(@Param("srcId") I srcId, @Param("dstId") I dstId) {
     MethodModel methodModel = getMethodModel();
@@ -533,22 +531,23 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
 
   /**
    * 查找指定起始点和目的点之间的最短路径
-   * @param srcId 起始点id
-   * @param dstId 目的点id
+   *
+   * @param srcId        起始点id
+   * @param dstId        目的点id
    * @param edgeTypeList Edge type 列表
-   * @param direction REVERSELY表示反向，BIDIRECT表示双向
+   * @param direction    REVERSELY表示反向，BIDIRECT表示双向
    * @return 起始点和目的点之间的最短路径
    */
-  default List<NgPath<I>> shortestOptionalPath(@Param("srcId") I srcId,@Param("dstId") I dstId,
-          @Param("edgeTypeList") List<String> edgeTypeList,
-          @Param("direction") String direction
+  default List<NgPath<I>> shortestOptionalPath(@Param("srcId") I srcId, @Param("dstId") I dstId,
+                                               @Param("edgeTypeList") List<String> edgeTypeList,
+                                               @Param("direction") String direction
   ) {
     MethodModel methodModel = getMethodModel();
     methodModel.setReturnType(Collection.class);
     methodModel.setResultType(NgPath.class);
     ClassModel classModel = getClassModel(this.getClass());
     return (List<NgPath<I>>) MapperProxy.invoke(classModel, methodModel,
-            srcId, dstId,edgeTypeList,direction);
+            srcId, dstId, edgeTypeList, direction);
   }
 
   // endregion
@@ -556,6 +555,7 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
 
   /**
    * 列出所有图空间
+   *
    * @return 所有图空间
    */
   default List<String> showSpaces() {
