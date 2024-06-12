@@ -7,6 +7,7 @@ package org.nebula.contrib.ngbatis.proxy;
 import com.sun.istack.NotNull;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import org.nebula.contrib.ngbatis.exception.QueryException;
+import org.nebula.contrib.ngbatis.handler.CollectionStringResultHandler;
 import org.nebula.contrib.ngbatis.models.ClassModel;
 import org.nebula.contrib.ngbatis.models.MethodModel;
 import org.nebula.contrib.ngbatis.models.data.NgPath;
@@ -560,15 +561,10 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    */
   default List<String> showSpaces() {
     MethodModel methodModel = getMethodModel();
-    methodModel.setReturnType(ResultSet.class);
-    methodModel.setResultType(ResultSet.class);
+    methodModel.setReturnType(CollectionStringResultHandler.class);
+    methodModel.setResultType(String.class);
     ClassModel classModel = getClassModel(this.getClass());
-    ResultSet resultSet = (ResultSet) MapperProxy.invoke(classModel, methodModel);
-    List<String> spaceNames = new ArrayList();
-    for (int i = 0; i < resultSet.rowsSize(); i++) {
-      spaceNames.add(resultSet.rowValues(i).get("Name").toString());
-    }
-    return spaceNames;
+    return (List<String>) MapperProxy.invoke(classModel, methodModel);
   }
 
 
