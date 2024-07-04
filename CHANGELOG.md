@@ -30,12 +30,15 @@ This source code is licensed under Apache 2.0 License.
 
 ## Bugfix
 
-- fix: when `use-session-pool` and spaceFromParam is true, skip the space addition
+- fix: when `use-session-pool` and spaceFromParam is true, skip the space addition.
+- fix: when timezone is not default, the time is incorrect.
 
 ## Feature
 
 - feat: support the use of ciphertext passwords in yml.
-- feat: expanding the `insertSelectiveBatch` interface in `NebulaDaoBasic`.
+- feat: expanding the `insertSelectiveBatch` interface in `NebulaDaoBasic`.([#299](https://github.com/nebula-contrib/ngbatis/pull/299), via [Ozjq](https://github.com/Ozjq))
+- feat: expanding the `shortestOptionalPath` interface in `NebulaDaoBasic`.([#303](https://github.com/nebula-contrib/ngbatis/pull/303), via [xYLiu](https://github.com/n3A87))
+- feat: expanding the `showSpaces` interface in `NebulaDaoBasic`.([#304](https://github.com/nebula-contrib/ngbatis/pull/304), via [xYLiu](https://github.com/n3A87))
 
 # 1.2.2
 

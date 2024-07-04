@@ -11,6 +11,7 @@ import static org.nebula.contrib.ngbatis.utils.ReflectUtil.schemaByEntityType;
 
 import com.vesoft.nebula.DateTime;
 import com.vesoft.nebula.ErrorCode;
+import com.vesoft.nebula.Time;
 import com.vesoft.nebula.client.graph.data.DateTimeWrapper;
 import com.vesoft.nebula.client.graph.data.DateWrapper;
 import com.vesoft.nebula.client.graph.data.DurationWrapper;
@@ -138,7 +139,8 @@ public class ResultSetUtil {
   }
 
   private static Object transformTime(TimeWrapper time) {
-    return new java.sql.Time(time.getHour(), time.getMinute(), time.getSecond());
+    Time localTime = time.getLocalTime();
+    return new java.sql.Time(localTime.getHour(), localTime.getMinute(), localTime.getSec());
   }
 
   private static Object transformDuration(DurationWrapper du) {
