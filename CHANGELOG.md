@@ -30,6 +30,8 @@ This source code is licensed under Apache 2.0 License.
 
 ## Bugfix
 
+- fix: when `use-session-pool` and spaceFromParam is true, skip the space addition
+
 ## Feature
 
 - feat: support the use of ciphertext passwords in yml.

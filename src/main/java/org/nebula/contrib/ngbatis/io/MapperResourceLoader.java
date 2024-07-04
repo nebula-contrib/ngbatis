@@ -175,7 +175,9 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
           cm.getNgqls().put(ngqlModel.getId(),ngqlModel);
         } else {
           MethodModel methodModel = parseMethodModel(methodNode);
-          addSpaceToSessionPool(methodModel.getSpace());
+          if (!methodModel.isSpaceFromParam()) {
+            addSpaceToSessionPool(methodModel.getSpace());
+          }
           Method method = getNameUniqueMethod(namespace, methodModel.getId());
           methodModel.setMethod(method);
           Assert.notNull(method,
