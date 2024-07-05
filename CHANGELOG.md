@@ -28,6 +28,12 @@ This source code is licensed under Apache 2.0 License.
 
 # NEXT
 
+## Dependencies upgrade
+
+- nebula-java: 3.6.0 -> 3.8.3
+- org.hibernate:hibernate-core was excluded.
+> If you need to use hibernate-core, please add the dependency by yourself.
+
 ## Bugfix
 
 - fix: when `use-session-pool` and spaceFromParam is true, skip the space addition.

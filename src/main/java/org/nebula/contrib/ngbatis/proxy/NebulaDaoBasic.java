@@ -13,7 +13,7 @@ import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.pkType;
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.proxy;
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.vertexName;
 
-import com.sun.istack.NotNull;
+import com.sun.istack.internal.NotNull;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import java.io.Serializable;
 import java.util.ArrayList;
