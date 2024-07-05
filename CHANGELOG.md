@@ -45,6 +45,30 @@ This source code is licensed under Apache 2.0 License.
 - feat: expanding the `insertSelectiveBatch` interface in `NebulaDaoBasic`.([#299](https://github.com/nebula-contrib/ngbatis/pull/299), via [Ozjq](https://github.com/Ozjq))
 - feat: expanding the `shortestOptionalPath` interface in `NebulaDaoBasic`.([#303](https://github.com/nebula-contrib/ngbatis/pull/303), via [xYLiu](https://github.com/n3A87))
 - feat: expanding the `showSpaces` interface in `NebulaDaoBasic`.([#304](https://github.com/nebula-contrib/ngbatis/pull/304), via [xYLiu](https://github.com/n3A87))
+- feat: support ssl and http2 config in yml.
+  > http2 属于企业版的数据库才支持，但我没有测试环境，所以不确定是否可用。
+  > http2 is supported by the enterprise version of the database, but I don't have a test environment, so I'm not sure if it works.
+
+  - example:
+
+    ```yaml
+    nebula:
+      pool-config:
+        enable-ssl: true
+        ssl-param:
+          sign-mode: SELF_SIGNED
+          crt-file-path: /path/to/client.crt
+          key-file-path: /path/to/client.key
+          password: password
+        # ssl-param:
+          # sign-mode: CA_SIGNED
+          # ca-crt-file-path: /path/to/ca-client.crt
+          # crt-file-path: /path/to/client.crt
+          # key-file-path: /path/to/client.key
+        use-http2: false
+        custom-headers:
+          Route-Tag: abc
+    ```
 
 # 1.2.2
 

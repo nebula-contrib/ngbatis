@@ -4,10 +4,18 @@ package org.nebula.contrib.ngbatis;
 //
 // This source code is licensed under Apache 2.0 License.
 
+import static org.nebula.contrib.ngbatis.utils.ConfigUtil.getConfig;
+
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
+import com.vesoft.nebula.client.graph.data.CASignedSSLParam;
+import com.vesoft.nebula.client.graph.data.SSLParam;
+import com.vesoft.nebula.client.graph.data.SSLParam.SignMode;
+import java.util.Map;
 import org.nebula.contrib.ngbatis.config.NebulaJdbcProperties;
 import org.nebula.contrib.ngbatis.config.NgbatisConfig;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
+import org.nebula.contrib.ngbatis.models.ext.SettableCASignedSSLParam;
+import org.nebula.contrib.ngbatis.models.ext.SettableSelfSignedSSLParam;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -86,6 +94,7 @@ public class NgbatisContextInitializer implements ApplicationContextInitializer 
     return property;
   }
 
+  @SuppressWarnings("unchecked")
   private NebulaPoolConfig getNebulaPoolConfig(ConfigurableEnvironment environment) {
     NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig()
         .setMinConnSize(
@@ -96,11 +105,50 @@ public class NgbatisContextInitializer implements ApplicationContextInitializer 
         .setIdleTime(environment.getProperty("nebula.pool-config.idle-time", Integer.class, 0))
         .setIntervalIdle(
         environment.getProperty("nebula.pool-config.interval-idle", Integer.class, -1))
+        .setUseHttp2(environment.getProperty("nebula.pool-config.use-http2", Boolean.class, false))
+        .setCustomHeaders(
+          getConfig(environment, "nebula.pool-config.custom-headers", Map.class)
+        )
         .setWaitTime(environment.getProperty("nebula.pool-config.wait-time", Integer.class, 0));
-    // TODO enable ssl
+    confSsl(environment, nebulaPoolConfig);
     return nebulaPoolConfig;
   }
 
+  private void confSsl(
+      ConfigurableEnvironment environment,
+      NebulaPoolConfig nebulaPoolConfig
+  ) {
+    boolean enableSsl = environment.getProperty("nebula.pool-config.enable-ssl", Boolean.class, false);
+    nebulaPoolConfig.setEnableSsl(enableSsl);
+    if (enableSsl) {
+      SignMode signMode = environment.getProperty(
+        "nebula.pool-config.ssl-param.sign-mode",
+        SignMode.class,
+        SignMode.SELF_SIGNED
+      );
+      
+      if (signMode == SignMode.NONE) {
+        return;
+      }
+
+      Class<? extends SSLParam> sslParamClass = signMode == SignMode.SELF_SIGNED
+        ? SettableSelfSignedSSLParam.class
+        : SettableCASignedSSLParam.class;
+      
+      SSLParam sslParam = getConfig(
+        environment, 
+        "nebula.pool-config.ssl-param",
+        sslParamClass
+      );
+      
+      if (sslParam == null) {
+        nebulaPoolConfig.setSslParam(new CASignedSSLParam());
+        return;
+      }
+      nebulaPoolConfig.setSslParam(sslParam);
+    }
+  }
+  
   /**
    * 获取 ngbatis 自定义配置
    */
