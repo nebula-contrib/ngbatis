@@ -14,7 +14,7 @@ import java.util.Map;
 import org.nebula.contrib.ngbatis.config.NebulaJdbcProperties;
 import org.nebula.contrib.ngbatis.config.NgbatisConfig;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
-import org.nebula.contrib.ngbatis.models.ext.SettableCASignedSSLParam;
+import org.nebula.contrib.ngbatis.models.ext.SettableCaSignedSslParam;
 import org.nebula.contrib.ngbatis.models.ext.SettableSelfSignedSSLParam;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -133,7 +133,7 @@ public class NgbatisContextInitializer implements ApplicationContextInitializer 
 
       Class<? extends SSLParam> sslParamClass = signMode == SignMode.SELF_SIGNED
         ? SettableSelfSignedSSLParam.class
-        : SettableCASignedSSLParam.class;
+        : SettableCaSignedSslParam.class;
       
       SSLParam sslParam = getConfig(
         environment, 

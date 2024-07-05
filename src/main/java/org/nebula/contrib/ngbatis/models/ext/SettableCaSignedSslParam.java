@@ -15,7 +15,7 @@ import com.vesoft.nebula.client.graph.data.CASignedSSLParam;
  * @since 2024-07-05 4:27
  * <br>Now is history!
  */
-public class SettableCASignedSSLParam extends CASignedSSLParam {
+public class SettableCaSignedSslParam extends CASignedSSLParam {
 
   public void setCaCrtFilePath(String caCrtFilePath) 
       throws NoSuchFieldException, IllegalAccessException {

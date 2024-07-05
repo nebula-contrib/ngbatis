@@ -22,17 +22,17 @@ public class SettableSelfSignedSSLParam extends SelfSignedSSLParam {
   }
   
   public void setPassword(String password)
-    throws NoSuchFieldException, IllegalAccessException {
+      throws NoSuchFieldException, IllegalAccessException {
     setValue(this, "password", password);
   }
   
   public void setCrtFilePath(String crtFilePath)
-    throws NoSuchFieldException, IllegalAccessException {
+      throws NoSuchFieldException, IllegalAccessException {
     setValue(this, "crtFilePath", crtFilePath);
   }
   
   public void setKeyFilePath(String keyFilePath)
-    throws NoSuchFieldException, IllegalAccessException {
+      throws NoSuchFieldException, IllegalAccessException {
     setValue(this, "keyFilePath", keyFilePath);
   }
   
