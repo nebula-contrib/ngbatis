@@ -110,7 +110,6 @@ public class MapperProxy {
    * @return 结果值
    */
   public static Object invoke(ClassModel classModel, MethodModel methodModel, Object... args) {
-    Method method = methodModel.getMethod();
     ResultSet query = null;
     // 参数格式转换
     final long step0 = System.currentTimeMillis();
