@@ -6,6 +6,7 @@ package org.nebula.contrib.ngbatis.utils;
 
 import static org.springframework.util.ObjectUtils.nullSafeEquals;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -413,25 +414,41 @@ public abstract class ReflectUtil {
    * @return 主键属性
    */
   public static Field getPkField(Field[] fields, Class<?> type, boolean canNotNull) {
-    Field pkField = null;
-    Field typePkField = null;
+    return getAnnoField(fields, type, canNotNull, Id.class);
+  }
+  
+  public static Field getAnnoField(Class<?> type, Class<? extends Annotation> anno) {
+    Field[] allColumnFields = getAllColumnFields(type);
+    return getAnnoField(allColumnFields, type, false, anno);
+  }
+
+  public static Field getAnnoField(
+      Field[] fields, Class<?> type, boolean canNotNull, 
+      Class<? extends Annotation> anno) {
+    Field markedField = null;
+    Field typeMarkedField = null;
     for (Field field : fields) {
-      if (field.isAnnotationPresent(Id.class)) {
-        pkField = field;
+      if (field.isAnnotationPresent(anno)) {
+        markedField = field;
         if (field.getDeclaringClass().equals(type)) {
-          typePkField = field;
+          typeMarkedField = field;
         }
       }
     }
-    // 多标签时，以运行时类中的 @Id 注解为准
-    if (typePkField != null) {
-      pkField = typePkField;
+    // 多标签时，以运行时类中的注解为准，如 @Id
+    if (typeMarkedField != null) {
+      markedField = typeMarkedField;
     }
-    if (canNotNull && pkField == null) {
+    if (canNotNull && markedField == null) {
       throw new ParseException(
-        String.format("%s 必须有一个属性用 @Id 注解。（javax.persistence.Id）", type));
+        String.format(
+          "%s 必须有一个属性用 @%s 注解。（%s）", 
+          type, 
+          anno.getSimpleName(),
+          anno.getName()
+        ));
     }
-    return pkField;
+    return markedField;
   }
   
   public static Class<?> typeArg(Object o, Class<?> parent, int i) {

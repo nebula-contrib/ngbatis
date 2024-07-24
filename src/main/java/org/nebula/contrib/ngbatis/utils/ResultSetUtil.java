@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.nebula.contrib.ngbatis.annotations.DstId;
+import org.nebula.contrib.ngbatis.annotations.SrcId;
 import org.nebula.contrib.ngbatis.exception.ResultHandleException;
 import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.nebula.contrib.ngbatis.proxy.MapperProxy;
@@ -307,7 +309,7 @@ public class ResultSetUtil {
       for (Map.Entry<String, ValueWrapper> entry : properties.entrySet()) {
         ReflectUtil.setValue(t, entry.getKey(), ResultSetUtil.getValue(entry.getValue()));
       }
-      setRanking(t, resultType, r);
+      setEdgeExtraAttrs(t, resultType, r);
     } catch (UnsupportedEncodingException | InstantiationException
       | NoSuchFieldException | IllegalAccessException e) {
       e.printStackTrace();
@@ -366,6 +368,7 @@ public class ResultSetUtil {
    * @throws IllegalAccessException 当 ranking 值的类型，与
    *     e 中的 ranking 值的类型不匹配时报错，当属性被 final 修饰时报错
    */
+  @Deprecated
   public static void setRanking(Object obj, Class<?> resultType, Relationship e)
       throws IllegalAccessException {
     Field pkField = getPkField(resultType, false);
@@ -375,6 +378,31 @@ public class ResultSetUtil {
     }
     if (resultType.getSuperclass() != null) {
       setRanking(obj, resultType.getSuperclass(), e);
+    }
+  }
+  
+  public static void setEdgeExtraAttrs(Object t, Class<?> resultType, Relationship e)
+      throws IllegalAccessException {
+    Field pkField = getPkField(resultType, false);
+    if (pkField != null) {
+      long ranking = e.ranking();
+      ReflectUtil.setValue(t, pkField, ranking);
+    }
+    
+    Field srcIdField = ReflectUtil.getAnnoField(resultType, SrcId.class);
+    if (srcIdField != null) {
+      Object srcId = ResultSetUtil.getValue(e.srcId());
+      ReflectUtil.setValue(t, srcIdField, srcId);
+    }
+    
+    Field dstIdField = ReflectUtil.getAnnoField(resultType, DstId.class);
+    if (dstIdField != null) {
+      Object dstId = ResultSetUtil.getValue(e.dstId());
+      ReflectUtil.setValue(t, dstIdField, dstId);
+    }
+
+    if (resultType.getSuperclass() != null) {
+      setEdgeExtraAttrs(t, resultType.getSuperclass(), e);
     }
   }
 

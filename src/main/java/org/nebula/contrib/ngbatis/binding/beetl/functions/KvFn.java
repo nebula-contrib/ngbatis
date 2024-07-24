@@ -15,6 +15,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.nebula.contrib.ngbatis.annotations.DstId;
+import org.nebula.contrib.ngbatis.annotations.SrcId;
 import org.nebula.contrib.ngbatis.utils.ReflectUtil;
 
 /**
@@ -49,6 +51,11 @@ public class KvFn extends AbstractFunction<Object, String, Boolean, Boolean, Boo
 
     for (Field field : fields) {
       if (pkField != null && pkField.equals(field)) {
+        continue;
+      }
+      
+      boolean isVidField = field.isAnnotationPresent(SrcId.class) || field.isAnnotationPresent(DstId.class);
+      if (excludePk && isVidField) {
         continue;
       }
       fieldList.add(field);
