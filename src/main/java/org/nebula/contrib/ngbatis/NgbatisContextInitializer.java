@@ -15,7 +15,7 @@ import org.nebula.contrib.ngbatis.config.NebulaJdbcProperties;
 import org.nebula.contrib.ngbatis.config.NgbatisConfig;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
 import org.nebula.contrib.ngbatis.models.ext.SettableCaSignedSslParam;
-import org.nebula.contrib.ngbatis.models.ext.SettableSelfSignedSSLParam;
+import org.nebula.contrib.ngbatis.models.ext.SettableSelfSignedSslParam;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -118,7 +118,10 @@ public class NgbatisContextInitializer implements ApplicationContextInitializer 
       ConfigurableEnvironment environment,
       NebulaPoolConfig nebulaPoolConfig
   ) {
-    boolean enableSsl = environment.getProperty("nebula.pool-config.enable-ssl", Boolean.class, false);
+    boolean enableSsl = environment.getProperty(
+      "nebula.pool-config.enable-ssl", Boolean.class, false
+    );
+    
     nebulaPoolConfig.setEnableSsl(enableSsl);
     if (enableSsl) {
       SignMode signMode = environment.getProperty(
@@ -132,7 +135,7 @@ public class NgbatisContextInitializer implements ApplicationContextInitializer 
       }
 
       Class<? extends SSLParam> sslParamClass = signMode == SignMode.SELF_SIGNED
-        ? SettableSelfSignedSSLParam.class
+        ? SettableSelfSignedSslParam.class
         : SettableCaSignedSslParam.class;
       
       SSLParam sslParam = getConfig(
