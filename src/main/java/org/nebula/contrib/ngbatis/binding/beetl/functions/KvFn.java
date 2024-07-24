@@ -54,7 +54,9 @@ public class KvFn extends AbstractFunction<Object, String, Boolean, Boolean, Boo
         continue;
       }
       
-      boolean isVidField = field.isAnnotationPresent(SrcId.class) || field.isAnnotationPresent(DstId.class);
+      boolean isVidField = 
+        field.isAnnotationPresent(SrcId.class) || field.isAnnotationPresent(DstId.class);
+
       if (excludePk && isVidField) {
         continue;
       }

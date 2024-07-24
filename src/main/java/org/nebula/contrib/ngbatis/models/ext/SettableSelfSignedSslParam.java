@@ -15,9 +15,9 @@ import com.vesoft.nebula.client.graph.data.SelfSignedSSLParam;
  * @since 2024-07-05 4:35
  * <br>Now is history!
  */
-public class SettableSelfSignedSSLParam extends SelfSignedSSLParam {
+public class SettableSelfSignedSslParam extends SelfSignedSSLParam {
 
-  public SettableSelfSignedSSLParam() {
+  public SettableSelfSignedSslParam() {
     super(null, null, null);
   }
   
