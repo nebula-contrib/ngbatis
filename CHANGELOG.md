@@ -28,6 +28,8 @@ This source code is licensed under Apache 2.0 License.
 
 # NEXT
 
+# 1.3.0
+
 ## Dependencies upgrade
 
 - nebula-java: 3.6.0 -> 3.8.3
