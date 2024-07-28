@@ -11,6 +11,7 @@ import static org.nebula.contrib.ngbatis.models.ClassModel.PROXY_SUFFIX;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.NEED_SEALING_TYPES;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getNameUniqueMethod;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -79,11 +80,14 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
   @TimeLog(name = "xml-load", explain = "mappers xml load completed : {} ms")
   public Map<String, ClassModel> load() {
     Map<String, ClassModel> resultClassModel = new HashMap<>();
+    String mapperLocations = parseConfig.getMapperLocations();
     try {
-      Resource[] resources = getResources(parseConfig.getMapperLocations());
+      Resource[] resources = getResources(mapperLocations);
       for (Resource resource : resources) {
         resultClassModel.putAll(parseClassModel(resource));
       }
+    } catch (FileNotFoundException ffe) {
+      log.warn("No mapper files were found in path pattern '{}', please add", mapperLocations);
     } catch (IOException | NoSuchMethodException e) {
       throw new ResourceLoadException(e);
     }
