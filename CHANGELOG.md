@@ -40,6 +40,7 @@ This source code is licensed under Apache 2.0 License.
 
 - fix: when `use-session-pool` and spaceFromParam is true, skip the space addition.
 - fix: when timezone is not default, the time is incorrect.
+- fix: allow normal startup without any mapper files.
 
 ## Feature
 
