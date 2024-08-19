@@ -79,24 +79,26 @@ public class ResultSetUtil {
    * @param <T> 目标结果类型
    * @return
    */
-  public static <T> T getValue(ValueWrapper value) {
+  public static <T> T getValue(ValueWrapper value,Class<T> resultType) {
     try {
       Object o = value.isLong() ? value.asLong()
-          : value.isBoolean() ? value.asBoolean()
-          : value.isDouble() ? value.asDouble()
-            : value.isString() ? value.asString()
+              : value.isBoolean() ? value.asBoolean()
+              : value.isDouble() ? value.asDouble()
+              : value.isString() ? value.asString()
               : value.isTime() ? transformTime(value.asTime())
-                : value.isDate() ? transformDate(value.asDate())
-                  : value.isDateTime() ? transformDateTime(value.asDateTime())
-                    : value.isVertex() ? transformNode(value.asNode())
-                      : value.isEdge() ? transformRelationship(value)
-                        : value.isPath() ? value.asPath()
-                          : value.isList() ? transformList(value.asList())
-                            : value.isSet() ? transformSet(value.asSet())
-                              : value.isMap() ? transformMap(value.asMap())
-                                : value.isDuration() ? transformDuration(value.asDuration())
-                                  : null;
-
+              : value.isDate() ? transformDate(value.asDate())
+              : value.isDateTime() ? transformDateTime(value.asDateTime())
+              : value.isVertex() ? transformNode(value.asNode(),resultType)
+              : value.isEdge() ? transformRelationship(value)
+              : value.isPath() ? value.asPath()
+              : value.isList() ? transformList(value.asList())
+              : value.isSet() ? transformSet(value.asSet())
+              : value.isMap() ? transformMap(value.asMap())
+              : value.isDuration() ? transformDuration(value.asDuration())
+              : null;
+      if (o instanceof Number) {
+        o = castNumber((Number) o, resultType);
+      }
       return (T) o;
     } catch (UnsupportedEncodingException e) {
       throw new RuntimeException(e);
@@ -106,15 +108,11 @@ public class ResultSetUtil {
   /**
    * 根据 resultType 从 nebula 的数据类型中获取 java 类型数据
    * @param valueWrapper nebula 的数据类型
-   * @param resultType 接口返回值类型（类型为集合时，为集合泛型）
    * @param <T> 调用方用来接收结果的类型，即 resultType
    * @return java类型结果
    */
-  public static <T> T getValue(ValueWrapper valueWrapper, Class<T> resultType) {
-    T value = getValue(valueWrapper);
-    if (value instanceof Number) {
-      value = (T) castNumber((Number) value, resultType);
-    }
+  public static <T> T getValue(ValueWrapper valueWrapper) {
+    T value = getValue(valueWrapper,null);
     return value;
   }
 
@@ -149,16 +147,16 @@ public class ResultSetUtil {
     return java.time.Duration.ofNanos(du.getSeconds() * 1000000000);
   }
 
-  private static Object transformNode(Node node) {
+  private static Object transformNode(Node node,Class<?> resultType) {
     MapperContext mapperContext = MapperProxy.ENV.getMapperContext();
     Map<String, Class<?>> tagTypeMapping = mapperContext.getTagTypeMapping();
-    Class<?> nodeType = null;
+    Class<?> nodeType = resultType;
     List<String> tagNames = node.tagNames();
 
     for (String tagName : tagNames) {
       Class<?> tagType = tagTypeMapping.get(tagName);
       boolean tagTypeIsSuperClass = isCurrentTypeOrParentType(nodeType, tagType);
-      if (!tagTypeIsSuperClass) {
+      if (!tagTypeIsSuperClass && nodeType.isAssignableFrom(tagType)) {
         nodeType = tagType;
       }
     }
