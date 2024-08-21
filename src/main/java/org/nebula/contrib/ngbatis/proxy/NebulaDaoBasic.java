@@ -46,6 +46,9 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    */
   default T selectById(@Param("id") I id) {
     MethodModel methodModel = getMethodModel();
+    Class<?> currentType = this.getClass();
+    Class<?> entityType = entityType(currentType);
+    methodModel.setResultType(entityType);
     ClassModel classModel = getClassModel(this.getClass());
     return (T) MapperProxy.invoke(classModel, methodModel, id);
   }
