@@ -43,6 +43,7 @@ This source code is licensed under Apache 2.0 License.
 - fix: allow normal startup without any mapper files.
 - fix: Limit the node type obtained by `selectById` to the entity class of the interface.
 - fix: When a node has multiple tags, prioritize using the tag of `resultType`. (Collaborate with [charle004](https://github.com/charle004), [#311](https://github.com/nebula-contrib/ngbatis/pull/311))
+- fix: debugging log output issue [#312](https://github.com/nebula-contrib/ngbatis/issues/312)
 
 ## Feature
 
