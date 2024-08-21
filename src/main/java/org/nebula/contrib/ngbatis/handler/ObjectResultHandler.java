@@ -57,7 +57,7 @@ public class ObjectResultHandler extends AbstractResultHandler<Object, Object> {
 
     for (int i = 0; i < columnNames.size(); i++) {
       ValueWrapper valueWrapper = record.values().get(i);
-      Object v = ResultSetUtil.getValue(valueWrapper,resultType);
+      Object v = ResultSetUtil.getValue(valueWrapper, resultType);
       newResult = fillResult(v, newResult, columnNames, resultType, i);
     }
 
