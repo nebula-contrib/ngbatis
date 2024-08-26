@@ -295,8 +295,9 @@ public abstract class ReflectUtil {
    * @return paramType 是否为 parentType 子类或实现类 
    */
   public static boolean isCurrentTypeOrParentType(Class<?> paramType, Class<?> parentType) {
-    if (paramType == null) return false;
-    if (parentType == null) return false;
+    if (paramType == null || parentType == null) {
+      return false;
+    }
     if (paramType == parentType) {
       return true;
     }
