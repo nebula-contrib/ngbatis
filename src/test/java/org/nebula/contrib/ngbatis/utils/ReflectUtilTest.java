@@ -28,11 +28,11 @@ public class ReflectUtilTest {
   @Test
   public void testFindLeafClass() {
     Set<Class<?>> classes = new HashSet<Class<?>>() {{
-      add(A.class);
-      add(E.class);
-      add(F.class);
-      add(G.class);
-    }};
+        add(A.class);
+        add(E.class);
+        add(F.class);
+        add(G.class);
+      }};
     Class<?> leafType = ReflectUtil.findNoForkLeafClass(classes, C.class);
     Assertions.assertEquals(D.class, leafType);
 
@@ -42,27 +42,37 @@ public class ReflectUtilTest {
     leafType = ReflectUtil.findNoForkLeafClass(classes, B.class);
     Assertions.assertEquals(B.class, leafType);
   }
+
+
+  /*
+   * - A
+   *   - B
+   *     - C
+   *       - D
+   *         - F
+   *         - G
+   *     - E
+   */
+  static class A {
+    
+  }
+
+  static class B extends A {
+  }
+
+  static class C extends B {
+  }
+
+  static class D extends C {
+  }
+
+  static class F extends D {
+  }
+
+  static class G extends D {
+  }
+
+  static class E extends B {
+  }
 }
 
-/*
- * - A
- *   - B
- *     - C
- *       - D
- *         - F
- *         - G
- *     - E
- */
-class A {}
-
-class B extends A {}
-
-class C extends B {}
-
-class D extends C {}
-
-class F extends D {}
-
-class G extends D {}
-
-class E extends B {}
