@@ -1,0 +1,42 @@
+#Copyright (c) 2024 All project authors. All rights reserved.
+#
+#This source code is licensed under Apache 2.0 License.
+
+server:
+  port: 8082
+
+
+spring:
+  profiles:
+    active: 4dev
+
+nebula:
+  ngbatis:
+    session-life-length: 299000
+    check-fixed-rate: 300000
+    # space name needs to be informed through annotations(@Space) or xml(space="test")
+    # default false(false: Session pool map will not be initialized)
+    use-session-pool: false
+  hosts: 127.0.0.1:9669
+  username: root
+  password: nebula
+  space: test
+  pool-config:
+    min-conns-size: 1
+    max-conns-size: 10
+    timeout: 6000
+    idle-time: 0
+    interval-idle: -1
+    wait-time: 0
+    min-cluster-health-rate: 1.0
+    enable-ssl: false
+
+
+logging:
+  level:
+    org.nebula.contrib: DEBUG
+
+cql:
+  parser:
+    # 更换开发者自定义的 xml 所在位置
+    mapper-locations: classpath:ng-mapper/**/*.xml # 默认为 mapper/**/*.xml
