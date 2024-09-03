@@ -16,6 +16,7 @@ import org.jsoup.nodes.TextNode;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
 import org.nebula.contrib.ngbatis.exception.ResourceLoadException;
 import org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 
 /**
@@ -29,6 +30,10 @@ public class DaoResourceLoader extends MapperResourceLoader {
 
   public DaoResourceLoader(ParseCfgProps parseConfig) {
     super(parseConfig);
+  }
+
+  public DaoResourceLoader(ParseCfgProps parseConfig, ApplicationContext applicationContext) {
+    super(parseConfig,applicationContext);
   }
 
   /**

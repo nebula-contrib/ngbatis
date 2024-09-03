@@ -43,6 +43,7 @@ import org.nebula.contrib.ngbatis.utils.Page;
 import org.nebula.contrib.ngbatis.utils.ReflectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.data.repository.query.Param;
@@ -63,6 +64,7 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
 
   private static Logger log = LoggerFactory.getLogger(MapperResourceLoader.class);
   protected ParseCfgProps parseConfig;
+  protected ApplicationContext applicationContext;
 
   private MapperResourceLoader() {
     super();
@@ -70,6 +72,11 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
 
   public MapperResourceLoader(ParseCfgProps parseConfig) {
     this.parseConfig = parseConfig;
+  }
+
+  public MapperResourceLoader(ParseCfgProps parseConfig,ApplicationContext applicationContext) {
+    this.parseConfig = parseConfig;
+    this.applicationContext = applicationContext;
   }
 
   /**
@@ -148,8 +155,18 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
       }
       String spaceClassName = genericTypes[0].getTypeName();
       Space annotation = Class.forName(spaceClassName).getAnnotation(Space.class);
-      if (null != annotation && !annotation.name().equals("")) {
-        cm.setSpace(annotation.name());
+      if(null != annotation){
+        String spaceName = annotation.name();
+        if (applicationContext!=null) {
+          try {
+            spaceName = applicationContext.getEnvironment().resolveRequiredPlaceholders(spaceName);
+          } catch (IllegalArgumentException e) {
+            throw new ResourceLoadException("The name of annotation @Space in Class "+spaceClassName+" missing configurable value");
+          }
+        }
+        if (!spaceName.equals("")) {
+          cm.setSpace(spaceName);
+        }
       }
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
