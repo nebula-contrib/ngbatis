@@ -33,7 +33,7 @@ public class DaoResourceLoader extends MapperResourceLoader {
   }
 
   public DaoResourceLoader(ParseCfgProps parseConfig, ApplicationContext applicationContext) {
-    super(parseConfig,applicationContext);
+    super(parseConfig, applicationContext);
   }
 
   /**

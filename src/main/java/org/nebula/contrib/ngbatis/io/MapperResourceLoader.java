@@ -156,14 +156,7 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
       String spaceClassName = genericTypes[0].getTypeName();
       Space annotation = Class.forName(spaceClassName).getAnnotation(Space.class);
       if(null != annotation){
-        String spaceName = annotation.name();
-        if (applicationContext!=null) {
-          try {
-            spaceName = applicationContext.getEnvironment().resolveRequiredPlaceholders(spaceName);
-          } catch (IllegalArgumentException e) {
-            throw new ResourceLoadException("The name of annotation @Space in Class "+spaceClassName+" missing configurable value");
-          }
-        }
+        String spaceName = tryResolvePlaceholder(annotation.name());
         if (!spaceName.equals("")) {
           cm.setSpace(spaceName);
         }
@@ -171,6 +164,24 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     }
+  }
+
+  /**
+   * 利用Spring Environment 解析注解的值，用于 @Space 的 name 属性解析
+   * @param value 需要解析的值，可能是带占位符的 ${xx.xx} ，也可以是固定的字符串
+   * @return resolveResult 解析结果
+   * @throws IllegalArgumentException 当配置了 ${xx.xx} 占位符，且spring配置文件中未指定该配置时抛出
+   */
+  private String tryResolvePlaceholder(String value){
+    String resolveResult = value;
+    if (null != applicationContext) {
+      try {
+        resolveResult = applicationContext.getEnvironment().resolveRequiredPlaceholders(value);
+      } catch (IllegalArgumentException e) {
+        throw new ResourceLoadException("The name ( "+ value +" ) of annotation @Space missing configurable value");
+      }
+    }
+    return resolveResult;
   }
 
   /**
