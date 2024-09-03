@@ -178,7 +178,7 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
       try {
         resolveResult = applicationContext.getEnvironment().resolveRequiredPlaceholders(value);
       } catch (IllegalArgumentException e) {
-        throw new ResourceLoadException("The name ( "+ value +" ) of annotation @Space missing configurable value");
+        throw new ResourceLoadException("name ( "+ value +" ) of @Space missing configurable value");
       }
     }
     return resolveResult;
