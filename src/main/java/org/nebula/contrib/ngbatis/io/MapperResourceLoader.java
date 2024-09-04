@@ -43,6 +43,7 @@ import org.nebula.contrib.ngbatis.utils.Page;
 import org.nebula.contrib.ngbatis.utils.ReflectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.data.repository.query.Param;
@@ -63,6 +64,7 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
 
   private static Logger log = LoggerFactory.getLogger(MapperResourceLoader.class);
   protected ParseCfgProps parseConfig;
+  protected ApplicationContext applicationContext;
 
   private MapperResourceLoader() {
     super();
@@ -70,6 +72,11 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
 
   public MapperResourceLoader(ParseCfgProps parseConfig) {
     this.parseConfig = parseConfig;
+  }
+
+  public MapperResourceLoader(ParseCfgProps parseConfig,ApplicationContext applicationContext) {
+    this.parseConfig = parseConfig;
+    this.applicationContext = applicationContext;
   }
 
   /**
@@ -148,12 +155,33 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
       }
       String spaceClassName = genericTypes[0].getTypeName();
       Space annotation = Class.forName(spaceClassName).getAnnotation(Space.class);
-      if (null != annotation && !annotation.name().equals("")) {
-        cm.setSpace(annotation.name());
+      if(null != annotation){
+        String spaceName = tryResolvePlaceholder(annotation.name());
+        if (!spaceName.equals("")) {
+          cm.setSpace(spaceName);
+        }
       }
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     }
+  }
+
+  /**
+   * 利用Spring Environment 解析注解的值，用于 @Space 的 name 属性解析
+   * @param value 需要解析的值，可能是带占位符的 ${xx.xx} ，也可以是固定的字符串
+   * @return resolveResult 解析结果
+   * @throws IllegalArgumentException 当配置了 ${xx.xx} 占位符，且spring配置文件中未指定该配置时抛出
+   */
+  private String tryResolvePlaceholder(String value){
+    String resolveResult = value;
+    if (null != applicationContext) {
+      try {
+        resolveResult = applicationContext.getEnvironment().resolveRequiredPlaceholders(value);
+      } catch (IllegalArgumentException e) {
+        throw new ResourceLoadException("name ( "+ value +" ) of @Space missing configurable value");
+      }
+    }
+    return resolveResult;
   }
 
   /**

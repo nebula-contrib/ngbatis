@@ -78,6 +78,42 @@ This source code is licensed under Apache 2.0 License.
           Route-Tag: abc
     ```
 
+- feat: @Space annotation supports dynamic configuration.
+  > @Space 注解的 name 属性值可通过 spring 配置文件自定义配置。
+  - example:
+
+    ```yaml
+    app:
+      person:
+        space: PERSON_SPACE
+    ```
+  
+    ```java
+    @Space(name = "${nebula.space}")
+    @Table(name = "person")
+    public class Person {
+        @Id
+        private String vid;
+        private String name;
+  
+        public String getVid() {
+            return vid;
+        }
+  
+        public void setVid(String vid) {
+            this.vid = vid;
+        }
+  
+        public String getName() {
+            return name;
+        }
+  
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+    ```
+
 # 1.2.2
 
 ## Bugfix

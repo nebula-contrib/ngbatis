@@ -74,7 +74,7 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
   }
 
   public MapperContext mapperContext(NebulaPool nebulaPool) {
-    DaoResourceLoader daoBasicResourceLoader = new DaoResourceLoader(parseCfgProps);
+    DaoResourceLoader daoBasicResourceLoader = new DaoResourceLoader(parseCfgProps, this.context);
     MapperContext context = MapperContext.newInstance();
     context.setResourceRefresh(parseCfgProps.isResourceRefresh());
     context.setNgbatisConfig(nebulaJdbcProperties.getNgbatis());
