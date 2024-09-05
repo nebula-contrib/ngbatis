@@ -25,7 +25,7 @@ public class ParseCfgProps {
 
   private String mapperTplLocation = "NebulaDaoBasic.xml";
 
-  private String mapperLocations = "mapper/**/*.xml";
+  private String[] mapperLocations = {"mapper/**/*.xml"};
 
   private String id = "id";
 
@@ -75,7 +75,7 @@ public class ParseCfgProps {
    * <p>获取开发者业务dao对应xml所存放的路径。</p>
    * @return 开发者业务dao对应xml所存放的路径
    */
-  public String getMapperLocations() {
+  public String[] getMapperLocations() {
     return mapperLocations;
   }
 
@@ -84,8 +84,8 @@ public class ParseCfgProps {
    * @param mapperLocations  业务dao对应xml所存放的路径
    * @return 解析配置（本应是 void，为支持链式调用而改）
    */
-  public ParseCfgProps setMapperLocations(String mapperLocations) {
-    if (isBlank(mapperLocations)) {
+  public ParseCfgProps setMapperLocations(String[] mapperLocations) {
+    if (isEmpty(mapperLocations)) {
       return this;
     }
     this.mapperLocations = mapperLocations;

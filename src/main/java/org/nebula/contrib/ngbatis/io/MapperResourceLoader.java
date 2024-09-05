@@ -87,11 +87,13 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
   @TimeLog(name = "xml-load", explain = "mappers xml load completed : {} ms")
   public Map<String, ClassModel> load() {
     Map<String, ClassModel> resultClassModel = new HashMap<>();
-    String mapperLocations = parseConfig.getMapperLocations();
+    String[] mapperLocations = parseConfig.getMapperLocations();
     try {
-      Resource[] resources = getResources(mapperLocations);
-      for (Resource resource : resources) {
-        resultClassModel.putAll(parseClassModel(resource));
+      for (String mapperLocation : mapperLocations) {
+        Resource[] resources = getResources(mapperLocation);
+        for (Resource resource : resources) {
+          resultClassModel.putAll(parseClassModel(resource));
+        }
       }
     } catch (FileNotFoundException ffe) {
       log.warn("No mapper files were found in path pattern '{}', please add", mapperLocations);
