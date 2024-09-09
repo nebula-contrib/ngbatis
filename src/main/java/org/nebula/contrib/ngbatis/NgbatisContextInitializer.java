@@ -62,7 +62,7 @@ public class NgbatisContextInitializer implements ApplicationContextInitializer 
       .setLogShow(environment.getProperty("cql.parser.log-show"))
       .setMapper(environment.getProperty("cql.parser.mapper"))
       .setNamespace(environment.getProperty("cql.parser.namespace"))
-      .setMapperLocations(environment.getProperty("cql.parser.mapper-locations"))
+      .setMapperLocations(environment.getProperty("cql.parser.mapper-locations", String[].class))
       .setMapperTplLocation(environment.getProperty("cql.parser.mapper-tpl-location"))
       .setResultType(environment.getProperty("cql.parser.result-type"))
       .setParameterType(environment.getProperty("cql.parser.parameter-type"))
