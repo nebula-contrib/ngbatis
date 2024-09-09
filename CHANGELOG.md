@@ -87,7 +87,7 @@ This source code is licensed under Apache 2.0 License.
       person:
         space: PERSON_SPACE
     ```
-  
+
     ```java
     @Space(name = "${app.person.space}")
     @Table(name = "person")
@@ -113,14 +113,16 @@ This source code is licensed under Apache 2.0 License.
         }
     }
     ```
-    
+
   - XML example:
+
     ```xml
     <mapper namespace="com.xxx.TestSpaceMapper" space="${app.person.space}">
 
     </mapper>
     ```
-    
+
+
 # 1.2.2
 
 ## Bugfix
