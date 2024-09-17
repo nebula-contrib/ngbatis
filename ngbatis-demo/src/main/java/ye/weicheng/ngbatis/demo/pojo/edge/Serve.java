@@ -1,4 +1,4 @@
-package ye.weicheng.ngbatis.demo.pojo.Edge;
+package ye.weicheng.ngbatis.demo.pojo.edge;
 
 // Copyright (c) 2022 All project authors. All rights reserved.
 //
@@ -67,18 +67,18 @@ public class Serve extends GraphBaseEdge {
   }
 
   public void setEnd_year(int end_year) {
-    this.end_year = end_year;
+	this.end_year = end_year;
   }
 
 
   @Override
   public String toString() {
-    return "Serve{" +
-            "rank=" + rank +
-            ", srcId='" + srcId + '\'' +
-            ", dstId='" + dstId + '\'' +
-            ", start_year=" + start_year +
-            ", end_year=" + end_year +
-            '}';
+	return "Serve{" +
+			"rank=" + rank +
+			", srcId='" + srcId + '\'' +
+			", dstId='" + dstId + '\'' +
+			", start_year=" + start_year +
+			", end_year=" + end_year +
+			'}';
   }
 }

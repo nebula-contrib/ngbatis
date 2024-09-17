@@ -1,4 +1,4 @@
-package ye.weicheng.ngbatis.demo.pojo.Edge;
+package ye.weicheng.ngbatis.demo.pojo.edge;
 
 // Copyright (c) 2022 All project authors. All rights reserved.
 //
