@@ -18,6 +18,8 @@ import org.nebula.contrib.ngbatis.annotations.base.GraphId;
 import org.nebula.contrib.ngbatis.annotations.base.Tag;
 import org.nebula.contrib.ngbatis.session.LocalSession;
 
+import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getNameByColumn;
+
 /**
  * 提供给实体调用的拓展方法。
  * @author xYLiuuuuuu
@@ -138,7 +140,7 @@ public class GraphBaseExt {
 	  if (!field.isAnnotationPresent(GraphId.class)) {
 		try {
 		  field.setAccessible(true);
-		  String fieldName = field.getName();
+		  String fieldName = getNameByColumn(field);
 		  Object fieldValue = field.get(v2);
 		  result.put(fieldName, fieldValue);
 		}

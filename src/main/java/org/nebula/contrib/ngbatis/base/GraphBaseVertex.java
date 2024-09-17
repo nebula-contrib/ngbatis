@@ -13,6 +13,7 @@ import static org.nebula.contrib.ngbatis.base.GraphQueryBuilder.matchOutgoingVer
 import static org.nebula.contrib.ngbatis.base.GraphQueryBuilder.matchPath;
 import static org.nebula.contrib.ngbatis.base.GraphQueryBuilder.matchShortestPaths;
 import static org.nebula.contrib.ngbatis.base.GraphQueryBuilder.matchVariableLengthPath;
+import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getNameByColumn;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getValue;
 
 import com.vesoft.nebula.client.graph.data.ResultSet;
@@ -403,7 +404,7 @@ public abstract class GraphBaseVertex extends GraphBase {
 	  if (!field.isAnnotationPresent(GraphId.class)) {
 		Object value = getValue(this, field);
 		if (value != null) {
-		  properties.put(field.getName(), value);
+		  properties.put(getNameByColumn(field), value);
 		}
 	  }
 	}

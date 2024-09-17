@@ -4,6 +4,7 @@ package ye.weicheng.ngbatis.demo.pojo.edge;
 //
 // This source code is licensed under Apache 2.0 License.
 
+import javax.persistence.Column;
 import javax.persistence.Id;
 import org.nebula.contrib.ngbatis.annotations.DstId;
 import org.nebula.contrib.ngbatis.annotations.SrcId;
@@ -27,8 +28,10 @@ public class Serve extends GraphBaseEdge {
   @DstId // 可选，如果不需要获取关系的目标节点id，可以不加当前属性
   private String dstId;
 
-  private Integer start_year;
-  private Integer end_year;
+  @Column(name = "start_year")
+  private Integer startYear;
+  @Column(name = "end_year")
+  private Integer endYear;
 
   public Long getRank() {
     return rank;
@@ -54,31 +57,30 @@ public class Serve extends GraphBaseEdge {
     this.dstId = dstId;
   }
 
-  public int getStart_year() {
-    return start_year;
+  public Integer getStartYear() {
+    return startYear;
   }
 
-  public void setStart_year(int start_year) {
-    this.start_year = start_year;
+  public void setStartYear(Integer startYear) {
+    this.startYear = startYear;
   }
 
-  public int getEnd_year() {
-    return end_year;
+  public Integer getEndYear() {
+    return endYear;
   }
 
-  public void setEnd_year(int end_year) {
-	this.end_year = end_year;
+  public void setEndYear(Integer endYear) {
+    this.endYear = endYear;
   }
-
 
   @Override
   public String toString() {
-	return "Serve{" +
-			"rank=" + rank +
-			", srcId='" + srcId + '\'' +
-			", dstId='" + dstId + '\'' +
-			", start_year=" + start_year +
-			", end_year=" + end_year +
-			'}';
+    return "Serve{"
+      + "rank=" + rank
+      + ", srcId='" + srcId + '\''
+      + ", dstId='" + dstId + '\''
+      + ", startYear=" + startYear
+      + ", endYear=" + endYear
+      + '}';
   }
 }

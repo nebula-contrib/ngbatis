@@ -32,8 +32,6 @@ public class Team extends GraphBaseVertex {
 
   @Override
   public String toString() {
-	return "Team{" +
-			"name='" + name + '\'' +
-			'}';
+    return "Team{" + "name='" + name + '\'' + '}';
   }
 }

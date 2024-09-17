@@ -3,6 +3,7 @@ package org.nebula.contrib.ngbatis.base;
 import static org.nebula.contrib.ngbatis.base.GraphBaseExt.executeGQL;
 import static org.nebula.contrib.ngbatis.base.GraphBaseExt.handleResult;
 import static org.nebula.contrib.ngbatis.base.GraphQueryBuilder.lookupEdgeCount;
+import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getNameByColumn;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getValue;
 
 import com.vesoft.nebula.client.graph.data.ResultSet;
@@ -143,7 +144,7 @@ public abstract class GraphBaseEdge extends GraphBase {
 	for (Field field : declaredFields) {
 	  Object value = getValue(this, field);
 	  if (value != null) {
-		properties.put(field.getName(), value);
+		properties.put(getNameByColumn(field), value);
 	  }
 	}
 	return properties;

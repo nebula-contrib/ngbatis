@@ -190,7 +190,7 @@ public class NebulaGraphBasicTests {
   @Test
   public void queryEdgeByProperty() {
     Serve serve = new Serve();
-    serve.setStart_year(2003);
+    serve.setStartYear(2003);
     Player src = new Player();
     src.setName("Carmelo Anthony");
     Team dst = new Team();
