@@ -17,4 +17,5 @@ public interface ResultResolver {
 
   <T> T resolve(MethodModel methodModel, ResultSet result);
 
+  <T> T resolve(ResultSet result,Class<?> returnType,Class<?> resultType);
 }

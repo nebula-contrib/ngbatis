@@ -54,5 +54,29 @@ public class DefaultResultResolver implements ResultResolver {
     return handler.handle(returnType, result, resultType);
   }
 
+  @Override
+  public Object resolve(ResultSet result, Class returnType,Class resultType) {
+    if (resultType == null) {
+      resultType = returnType;
+    }
 
+    if (returnType == void.class) {
+      return null;
+    }
+
+    // 核心方法。获取真正执行结果集类型转换的结果处理执行者
+    ResultHandler<Object, Object> handler = ResultHandler.getHandler(
+            ReflectUtil.sealingBasicType(returnType),
+            ReflectUtil.sealingBasicType(resultType)
+    );
+    log.debug("返回类型 {},结果集处理器为：{}",
+            returnType.getName(),
+            handler
+    );
+
+    if (handler == null) {
+      return result;
+    }
+    return handler.handle(returnType, result, resultType);
+  }
 }
