@@ -9,7 +9,7 @@ import org.nebula.contrib.ngbatis.models.MethodModel;
 
 /**
  * 结果解析接口。
- * 
+ *
  * @author yeweicheng
  * <br>Now is history!
  */
@@ -17,5 +17,5 @@ public interface ResultResolver {
 
   <T> T resolve(MethodModel methodModel, ResultSet result);
 
-  <T> T resolve(ResultSet result,Class<?> returnType,Class<?> resultType);
+  <T> T resolve(ResultSet result, Class<?> returnType, Class<?> resultType);
 }

@@ -15,5 +15,5 @@ import org.nebula.contrib.ngbatis.enums.IdType;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface GraphId {
-	IdType type();
+  IdType type();
 }

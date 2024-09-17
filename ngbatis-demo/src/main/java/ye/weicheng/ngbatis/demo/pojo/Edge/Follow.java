@@ -5,7 +5,6 @@ package ye.weicheng.ngbatis.demo.pojo.Edge;
 // This source code is licensed under Apache 2.0 License.
 
 import javax.persistence.Id;
-
 import org.nebula.contrib.ngbatis.annotations.DstId;
 import org.nebula.contrib.ngbatis.annotations.SrcId;
 import org.nebula.contrib.ngbatis.annotations.base.EdgeType;
@@ -65,11 +64,11 @@ public class Follow extends GraphBaseEdge {
 
   @Override
   public String toString() {
-    return "Follow{" +
-            "rank=" + rank +
-            ", srcId='" + srcId + '\'' +
-            ", dstId='" + dstId + '\'' +
-            ", degree=" + degree +
-            '}';
+    return "Follow{"
+            + "rank=" + rank
+            + ", srcId='" + srcId + '\''
+            + ", dstId='" + dstId + '\''
+            + ", degree=" + degree
+            + '}';
   }
 }

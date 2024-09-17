@@ -11,6 +11,7 @@ import org.nebula.contrib.ngbatis.models.MethodModel;
 import org.nebula.contrib.ngbatis.utils.ReflectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,57 +27,57 @@ public class DefaultResultResolver implements ResultResolver {
 
   @Override
   public Object resolve(MethodModel methodModel, ResultSet result) {
-    Class returnType = methodModel.getReturnType();
-    Class resultType = methodModel.getResultType();
+	Class returnType = methodModel.getReturnType();
+	Class resultType = methodModel.getResultType();
 
-    if (resultType == null) {
-      resultType = returnType;
-    }
+	if (resultType == null) {
+	  resultType = returnType;
+	}
 
-    if (returnType == void.class) {
-      return null;
-    }
+	if (returnType == void.class) {
+	  return null;
+	}
 
-    // 核心方法。获取真正执行结果集类型转换的结果处理执行者
-    ResultHandler<Object, Object> handler = ResultHandler.getHandler(
-        ReflectUtil.sealingBasicType(returnType),
-        ReflectUtil.sealingBasicType(resultType)
-    );
-    log.debug("针对java返回类型 {} 与 xml 返回类型 {} 的结果集处理器为：{}", 
-        returnType.getName(),
-        resultType.getName(), 
-        handler
-    );
+	// 核心方法。获取真正执行结果集类型转换的结果处理执行者
+	ResultHandler<Object, Object> handler = ResultHandler.getHandler(
+			ReflectUtil.sealingBasicType(returnType),
+			ReflectUtil.sealingBasicType(resultType)
+	);
+	log.debug("针对java返回类型 {} 与 xml 返回类型 {} 的结果集处理器为：{}",
+			returnType.getName(),
+			resultType.getName(),
+			handler
+	);
 
-    if (handler == null) {
-      return result;
-    }
-    return handler.handle(returnType, result, resultType);
+	if (handler == null) {
+	  return result;
+	}
+	return handler.handle(returnType, result, resultType);
   }
 
   @Override
-  public Object resolve(ResultSet result, Class returnType,Class resultType) {
-    if (resultType == null) {
-      resultType = returnType;
-    }
+  public Object resolve(ResultSet result, Class returnType, Class resultType) {
+	if (resultType == null) {
+	  resultType = returnType;
+	}
 
-    if (returnType == void.class) {
-      return null;
-    }
+	if (returnType == void.class) {
+	  return null;
+	}
 
-    // 核心方法。获取真正执行结果集类型转换的结果处理执行者
-    ResultHandler<Object, Object> handler = ResultHandler.getHandler(
-            ReflectUtil.sealingBasicType(returnType),
-            ReflectUtil.sealingBasicType(resultType)
-    );
-    log.debug("返回类型 {},结果集处理器为：{}",
-            returnType.getName(),
-            handler
-    );
+	// 核心方法。获取真正执行结果集类型转换的结果处理执行者
+	ResultHandler<Object, Object> handler = ResultHandler.getHandler(
+			ReflectUtil.sealingBasicType(returnType),
+			ReflectUtil.sealingBasicType(resultType)
+	);
+	log.debug("返回类型 {},结果集处理器为：{}",
+			returnType.getName(),
+			handler
+	);
 
-    if (handler == null) {
-      return result;
-    }
-    return handler.handle(returnType, result, resultType);
+	if (handler == null) {
+	  return result;
+	}
+	return handler.handle(returnType, result, resultType);
   }
 }

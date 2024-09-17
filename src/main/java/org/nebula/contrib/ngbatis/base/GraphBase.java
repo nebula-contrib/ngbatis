@@ -10,8 +10,7 @@ import java.util.Map;
 
 public abstract class GraphBase {
 
-	protected abstract String getEntityTypeName();
+  protected abstract String getEntityTypeName();
 
-	protected abstract Map<String,Object> getEntityProperties();
-
+  protected abstract Map<String, Object> getEntityProperties();
 }
