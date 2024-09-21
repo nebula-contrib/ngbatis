@@ -110,7 +110,6 @@ public class MapperProxy {
    * @return 结果值
    */
   public static Object invoke(ClassModel classModel, MethodModel methodModel, Object... args) {
-    Method method = methodModel.getMethod();
     ResultSet query = null;
     // 参数格式转换
     final long step0 = System.currentTimeMillis();
@@ -220,9 +219,8 @@ public class MapperProxy {
     try {
       localSession = dispatcher.poll();
       if (log.isDebugEnabled()) {
-        StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[6];
-        proxyClass = stackTraceElement.getClassName();
-        proxyMethod = stackTraceElement.getMethodName();
+        proxyClass = cm.getNamespace().getName();
+        proxyMethod = mm.getId();
         localSessionSpace = localSession.getCurrentSpace();
       }
 
@@ -274,9 +272,8 @@ public class MapperProxy {
 
     try {
       if (log.isDebugEnabled()) {
-        StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[6];
-        proxyClass = stackTraceElement.getClassName();
-        proxyMethod = stackTraceElement.getMethodName();
+        proxyClass = cm.getNamespace().getName();
+        proxyMethod = mm.getId();
       }
 
       currentSpace = getSpace(cm, mm, paramsForTemplate);

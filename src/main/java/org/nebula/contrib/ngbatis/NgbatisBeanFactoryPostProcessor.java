@@ -74,7 +74,7 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
   }
 
   public MapperContext mapperContext(NebulaPool nebulaPool) {
-    DaoResourceLoader daoBasicResourceLoader = new DaoResourceLoader(parseCfgProps);
+    DaoResourceLoader daoBasicResourceLoader = new DaoResourceLoader(parseCfgProps, this.context);
     MapperContext context = MapperContext.newInstance();
     context.setResourceRefresh(parseCfgProps.isResourceRefresh());
     context.setNgbatisConfig(nebulaJdbcProperties.getNgbatis());
@@ -233,7 +233,12 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
             spaceName,
             nebulaJdbcProperties.getUsername(),
             nebulaJdbcProperties.getPassword()
-    );
+    ).setUseHttp2(poolConfig.isUseHttp2())
+      .setEnableSsl(poolConfig.isEnableSsl())
+      .setSslParam(poolConfig.getSslParam())
+      .setCustomHeaders(poolConfig.getCustomHeaders())
+      .setWaitTime(poolConfig.getWaitTime())
+      .setTimeout(poolConfig.getTimeout());
 
     if (poolConfig.getMinConnSize() <= 0) {
       sessionPoolConfig.setMinSessionSize(1);
@@ -252,11 +257,7 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
       sessionPoolConfig.setHealthCheckTime(healthCheckTime);
     }
 
-    SessionPool sessionPool = new SessionPool(sessionPoolConfig);
-    if (!sessionPool.init()) {
-      return null;
-    }
-    return sessionPool;
+    return new SessionPool(sessionPoolConfig);
   }
 
   @Override

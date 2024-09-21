@@ -41,6 +41,9 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    */
   default T selectById(@Param("id") I id) {
     MethodModel methodModel = getMethodModel();
+    Class<?> currentType = this.getClass();
+    Class<?> entityType = entityType(currentType);
+    methodModel.setResultType(entityType);
     ClassModel classModel = getClassModel(this.getClass());
     return (T) MapperProxy.invoke(classModel, methodModel, id);
   }
@@ -345,7 +348,7 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   // region graph special
 
   /**
-   * 根据三元组值，插入关系
+   * 根据三元组值，插入关系。任一参数为空，不执行。
    *
    * @param v1 开始节点值 或 开始节点id
    * @param e  关系值
@@ -372,7 +375,7 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   }
 
   /**
-   * 根据三元组值, 插入关系
+   * 根据三元组值, 插入关系。任一参数为空，不执行。
    * <p>Selective: 仅处理非空字段</p>
    *
    * @param src  开始节点值
@@ -389,7 +392,7 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   }
 
   /**
-   * 根据三元组值, 插入关系
+   * 根据三元组值, 插入关系。任一参数为空，不执行。
    * <p>Selective: 仅处理非空字段</p>
    *
    * @param src  开始节点值

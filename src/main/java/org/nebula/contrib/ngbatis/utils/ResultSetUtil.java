@@ -5,12 +5,14 @@ package org.nebula.contrib.ngbatis.utils;
 // This source code is licensed under Apache 2.0 License.
 
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.castNumber;
+import static org.nebula.contrib.ngbatis.utils.ReflectUtil.findLeafClassFromList;
+import static org.nebula.contrib.ngbatis.utils.ReflectUtil.findNoForkLeafClass;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getPkField;
-import static org.nebula.contrib.ngbatis.utils.ReflectUtil.isCurrentTypeOrParentType;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.schemaByEntityType;
 
 import com.vesoft.nebula.DateTime;
 import com.vesoft.nebula.ErrorCode;
+import com.vesoft.nebula.Time;
 import com.vesoft.nebula.client.graph.data.DateTimeWrapper;
 import com.vesoft.nebula.client.graph.data.DateWrapper;
 import com.vesoft.nebula.client.graph.data.DurationWrapper;
@@ -30,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.nebula.contrib.ngbatis.annotations.DstId;
+import org.nebula.contrib.ngbatis.annotations.SrcId;
 import org.nebula.contrib.ngbatis.exception.ResultHandleException;
 import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.nebula.contrib.ngbatis.proxy.MapperProxy;
@@ -76,7 +80,7 @@ public class ResultSetUtil {
    * @param <T> 目标结果类型
    * @return
    */
-  public static <T> T getValue(ValueWrapper value) {
+  public static <T> T getValue(ValueWrapper value, Class<T> resultType) {
     try {
       Object o = value.isLong() ? value.asLong()
           : value.isBoolean() ? value.asBoolean()
@@ -85,7 +89,7 @@ public class ResultSetUtil {
               : value.isTime() ? transformTime(value.asTime())
                 : value.isDate() ? transformDate(value.asDate())
                   : value.isDateTime() ? transformDateTime(value.asDateTime())
-                    : value.isVertex() ? transformNode(value.asNode())
+                    : value.isVertex() ? transformNode(value.asNode(), resultType)
                       : value.isEdge() ? transformRelationship(value)
                         : value.isPath() ? value.asPath()
                           : value.isList() ? transformList(value.asList())
@@ -93,7 +97,9 @@ public class ResultSetUtil {
                               : value.isMap() ? transformMap(value.asMap())
                                 : value.isDuration() ? transformDuration(value.asDuration())
                                   : null;
-
+      if (o instanceof Number) {
+        o = castNumber((Number) o, resultType);
+      }
       return (T) o;
     } catch (UnsupportedEncodingException e) {
       throw new RuntimeException(e);
@@ -103,15 +109,11 @@ public class ResultSetUtil {
   /**
    * 根据 resultType 从 nebula 的数据类型中获取 java 类型数据
    * @param valueWrapper nebula 的数据类型
-   * @param resultType 接口返回值类型（类型为集合时，为集合泛型）
    * @param <T> 调用方用来接收结果的类型，即 resultType
    * @return java类型结果
    */
-  public static <T> T getValue(ValueWrapper valueWrapper, Class<T> resultType) {
-    T value = getValue(valueWrapper);
-    if (value instanceof Number) {
-      value = (T) castNumber((Number) value, resultType);
-    }
+  public static <T> T getValue(ValueWrapper valueWrapper) {
+    T value = getValue(valueWrapper,null);
     return value;
   }
 
@@ -138,31 +140,40 @@ public class ResultSetUtil {
   }
 
   private static Object transformTime(TimeWrapper time) {
-    return new java.sql.Time(time.getHour(), time.getMinute(), time.getSecond());
+    Time localTime = time.getLocalTime();
+    return new java.sql.Time(localTime.getHour(), localTime.getMinute(), localTime.getSec());
   }
 
   private static Object transformDuration(DurationWrapper du) {
     return java.time.Duration.ofNanos(du.getSeconds() * 1000000000);
   }
 
-  private static Object transformNode(Node node) {
-    MapperContext mapperContext = MapperProxy.ENV.getMapperContext();
-    Map<String, Class<?>> tagTypeMapping = mapperContext.getTagTypeMapping();
-    Class<?> nodeType = null;
+  private static Object transformNode(Node node, Class<?> resultType) {
     List<String> tagNames = node.tagNames();
 
-    for (String tagName : tagNames) {
-      Class<?> tagType = tagTypeMapping.get(tagName);
-      boolean tagTypeIsSuperClass = isCurrentTypeOrParentType(nodeType, tagType);
-      if (!tagTypeIsSuperClass) {
-        nodeType = tagType;
-      }
-    }
+    List<Class<?>> tagTypes = findTagTypes(tagNames);
+    
+    Class<?> nodeType = resultType == null
+      ? findLeafClassFromList(tagTypes) 
+      : findNoForkLeafClass(tagTypes, resultType);
 
     if (nodeType != null) {
       return nodeToResultType(node, nodeType);
     }
     return if_unknown_node_to_map ? nodeToMap(node) : node;
+  }
+
+  private static List<Class<?>> findTagTypes(List<String> tagNames) {
+    MapperContext mapperContext = MapperProxy.ENV.getMapperContext();
+    Map<String, Class<?>> tagTypeMapping = mapperContext.getTagTypeMapping();
+    List<Class<?>> tagTypes = new ArrayList<>();
+    for (String tagName : tagNames) {
+      Class<?> tagType = tagTypeMapping.get(tagName);
+      if (tagType != null) {
+        tagTypes.add(tagType);
+      }
+    }
+    return tagTypes;
   }
 
   private static Object transformMap(HashMap<String, ValueWrapper> map) {
@@ -305,7 +316,7 @@ public class ResultSetUtil {
       for (Map.Entry<String, ValueWrapper> entry : properties.entrySet()) {
         ReflectUtil.setValue(t, entry.getKey(), ResultSetUtil.getValue(entry.getValue()));
       }
-      setRanking(t, resultType, r);
+      setEdgeExtraAttrs(t, resultType, r);
     } catch (UnsupportedEncodingException | InstantiationException
       | NoSuchFieldException | IllegalAccessException e) {
       e.printStackTrace();
@@ -364,6 +375,7 @@ public class ResultSetUtil {
    * @throws IllegalAccessException 当 ranking 值的类型，与
    *     e 中的 ranking 值的类型不匹配时报错，当属性被 final 修饰时报错
    */
+  @Deprecated
   public static void setRanking(Object obj, Class<?> resultType, Relationship e)
       throws IllegalAccessException {
     Field pkField = getPkField(resultType, false);
@@ -373,6 +385,31 @@ public class ResultSetUtil {
     }
     if (resultType.getSuperclass() != null) {
       setRanking(obj, resultType.getSuperclass(), e);
+    }
+  }
+  
+  public static void setEdgeExtraAttrs(Object t, Class<?> resultType, Relationship e)
+      throws IllegalAccessException {
+    Field pkField = getPkField(resultType, false);
+    if (pkField != null) {
+      long ranking = e.ranking();
+      ReflectUtil.setValue(t, pkField, ranking);
+    }
+    
+    Field srcIdField = ReflectUtil.getAnnoField(resultType, SrcId.class);
+    if (srcIdField != null) {
+      Object srcId = ResultSetUtil.getValue(e.srcId());
+      ReflectUtil.setValue(t, srcIdField, srcId);
+    }
+    
+    Field dstIdField = ReflectUtil.getAnnoField(resultType, DstId.class);
+    if (dstIdField != null) {
+      Object dstId = ResultSetUtil.getValue(e.dstId());
+      ReflectUtil.setValue(t, dstIdField, dstId);
+    }
+
+    if (resultType.getSuperclass() != null) {
+      setEdgeExtraAttrs(t, resultType.getSuperclass(), e);
     }
   }
 
