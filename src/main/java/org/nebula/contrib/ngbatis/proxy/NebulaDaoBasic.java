@@ -39,6 +39,9 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    */
   default T selectById(@Param("id") I id) {
     MethodModel methodModel = getMethodModel();
+    Class<?> currentType = this.getClass();
+    Class<?> entityType = entityType(currentType);
+    methodModel.setResultType(entityType);
     ClassModel classModel = getClassModel(this.getClass());
     return (T) MapperProxy.invoke(classModel, methodModel, id);
   }
@@ -343,13 +346,13 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   // region graph special
 
   /**
-   * 根据三元组值，插入关系
+   * 根据三元组值，插入关系。任一参数为空，不执行。
    *
    * @param v1 开始节点值 或 开始节点id
    * @param e  关系值
    * @param v2 结束节点值 或 结束节点id
    */
-  default void insertEdge(@NotNull Object v1, @NotNull Object e, @NotNull Object v2) {
+  default void insertEdge(Object v1, Object e, Object v2) {
     if (v2 == null || v1 == null || e == null) {
       return;
     }
@@ -370,14 +373,14 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   }
 
   /**
-   * 根据三元组值, 插入关系
+   * 根据三元组值, 插入关系。任一参数为空，不执行。
    * <p>Selective: 仅处理非空字段</p>
    *
    * @param src  开始节点值
    * @param edge 关系值
    * @param dst  结束节点值
    */
-  default void insertEdgeSelective(@NotNull Object src, @NotNull Object edge, @NotNull Object dst) {
+  default void insertEdgeSelective(Object src, Object edge, Object dst) {
     if (dst == null || src == null || edge == null) {
       return;
     }
@@ -387,14 +390,14 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   }
 
   /**
-   * 根据三元组值, 插入关系
+   * 根据三元组值, 插入关系。任一参数为空，不执行。
    * <p>Selective: 仅处理非空字段</p>
    *
    * @param src  开始节点值
    * @param edge 关系值
    * @param dst  结束节点值
    */
-  default void upsertEdgeSelective(@NotNull Object src, @NotNull Object edge, @NotNull Object dst) {
+  default void upsertEdgeSelective(Object src, Object edge, Object dst) {
     if (dst == null || src == null || edge == null) {
       return;
     }
