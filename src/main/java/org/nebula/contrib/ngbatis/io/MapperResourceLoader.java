@@ -155,7 +155,7 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
       }
       String spaceClassName = genericTypes[0].getTypeName();
       Space annotation = Class.forName(spaceClassName).getAnnotation(Space.class);
-      if(null != annotation){
+      if (null != annotation) {
         String spaceName = tryResolvePlaceholder(annotation.name());
         if (!spaceName.equals("")) {
           cm.setSpace(spaceName);
@@ -172,13 +172,15 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
    * @return resolveResult 解析结果
    * @throws IllegalArgumentException 当配置了 ${xx.xx} 占位符，且spring配置文件中未指定该配置时抛出
    */
-  private String tryResolvePlaceholder(String value){
+  private String tryResolvePlaceholder(String value) {
     String resolveResult = value;
     if (null != applicationContext) {
       try {
         resolveResult = applicationContext.getEnvironment().resolveRequiredPlaceholders(value);
       } catch (IllegalArgumentException e) {
-        throw new ResourceLoadException("name ( "+ value +" ) of @Space missing configurable value");
+        throw new ResourceLoadException(
+          "name ( " + value + " ) of @Space missing configurable value"
+        );
       }
     }
     return resolveResult;

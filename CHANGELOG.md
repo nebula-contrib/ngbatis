@@ -55,7 +55,7 @@ This source code is licensed under Apache 2.0 License.
   > http2 属于企业版的数据库才支持，但我没有测试环境，所以不确定是否可用。
   > http2 is supported by the enterprise version of the database, but I don't have a test environment, so I'm not sure if it works.
 - feat: support adding ID attributes of start and end nodes in edge entities.
-  > 通过 @DstId, @SrcId 进行注解，可以将属性标记成特殊的属性，用于查询时可以填充的起始点和终点的id值。
+  > 通过 `@DstId`, `@SrcId` 进行注解，可以将属性标记成特殊的属性，用于查询时可以填充的起始点和终点的id值。
 
   - example:
 
@@ -78,8 +78,8 @@ This source code is licensed under Apache 2.0 License.
           Route-Tag: abc
     ```
 
-- feat: @Space annotation supports dynamic configuration.
-  > @Space 注解的 name 属性值可通过 spring 配置文件自定义配置。
+- feat: `@Space` annotation supports dynamic configuration.
+  > `@Space` 注解的 name 属性值可通过 spring 配置文件自定义配置。
   - example:
 
     ```yaml
