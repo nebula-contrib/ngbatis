@@ -24,41 +24,37 @@ public class NebulaGraphBasicTests {
   @Test
   public void queryVertexId() {
     Player player = new Player();
-    //查询tag为Player的点的id
-    List<String> ids = player.queryId();
+    //直接查Id(根据Tag)
+    List<String> ids = player.queryIdsByProperties();
     System.out.println(ids.toString());
-
     //设置属性
     player.setName("Vince Carter");
-    List<String> ids2 = player.queryId();
+    player.setAge(42);
+    List<String> ids2 = player.queryIdsByProperties();
     System.out.println(ids2.toString());
-  }
-
-  @Test
-  public void queryVertexByTag() {
-    Player player = new Player();
-    List<Player> players = player.queryByTag();
-    System.out.println(players.toString());
   }
 
   @Test
   public void queryVertexById() {
     Player player = new Player();
     player.setId("player101");
-    Player p = player.queryById();
+    Player p = player.queryVertexById();
     System.out.println(p);
-
-    //id为空，报错 Player does not have id.
-    //Player player2 = new Player();
-    //Player nPlayer2 = player2.queryById();
-    //System.out.println(nPlayer2);
   }
 
   @Test
-  public void queryVertexByProperty() {
+  public void queryVertexByTag() {
     Player player = new Player();
-    player.setAge(33);
-    List<Player> players = player.queryByProperty();
+    List<Player> players = player.queryVertexByTag();
+    System.out.println(players.toString());
+  }
+
+  @Test
+  public void queryVertexByProperties() {
+    Player player = new Player();
+    player.setId("player101");
+    player.setAge(36);
+    List<Player> players = player.queryVertexByProperties();
     System.out.println(players.toString());
   }
 
@@ -67,10 +63,12 @@ public class NebulaGraphBasicTests {
     Player player = new Player();
     player.setAge(36);
     player.setId("player101");
-    List<NgVertex<String>> vs = player.queryAllAdjacentVertex(Serve.class);
-    System.out.println(JSON.toJSONString(vs));
-
-    List<NgVertex<String>> vs2 = player.queryAllAdjacentVertex();
+    List<NgVertex<String>> vs = player.queryAllAdjacentVertex();
+    for (NgVertex<String> v : vs) {
+      System.out.println(JSON.toJSONString(v));
+    }
+    //指定多个边类型
+    List<NgVertex<String>> vs2 = player.queryAllAdjacentVertex(Serve.class,Follow.class);
     for (NgVertex<String> v : vs2) {
       System.out.println(JSON.toJSONString(v));
     }
@@ -81,7 +79,9 @@ public class NebulaGraphBasicTests {
     Player player = new Player();
     player.setAge(37);
     List<NgVertex<String>> res = player.queryIncomingAdjacentVertex();
-    System.out.println(res);
+    for (NgVertex<String> v : res) {
+      System.out.println(JSON.toJSONString(v));
+    }
   }
 
   @Test
@@ -89,86 +89,96 @@ public class NebulaGraphBasicTests {
     Player player = new Player();
     player.setAge(37);
     List<NgVertex<String>> res = player.queryOutgoingAdjacentVertex();
-    System.out.println(res);
+    for (NgVertex<String> v : res) {
+      System.out.println(JSON.toJSONString(v));
+    }
   }
 
   @Test
-  public void queryNeighborsWithHop() {
+  public void queryNeighborIdsWithHopById() {
     Player player = new Player();
     player.setId("player102");
-    List<String> ids = player.queryNeighborsWithHop(2, 2, Follow.class);
+    List<String> ids = player.queryNeighborIdsWithHopById(2, 2, Follow.class,Serve.class);
     System.out.println(ids);
-
 
     Player player2 = new Player();
     player2.setId("player100");
-    List<String> ids2 = player2.queryNeighborsWithHop(1, 2, Follow.class);
+    List<String> ids2 = player2.queryNeighborIdsWithHopById(1, 2);
     System.out.println(ids2);
   }
 
   @Test
-  public void queryConnectedEdges() {
+  public void queryConnectedEdgesById() {
     Player player = new Player();
-    player.setId("player110");
-    List<NgEdge<String>> ngEdges = player.queryConnectedEdges(Direction.NULL);
-    System.out.println(JSON.toJSONString(ngEdges));
-    List<NgEdge<String>> ngEdges2 = player.queryConnectedEdges(Direction.BIDIRECT);
-    System.out.println(JSON.toJSONString(ngEdges2));
+    player.setId("player100");
+    List<NgEdge<String>> ngEdges = player.queryConnectedEdgesById(Direction.NULL);
+    for (NgEdge<String> ngEdge : ngEdges) {
+      System.out.println(JSON.toJSONString(ngEdge));
+    }
+    List<NgEdge<String>> ngEdges2 = player.queryConnectedEdgesById(Direction.BIDIRECT,Follow.class);
+    for (NgEdge<String> ngEdge : ngEdges2) {
+      System.out.println(JSON.toJSONString(ngEdge));
+    }
   }
 
 
   @Test
   public void queryPathFromVertex() {
     Player player = new Player();
-    player.setName("Vince Carter");
-
-    List<NgPath<Object>> ngPaths = player.queryPathFromVertex(Direction.NULL);
-    System.out.println(JSON.toJSONString(ngPaths));
-  }
-
-
-  @Test
-  public void queryShortestPath() {
-    Player player = new Player();
-    player.setName("Tim Duncan");
-
-    Player v2 = new Player();
-    v2.setName("Tony Parker");
-
-    NgPath<String> ngPath = player.queryShortestPath(5, Direction.NULL, v2);
-    System.out.println(JSON.toJSONString(ngPath));
-  }
-
-
-  @Test
-  public void queryAllShortestPaths() {
-    Player player = new Player();
-    player.setName("Tim Duncan");
-
-    Player v2 = new Player();
-    v2.setName("Tony Parker");
-
-    List<NgPath<Object>> ngPaths = player.queryAllShortestPaths(5, Direction.NULL, v2);
-    System.out.println(JSON.toJSONString(ngPaths));
+    player.setName("Tony Parker");
+    player.setId("player101");
+    List<NgPath<String>> ngPaths = player.queryPathFromVertex(Direction.NULL);
+    for (NgPath<String> ngPath : ngPaths) {
+      System.out.println(JSON.toJSONString(ngPath));
+    }
   }
 
   @Test
-  public void queryFixedLengthPath() {
+  public void queryFixedLengthPathFromVertex() {
     Player player = new Player();
     player.setName("Tim Duncan");
-    List<NgPath<String>> ngPaths = player.queryFixedLengthPath(5, Direction.NULL,
-         Follow.class, Serve.class);
-    System.out.println(JSON.toJSONString(ngPaths));
+    List<NgPath<String>> ngPaths = player.queryFixedLengthPathFromVertex(5, Direction.NULL,
+            Follow.class, Serve.class);
+    for (NgPath<String> ngPath : ngPaths) {
+      System.out.println(JSON.toJSONString(ngPath));
+    }
   }
+
 
   @Test
   public void queryVariableLengthPath() {
     Player player = new Player();
     player.setName("Tim Duncan");
-    List<NgPath<String>> ngPaths = player.queryVariableLengthPath(1, 3,Direction.NULL,
-         Follow.class);
+    List<NgPath<String>> ngPaths = player.queryVariableLengthPathFromVertex(1, 3,Direction.NULL,
+            Follow.class);
+    for (NgPath<String> ngPath : ngPaths) {
+      System.out.println(JSON.toJSONString(ngPath));
+    }
+  }
+
+
+  @Test
+  public void queryShortestPathFromSrcAndDst() {
+    Player src = new Player();
+    src.setName("Tim Duncan");
+    Player dst = new Player();
+    dst.setName("Tony Parker");
+    NgPath<String> ngPath = src.queryShortestPathFromSrcAndDst(5, Direction.NULL, dst);
+    System.out.println(JSON.toJSONString(ngPath));
+  }
+
+
+  @Test
+  public void queryAllShortestPathsFromSrcAndDst() {
+    Player src = new Player();
+    src.setName("Tim Duncan");
+    Player dst = new Player();
+    dst.setName("Tony Parker");
+    List<NgPath<Object>> ngPaths = src.queryAllShortestPathsFromSrcAndDst(5, Direction.NULL, dst);
     System.out.println(JSON.toJSONString(ngPaths));
   }
+
+
 
   @Test
   public void queryVertexCountByTag() {
@@ -181,30 +191,33 @@ public class NebulaGraphBasicTests {
   @Test
   public void queryEdgeByType() {
     Serve serve = new Serve();
-    List<Serve> serves = serve.queryByType(Direction.NULL);
+    List<Serve> serves = serve.queryEdgeByType(Direction.NULL);
     for (Serve s : serves) {
       System.out.println(s);
     }
   }
 
   @Test
-  public void queryEdgeByProperty() {
+  public void queryEdgeWithSrcAndDstByProperties() {
+    //边
     Serve serve = new Serve();
     serve.setStartYear(2003);
+    //起点
     Player src = new Player();
-    src.setName("Carmelo Anthony");
+    src.setId("player129");
+    //终点
     Team dst = new Team();
-    List<Follow> fl = serve.queryByProperty(src, Direction.BIDIRECT, dst);
+    dst.setName("Heat");
+    List<Follow> fl = serve.queryEdgeWithSrcAndDstByProperties(src, Direction.BIDIRECT, dst);
     System.out.println(JSON.toJSONString(fl));
   }
 
   @Test
-  public void queryEdgeProperty() {
+  public void queryEdgePropertiesBySrcAndDstId() {
     Serve serve = new Serve();
     serve.setSrcId("player100");
     serve.setDstId("team204");
-
-    Serve s = serve.queryEdgeProperty();
+    Serve s = serve.queryEdgePropertiesBySrcAndDstId();
     System.out.println(s);
   }
 

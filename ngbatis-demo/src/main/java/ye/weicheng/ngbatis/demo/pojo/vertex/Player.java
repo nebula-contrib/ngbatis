@@ -52,12 +52,11 @@ public class Player extends GraphBaseVertex {
 
   @Override
   public String toString() {
-    return "Player{"
-            + "name='" + name + '\''
-            + ", age=" + age
-            + '}';
+    return "Player{" +
+            "id='" + id + '\'' +
+            ", name='" + name + '\'' +
+            ", age=" + age +
+            '}';
   }
-
-
 
 }

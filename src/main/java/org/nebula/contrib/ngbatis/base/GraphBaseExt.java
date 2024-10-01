@@ -7,18 +7,26 @@ import com.vesoft.nebula.client.graph.net.Session;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import org.nebula.contrib.ngbatis.ArgsResolver;
 import org.nebula.contrib.ngbatis.Env;
 import org.nebula.contrib.ngbatis.ResultResolver;
 import org.nebula.contrib.ngbatis.SessionDispatcher;
 import org.nebula.contrib.ngbatis.annotations.base.EdgeType;
 import org.nebula.contrib.ngbatis.annotations.base.GraphId;
 import org.nebula.contrib.ngbatis.annotations.base.Tag;
+import org.nebula.contrib.ngbatis.proxy.MapperProxy;
 import org.nebula.contrib.ngbatis.session.LocalSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import static org.apache.commons.lang3.ObjectUtils.isEmpty;
+import static org.nebula.contrib.ngbatis.proxy.MapperProxy.executeWithParameter;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getNameByColumn;
+import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getValue;
 
 /**
  * 提供给实体调用的拓展方法。
@@ -28,13 +36,9 @@ import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getNameByColumn;
 
 public class GraphBaseExt {
   public static Env ENV;
+  private static Logger log = LoggerFactory.getLogger(GraphBaseExt.class);
 
-  /**
-   * 执行gql
-   * @param gql 查询语句
-   * @return 结果集ResultSet
-   */
-  public static ResultSet executeGQL(String gql) {
+  public static ResultSet executeGql(String textTpl,Map<String,Object> m1,Map<String, Object> m2) {
 	Session session = null;
 	LocalSession localSession = null;
 	ResultSet result = null;
@@ -44,19 +48,30 @@ public class GraphBaseExt {
 	//从env中获取space
 	String currentSpace = ENV.getSpace();
 
+	ArgsResolver argsResolver = ENV.getArgsResolver();
+
+	String gql = ENV.getTextResolver().resolve(textTpl, m1);
+
+	Map<String,Object> parasForDb = argsResolver.resolve(m2);
+
 	String[] qlAndSpace = null;
 	try {
 	  //确保当前图空间正确
 	  qlAndSpace = qlWithSpace(localSession, gql, currentSpace);
 	  gql = qlAndSpace[1];
 	  session = localSession.getSession();
-	  //查询结果
-	  result = session.execute(gql);
-	  return result;
+	  result = session.executeWithParameter(gql,parasForDb);
 	}
 	catch (Exception e) {
 	  throw new RuntimeException(e);
 	}
+	finally {
+	  log.debug("\n\t- nGql：{}"
+					  + "\n\t- params: {}"
+					  + "\n\t- result：{}",
+			  gql, m2, result);
+	}
+	return result;
   }
 
   /**
@@ -99,7 +114,7 @@ public class GraphBaseExt {
    */
   public static String getEdgeType(Class edgeClass) {
 	if (edgeClass.isAnnotationPresent(EdgeType.class)) {
-	  // 获取 @Tag 注解
+	  // 获取 @EdgeType 注解
 	  EdgeType anno = (EdgeType) edgeClass.getAnnotation(EdgeType.class);
 	  // 获取 name 属性值
 	  return anno.name();
@@ -137,18 +152,76 @@ public class GraphBaseExt {
 	Map<String, Object> result = new HashMap<String, Object>();
 	Field[] fields = v2Class.getDeclaredFields();
 	for (Field field : fields) {
-	  if (!field.isAnnotationPresent(GraphId.class)) {
-		try {
-		  field.setAccessible(true);
-		  String fieldName = getNameByColumn(field);
-		  Object fieldValue = field.get(v2);
-		  result.put(fieldName, fieldValue);
+	  Object fieldValue = getValue(v2,field);
+	  if (fieldValue == null) {
+		continue;
+	  }
+	  // 如果是基本类型且是初始值，跳过
+	  if (field.getType().isPrimitive()) {
+		if (isPrimitiveDefaultValue(field.getType(), fieldValue)) {
+		  continue; // 跳过初始值
 		}
-		catch (IllegalAccessException e) {
-		  throw new RuntimeException("Unable to access field: " + field.getName(), e);
-		}
+	  }
+	  // 处理带有 @GraphId 注解的字段
+	  if (field.isAnnotationPresent(GraphId.class)) {
+		result.put("id", fieldValue);
+	  }
+	  else {
+		result.put(getNameByColumn(field), fieldValue);
 	  }
 	}
 	return result;
+  }
+
+  /**
+   * 判断实体属性是否为基本类型且是默认值
+   * @param type 实体类型
+   * @param value 属性值
+   * @return 判断结果
+   */
+  public static boolean isPrimitiveDefaultValue(Class<?> type, Object value) {
+	if (type == int.class && (int) value == 0) {
+	  return true;
+	}
+	if (type == long.class && (long) value == 0L) {
+	  return true;
+	}
+	if (type == float.class && (float) value == 0.0f) {
+	  return true;
+	}
+	if (type == double.class && (double) value == 0.0d) {
+	  return true;
+	}
+	if (type == byte.class && (byte) value == 0) {
+	  return true;
+	}
+	if (type == short.class && (short) value == 0) {
+	  return true;
+	}
+	if (type == char.class && (char) value == '\u0000') { // 默认字符是空字符
+	  return true;
+	}
+	return false;
+  }
+
+  /**
+   * 将多个edgeClass拼接成edge子句
+   * @param sep 分隔符
+   * @param edgeClass 边类型
+   * @return edge子句
+   */
+  public static String getEdgeTypes(String sep, Class<?>... edgeClass) {
+	if (edgeClass == null) {
+	  return "";
+	}
+	StringBuilder edgeTypeBuilder = new StringBuilder();
+	for (Class<?> edgeType : edgeClass) {
+	  String type = GraphBaseExt.getEdgeType(edgeType);
+	  edgeTypeBuilder.append(type).append(sep);
+	}
+	if (edgeTypeBuilder.length() > 0) {
+	  edgeTypeBuilder.setLength(edgeTypeBuilder.length() - 1);
+	}
+	return edgeTypeBuilder.toString();
   }
 }
