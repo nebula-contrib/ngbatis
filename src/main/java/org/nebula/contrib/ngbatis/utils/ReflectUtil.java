@@ -24,6 +24,9 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.nebula.contrib.ngbatis.annotations.base.EdgeType;
+import org.nebula.contrib.ngbatis.annotations.base.GraphId;
+import org.nebula.contrib.ngbatis.annotations.base.Tag;
 import org.nebula.contrib.ngbatis.exception.ParseException;
 import org.nebula.contrib.ngbatis.models.MethodModel;
 import org.springframework.util.Assert;
@@ -79,6 +82,10 @@ public abstract class ReflectUtil {
       if (getNameByColumn(columnField).equals(prop)) {
         declaredField = columnField;
         break;
+      }
+      if (isGraphId(columnField) && prop.equals("@GraphId")) {
+        setValue(o, columnField, value);
+        return;
       }
     }
     if (declaredField == null) {
@@ -588,9 +595,32 @@ public abstract class ReflectUtil {
    */
   public static String schemaByEntityType(Class<?> entityType) {
     Table tableAnno = entityType.getAnnotation(Table.class);
-    return tableAnno != null
-        ? tableAnno.name()
-        : StringUtil.camelToUnderline(entityType.getSimpleName());
+    Tag tagAnno = entityType.getAnnotation(Tag.class);
+    EdgeType edgeTypeAnno = entityType.getAnnotation(EdgeType.class);
+    if (tableAnno != null) {
+      return tableAnno.name();
+    }
+    if (tagAnno != null) {
+      return tagAnno.name();
+    }
+    if (edgeTypeAnno != null) {
+      return edgeTypeAnno.name();
+    }
+    return StringUtil.camelToUnderline(entityType.getSimpleName());
   }
 
+  /**
+   * 判断传入的属性是否带有@GraphId注解
+   * @param field 属性
+   * @return 判断结果
+   */
+  public static boolean isGraphId(Field field) {
+    Annotation[] annotations = field.getAnnotations();
+    for (Annotation annotation : annotations) {
+      if (annotation instanceof GraphId) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

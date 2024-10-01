@@ -187,6 +187,16 @@ public class DefaultArgsResolver implements ArgsResolver {
     return resolve(true, methodModel, args);
   }
 
+  @Override
+  public Map<String, Object> resolve(Map<String, Object> argMap) {
+    Map<String, Object> result = new LinkedHashMap<>();
+    for (Map.Entry<String, Object> entry : argMap.entrySet()) {
+      String key = entry.getKey();
+      result.put(key, serialize(false, entry.getValue()));
+    }
+    return result;
+  }
+
   @SuppressWarnings("unchecked")
   @Override
   public Map<String, Object> resolve(MethodModel methodModel, Object... args) {
@@ -230,7 +240,8 @@ public class DefaultArgsResolver implements ArgsResolver {
     }
     return result;
   }
-  
+
+
   private Object serialize(boolean forTemplate, Object o) {
     return forTemplate ? JSON.toJSON(o) : toNebulaValueType(o);
   }

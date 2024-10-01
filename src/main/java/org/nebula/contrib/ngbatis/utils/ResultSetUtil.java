@@ -425,6 +425,7 @@ public class ResultSetUtil {
       if (!v.tagNames().contains(tagName)) {
         return;
       }
+      ReflectUtil.setValue(t, "@GraphId", ResultSetUtil.getValue(v.getId()));
       List<ValueWrapper> values = v.values(tagName);
       List<String> keys = v.keys(tagName);
       for (int i = 0; i < keys.size(); i++) {
