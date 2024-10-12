@@ -24,6 +24,7 @@ import org.nebula.contrib.ngbatis.proxy.RamClassLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -59,12 +60,21 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
   @Override
   public void postProcessBeanFactory(
       ConfigurableListableBeanFactory configurableListableBeanFactory) throws BeansException {
+    setBeans(configurableListableBeanFactory);
     NebulaPool nebulaPool = nebulaPool();
     mapperContext(nebulaPool);
   }
 
+  private void setBeans(ConfigurableListableBeanFactory beanFactory) {
+    ObjectProvider<PasswordDecoder> passwordDecoders =
+      beanFactory.getBeanProvider(PasswordDecoder.class);
+
+    PasswordDecoder passwordDecoder = passwordDecoders.getIfAvailable();
+    nebulaJdbcProperties.setPasswordDecoder(passwordDecoder);
+  }
+
   public MapperContext mapperContext(NebulaPool nebulaPool) {
-    DaoResourceLoader daoBasicResourceLoader = new DaoResourceLoader(parseCfgProps);
+    DaoResourceLoader daoBasicResourceLoader = new DaoResourceLoader(parseCfgProps, this.context);
     MapperContext context = MapperContext.newInstance();
     context.setResourceRefresh(parseCfgProps.isResourceRefresh());
     context.setNgbatisConfig(nebulaJdbcProperties.getNgbatis());
@@ -223,7 +233,12 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
             spaceName,
             nebulaJdbcProperties.getUsername(),
             nebulaJdbcProperties.getPassword()
-    );
+    ).setUseHttp2(poolConfig.isUseHttp2())
+      .setEnableSsl(poolConfig.isEnableSsl())
+      .setSslParam(poolConfig.getSslParam())
+      .setCustomHeaders(poolConfig.getCustomHeaders())
+      .setWaitTime(poolConfig.getWaitTime())
+      .setTimeout(poolConfig.getTimeout());
 
     if (poolConfig.getMinConnSize() <= 0) {
       sessionPoolConfig.setMinSessionSize(1);
@@ -242,11 +257,7 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
       sessionPoolConfig.setHealthCheckTime(healthCheckTime);
     }
 
-    SessionPool sessionPool = new SessionPool(sessionPoolConfig);
-    if (!sessionPool.init()) {
-      return null;
-    }
-    return sessionPool;
+    return new SessionPool(sessionPoolConfig);
   }
 
   @Override

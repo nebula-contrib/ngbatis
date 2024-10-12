@@ -16,9 +16,12 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.nebula.contrib.ngbatis.exception.ParseException;
@@ -283,6 +286,7 @@ public abstract class ReflectUtil {
     return null;
   }
 
+
   /**
    * 判断 parentType 是否是 paramType 或其父类、接口
    * @param paramType 待判断类型-子类
@@ -290,11 +294,101 @@ public abstract class ReflectUtil {
    * @return paramType 是否为 parentType 子类或实现类 
    */
   public static boolean isCurrentTypeOrParentType(Class<?> paramType, Class<?> parentType) {
+    if (paramType == null || parentType == null) {
+      return false;
+    }
     if (paramType == parentType) {
       return true;
     }
-    Set<Class<?>> parentTypes = getParentTypes(paramType);
-    return parentTypes.contains(parentType);
+    return parentType.isAssignableFrom(paramType);
+  }
+
+  public static Class<?> findLeafClassFromList(List<Class<?>> list) {
+    if (list == null || list.isEmpty()) {
+      return null;
+    }
+    Class<?> resultType = list.get(0);
+    for (int i = 1; i < list.size(); i++) {
+      Class<?> type = list.get(i);
+      if (resultType.isAssignableFrom(type)) {
+        resultType = type;
+      }
+    }
+    return resultType;
+  }
+
+  /**
+   * 从多个类型中，找到最底层的子类。<br>
+   * 当 resultType 往深处查找时，如果存在多个子类，返回递归过程未分叉的子类。<br>
+   * 既根据提供的 tagTypes 集合，查找确定性的运行时类型。<br>
+   * {@link org.nebula.contrib.ngbatis.utils.ReflectUtilTest#testFindLeafClass()}
+   * 
+   * @param tagTypes 类型集合
+   * @param resultType 目标类型
+   * @return 未分叉的子类
+   */
+  public static Class<?> findNoForkLeafClass(Collection<Class<?>> tagTypes, Class<?> resultType) {
+    Class<?> nodeType = null;
+    Map<Class<?>, Set<Class<?>>> classSetMap = extendTree(tagTypes);
+
+    Set<Class<?>> subclasses = classSetMap.get(resultType);
+
+    // 目标的类，不在标签所对应的类继承树中。
+    if (subclasses == null) {
+      return null;
+    }
+
+    // 当目标的类，没有子类，说明已经是子叶节点。
+    if (subclasses.isEmpty()) {
+      return resultType;
+    }
+
+    // 当目标的类，有多个子类时，
+    // 说明在继承树的实现类中存在分歧，程序无法自行决定使用哪个子类。
+    if (subclasses.size() > 1) {
+      return resultType;
+    }
+
+    while (subclasses.size() == 1) {
+      nodeType = subclasses.iterator().next();
+      subclasses = classSetMap.get(nodeType);
+    }
+
+    return nodeType;
+  }
+
+  /**
+   * 根据多个类型，生成继承树。
+   * 
+   * @param tagTypes 类型集合
+   * @return 继承树
+   */
+  public static Map<Class<?>, Set<Class<?>>> extendTree(Collection<Class<?>> tagTypes) {
+    Map<Class<?>, Set<Class<?>>> tree = new HashMap<>();
+    extendTree(tagTypes, tree);
+    return tree;
+  }
+
+  /**
+   * 根据多个类型，生成继承树。
+   * 
+   * @param tagTypes 类型集合
+   * @param tree 继承树，用于递归的容器
+   */
+  public static void extendTree(Collection<Class<?>> tagTypes, Map<Class<?>, Set<Class<?>>> tree) {
+    Set<Class<?>> superTypes = new HashSet<>();
+    for (Class<?> tagType : tagTypes) {
+      tree.computeIfAbsent(tagType, k -> new HashSet<>());
+      Class<?> superclass = tagType.getSuperclass();
+      if (superclass != null) {
+        Set<Class<?>> children = tree.computeIfAbsent(superclass, k -> new HashSet<>());
+        children.add(tagType);
+        superTypes.add(superclass);
+      }
+    }
+    if (!superTypes.isEmpty()) {
+      extendTree(superTypes, tree);
+    }
   }
 
   /**
@@ -413,25 +507,41 @@ public abstract class ReflectUtil {
    * @return 主键属性
    */
   public static Field getPkField(Field[] fields, Class<?> type, boolean canNotNull) {
-    Field pkField = null;
-    Field typePkField = null;
+    return getAnnoField(fields, type, canNotNull, Id.class);
+  }
+  
+  public static Field getAnnoField(Class<?> type, Class<? extends Annotation> anno) {
+    Field[] allColumnFields = getAllColumnFields(type);
+    return getAnnoField(allColumnFields, type, false, anno);
+  }
+
+  public static Field getAnnoField(
+      Field[] fields, Class<?> type, boolean canNotNull, 
+      Class<? extends Annotation> anno) {
+    Field markedField = null;
+    Field typeMarkedField = null;
     for (Field field : fields) {
-      if (field.isAnnotationPresent(Id.class)) {
-        pkField = field;
+      if (field.isAnnotationPresent(anno)) {
+        markedField = field;
         if (field.getDeclaringClass().equals(type)) {
-          typePkField = field;
+          typeMarkedField = field;
         }
       }
     }
-    // 多标签时，以运行时类中的 @Id 注解为准
-    if (typePkField != null) {
-      pkField = typePkField;
+    // 多标签时，以运行时类中的注解为准，如 @Id
+    if (typeMarkedField != null) {
+      markedField = typeMarkedField;
     }
-    if (canNotNull && pkField == null) {
+    if (canNotNull && markedField == null) {
       throw new ParseException(
-        String.format("%s 必须有一个属性用 @Id 注解。（javax.persistence.Id）", type));
+        String.format(
+          "%s 必须有一个属性用 @%s 注解。（%s）", 
+          type, 
+          anno.getSimpleName(),
+          anno.getName()
+        ));
     }
-    return pkField;
+    return markedField;
   }
   
   public static Class<?> typeArg(Object o, Class<?> parent, int i) {

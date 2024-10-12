@@ -33,8 +33,10 @@ This source code is licensed under Apache 2.0 License.
 
   NgBatis | nebula-java | JDK | Springboot | Beetl
   ---|-------------|---|------------|---
+  1.3.0 | 3.8.3       | 8 | 2.7.0 | 3.15.10.RELEASE
+  1.3.0-jdk17 | 3.8.3       | 17 | 3.0.7 | 3.15.10.RELEASE
   1.2.2 | 3.6.0       | 8 | 2.7.0 | 3.15.10.RELEASE
-  1.2.1-jdk17 | 3.6.0       | 17 | 3.0.7 | 3.15.10.RELEASE
+  1.2.2-jdk17 | 3.6.0       | 17 | 3.0.7 | 3.15.10.RELEASE
   1.2.1 | 3.6.0       | 8 | 2.7.0 | 3.15.10.RELEASE
   1.2.0-jdk17 | 3.6.0       | 17 | 3.0.7 | 3.15.10.RELEASE
   1.2.0 | 3.6.0       | 8 | 2.7.0 | 3.15.10.RELEASE
@@ -77,14 +79,14 @@ This source code is licensed under Apache 2.0 License.
         <dependency>
           <groupId>org.nebula-contrib</groupId>
           <artifactId>ngbatis</artifactId>
-          <version>1.2.2</version>
+          <version>1.3.0-jdk17</version>
         </dependency>
     ```
 
 - Gradle
 
     ```groovy
-    implementation 'org.nebula-contrib:ngbatis:1.2.1'
+    implementation 'org.nebula-contrib:ngbatis:1.3.0-jdk17'
     ```
 
 ### 参考 [【ngbatis-demo】](./ngbatis-demo)，与springboot无缝集成。在该项目的 test 中还有api的样例。在开发过程中每增加一个特性也都会同步更新ngbatis-demo的用例
@@ -236,8 +238,8 @@ resource/mapper/TestRepository.xml
 package com.example.model.vertex.Person;
 
 import lombok.Data;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Data
 @Table(name = "person")
@@ -256,7 +258,7 @@ package com.example.model.edge.Like;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;
-import javax.persistence.Table;
+import jakarta.persistence.Table;
 
 @Data
 @Table(name = "like")

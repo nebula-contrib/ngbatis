@@ -133,7 +133,7 @@ public class DefaultArgsResolver implements ArgsResolver {
         put(Object.class, (Setter<Object>) (obj) -> {
           Map<String, Object> pojoFields = new HashMap<>();
           Class<?> paramType = obj.getClass();
-          Field[] allFields = getAllColumnFields(paramType);
+          Field[] allFields = getAllColumnFields(paramType, true);
           for (Field declaredField : allFields) {
             Object nebulaValue = toNebulaValueType(
               ReflectUtil.getValue(obj, declaredField),

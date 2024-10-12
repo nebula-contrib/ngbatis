@@ -208,6 +208,22 @@
             ${ id } : ( ${ ng.join( @kv.values ) } ) ${ rowLP.last ? '' : ', ' }
         @}
     </insert>
+
+    <insert id="insertSelectiveBatch">
+        @for ( row in ng_args[0] ) {
+            @var kv = ng.kv( row, '', true, true );
+            @var id = ng.id( row );
+            INSERT VERTEX IF NOT EXISTS
+            @for ( entry in @kv.multiTagColumns ) {
+                `${ entry.key }` (
+                    ${ ng.join( entry.value, ", ", "ng.schemaFmt" ) }
+                ) ${ entryLP.last ? '' : ','}
+            @}
+            VALUES
+            ${ id } : ( ${ ng.join( @kv.values ) } ) ;
+        @}
+    </insert>
+
     <!--endregion-->
     
     <!--region update zoom -->
@@ -301,7 +317,7 @@
 
 
     <delete id="deleteByIdBatch">
-	DELETE VERTEX  ${ ng.join( p0, ", ", "ng.valueFmt" ) }
+        DELETE VERTEX  ${ ng.join( p0, ", ", "ng.valueFmt" ) }
     </delete>
     <!--endregion-->
 
@@ -399,6 +415,20 @@
         @var dstId = ng.valueFmt( dstId );
         FIND SHORTEST PATH FROM ${ srcId } TO ${ dstId } OVER * YIELD path AS p
     </select>
+
+    <select id="shortestOptionalPath" resultType="org.nebula.contrib.ngbatis.models.data.NgPath">
+        @var srcId = ng.valueFmt( srcId );
+        @var dstId = ng.valueFmt( dstId );
+
+        FIND SHORTEST PATH FROM ${ srcId } TO ${ dstId }
+        OVER ${ isNotEmpty(edgeTypeList) ? ng.join(edgeTypeList) : '*' } ${ isNotEmpty( direction ) ? direction : ''  }
+        YIELD path AS p;
+    </select>
     <!--endregion-->
+
+    <select id="showSpaces">
+        SHOW SPACES;
+    </select>
+
 
 </mapper>

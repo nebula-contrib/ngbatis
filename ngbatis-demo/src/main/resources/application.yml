@@ -14,7 +14,7 @@ nebula:
     use-session-pool: false
   hosts: 127.0.0.1:19669
   username: root
-  password: nebula
+  password: bmVidWxh
   space: test
   pool-config:
     min-conns-size: 0

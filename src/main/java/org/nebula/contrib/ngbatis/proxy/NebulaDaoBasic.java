@@ -15,6 +15,7 @@ import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.vertexName;
 
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -46,6 +47,9 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    */
   default T selectById(@Param("id") I id) {
     MethodModel methodModel = getMethodModel();
+    Class<?> currentType = this.getClass();
+    Class<?> entityType = entityType(currentType);
+    methodModel.setResultType(entityType);
     ClassModel classModel = getClassModel(this.getClass());
     return (T) MapperProxy.invoke(classModel, methodModel, id);
   }
@@ -219,6 +223,16 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     ClassModel classModel = getClassModel(this.getClass());
     MapperProxy.invoke(classModel, methodModel, ts);
   }
+
+  /**
+   * 批量插入非空字段
+   * @param ts 当前Tag下多个顶点
+   */
+  default void insertSelectiveBatch(List<? extends T> ts) {
+    MethodModel methodModel = getMethodModel();
+    ClassModel classModel = getClassModel(this.getClass());
+    MapperProxy.invoke(classModel,methodModel,ts);
+  }
   // endregion
 
   // region update zoom
@@ -333,13 +347,13 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
 
   // region graph special
   /**
-   * 根据三元组值，插入关系
+   * 根据三元组值，插入关系。任一参数为空，不执行。
    *
    * @param v1 开始节点值 或 开始节点id
    * @param e  关系值
    * @param v2 结束节点值 或 结束节点id
    */
-  default void insertEdge(@NotNull Object v1, @NotNull Object e, @NotNull Object v2) {
+  default void insertEdge(Object v1, Object e, Object v2) {
     if (v2 == null || v1 == null || e == null) {
       return;
     }
@@ -360,14 +374,14 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   }
 
   /**
-   * 根据三元组值, 插入关系
+   * 根据三元组值, 插入关系。任一参数为空，不执行。
    * <p>Selective: 仅处理非空字段</p>
    *
    * @param src 开始节点值
    * @param edge  关系值
    * @param dst 结束节点值
    */
-  default void insertEdgeSelective(@NotNull Object src, @NotNull Object edge, @NotNull Object dst) {
+  default void insertEdgeSelective(Object src, Object edge, Object dst) {
     if (dst == null || src == null || edge == null) {
       return;
     }
@@ -377,14 +391,14 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   }
 
   /**
-   * 根据三元组值, 插入关系
+   * 根据三元组值, 插入关系。任一参数为空，不执行。
    * <p>Selective: 仅处理非空字段</p>
    *
    * @param src 开始节点值
    * @param edge  关系值
    * @param dst 结束节点值
    */
-  default void upsertEdgeSelective(@NotNull Object src, @NotNull Object edge, @NotNull Object dst) {
+  default void upsertEdgeSelective(Object src, Object edge, Object dst) {
     if (dst == null || src == null || edge == null) {
       return;
     }
@@ -519,7 +533,45 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     return (List<NgPath<I>>) MapperProxy.invoke(classModel, methodModel, srcId, dstId);
   }
 
+  /**
+   * 查找指定起始点和目的点之间的最短路径
+   * @param srcId 起始点id
+   * @param dstId 目的点id
+   * @param edgeTypeList Edge type 列表
+   * @param direction REVERSELY表示反向，BIDIRECT表示双向
+   * @return 起始点和目的点之间的最短路径
+   */
+  default List<NgPath<I>> shortestOptionalPath(@Param("srcId") I srcId,@Param("dstId") I dstId,
+          @Param("edgeTypeList") List<String> edgeTypeList,
+          @Param("direction") String direction
+  ) {
+    MethodModel methodModel = getMethodModel();
+    methodModel.setReturnType(Collection.class);
+    methodModel.setResultType(NgPath.class);
+    ClassModel classModel = getClassModel(this.getClass());
+    return (List<NgPath<I>>) MapperProxy.invoke(classModel, methodModel,
+            srcId, dstId,edgeTypeList,direction);
+  }
 
   // endregion
+
+
+  /**
+   * 列出所有图空间
+   * @return 所有图空间
+   */
+  default List<String> showSpaces() {
+    MethodModel methodModel = getMethodModel();
+    methodModel.setReturnType(ResultSet.class);
+    methodModel.setResultType(ResultSet.class);
+    ClassModel classModel = getClassModel(this.getClass());
+    ResultSet resultSet = (ResultSet) MapperProxy.invoke(classModel, methodModel);
+    List<String> spaceNames = new ArrayList();
+    for (int i = 0; i < resultSet.rowsSize(); i++) {
+      spaceNames.add(resultSet.rowValues(i).get("Name").toString());
+    }
+    return spaceNames;
+  }
+
 
 }

@@ -1,0 +1,17 @@
+<!--
+    Copyright (c) 2024 All project authors. All rights reserved.
+    
+    This source code is licensed under Apache 2.0 License.
+-->
+<mapper namespace="org.nebula.contrib.kg.dao.DataDao">
+
+    <select id="selectTriplets" resultType="org.nebula.contrib.kg.pojo.Triplet">
+        MATCH (n)-[r]->(n2)
+        @if ( isNotEmpty( id ) ) {
+            WHERE id(n) == $id
+        @}
+        RETURN n as `src`, r as `edge`, n2 as `dst`
+        LIMIT 100
+    </select>
+
+</mapper>

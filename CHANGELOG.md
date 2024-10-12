@@ -26,6 +26,94 @@ This source code is licensed under Apache 2.0 License.
 
 - [x] Springboot 3.x support. (lastest-jdk17)
 
+# NEXT
+
+# 1.3.0
+
+## Dependencies upgrade
+
+- nebula-java: 3.6.0 -> 3.8.3
+- org.hibernate:hibernate-core was excluded.
+  > If you need to use hibernate-core, please add the dependency by yourself.
+
+## Bugfix
+
+- fix: when `use-session-pool` and spaceFromParam is true, skip the space addition.
+- fix: when timezone is not default, the time is incorrect.
+- fix: allow normal startup without any mapper files.
+- fix: Limit the node type obtained by `selectById` to the entity class of the interface.
+- fix: When a node has multiple tags, prioritize using the tag of `resultType`. (Collaborate with [charle004](https://github.com/charle004), [#311](https://github.com/nebula-contrib/ngbatis/pull/311))
+- fix: debugging log output issue [#312](https://github.com/nebula-contrib/ngbatis/issues/312)
+
+## Feature
+
+- feat: support the use of ciphertext passwords in yml.
+- feat: expanding the `insertSelectiveBatch` interface in `NebulaDaoBasic`.([#299](https://github.com/nebula-contrib/ngbatis/pull/299), via [Ozjq](https://github.com/Ozjq))
+- feat: expanding the `shortestOptionalPath` interface in `NebulaDaoBasic`.([#303](https://github.com/nebula-contrib/ngbatis/pull/303), via [xYLiu](https://github.com/n3A87))
+- feat: expanding the `showSpaces` interface in `NebulaDaoBasic`.([#304](https://github.com/nebula-contrib/ngbatis/pull/304), via [xYLiu](https://github.com/n3A87))
+- feat: support ssl and http2 config in yml.
+  > http2 属于企业版的数据库才支持，但我没有测试环境，所以不确定是否可用。
+  > http2 is supported by the enterprise version of the database, but I don't have a test environment, so I'm not sure if it works.
+- feat: support adding ID attributes of start and end nodes in edge entities.
+  > 通过 @DstId, @SrcId 进行注解，可以将属性标记成特殊的属性，用于查询时可以填充的起始点和终点的id值。
+
+  - example:
+
+    ```yaml
+    nebula:
+      pool-config:
+        enable-ssl: true
+        ssl-param:
+          sign-mode: SELF_SIGNED
+          crt-file-path: /path/to/client.crt
+          key-file-path: /path/to/client.key
+          password: password
+        # ssl-param:
+          # sign-mode: CA_SIGNED
+          # ca-crt-file-path: /path/to/ca-client.crt
+          # crt-file-path: /path/to/client.crt
+          # key-file-path: /path/to/client.key
+        use-http2: false
+        custom-headers:
+          Route-Tag: abc
+    ```
+
+- feat: @Space annotation supports dynamic configuration.
+  > @Space 注解的 name 属性值可通过 spring 配置文件自定义配置。
+  - example:
+
+    ```yaml
+    app:
+      person:
+        space: PERSON_SPACE
+    ```
+  
+    ```java
+    @Space(name = "${nebula.space}")
+    @Table(name = "person")
+    public class Person {
+        @Id
+        private String vid;
+        private String name;
+  
+        public String getVid() {
+            return vid;
+        }
+  
+        public void setVid(String vid) {
+            this.vid = vid;
+        }
+  
+        public String getName() {
+            return name;
+        }
+  
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+    ```
+
 # 1.2.2
 
 ## Bugfix
@@ -68,8 +156,8 @@ This source code is licensed under Apache 2.0 License.
 - feat: support `<nGQL>` include query pieces. ([#212](https://github.com/nebula-contrib/ngbatis/pull/212), via [dieyi](https://github.com/1244453393))
 - feat: extending `NgPath`, when 'with prop' is used in nGQL, edge attributes can be obtained from NgPath. ([#228](https://github.com/nebula-contrib/ngbatis/pull/228), via [dieyi](https://github.com/1244453393))
 - feat: expanding the `insertEdgeBatch` interface in `NebulaDaoBasic`. ([#244](https://github.com/nebula-contrib/ngbatis/pull/244), via [Sunhb](https://github.com/shbone))
-- feat: expanding the `deleteByIdBatch` interface in `NebulaDaoBasic`. ([#247](https://github.com/nebula-contrib/ngbatis/pull/244), via [Sunhb](https://github.com/shbone))
-- feat: expanding the `listEndNodes` interface in `NebulaDaoBasic`. ([#247](https://github.com/nebula-contrib/ngbatis/pull/272), via [knqiufan](https://github.com/knqiufan))
+- feat: expanding the `deleteByIdBatch` interface in `NebulaDaoBasic`. ([#247](https://github.com/nebula-contrib/ngbatis/pull/247), via [Sunhb](https://github.com/shbone))
+- feat: expanding the `listEndNodes` interface in `NebulaDaoBasic`. ([#272](https://github.com/nebula-contrib/ngbatis/pull/272), via [knqiufan](https://github.com/knqiufan))
 - feat: support specify space by param
 
 ## Bugfix
