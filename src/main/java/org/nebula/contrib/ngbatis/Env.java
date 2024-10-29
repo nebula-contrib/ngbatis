@@ -7,6 +7,7 @@ package org.nebula.contrib.ngbatis;
 import com.alibaba.fastjson.parser.ParserConfig;
 import com.vesoft.nebula.client.graph.SessionPool;
 import com.vesoft.nebula.client.graph.net.Session;
+import org.nebula.contrib.ngbatis.base.GraphBaseExt;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
 import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.nebula.contrib.ngbatis.proxy.MapperProxy;
@@ -87,6 +88,7 @@ public class Env {
     this.pkGenerator = pkGenerator;
     this.mapperContext = MapperContext.newInstance();
     MapperProxy.ENV = this;
+    GraphBaseExt.ENV = this;
     this.dispatcher = dispatcher;
     log.debug(" Env constructor ");
   }
