@@ -337,6 +337,131 @@ public class PersonServiceImpl {
 
 ```
 
+### 使用提供的方法进行实体直查（OGM）
+
+该查询方式是从实体对象出发完成数据直查。使用前要定义实体类，作为查询参数。
+
+#### 实体类
+
+##### 点实体
+
+- 继承`GraphBaseVertex`类标识是点实体
+- `@Tag`的name属性注明点实体的Tag
+- `@GraphId`的type属性注明点实体id的类型（可选）
+
+```java
+@Tag(name = "player")
+public class Player extends GraphBaseVertex {
+
+  @GraphId(type = IdType.STRING)
+  private String id;
+
+  private String name;
+
+  private Integer age;
+    
+  ...
+
+}
+```
+
+具体可参考`ye.weicheng.ngbatis.demo.pojo.edge`包下的点实体示例。
+
+##### 边实体
+
+- 继承`GraphBaseEdge`类标识是边实体
+- `@EdgeType`的name属性注明边实体的类型
+- `@Id`（可选，如果两个节点之间同一类型边的唯一性由源节点id和目标节点id共同决定，可以不加当前属性）
+- `@SrcId`（可选，如果不需要获取关系的源节点id，可以不加当前属性）
+- `@DstId`（可选，如果不需要获取关系的目标节点id，可以不加当前属性）
+
+```java
+@EdgeType(name = "serve")
+public class Serve extends GraphBaseEdge {
+
+  @Id 
+  private Long rank;
+
+  @SrcId 
+  private String srcId;
+
+  @DstId 
+  private String dstId;
+
+  @Column(name = "start_year")
+  private Integer startYear;
+  @Column(name = "end_year")
+  private Integer endYear;
+
+  ...
+}
+```
+
+具体可参考`ye.weicheng.ngbatis.demo.pojo.vertex`包下的边实体示例。
+
+#### 现提供的方法
+
+##### 关于点实体
+
+| API                                                          | 用法说明                                                     |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| queryIdsByProperties()                                       | 查询特定Tag或者属性的点Id集合                                |
+| queryVertexById()                                            | 查询特定点Id的单个点                                         |
+| queryVertexByTag()                                           | 查询特定Tag的点集合                                          |
+| queryVertexByProperties()                                    | 查询特定属性的点集合                                         |
+| queryAllAdjacentVertex(Class<?>... edgeClass)                | 查询特定点的所有邻点集合，可指定一个或多个连接两点的边类型   |
+| queryIncomingAdjacentVertex(Class<?>... edgeClass)           | 查询特定点入边方向的邻点集合，可指定一个或多个连接两点的边类型 |
+| queryOutgoingAdjacentVertex(Class<?>... edgeClass)           | 查询特定点出边方向的邻点集合，可指定一个或多个连接两点的边类型 |
+| queryNeighborIdsWithHopById(int m, int n, Class<?>... edgeClass) | 查询特定点指定跳数内的点Id集合，可指定一个或多个连接两点的边类型 |
+| queryConnectedEdgesById(Direction direction)                 | 查询特定点关联的所有边集合，可指定边的方向和类型             |
+| queryPathFromVertex(Direction direction)                     | 查询特定点关联的所有路径集合，可指定边的方向                 |
+| queryFixedLengthPathFromVertex(Integer maxHop, Direction direction, Class<?>... edgeClass) | 查询特定点出发的定长路径集合，可指定最大步数、边的方向、边的类型 |
+| queryVariableLengthPathFromVertex(Integer minHop, Integer maxHop,   Direction direction, Class<?>... edgeClass) | 查询特定点出发的变长路径集合，可指定最小步数、最大步数、边的方向、边的类型 |
+| queryShortestPathFromSrcAndDst(Integer maxHop,   Direction direction, T v2) | 查询特定点出发的任意一条最短路径，可指定步数、边的方向、终点实体 |
+| queryAllShortestPathsFromSrcAndDst(Integer maxHop,   Direction direction, T v2) | 查询从该点出发的所有最短路径集合，可指定步数、边的方向、终点实体 |
+| queryVertexCountByTag()                                      | 查询特定Tag的点的数量                                        |
+
+具体实现见`org.nebula.contrib.ngbatis.base`包下的点实体基类`GraphBaseVertex`。
+
+##### 关于边实体
+
+| API                                                          | 用法说明                   |
+| ------------------------------------------------------------ | -------------------------- |
+| queryEdgeByType(Direction direction)                         | 查询特定类型、方向的边集合 |
+| queryEdgeWithSrcAndDstByProperties(T srcVertex, Direction direction, T dstVertex) | 查询特定属性的边集合       |
+| queryEdgePropertiesBySrcAndDstId()                           | 查询特定始终点id的边集合   |
+| queryEdgeCountByType()                                       | 查询特定Type的边的数量     |
+
+具体实现见`org.nebula.contrib.ngbatis.base`包下的边实体基类`GraphBaseEdge`。
+
+#### 使用示例
+
+```java
+@Test
+public void testVertex(){
+    Player srcPlayer = new Player();
+    //查询所有符合条件 name = "Vince Carter" 的Player顶点
+    srcPlayer.setName("Vince Carter");
+    List<Player> vertices = player.queryVertexByProperties();
+}
+
+@Test
+public void testEdge(){
+    Serve serve = new Serve();
+    
+    //查询起点id为player100，终点id为team204的Serve边
+    serve.setSrcId("player100");
+    serve.setDstId("team204");
+    Serve edge = serve.queryEdgeWithSrcAndDstByProperties();
+    
+    //查询Serve类型、方向为”->“的边
+    List<Serve> edges = serve.queryEdgeByType(Direction.NULL);
+    
+}
+```
+
+具体每个直查方法的使用示例可参考ngbatis-demo里的NebulaGraphBasicTests测试类。
+
 ## 特别声明的上游项目
 
 - [beetl](https://gitee.com/xiandafu/beetl), BSD-3, Beetl模板引擎是项目很重要的组成部分(as is).
