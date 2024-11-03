@@ -55,30 +55,32 @@ Scan the specified resource package, obtain the `nGQL | cypher` template, and op
   - Support edge type conversion to POJO
 
 - [x] ResultSet If you do not need to use the result processing provided by the framework, you can directly declare the return value `ResultSet` on the interface and process it yourself
+
 ## D. Use the provided method to conduct entity direct inspection
+
 > See【[Entity Direct Query](../dev-example/entity-query)】
 
 | API                                                          | 用法说明                                                     |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| queryIdsByProperties()                                       | 查询特定Tag或者属性的点Id集合                                |
-| queryVertexById()                                            | 查询特定点Id的单个点                                         |
-| queryVertexByTag()                                           | 查询特定Tag的点集合                                          |
-| queryVertexByProperties()                                    | 查询特定属性的点集合                                         |
-| queryAllAdjacentVertex(Class<?>... edgeClass)                | 查询特定点的所有邻点集合，可指定一个或多个连接两点的边类型   |
-| queryIncomingAdjacentVertex(Class<?>... edgeClass)           | 查询特定点入边方向的邻点集合，可指定一个或多个连接两点的边类型 |
-| queryOutgoingAdjacentVertex(Class<?>... edgeClass)           | 查询特定点出边方向的邻点集合，可指定一个或多个连接两点的边类型 |
-| queryNeighborIdsWithHopById(int m, int n, Class<?>... edgeClass) | 查询特定点指定跳数内的点Id集合，可指定一个或多个连接两点的边类型 |
-| queryConnectedEdgesById(Direction direction)                 | 查询特定点关联的所有边集合，可指定边的方向和类型             |
-| queryPathFromVertex(Direction direction)                     | 查询特定点关联的所有路径集合，可指定边的方向                 |
-| queryFixedLengthPathFromVertex(Integer maxHop, Direction direction, Class<?>... edgeClass) | 查询特定点出发的定长路径集合，可指定最大步数、边的方向、边的类型 |
-| queryVariableLengthPathFromVertex(Integer minHop, Integer maxHop,   Direction direction, Class<?>... edgeClass) | 查询特定点出发的变长路径集合，可指定最小步数、最大步数、边的方向、边的类型 |
-| queryShortestPathFromSrcAndDst(Integer maxHop,   Direction direction, T v2) | 查询特定点出发的任意一条最短路径，可指定步数、边的方向、终点实体 |
-| queryAllShortestPathsFromSrcAndDst(Integer maxHop,   Direction direction, T v2) | 查询从该点出发的所有最短路径集合，可指定步数、边的方向、终点实体 |
-| queryVertexCountByTag()                                      | 查询特定Tag的点的数量                                        |
-| queryEdgeByType(Direction direction)                         | 查询特定类型、方向的边集合 |
-| queryEdgeWithSrcAndDstByProperties(T srcVertex, Direction direction, T dstVertex) | 查询特定属性的边集合       |
-| queryEdgePropertiesBySrcAndDstId()                           | 查询特定始终点id的边集合   |
-| queryEdgeCountByType()                                       | 查询特定Type的边的数量     |
+| queryIdsByProperties()                                       | Query a collection of vertex ids for a particular Tag or attribute |
+| queryVertexById()                                            | Query a single vertex for a specific vertex Id               |
+| queryVertexByTag()                                           | Query a collection of vertices  for a specific Tag           |
+| queryVertexByProperties()                                    | Query a collection of vertexes for a specific property       |
+| queryAllAdjacentVertex(Class<?>... edgeClass)                | Query a collection of all neighboring vertexes of a particular vertex, specifying one or more edge types that connect the two vertexes |
+| queryIncomingAdjacentVertex(Class<?>... edgeClass)           | Query the set of adjacent vertexes in the direction of the incoming edge of a particular vertex, specifying one or more edge types that connect two vertexes |
+| queryOutgoingAdjacentVertex(Class<?>... edgeClass)           | Query the set of adjacent vertexes in the direction of the edge of a particular vertex, specifying one or more edge types that connect two vertexes |
+| queryNeighborIdsWithHopById(int m, int n, Class<?>... edgeClass) | Query a collection of vertex ids within a specified number of hops for a particular vertex, specifying one or more edge types that connect two vertexes |
+| queryConnectedEdgesById(Direction direction)                 | Query the set of all edges associated with a particular vertex, specifying the direction and type of the edge |
+| queryPathFromVertex(Direction direction)                     | Query the collection of all paths associated with a particular vertex, specifying the direction of the edge |
+| queryFixedLengthPathFromVertex(Integer maxHop, Direction direction, Class<?>... edgeClass) | Query a set of fixed-length paths from a specific vertex, specifying the maximum number of steps, the direction of the edge, and the type of the edge |
+| queryVariableLengthPathFromVertex(Integer minHop, Integer maxHop,   Direction direction, Class<?>... edgeClass) | Query a set of variable-length paths from a specific vertex, specifying the minimum number of steps, the maximum number of steps, the direction of the edge, and the type of the edge |
+| queryShortestPathFromSrcAndDst(Integer maxHop,   Direction direction, T v2) | Query any shortest path from a specific vertex, specifying the number of steps, the direction of the edge, and the end vertex entity |
+| queryAllShortestPathsFromSrcAndDst(Integer maxHop,   Direction direction, T v2) | Query the set of all shortest paths from this vertex, specifying the number of steps, the direction of the edge, and the end vertex entity |
+| queryVertexCountByTag()                                      | Query the number of vertexes for a specific Tag              |
+| queryEdgeByType(Direction direction)                         | Query a set of edges of a specific type and direction |
+| queryEdgeWithSrcAndDstByProperties(T srcVertex, Direction direction, T dstVertex) | Query a set of edges for a particular property        |
+| queryEdgePropertiesBySrcAndDstId()                           | Query a set of edges for a specific always vertex id  |
+| queryEdgeCountByType()                                       | Query the number of edges for a specific Type         |
 
 ## E. Interface of Primary key generation
 

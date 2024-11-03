@@ -403,34 +403,34 @@ public class Serve extends GraphBaseEdge {
 
 ##### 关于点实体
 
-| API                                                          | 用法说明                                                     |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| queryIdsByProperties()                                       | 查询特定Tag或者属性的点Id集合                                |
-| queryVertexById()                                            | 查询特定点Id的单个点                                         |
-| queryVertexByTag()                                           | 查询特定Tag的点集合                                          |
-| queryVertexByProperties()                                    | 查询特定属性的点集合                                         |
-| queryAllAdjacentVertex(Class<?>... edgeClass)                | 查询特定点的所有邻点集合，可指定一个或多个连接两点的边类型   |
-| queryIncomingAdjacentVertex(Class<?>... edgeClass)           | 查询特定点入边方向的邻点集合，可指定一个或多个连接两点的边类型 |
-| queryOutgoingAdjacentVertex(Class<?>... edgeClass)           | 查询特定点出边方向的邻点集合，可指定一个或多个连接两点的边类型 |
-| queryNeighborIdsWithHopById(int m, int n, Class<?>... edgeClass) | 查询特定点指定跳数内的点Id集合，可指定一个或多个连接两点的边类型 |
-| queryConnectedEdgesById(Direction direction)                 | 查询特定点关联的所有边集合，可指定边的方向和类型             |
-| queryPathFromVertex(Direction direction)                     | 查询特定点关联的所有路径集合，可指定边的方向                 |
-| queryFixedLengthPathFromVertex(Integer maxHop, Direction direction, Class<?>... edgeClass) | 查询特定点出发的定长路径集合，可指定最大步数、边的方向、边的类型 |
-| queryVariableLengthPathFromVertex(Integer minHop, Integer maxHop,   Direction direction, Class<?>... edgeClass) | 查询特定点出发的变长路径集合，可指定最小步数、最大步数、边的方向、边的类型 |
-| queryShortestPathFromSrcAndDst(Integer maxHop,   Direction direction, T v2) | 查询特定点出发的任意一条最短路径，可指定步数、边的方向、终点实体 |
-| queryAllShortestPathsFromSrcAndDst(Integer maxHop,   Direction direction, T v2) | 查询从该点出发的所有最短路径集合，可指定步数、边的方向、终点实体 |
-| queryVertexCountByTag()                                      | 查询特定Tag的点的数量                                        |
+API | 用法说明
+--|--
+queryIdsByProperties()                           | 查询特定Tag或者属性的点Id集合
+queryVertexById()                                | 查询特定点Id的单个点
+queryVertexByTag()                               | 查询特定Tag的点集合
+queryVertexByProperties()                        | 查询特定属性的点集合
+queryAllAdjacentVertex(Class<?>... edgeClass)    | 查询特定点的所有邻点集合，可指定一个或多个连接两点的边类型
+queryIncomingAdjacentVertex(Class<?>... edgeClass) | 查询特定点入边方向的邻点集合，可指定一个或多个连接两点的边类型
+queryOutgoingAdjacentVertex(Class<?>... edgeClass) | 查询特定点出边方向的邻点集合，可指定一个或多个连接两点的边类型
+queryNeighborIdsWithHopById(int m, int n, Class<?>... edgeClass) | 查询特定点指定跳数内的点Id集合，可指定一个或多个连接两点的边类型
+queryConnectedEdgesById(Direction direction)     | 查询特定点关联的所有边集合，可指定边的方向和类型
+queryPathFromVertex(Direction direction)         | 查询特定点关联的所有路径集合，可指定边的方向
+queryFixedLengthPathFromVertex(Integer maxHop, Direction direction, Class<?>... edgeClass) | 查询特定点出发的定长路径集合，可指定最大步数、边的方向、边的类型
+queryVariableLengthPathFromVertex(Integer minHop, Integer maxHop,   Direction direction, Class<?>... edgeClass) | 查询特定点出发的变长路径集合，可指定最小步数、最大步数、边的方向、边的类型
+queryShortestPathFromSrcAndDst(Integer maxHop,   Direction direction, T v2) | 查询特定点出发的任意一条最短路径，可指定步数、边的方向、终点实体
+queryAllShortestPathsFromSrcAndDst(Integer maxHop,   Direction direction, T v2) | 查询从该点出发的所有最短路径集合，可指定步数、边的方向、终点实体
+queryVertexCountByTag()                          | 查询特定Tag的点的数量
 
 具体实现见`org.nebula.contrib.ngbatis.base`包下的点实体基类`GraphBaseVertex`。
 
 ##### 关于边实体
 
-| API                                                          | 用法说明                   |
-| ------------------------------------------------------------ | -------------------------- |
-| queryEdgeByType(Direction direction)                         | 查询特定类型、方向的边集合 |
-| queryEdgeWithSrcAndDstByProperties(T srcVertex, Direction direction, T dstVertex) | 查询特定属性的边集合       |
-| queryEdgePropertiesBySrcAndDstId()                           | 查询特定始终点id的边集合   |
-| queryEdgeCountByType()                                       | 查询特定Type的边的数量     |
+API | 用法说明
+--|--
+queryEdgeByType(Direction direction)             | 查询特定类型、方向的边集合
+queryEdgeWithSrcAndDstByProperties(T srcVertex, Direction direction, T dstVertex) | 查询特定属性的边集合
+queryEdgePropertiesBySrcAndDstId()               | 查询特定始终点id的边集合
+queryEdgeCountByType()                           | 查询特定Type的边的数量
 
 具体实现见`org.nebula.contrib.ngbatis.base`包下的边实体基类`GraphBaseEdge`。
 

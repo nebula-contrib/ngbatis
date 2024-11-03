@@ -343,13 +343,14 @@ public class PersonServiceImpl {
 
 #### c.1 Entity class
 
-##### c.1.1 Vertex Entity 
+##### c.1.1 Vertex Entity
 
 - Extends the `GraphBaseVertex` class identifier as a vertex entity
 - The name attribute of `@Tag` indicates the Tag of the vertex entity
 - The type attribute of `@GraphId` indicates the type of the point entity id (optional)
 
 ```java
+
 @Tag(name = "player")
 public class Player extends GraphBaseVertex {
 
@@ -363,21 +364,21 @@ public class Player extends GraphBaseVertex {
   ...
 
 }
+
 ```
 
 Specific reference `ye.weicheng.ngbatis.demo.pojo.vertex` vertex entities under the package sample.
 
-##### c.1.2 Edge Entity 
+##### c.1.2 Edge Entity
 
 - Extends the `GraphBaseEdge` class to identify edge entities
-
 - The name attribute of `@EdgeType` indicates the type of the edge entity
-
 - `@Id` (Optional, if the uniqueness of an edge of the same type between two nodes is determined by the source node id and the destination node id, the current attribute can be omitted)
 - `@SrcId` (optional, if you do not need to obtain the source node id of the relationship, you can omit the current attribute)
 - `@DstId` (Optional, if you do not need to get the target node id of the relationship, you can omit the current attribute)
 
 ```java
+
 @EdgeType(name = "serve")
 public class Serve extends GraphBaseEdge {
 
@@ -396,7 +397,9 @@ public class Serve extends GraphBaseEdge {
   private Integer endYear;
 
   ...
+  
 }
+
 ```
 
 Specific reference `ye.weicheng.ngbatis.demo.pojo.edge` edge entities under the package sample.
@@ -405,40 +408,41 @@ Specific reference `ye.weicheng.ngbatis.demo.pojo.edge` edge entities under the 
 
 ##### c.2.1 About vertex entity
 
-| API                                                          | 用法说明                                                     |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| queryIdsByProperties()                                       | Query a collection of vertex ids for a particular Tag or attribute |
-| queryVertexById()                                            | Query a single vertex for a specific vertex Id               |
-| queryVertexByTag()                                           | Query a collection of vertices  for a specific Tag           |
-| queryVertexByProperties()                                    | Query a collection of vertexes for a specific property       |
-| queryAllAdjacentVertex(Class<?>... edgeClass)                | Query a collection of all neighboring vertexes of a particular vertex, specifying one or more edge types that connect the two vertexes |
-| queryIncomingAdjacentVertex(Class<?>... edgeClass)           | Query the set of adjacent vertexes in the direction of the incoming edge of a particular vertex, specifying one or more edge types that connect two vertexes |
-| queryOutgoingAdjacentVertex(Class<?>... edgeClass)           | Query the set of adjacent vertexes in the direction of the edge of a particular vertex, specifying one or more edge types that connect two vertexes |
-| queryNeighborIdsWithHopById(int m, int n, Class<?>... edgeClass) | Query a collection of vertex ids within a specified number of hops for a particular vertex, specifying one or more edge types that connect two vertexes |
-| queryConnectedEdgesById(Direction direction)                 | Query the set of all edges associated with a particular vertex, specifying the direction and type of the edge |
-| queryPathFromVertex(Direction direction)                     | Query the collection of all paths associated with a particular vertex, specifying the direction of the edge |
-| queryFixedLengthPathFromVertex(Integer maxHop, Direction direction, Class<?>... edgeClass) | Query a set of fixed-length paths from a specific vertex, specifying the maximum number of steps, the direction of the edge, and the type of the edge |
-| queryVariableLengthPathFromVertex(Integer minHop, Integer maxHop,   Direction direction, Class<?>... edgeClass) | Query a set of variable-length paths from a specific vertex, specifying the minimum number of steps, the maximum number of steps, the direction of the edge, and the type of the edge |
-| queryShortestPathFromSrcAndDst(Integer maxHop,   Direction direction, T v2) | Query any shortest path from a specific vertex, specifying the number of steps, the direction of the edge, and the end vertex entity |
-| queryAllShortestPathsFromSrcAndDst(Integer maxHop,   Direction direction, T v2) | Query the set of all shortest paths from this vertex, specifying the number of steps, the direction of the edge, and the end vertex entity |
-| queryVertexCountByTag()                                      | Query the number of vertexes for a specific Tag              |
+API | 用法说明
+--|--
+queryIdsByProperties()                              | Query a collection of vertex ids for a particular Tag or attribute
+queryVertexById()                                   | Query a single vertex for a specific vertex Id
+queryVertexByTag()                                  | Query a collection of vertices  for a specific Tag
+queryVertexByProperties()                           | Query a collection of vertexes for a specific property
+queryAllAdjacentVertex(Class<?>... edgeClass)       | Query a collection of all neighboring vertexes of a particular vertex, specifying one or more edge types that connect the two vertexes
+queryIncomingAdjacentVertex(Class<?>... edgeClass)  | Query the set of adjacent vertexes in the direction of the incoming edge of a particular vertex, specifying one or more edge types that connect two vertexes
+queryOutgoingAdjacentVertex(Class<?>... edgeClass)  | Query the set of adjacent vertexes in the direction of the edge of a particular vertex, specifying one or more edge types that connect two vertexes
+queryNeighborIdsWithHopById(int m, int n, Class<?>... edgeClass) | Query a collection of vertex ids within a specified number of hops for a particular vertex, specifying one or more edge types that connect two vertexes
+queryConnectedEdgesById(Direction direction)        | Query the set of all edges associated with a particular vertex, specifying the direction and type of the edge
+queryPathFromVertex(Direction direction)            | Query the collection of all paths associated with a particular vertex, specifying the direction of the edge
+queryFixedLengthPathFromVertex(Integer maxHop, Direction direction, Class<?>... edgeClass) | Query a set of fixed-length paths from a specific vertex, specifying the maximum number of steps, the direction of the edge, and the type of the edge
+queryVariableLengthPathFromVertex(Integer minHop, Integer maxHop,   Direction direction, Class<?>... edgeClass) | Query a set of variable-length paths from a specific vertex, specifying the minimum number of steps, the maximum number of steps, the direction of the edge, and the type of the edge
+queryShortestPathFromSrcAndDst(Integer maxHop,   Direction direction, T v2) | Query any shortest path from a specific vertex, specifying the number of steps, the direction of the edge, and the end vertex entity
+queryAllShortestPathsFromSrcAndDst(Integer maxHop,   Direction direction, T v2) | Query the set of all shortest paths from this vertex, specifying the number of steps, the direction of the edge, and the end vertex entity
+queryVertexCountByTag()                             | Query the number of vertexes for a specific Tag
 
 For specific implementation, see the point entity base class `GraphBaseVertex` under the `org.nebula.contrib.ngbatis.base` package.
 
 ##### c.2.2 About edge entity
 
-| API                                                          | 用法说明                                              |
-| ------------------------------------------------------------ | ----------------------------------------------------- |
-| queryEdgeByType(Direction direction)                         | Query a set of edges of a specific type and direction |
-| queryEdgeWithSrcAndDstByProperties(T srcVertex, Direction direction, T dstVertex) | Query a set of edges for a particular property        |
-| queryEdgePropertiesBySrcAndDstId()                           | Query a set of edges for a specific always vertex id  |
-| queryEdgeCountByType()                                       | Query the number of edges for a specific Type         |
+API | 用法说明
+--|--
+queryEdgeByType(Direction direction)                       | Query a set of edges of a specific type and direction
+queryEdgeWithSrcAndDstByProperties(T srcVertex, Direction direction, T dstVertex) | Query a set of edges for a particular property
+queryEdgePropertiesBySrcAndDstId()                         | Query a set of edges for a specific always vertex id
+queryEdgeCountByType()                                     | Query the number of edges for a specific Type
 
 For specific implementation, see the point entity base class `GraphBaseEdge` under the `org.nebula.contrib.ngbatis.base` package.
 
 #### c.3 test
 
 ```java
+
 @Test
 public void testVertex(){
     Player srcPlayer = new Player();
@@ -457,6 +461,7 @@ public void testEdge(){
     //Query the edges of Serve type and direction "->"
     List<Serve> edges = serve.queryEdgeByType(Direction.NULL);
 }
+
 ```
 
 For specific usage examples of each direct inspection method, please refer to the `NebulaGraphBasicTests` test class in ngbatis-demo.

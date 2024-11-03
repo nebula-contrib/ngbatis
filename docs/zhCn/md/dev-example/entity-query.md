@@ -1,13 +1,17 @@
 # 实体直查
+
 这里具体使用的是NebulaGraph官方提供的[示例数据Basketballplayer](https://docs.nebula-graph.com.cn/3.8.0/3.ngql-guide/1.nGQL-overview/1.overview/#basketballplayer)
 
 ## 自定义点或边实体
 
 ### 点实体
+
 - 继承`GraphBaseVertex`类标识是点实体
 - `@Tag`的name属性注明点实体的Tag
 - `@GraphId`的type属性注明点实体id的类型（可选）
+
 ```java
+
 @Tag(name = "player")
 public class Player extends GraphBaseVertex {
 
@@ -21,14 +25,19 @@ public class Player extends GraphBaseVertex {
   ...
 
 }
+
 ```
+
 ### 边实体
+
 - 继承`GraphBaseEdge`类标识是边实体
 - `@EdgeType`的name属性注明边实体的类型
 - `@Id`（可选，如果两个节点之间同一类型边的唯一性由源节点id和目标节点id共同决定，可以不加当前属性）
 - `@SrcId`（可选，如果不需要获取关系的源节点id，可以不加当前属性）
 - `@DstId`（可选，如果不需要获取关系的目标节点id，可以不加当前属性）
+
 ```java
+
 @EdgeType(name = "serve")
 public class Serve extends GraphBaseEdge {
 
@@ -49,11 +58,13 @@ public class Serve extends GraphBaseEdge {
 
   ...
 }
+
 ```
 
 ## 使用示例
 
 ```java
+
 @Test
 public void testVertex(){
   Player srcPlayer = new Player();
@@ -72,4 +83,5 @@ public void testEdge(){
   //查询Serve类型、方向为”->“的边
   List<Serve> edges = serve.queryEdgeByType(Direction.NULL);
 }
+
 ```
