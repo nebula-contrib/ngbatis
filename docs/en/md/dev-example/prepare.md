@@ -32,7 +32,7 @@ CREATE TAG INDEX `i_person_name_age` on `person`(`name`(50), `age`);
 CREATE TAG INDEX `i_person_name` on `person`(`name`(50));
 ```
 
-## Necessary `POJO` for two ways'
+## Necessary `POJO` for two ways(By Basic DAO & By Custom nGQL)
 
 ### Person.java
 

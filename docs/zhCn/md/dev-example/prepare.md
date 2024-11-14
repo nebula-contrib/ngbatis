@@ -32,7 +32,7 @@ CREATE TAG INDEX `i_person_name_age` on `person`(`name`(50), `age`);
 CREATE TAG INDEX `i_person_name` on `person`(`name`(50));
 ```
 
-## 两种方式都需要的 `POJO` 类
+## 两种方式(使用基类编写 & 自定义nGQL)都需要的 `POJO` 类
 
 ### Person.java
 
