@@ -5,7 +5,8 @@
 
 ## How to position ngbatis
 
-**NGBATIS**  is a database ORM framework base [Nebula Graph](https://github.com/vesoft-inc/nebula) + springboot. Take advantage of [mybatis'](https://github.com/mybatis/mybatis-3) usage habits to develop. Including some frequently-used  operation in single table and vertex-edge, like [mybatis-plus](https://github.com/baomidou/mybatis-plus).
+**NGBATIS**  is a database ORM framework base [Nebula Graph](https://github.com/vesoft-inc/nebula) + springboot. Take advantage of [mybatis'](https://github.com/mybatis/mybatis-3) usage habits to develop. Including some frequently-used  operation in single table and vertex-edge, like [mybatis-plus](https://github.com/baomidou/mybatis-plus).And also provides graph-specific entity-relationship basic query operation methods.
+
 If you prefer JPA, [graph-ocean](https://github.com/nebula-contrib/graph-ocean) is a good choice.
 
 > If you don't have your own Nebula Graph Database, please arrange it for yourself.  [Lucky Gate](https://docs.nebula-graph.com.cn/3.2.0/4.deployment-and-installation/2.compile-and-install-nebula-graph/3.deploy-nebula-graph-with-docker-compose/)

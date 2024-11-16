@@ -56,6 +56,32 @@ Scan the specified resource package, obtain the `nGQL | cypher` template, and op
 
 - [x] ResultSet If you do not need to use the result processing provided by the framework, you can directly declare the return value `ResultSet` on the interface and process it yourself
 
-## D. Interface of Primary key generation
+## D. Use the provided method to conduct entity direct inspection
+
+> See【[Entity Direct Query](../dev-example/entity-query)】
+
+| API                                                          | 用法说明                                                     |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| queryIdsByProperties()                                       | Query a collection of vertex ids for a particular Tag or attribute |
+| queryVertexById()                                            | Query a single vertex for a specific vertex Id               |
+| queryVertexByTag()                                           | Query a collection of vertices  for a specific Tag           |
+| queryVertexByProperties()                                    | Query a collection of vertexes for a specific property       |
+| queryAllAdjacentVertex(Class<?>... edgeClass)                | Query a collection of all neighboring vertexes of a particular vertex, specifying one or more edge types that connect the two vertexes |
+| queryIncomingAdjacentVertex(Class<?>... edgeClass)           | Query the set of adjacent vertexes in the direction of the incoming edge of a particular vertex, specifying one or more edge types that connect two vertexes |
+| queryOutgoingAdjacentVertex(Class<?>... edgeClass)           | Query the set of adjacent vertexes in the direction of the edge of a particular vertex, specifying one or more edge types that connect two vertexes |
+| queryNeighborIdsWithHopById(int m, int n, Class<?>... edgeClass) | Query a collection of vertex ids within a specified number of hops for a particular vertex, specifying one or more edge types that connect two vertexes |
+| queryConnectedEdgesById(Direction direction)                 | Query the set of all edges associated with a particular vertex, specifying the direction and type of the edge |
+| queryPathFromVertex(Direction direction)                     | Query the collection of all paths associated with a particular vertex, specifying the direction of the edge |
+| queryFixedLengthPathFromVertex(Integer maxHop, Direction direction, Class<?>... edgeClass) | Query a set of fixed-length paths from a specific vertex, specifying the maximum number of steps, the direction of the edge, and the type of the edge |
+| queryVariableLengthPathFromVertex(Integer minHop, Integer maxHop,   Direction direction, Class<?>... edgeClass) | Query a set of variable-length paths from a specific vertex, specifying the minimum number of steps, the maximum number of steps, the direction of the edge, and the type of the edge |
+| queryShortestPathFromSrcAndDst(Integer maxHop,   Direction direction, T v2) | Query any shortest path from a specific vertex, specifying the number of steps, the direction of the edge, and the end vertex entity |
+| queryAllShortestPathsFromSrcAndDst(Integer maxHop,   Direction direction, T v2) | Query the set of all shortest paths from this vertex, specifying the number of steps, the direction of the edge, and the end vertex entity |
+| queryVertexCountByTag()                                      | Query the number of vertexes for a specific Tag              |
+| queryEdgeByType(Direction direction)                         | Query a set of edges of a specific type and direction |
+| queryEdgeWithSrcAndDstByProperties(T srcVertex, Direction direction, T dstVertex) | Query a set of edges for a particular property        |
+| queryEdgePropertiesBySrcAndDstId()                           | Query a set of edges for a specific always vertex id  |
+| queryEdgeCountByType()                                       | Query the number of edges for a specific Type         |
+
+## E. Interface of Primary key generation
 
 - [x] Provide the embedding point of the primary key generator, and developers can customize the primary key generator.
