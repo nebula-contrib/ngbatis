@@ -4,7 +4,21 @@
 
 package org.nebula.contrib.ngbatis.proxy;
 
+import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.edgeName;
+import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.entityType;
+import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.getClassModel;
+import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.getCqlTpl;
+import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.getMethodModel;
+import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.pkType;
+import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.proxy;
+import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.vertexName;
+
 import com.vesoft.nebula.client.graph.data.ResultSet;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import org.nebula.contrib.ngbatis.exception.QueryException;
 import org.nebula.contrib.ngbatis.handler.CollectionStringResultHandler;
 import org.nebula.contrib.ngbatis.models.ClassModel;
@@ -13,13 +27,6 @@ import org.nebula.contrib.ngbatis.models.data.NgPath;
 import org.nebula.contrib.ngbatis.utils.Page;
 import org.springframework.data.repository.query.Param;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.*;
 
 /**
  * 数据访问的基类，用于提供单表 CRUD 与基本的节点关系操作<br>
@@ -524,8 +531,8 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    * @param srcId the start node's id
    * @param dstId the end node's id
    * @return Shortest path list. entities containing vertext in path.
-   * If you want to obtain attributes within an entity,
-   * you need to use “with prop” in the nGQL.
+   *         If you want to obtain attributes within an entity,
+   *         you need to use “with prop” in the nGQL.
    */
   default List<NgPath<I>> shortestPath(@Param("srcId") I srcId, @Param("dstId") I dstId) {
     MethodModel methodModel = getMethodModel();
