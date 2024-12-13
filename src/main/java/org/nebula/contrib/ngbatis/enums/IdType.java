@@ -6,6 +6,6 @@ package org.nebula.contrib.ngbatis.enums;
  * @since 2024/9/8 10:15
  */
 public enum IdType {
-	STRING,
-	INT64;
+  STRING,
+  INT64;
 }
