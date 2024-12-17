@@ -6,6 +6,9 @@ package org.nebula.contrib.ngbatis;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+import com.vesoft.nebula.client.graph.SessionPool;
+import com.vesoft.nebula.client.graph.data.ResultSet;
+import java.util.Map;
 import org.nebula.contrib.ngbatis.config.NgbatisConfig;
 import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.nebula.contrib.ngbatis.session.LocalSession;
@@ -68,4 +71,25 @@ public interface SessionDispatcher {
     NgbatisConfig ngbatisConfig = MapperContext.newInstance().getNgbatisConfig();
     return ngbatisConfig != null && ngbatisConfig.getUseSessionPool();
   }
+
+  /**
+   * 按 spaceName 初始化 sessionPool
+   * 
+   * @param spaceName 可以是启动时不存在的空间名
+   * @return 初始化后的 sessionPool
+   */
+  SessionPool initSessionPool(String spaceName);
+
+  /**
+   * 处理会话
+   * @param localSession 本地会话
+   * @param result 结果集，主要获取成功与否
+   */
+  void handleSession(LocalSession localSession, ResultSet result);
+
+  ResultSet executeWithParameter(
+    String gql, 
+    Map<String, Object> params, 
+    String space,
+    Map<String, Object> extraReturn);
 }

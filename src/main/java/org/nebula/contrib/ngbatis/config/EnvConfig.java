@@ -72,6 +72,7 @@ public class EnvConfig {
   @Autowired(required = false)
   private PkGenerator pkGenerator;
 
+  @Autowired
   private SessionDispatcher sessionDispatcher;
 
   /**
@@ -80,8 +81,6 @@ public class EnvConfig {
    */
   @Bean
   public Env getEnv() {
-    properties.setPoolConfig(MapperContext.newInstance().getNebulaPoolConfig());
-    sessionDispatcher = new IntervalCheckSessionDispatcher(properties);
     return new Env(
       textResolver,
       resultResolver,

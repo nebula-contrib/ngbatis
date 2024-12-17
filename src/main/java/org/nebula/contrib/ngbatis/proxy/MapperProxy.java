@@ -126,12 +126,8 @@ public class MapperProxy {
 
     Map<String,Object> parasForDb = argsResolver.resolve(methodModel, args);
     final long step1 = System.currentTimeMillis();
-    NgbatisConfig ngbatisConfig = MapperContext.newInstance().getNgbatisConfig();
-    if (ngbatisConfig == null || !ngbatisConfig.getUseSessionPool()) {
-      query = executeWithParameter(classModel, methodModel, gql, parasForDb, argMap);
-    } else {
-      query = executeBySessionPool(classModel, methodModel, gql, parasForDb, argMap);
-    }
+
+    query = executeWithParameter(classModel, methodModel, gql, parasForDb, argMap);
 
     final long step2 = System.currentTimeMillis();
     if (!query.isSucceeded()) {
@@ -206,31 +202,29 @@ public class MapperProxy {
    * @param params 待执行脚本的参数所需的参数
    * @return nebula-graph 的未被 orm 操作的原始结果集
    */
-  public static ResultSet executeWithParameter(ClassModel cm, MethodModel mm, String gql,
-      Map<String, Object> params, Map<String, Object> paramsForTemplate) {
-    LocalSession localSession = null;
-    Session session = null;
+  public static ResultSet executeWithParameter(
+      ClassModel cm, MethodModel mm, String gql,
+      Map<String, Object> params, 
+      Map<String, Object> paramsForTemplate) {
+
     ResultSet result = null;
     String proxyClass = null;
     String proxyMethod = null;
-    String localSessionSpace = null;
-    String autoSwitch = null;
+    
     SessionDispatcher dispatcher = ENV.getDispatcher();
+    Map<String, Object> extraReturn = new HashMap<>();
+    
     try {
-      localSession = dispatcher.poll();
       if (log.isDebugEnabled()) {
         proxyClass = cm.getNamespace().getName();
         proxyMethod = mm.getId();
-        localSessionSpace = localSession.getCurrentSpace();
       }
 
       String currentSpace = getSpace(cm, mm, paramsForTemplate);
-      String[] qlAndSpace = qlWithSpace(localSession, gql, currentSpace);
-      gql = qlAndSpace[1];
-      autoSwitch = qlAndSpace[0] == null ? "" : qlAndSpace[0];
-      session = localSession.getSession();
-      result = session.executeWithParameter(gql, params);
-      localSession.setCurrentSpace(getSpace(result));
+      result = dispatcher.executeWithParameter(
+        gql, params, currentSpace, extraReturn
+      );
+      
       if (result.isSucceeded()) {
         return result;
       } else {
@@ -243,15 +237,18 @@ public class MapperProxy {
       throw new QueryException("数据查询失败：" + e.getMessage(), e);
     } finally {
       if (log.isDebugEnabled()) {
+        Object autoSwitch = extraReturn.get("autoSwitch");
+        Object localSessionSpace = extraReturn.get("localSessionSpace");
+        boolean noNeedSwitch = isEmpty(autoSwitch);
+        autoSwitch = (isEmpty(autoSwitch) ? "" : autoSwitch);
         log.debug("\n\t- proxyMethod: {}#{}"
                 + "\n\t- session space: {}"
-                + (isEmpty(autoSwitch) ? "\n\t- {}" : "\n\t- auto switch to: {}")
+                + (noNeedSwitch ? "\n\t- {}" : "\n\t- auto switch to: {}")
                 + "\n\t- nGql：{}"
                 + "\n\t- params: {}"
                 + "\n\t- result：{}",
             proxyClass, proxyMethod, localSessionSpace, autoSwitch, gql, paramsForTemplate, result);
       }
-      handleSession(dispatcher, localSession, result);
     }
   }
 
@@ -304,38 +301,6 @@ public class MapperProxy {
     }
   }
 
-  private static void handleSession(SessionDispatcher dispatcher,
-      LocalSession localSession, ResultSet result) {
-    if (localSession != null) {
-      boolean sessionError = ResultSetUtil.isSessionError(result);
-      if (sessionError || dispatcher.timeToRelease(localSession)) {
-        dispatcher.release(localSession);
-      } else {
-        dispatcher.offer(localSession);
-      }
-    }
-  }
-
-  private static String[] qlWithSpace(LocalSession localSession, String gql, String currentSpace)
-      throws IOErrorException, BindSpaceFailedException {
-    String[] qlAndSpace = new String[2];
-    gql = gql.trim();
-    String sessionSpace = localSession.getCurrentSpace();
-    boolean sameSpace = Objects.equals(sessionSpace, currentSpace);
-    if (!sameSpace && currentSpace !=  null) {
-      qlAndSpace[0] = currentSpace;
-      Session session = localSession.getSession();
-      ResultSet execute = session.execute(String.format("USE `%s`", currentSpace));
-      if (!execute.isSucceeded()) {
-        throw new BindSpaceFailedException(
-          String.format(" %s \"%s\"", execute.getErrorMessage(), currentSpace)
-        );
-      }
-    }
-    qlAndSpace[1] = String.format("\n\t\t%s", gql);
-    return qlAndSpace;
-  }
-
   /**
    * 获取当前语句所执行的目标space。
    * @param cm 当前接口的类模型
@@ -368,16 +333,6 @@ public class MapperProxy {
       return ENV.getTextResolver().resolve(space, paramsForTemplate);
     }
     return space;
-  }
-
-  /**
-   * 从结果集中获取当前的 space
-   * @param result 脚本执行之后的结果集
-   * @return 结果集所对应的 space
-   */
-  private static String getSpace(ResultSet result) {
-    String spaceName = result.getSpaceName();
-    return isBlank(spaceName) ? null : spaceName;
   }
 
   public static Logger getLog() {

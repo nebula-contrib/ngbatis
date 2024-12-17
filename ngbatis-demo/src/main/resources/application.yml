@@ -11,10 +11,10 @@ nebula:
     check-fixed-rate: 300000
     # space name needs to be informed through annotations(@Space) or xml(space="test")
     # default false(false: Session pool map will not be initialized)
-    use-session-pool: false
-  hosts: 127.0.0.1:19669
+    use-session-pool: true
+  hosts: 139.9.187.207:9669
   username: root
-  password: bmVidWxh
+  password: U3RhclNoYWRvd18wOTE5
   space: test
   pool-config:
     min-conns-size: 0
@@ -22,11 +22,11 @@ nebula:
     timeout: 6000
     idle-time: 0
     interval-idle: -1
-    wait-time: 6000
+    wait-time: 0
     min-cluster-health-rate: 1.0
     enable-ssl: false
     
 # 开启 nGQL 输出
-#logging:
-#  level:
-#    org.nebula.contrib: DEBUG
+logging:
+  level:
+    org.nebula.contrib: DEBUG
