@@ -4,13 +4,9 @@ import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getNameByColumn;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getValue;
 
 import com.vesoft.nebula.client.graph.data.ResultSet;
-import com.vesoft.nebula.client.graph.exception.BindSpaceFailedException;
-import com.vesoft.nebula.client.graph.exception.IOErrorException;
-import com.vesoft.nebula.client.graph.net.Session;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import org.nebula.contrib.ngbatis.ArgsResolver;
 import org.nebula.contrib.ngbatis.Env;
 import org.nebula.contrib.ngbatis.ResultResolver;
@@ -18,7 +14,6 @@ import org.nebula.contrib.ngbatis.SessionDispatcher;
 import org.nebula.contrib.ngbatis.annotations.base.EdgeType;
 import org.nebula.contrib.ngbatis.annotations.base.GraphId;
 import org.nebula.contrib.ngbatis.annotations.base.Tag;
-import org.nebula.contrib.ngbatis.session.LocalSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,12 +29,9 @@ public class GraphBaseExt {
 
   public static ResultSet executeGql(String textTpl,
           Map<String, Object> m1, Map<String, Object> m2) {
-    Session session = null;
-    LocalSession localSession = null;
     ResultSet result = null;
     //从env中获取本地会话调度器
     SessionDispatcher dispatcher = ENV.getDispatcher();
-    localSession = dispatcher.poll();
     //从env中获取space
     String currentSpace = ENV.getSpace();
 
@@ -49,20 +41,17 @@ public class GraphBaseExt {
 
     Map<String, Object> parasForDb = argsResolver.resolve(m2);
 
-    String[] qlAndSpace = null;
+    Map<String, Object> extraReturn = new HashMap<>();
     try {
-      //确保当前图空间正确
-      qlAndSpace = qlWithSpace(localSession, gql, currentSpace);
-      gql = qlAndSpace[1];
-      session = localSession.getSession();
-      result = session.executeWithParameter(gql, parasForDb);
+      result = dispatcher.executeWithParameter(gql, parasForDb, currentSpace, extraReturn);
     } catch (Exception e) {
       throw new RuntimeException(e);
     } finally {
-      log.debug("\n\t- nGql：{}"
+      log.debug("\n\t- space: {}" 
+                      + "\n\t- nGql：{}"
                       + "\n\t- params: {}"
                       + "\n\t- result：{}",
-              gql, m2, result);
+        currentSpace, gql, m2, result);
     }
     return result;
   }
@@ -78,26 +67,6 @@ public class GraphBaseExt {
     ResultResolver resultResolver = ENV.getResultResolver();
     Object resolve = resultResolver.resolve(resultSet, returnType, resultType);
     return resolve;
-  }
-
-  private static String[] qlWithSpace(LocalSession localSession, String gql, String currentSpace)
-          throws IOErrorException, BindSpaceFailedException {
-    String[] qlAndSpace = new String[2];
-    gql = gql.trim();
-    String sessionSpace = localSession.getCurrentSpace();
-    boolean sameSpace = Objects.equals(sessionSpace, currentSpace);
-    if (!sameSpace && currentSpace != null) {
-      qlAndSpace[0] = currentSpace;
-      Session session = localSession.getSession();
-      ResultSet execute = session.execute(String.format("USE `%s`", currentSpace));
-      if (!execute.isSucceeded()) {
-        throw new BindSpaceFailedException(
-                String.format(" %s \"%s\"", execute.getErrorMessage(), currentSpace)
-        );
-      }
-    }
-    qlAndSpace[1] = String.format("\n\t\t%s", gql);
-    return qlAndSpace;
   }
 
   /**
