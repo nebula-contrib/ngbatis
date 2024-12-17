@@ -102,7 +102,12 @@ public class Env {
    * @return SessionPool
    */
   public SessionPool getSessionPool(String spaceName) {
-    return mapperContext.getNebulaSessionPoolMap().get(spaceName);
+    SessionPool sessionPool = mapperContext.getNebulaSessionPoolMap().get(spaceName);
+    if (sessionPool == null) {
+      sessionPool = dispatcher.initSessionPool(spaceName);
+      mapperContext.getNebulaSessionPoolMap().put(spaceName, sessionPool);
+    }
+    return sessionPool;
   }
 
   /**
