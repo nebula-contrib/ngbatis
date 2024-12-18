@@ -187,7 +187,7 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   // region insert zoom
 
   /**
-   * <p>插入一条记录，全属性插入</p>
+   * <p>插入一条记录，全属性插入（IF NOT EXISTS）</p>
    *
    * @param record 当前表对应的记录数据
    * @return 是否删除成功，成功 1，失败 0
@@ -202,7 +202,22 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
   }
 
   /**
-   * <p>插入非空字段。</p>
+   * <p>插入一条记录，全属性插入</p>
+   *
+   * @param record 当前表对应的记录数据
+   * @return 是否删除成功，成功 1，失败 0
+   */
+  default Integer insertForce(T record) {
+    String cqlTpl = getCqlTpl();
+    ResultSet rs = (ResultSet) proxy(
+      this.getClass(), ResultSet.class, cqlTpl,
+      new Class[]{Object.class}, record
+    );
+    return rs.isSucceeded() ? 1 : 0;
+  }
+
+  /**
+   * <p>插入非空字段。（IF NOT EXISTS）</p>
    *
    * @param record 单个顶点
    * @return 是否删除成功，成功 1，失败 0
@@ -214,6 +229,21 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     ClassModel classModel = getClassModel(this.getClass());
     ResultSet resultSet = (ResultSet) MapperProxy.invoke(classModel, methodModel, record);
     return resultSet.isSucceeded() ? 1 : 0;
+  }
+
+  /**
+   * <p>插入非空字段。无论具有原有数据该id的节点是否已存在</p>
+   *
+   * @param record 单个顶点
+   * @return 是否删除成功，成功 1，失败 0
+   */
+  default Integer insertSelectiveForce(T record) {
+    String cqlTpl = getCqlTpl();
+    ResultSet rs = (ResultSet) proxy(
+      this.getClass(), ResultSet.class, cqlTpl,
+      new Class[]{Object.class}, record
+    );
+    return rs.isSucceeded() ? 1 : 0;
   }
 
   /**
