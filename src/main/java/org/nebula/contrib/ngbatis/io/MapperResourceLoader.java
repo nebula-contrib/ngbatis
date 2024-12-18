@@ -31,6 +31,7 @@ import org.jsoup.nodes.Entities;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
+import org.nebula.contrib.ngbatis.Env;
 import org.nebula.contrib.ngbatis.annotations.Space;
 import org.nebula.contrib.ngbatis.annotations.TimeLog;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
@@ -154,36 +155,15 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
         return;
       }
       String spaceClassName = genericTypes[0].getTypeName();
-      Space annotation = Class.forName(spaceClassName).getAnnotation(Space.class);
-      if (null != annotation) {
-        String spaceName = tryResolvePlaceholder(annotation.name());
-        if (!spaceName.equals("")) {
-          cm.setSpace(spaceName);
-        }
+      Class<?> entityType = Class.forName(spaceClassName);
+      String space = ReflectUtil.spaceFromEntity(entityType);
+      if (isNotBlank(space)) {
+        space = Env.tryResolvePlaceholder(space, applicationContext);
+        cm.setSpace(space);
       }
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     }
-  }
-
-  /**
-   * 利用Spring Environment 解析注解的值，用于 @Space 的 name 属性解析
-   * @param value 需要解析的值，可能是带占位符的 ${xx.xx} ，也可以是固定的字符串
-   * @return resolveResult 解析结果
-   * @throws IllegalArgumentException 当配置了 ${xx.xx} 占位符，且spring配置文件中未指定该配置时抛出
-   */
-  private String tryResolvePlaceholder(String value) {
-    String resolveResult = value;
-    if (null != applicationContext) {
-      try {
-        resolveResult = applicationContext.getEnvironment().resolveRequiredPlaceholders(value);
-      } catch (IllegalArgumentException e) {
-        throw new ResourceLoadException(
-          "name ( " + value + " ) of @Space missing configurable value"
-        );
-      }
-    }
-    return resolveResult;
   }
 
   /**
