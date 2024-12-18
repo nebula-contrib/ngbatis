@@ -178,6 +178,21 @@
         );
     </insert>
 
+
+    <insert id="insertForce">
+        @var kv = ng.kv( ng_args[0] );
+        @var id = ng.id( ng_args[0] );
+        INSERT VERTEX
+        @for ( entry in @kv.multiTagColumns ) {
+            `${ entry.key }` (
+                ${ ng.join( entry.value, ", ", "ng.schemaFmt" ) }
+            ) ${ entryLP.last ? '' : ','}
+        @}
+        VALUES ${ id } : (
+            ${ ng.join( @kv.values ) }
+        );
+    </insert>
+  
     <insert id="insertSelective">
         @var kv = ng.kv( ng_args[0], '', true, true );
         @var id = ng.id( ng_args[0] );
@@ -191,6 +206,22 @@
             ${ ng.join( @kv.values ) }
         );
     </insert>
+
+
+    <insert id="insertSelectiveForce">
+        @var kv = ng.kv( ng_args[0], '', true, true );
+        @var id = ng.id( ng_args[0] );
+        INSERT VERTEX
+        @for ( entry in @kv.multiTagColumns ) {
+            `${ entry.key }` (
+                ${ ng.join( entry.value, ", ", "ng.schemaFmt" ) }
+            ) ${ entryLP.last ? '' : ','}
+        @}
+        VALUES ${ id } : (
+            ${ ng.join( @kv.values ) }
+        );
+    </insert>
+
 
     <insert id="insertBatch">
         @for ( row in ng_args[0] ) {
@@ -398,7 +429,7 @@
     </select>
 
     <select id="listEndNodes">
-        MATCH (n: `${ p2 }`)-[r: `${ p1 }`]->(n2)
+        MATCH (n)-[r: `${ p1 }`]->(n2: `${ p2 }`)
         WHERE id(n) == $p0
         RETURN n2
     </select>

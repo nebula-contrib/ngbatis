@@ -25,6 +25,7 @@ import ye.weicheng.ngbatis.demo.pojo.Employee;
 import ye.weicheng.ngbatis.demo.pojo.Like;
 import ye.weicheng.ngbatis.demo.pojo.LikeWithRank;
 import ye.weicheng.ngbatis.demo.pojo.Person;
+import ye.weicheng.ngbatis.demo.pojo.vertex.Player;
 import ye.weicheng.ngbatis.demo.repository.TestRepository;
 
 /**
@@ -555,8 +556,14 @@ public class NebulaBasicDaoTests {
 
   @Test
   public void listEndNodes() {
-    List<Person> personList = repository.listEndNodes("易小海", Like.class);
+    List<Person> personList = repository.listEndNodes("叶小南", Like.class);
     System.out.println(JSON.toJSONString(personList));
+  }
+
+  @Test
+  public void listEndNodesPlayer() {
+    List<Player> playerList = repository.listEndNodes("叶小南", Like.class, Player.class);
+    System.out.println(JSON.toJSONString(playerList));
   }
 
   @Test
