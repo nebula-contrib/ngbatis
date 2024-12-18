@@ -24,6 +24,7 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.nebula.contrib.ngbatis.annotations.Space;
 import org.nebula.contrib.ngbatis.annotations.base.EdgeType;
 import org.nebula.contrib.ngbatis.annotations.base.GraphId;
 import org.nebula.contrib.ngbatis.annotations.base.Tag;
@@ -623,4 +624,25 @@ public abstract class ReflectUtil {
     }
     return false;
   }
+
+  /**
+   * 从实体类获取 space，并解析占位符
+    */
+  public static String spaceFromEntity(Class<?> entityType) {
+    boolean hasSpace = entityType.isAnnotationPresent(Space.class);
+    String space = null;
+    if (hasSpace) {
+      Space spaceAnnotation = entityType.getAnnotation(Space.class);
+      space = spaceAnnotation.name();
+    }
+    
+    boolean hasTable = entityType.isAnnotationPresent(Table.class);
+    if (hasTable) {
+      Table tableAnnotation = entityType.getAnnotation(Table.class);
+      space = tableAnnotation.schema();
+    }
+    
+    return space;
+  }
+  
 }
