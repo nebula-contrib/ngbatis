@@ -1,6 +1,7 @@
 package org.nebula.contrib.ngbatis.base;
 
 import java.util.Map;
+import org.nebula.contrib.ngbatis.models.MapperContext;
 
 /**
  * 实体基类
@@ -9,6 +10,10 @@ import java.util.Map;
  */
 
 public abstract class GraphBase {
+  public GraphBase() {
+    Map<String, Class<?>> tagTypeMapping = MapperContext.newInstance().getTagTypeMapping();
+    tagTypeMapping.put(getEntityTypeName(), this.getClass());
+  }
 
   protected abstract String getEntityTypeName();
 
