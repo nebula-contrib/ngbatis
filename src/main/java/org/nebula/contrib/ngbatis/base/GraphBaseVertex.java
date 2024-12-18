@@ -15,7 +15,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.nebula.contrib.ngbatis.annotations.base.GraphId;
+import javax.persistence.Id;
 import org.nebula.contrib.ngbatis.annotations.base.Tag;
 import org.nebula.contrib.ngbatis.enums.Direction;
 import org.nebula.contrib.ngbatis.enums.IdType;
@@ -355,8 +355,8 @@ public abstract class GraphBaseVertex extends GraphBase {
           continue; // 跳过初始值
         }
       }
-      // 处理带有 @GraphId 注解的字段
-      if (field.isAnnotationPresent(GraphId.class)) {
+      // 处理带有 @Id 注解的字段
+      if (field.isAnnotationPresent(Id.class)) {
         properties.put("id", value);
       } else {
         properties.put(getNameByColumn(field), value);
@@ -377,14 +377,14 @@ public abstract class GraphBaseVertex extends GraphBase {
     for (Field field : declaredFields) {
       Annotation[] annotations = field.getAnnotations();
       for (Annotation annotation : annotations) {
-        if (annotation instanceof GraphId) {
+        if (annotation instanceof Id) {
           id = getValue(this, field);
           specificTypeField = field.getType();
         }
       }
     }
     if (id == null || isPrimitiveDefaultValue(specificTypeField,id)) {
-      throw new RuntimeException(entityClass.getSimpleName() + " does not have @GraphId");
+      throw new RuntimeException(entityClass.getSimpleName() + " does not have @Id");
     }
     return id;
   }
@@ -398,8 +398,8 @@ public abstract class GraphBaseVertex extends GraphBase {
     for (Field field : declaredFields) {
       Annotation[] annotations = field.getAnnotations();
       for (Annotation annotation : annotations) {
-        if (annotation instanceof GraphId) {
-          return ((GraphId) annotation).type();
+        if (annotation instanceof Id) {
+          return field.getType() == String.class ? IdType.STRING : IdType.INT64;
         }
       }
     }

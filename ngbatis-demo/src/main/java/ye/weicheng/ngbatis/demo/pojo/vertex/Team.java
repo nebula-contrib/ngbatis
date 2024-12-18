@@ -4,10 +4,9 @@ package ye.weicheng.ngbatis.demo.pojo.vertex;
 //
 // This source code is licensed under Apache 2.0 License.
 
-import org.nebula.contrib.ngbatis.annotations.base.GraphId;
+import javax.persistence.Id;
 import org.nebula.contrib.ngbatis.annotations.base.Tag;
 import org.nebula.contrib.ngbatis.base.GraphBaseVertex;
-import org.nebula.contrib.ngbatis.enums.IdType;
 
 
 /**
@@ -19,7 +18,7 @@ import org.nebula.contrib.ngbatis.enums.IdType;
 @Tag(name = "team")
 public class Team extends GraphBaseVertex {
 
-  @GraphId(type = IdType.STRING)
+  @Id
   private String id;
 
   private String name;

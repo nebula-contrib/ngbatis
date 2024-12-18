@@ -8,12 +8,12 @@ import com.vesoft.nebula.client.graph.data.ResultSet;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import javax.persistence.Id;
 import org.nebula.contrib.ngbatis.ArgsResolver;
 import org.nebula.contrib.ngbatis.Env;
 import org.nebula.contrib.ngbatis.ResultResolver;
 import org.nebula.contrib.ngbatis.SessionDispatcher;
 import org.nebula.contrib.ngbatis.annotations.base.EdgeType;
-import org.nebula.contrib.ngbatis.annotations.base.GraphId;
 import org.nebula.contrib.ngbatis.annotations.base.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -155,8 +155,8 @@ public class GraphBaseExt {
           continue; // 跳过初始值
         }
       }
-      // 处理带有 @GraphId 注解的字段
-      if (field.isAnnotationPresent(GraphId.class)) {
+      // 处理带有 @Id 注解的字段
+      if (field.isAnnotationPresent(Id.class)) {
         result.put("id", fieldValue);
       } else {
         result.put(getNameByColumn(field), fieldValue);

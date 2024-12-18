@@ -265,8 +265,8 @@ class NgbatisDemoApplicationTests {
   void assertSpaceFailed(Exception e) {
     e.printStackTrace();
     String message = e.getMessage();
-    Assert.isTrue(e instanceof QueryException &&
-      (message.contains("SpaceNotFound") || (message.contains("create session failed.")))
+    Assert.isTrue(e instanceof QueryException
+      && (message.contains("SpaceNotFound") || (message.contains("create session failed.")))
     );
   }
   

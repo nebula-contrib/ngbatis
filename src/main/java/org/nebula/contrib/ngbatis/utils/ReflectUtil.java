@@ -27,7 +27,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.nebula.contrib.ngbatis.annotations.Space;
 import org.nebula.contrib.ngbatis.annotations.base.EdgeType;
-import org.nebula.contrib.ngbatis.annotations.base.GraphId;
 import org.nebula.contrib.ngbatis.annotations.base.Tag;
 import org.nebula.contrib.ngbatis.exception.ParseException;
 import org.nebula.contrib.ngbatis.models.MethodModel;
@@ -83,10 +82,6 @@ public abstract class ReflectUtil {
       if (getNameByColumn(columnField).equals(prop)) {
         declaredField = columnField;
         break;
-      }
-      if (isGraphId(columnField) && prop.equals("@GraphId")) {
-        setValue(o, columnField, value);
-        return;
       }
     }
     if (declaredField == null) {
@@ -619,7 +614,7 @@ public abstract class ReflectUtil {
   public static boolean isGraphId(Field field) {
     Annotation[] annotations = field.getAnnotations();
     for (Annotation annotation : annotations) {
-      if (annotation instanceof GraphId) {
+      if (annotation instanceof Id) {
         return true;
       }
     }

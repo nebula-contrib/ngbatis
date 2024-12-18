@@ -10,7 +10,7 @@ import org.nebula.contrib.ngbatis.enums.IdType;
  * @author xYLiuuuuuu
  * @since 2024/9/8 10:14
  */
-
+@Deprecated
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface GraphId {
