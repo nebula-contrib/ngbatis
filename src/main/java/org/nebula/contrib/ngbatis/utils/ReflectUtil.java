@@ -9,6 +9,7 @@ import static org.springframework.util.ObjectUtils.nullSafeEquals;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -31,7 +32,6 @@ import org.nebula.contrib.ngbatis.annotations.base.Tag;
 import org.nebula.contrib.ngbatis.exception.ParseException;
 import org.nebula.contrib.ngbatis.models.MethodModel;
 import org.springframework.util.Assert;
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 /**
  * <p>反射工具类。</p>
@@ -559,9 +559,9 @@ public abstract class ReflectUtil {
     if (parent.isInterface()) {
       Type[] interfaces = insClass.getGenericInterfaces();
       for (Type anInterface : interfaces) {
-        boolean isType = anInterface instanceof ParameterizedTypeImpl;
+        boolean isType = anInterface instanceof ParameterizedType;
         if (isType) {
-          ParameterizedTypeImpl paramTypeInterface = (ParameterizedTypeImpl) anInterface;
+          ParameterizedType paramTypeInterface = (ParameterizedType) anInterface;
           boolean found = paramTypeInterface.getRawType() == parent;
           if (found) {
             Type[] actualTypeArguments = paramTypeInterface.getActualTypeArguments();
@@ -583,10 +583,11 @@ public abstract class ReflectUtil {
    *    when type is not ParameterizedTypeImpl and the type name can not get class object in jvm.
    */
   public static Class<?> typeToClass(Type type) throws ClassNotFoundException {
-    if (type instanceof ParameterizedTypeImpl) {
-      return ((ParameterizedTypeImpl) type).getRawType();
+    String typeName = type.getTypeName();
+    if (type instanceof ParameterizedType) {
+      typeName = ((ParameterizedType) type).getRawType().getTypeName();
     }
-    return Class.forName(type.getTypeName());
+    return Class.forName(typeName);
   }
 
   /**
