@@ -398,7 +398,7 @@
     </select>
 
     <select id="listEndNodes">
-        MATCH (n: `${ p2 }`)-[r: `${ p1 }`]->(n2)
+        MATCH (n)-[r: `${ p1 }`]->(n2: `${ p2 }`)
         WHERE id(n) == $p0
         RETURN n2
     </select>

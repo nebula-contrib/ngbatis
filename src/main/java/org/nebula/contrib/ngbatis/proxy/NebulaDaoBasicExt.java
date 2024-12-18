@@ -123,7 +123,7 @@ public class NebulaDaoBasicExt {
    * @param args    接口参数
    * @return 对结果集进行处理后的 java对象
    */
-  public static Object proxy(Class<?> currentType, Class<?> returnType, String gql,
+  public static Object proxy(Class<?> currentType, Class<?> resultType, String gql,
       Class<?>[] argTypes, Object... args) {
     Method method = null;
     try {
@@ -135,7 +135,7 @@ public class NebulaDaoBasicExt {
 
     MethodModel methodModel = new MethodModel();
     methodModel.setMethod(method);
-    methodModel.setResultType(returnType);
+    methodModel.setResultType(resultType);
     methodModel.setText(gql);
     ClassModel classModel = getClassModel(currentType);
     return MapperProxy.invoke(classModel, methodModel, args);

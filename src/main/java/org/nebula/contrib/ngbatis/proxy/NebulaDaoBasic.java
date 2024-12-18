@@ -451,13 +451,12 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    * @param endId     结束节点的 id
    * @return 开始节点列表
    */
-  default List<?> listStartNodes(Class<?> startType, Class<?> edgeType, I endId) {
+  default <E> List<E> listStartNodes(Class<E> startType, Class<?> edgeType, I endId) {
     String cqlTpl = getCqlTpl();
     String startVertexName = vertexName(startType);
     String edgeName = edgeName(edgeType);
     Class<? extends NebulaDaoBasic> daoType = this.getClass();
-    Class<?> returnType = entityType(daoType);
-    return (List<?>) proxy(daoType, returnType, cqlTpl,
+    return (List<E>) proxy(daoType, startType, cqlTpl,
             new Class[]{Class.class, Class.class, Serializable.class}, startVertexName, edgeName,
             endId);
   }
@@ -482,13 +481,12 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
    * @param endType  结束节点的类型
    * @return 结束节点列表
    */
-  default List<?> listEndNodes(I startId, Class<?> edgeType, Class<?> endType) {
+  default <E> List<E> listEndNodes(I startId, Class<?> edgeType, Class<E> endType) {
     String cqlTpl = getCqlTpl();
     String endVertexName = vertexName(endType);
     String edgeName = edgeName(edgeType);
     Class<? extends NebulaDaoBasic> daoType = this.getClass();
-    Class<?> returnType = entityType(daoType);
-    return (List<?>) proxy(daoType, returnType, cqlTpl,
+    return (List<E>) proxy(daoType, endType, cqlTpl,
             new Class[]{Serializable.class, Class.class, Class.class}, startId, edgeName,
             endVertexName);
   }
