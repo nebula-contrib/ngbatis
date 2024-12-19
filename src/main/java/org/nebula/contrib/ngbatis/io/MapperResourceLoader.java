@@ -88,11 +88,13 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
   @TimeLog(name = "xml-load", explain = "mappers xml load completed : {} ms")
   public Map<String, ClassModel> load() {
     Map<String, ClassModel> resultClassModel = new HashMap<>();
-    String mapperLocations = parseConfig.getMapperLocations();
+    String[] mapperLocations = parseConfig.getMapperLocations();
     try {
-      Resource[] resources = getResources(mapperLocations);
-      for (Resource resource : resources) {
-        resultClassModel.putAll(parseClassModel(resource));
+      for (String mapperLocation : mapperLocations) {
+        Resource[] resources = getResources(mapperLocation);
+        for (Resource resource : resources) {
+          resultClassModel.putAll(parseClassModel(resource));
+        }
       }
     } catch (FileNotFoundException ffe) {
       log.warn("No mapper files were found in path pattern '{}', please add", mapperLocations);
@@ -126,6 +128,9 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
       // 从注解获取 space
       if (null == cm.getSpace()) {
         setClassModelBySpaceAnnotation(cm);
+      }else {
+        //动态解析 XML 中 mapper 标签配置的 Space 属性
+        setClassModelByXmlConfigSpace(cm);
       }
       addSpaceToSessionPool(cm.getSpace());
 
@@ -137,6 +142,15 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
       result.put(cm.getNamespace().getName() + PROXY_SUFFIX, cm);
     }
     return result;
+  }
+
+  /**
+   * 解析自定义的 XML 中的 mapper 标签设置的 space
+   * @param cm ClassModel
+   */
+  private void setClassModelByXmlConfigSpace(ClassModel cm) {
+    String space = tryResolvePlaceholder(cm.getSpace());
+    cm.setSpace(space);
   }
 
   /**

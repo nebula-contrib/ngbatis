@@ -78,18 +78,18 @@ This source code is licensed under Apache 2.0 License.
           Route-Tag: abc
     ```
 
-- feat: `@Space` annotation supports dynamic configuration.
-  > `@Space` 注解的 name 属性值可通过 spring 配置文件自定义配置。
-  - example:
+- feat: @Space annotation and space config in mapper xml supports dynamic configuration.
+  > @Space 注解的 name 属性值和 xml 文件中 Mapper 标签指定的 Space 可通过 spring 配置文件自定义配置。
+  - @Space example:
 
     ```yaml
     app:
       person:
         space: PERSON_SPACE
     ```
-  
+
     ```java
-    @Space(name = "${nebula.space}")
+    @Space(name = "${app.person.space}")
     @Table(name = "person")
     public class Person {
         @Id
@@ -112,6 +112,14 @@ This source code is licensed under Apache 2.0 License.
             this.name = name;
         }
     }
+    ```
+
+  - XML example:
+
+    ```xml
+    <mapper namespace="com.xxx.TestSpaceMapper" space="${app.person.space}">
+
+    </mapper>
     ```
 
 # 1.2.2
