@@ -48,7 +48,7 @@ public class IntervalCheckSessionDispatcher implements Runnable, SessionDispatch
   private final NebulaPoolConfig nebulaPoolConfig;
   private final ArrayBlockingQueue<LocalSession> sessionQueue;
   private final ScheduledExecutorService threadPool;
-  final private NebulaJdbcProperties nebulaJdbcProperties;
+  private final NebulaJdbcProperties nebulaJdbcProperties;
 
   /**
    * 具备间隔时间做连接可用性检查的会话调度器
@@ -288,7 +288,7 @@ public class IntervalCheckSessionDispatcher implements Runnable, SessionDispatch
   }
 
   private static String[] qlWithSpace(LocalSession localSession, String gql, String currentSpace)
-    throws IOErrorException, BindSpaceFailedException {
+      throws IOErrorException, BindSpaceFailedException {
     String[] qlAndSpace = new String[2];
     gql = gql.trim();
     String sessionSpace = localSession.getCurrentSpace();

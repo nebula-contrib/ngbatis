@@ -23,9 +23,9 @@ import org.nebula.contrib.ngbatis.exception.QueryException;
 import org.nebula.contrib.ngbatis.models.ClassModel;
 import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.nebula.contrib.ngbatis.models.MethodModel;
+import org.nebula.contrib.ngbatis.session.SpaceRouter;
 import org.nebula.contrib.ngbatis.utils.Page;
 import org.nebula.contrib.ngbatis.utils.ReflectUtil;
-import org.nebula.contrib.ngbatis.session.SpaceRouter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -243,80 +243,6 @@ public class MapperProxy {
       }
     }
   }
-
-//  /**
-//   * 通过 nebula-graph 客户端执行数据库访问。被 invoke 所调用，间接为动态代理类服务。
-//   *
-//   * @param gql  待执行的查询脚本（模板）
-//   * @param params 待执行脚本的参数所需的参数
-//   * @return nebula-graph 的未被 orm 操作的原始结果集
-//   */
-//  public static ResultSet executeBySessionPool(ClassModel cm, MethodModel mm, String gql,
-//      Map<String, Object> params, Map<String, Object> paramsForTemplate) {
-//
-//    ResultSet result = null;
-//    String proxyClass = null;
-//    String proxyMethod = null;
-//    String currentSpace = null;
-//
-//    try {
-//      if (log.isDebugEnabled()) {
-//        proxyClass = cm.getNamespace().getName();
-//        proxyMethod = mm.getId();
-//      }
-//
-//      currentSpace = SpaceRouter.getSpace(cm, mm, paramsForTemplate);
-//      SessionPool sessionPool = ENV.getSessionPool(currentSpace);
-//      if (sessionPool == null) {
-//        throw new QueryException(currentSpace + " sessionPool is null");
-//      }
-//      result = sessionPool.execute(gql, params);
-//      if (result.isSucceeded()) {
-//        return result;
-//      } else {
-//        throw new QueryException(
-//          " ResultSet error: " + result.getErrorMessage(),
-//          result.getErrorCode()
-//        );
-//      }
-//    } catch (Exception e) {
-//      throw new QueryException("execute failed: " + e.getMessage(), e);
-//    } finally {
-//      if (log.isDebugEnabled()) {
-//        log.debug("\n\t- proxyMethod: {}#{}"
-//                + "\n\t- session space: {}"
-//                + "\n\t- nGql：{}"
-//                + "\n\t- params: {}"
-//                + "\n\t- result：{}",
-//            proxyClass, proxyMethod, currentSpace, gql, paramsForTemplate, result);
-//      }
-//    }
-//  }
-
-//  /**
-//   * 获取当前语句所执行的目标space。
-//   * @param cm 当前接口的类模型
-//   * @param mm 当前接口方法的方法模型
-//   * @return 目标space
-//   */
-//  @Deprecated
-//  public static String getSpace(ClassModel cm, MethodModel mm) {
-//    return SpaceRouter.getSpace(cm, mm);
-//  }
-
-//  /**
-//   * 支持space从参数中获取
-//   * @param cm 当前接口的类模型
-//   * @param mm 当前接口方法的方法模型
-//   * @param paramsForTemplate 从模板参数中获取空间名
-//   * @return 目标space
-//   */
-//  @Deprecated
-//  public static String getSpace(
-//    ClassModel cm, MethodModel mm, Map<String, Object> paramsForTemplate
-//  ) {
-//    return SpaceRouter.getSpace(cm, mm, paramsForTemplate);
-//  }
 
   public static Logger getLog() {
     return log;

@@ -117,7 +117,7 @@ public class NebulaDaoBasicExt {
    * java.lang.Object...) MapperProxy.proxy}
    *
    * @param currentType 被动态代理的 dao，NebulaDaoBasic 子类
-   * @param returnType  返回值类型
+   * @param resultType  返回值类型
    * @param gql     查询脚本（可带占位符的模板）
    * @param argTypes  接口参数值类型
    * @param args    接口参数
