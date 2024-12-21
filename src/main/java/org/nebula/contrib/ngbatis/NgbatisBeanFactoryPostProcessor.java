@@ -2,6 +2,7 @@ package org.nebula.contrib.ngbatis;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.nebula.contrib.ngbatis.models.ClassModel.PROXY_SUFFIX;
+import static org.nebula.contrib.ngbatis.proxy.MapperProxy.ENV;
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.entityTypeAndIdType;
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.vertexName;
 
@@ -195,26 +196,22 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
 
   /**
    * create and init Nebula SessionPool
+   * please use IntervalCheckSessionDispatcher.setNebulaSessionPool() instead.
    */
   @Deprecated
-  public void setNebulaSessionPool(MapperContext context) throws Exception {
-    throw new Exception(
-      "Deprecated method, " 
-        + "please use IntervalCheckSessionDispatcher.setNebulaSessionPool() instead."
-    );
+  public void setNebulaSessionPool(MapperContext context) {
+    ENV.getDispatcher().setNebulaSessionPool(context);
   }
 
   /**
    * session pool create and init
+   * please use IntervalCheckSessionDispatcher.initSessionPool() instead.
    * @param spaceName nebula space name
    * @return inited SessionPool
    */
   @Deprecated
-  public SessionPool initSessionPool(String spaceName) throws Exception {
-    throw new Exception(
-      "Deprecated method, " 
-        + "please use SessionDispatcher.initSessionPool() instead." 
-    );
+  public SessionPool initSessionPool(String spaceName) {
+    return ENV.getDispatcher().initSessionPool(spaceName);
   }
 
   @Override

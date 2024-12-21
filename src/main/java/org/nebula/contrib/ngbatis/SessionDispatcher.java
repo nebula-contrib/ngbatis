@@ -72,6 +72,8 @@ public interface SessionDispatcher {
     return ngbatisConfig != null && ngbatisConfig.getUseSessionPool();
   }
 
+  void setNebulaSessionPool(MapperContext context);
+
   /**
    * 按 spaceName 初始化 sessionPool
    * 

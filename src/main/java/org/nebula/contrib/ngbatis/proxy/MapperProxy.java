@@ -5,35 +5,27 @@ package org.nebula.contrib.ngbatis.proxy;
 // This source code is licensed under Apache 2.0 License.
 
 import static org.apache.commons.lang3.ObjectUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.nebula.contrib.ngbatis.models.ClassModel.PROXY_SUFFIX;
 
-import com.vesoft.nebula.client.graph.SessionPool;
 import com.vesoft.nebula.client.graph.data.ResultSet;
-import com.vesoft.nebula.client.graph.exception.BindSpaceFailedException;
-import com.vesoft.nebula.client.graph.exception.IOErrorException;
-import com.vesoft.nebula.client.graph.net.Session;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import org.nebula.contrib.ngbatis.ArgsResolver;
 import org.nebula.contrib.ngbatis.Env;
 import org.nebula.contrib.ngbatis.ResultResolver;
 import org.nebula.contrib.ngbatis.SessionDispatcher;
-import org.nebula.contrib.ngbatis.config.NgbatisConfig;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
 import org.nebula.contrib.ngbatis.exception.QueryException;
 import org.nebula.contrib.ngbatis.models.ClassModel;
 import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.nebula.contrib.ngbatis.models.MethodModel;
-import org.nebula.contrib.ngbatis.session.LocalSession;
 import org.nebula.contrib.ngbatis.utils.Page;
 import org.nebula.contrib.ngbatis.utils.ReflectUtil;
-import org.nebula.contrib.ngbatis.utils.ResultSetUtil;
+import org.nebula.contrib.ngbatis.session.SpaceRouter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -220,7 +212,7 @@ public class MapperProxy {
         proxyMethod = mm.getId();
       }
 
-      String currentSpace = getSpace(cm, mm, paramsForTemplate);
+      String currentSpace = SpaceRouter.getSpace(cm, mm, paramsForTemplate);
       result = dispatcher.executeWithParameter(
         gql, params, currentSpace, extraReturn
       );
@@ -252,88 +244,79 @@ public class MapperProxy {
     }
   }
 
-  /**
-   * 通过 nebula-graph 客户端执行数据库访问。被 invoke 所调用，间接为动态代理类服务。
-   *
-   * @param gql  待执行的查询脚本（模板）
-   * @param params 待执行脚本的参数所需的参数
-   * @return nebula-graph 的未被 orm 操作的原始结果集
-   */
-  public static ResultSet executeBySessionPool(ClassModel cm, MethodModel mm, String gql,
-      Map<String, Object> params, Map<String, Object> paramsForTemplate) {
+//  /**
+//   * 通过 nebula-graph 客户端执行数据库访问。被 invoke 所调用，间接为动态代理类服务。
+//   *
+//   * @param gql  待执行的查询脚本（模板）
+//   * @param params 待执行脚本的参数所需的参数
+//   * @return nebula-graph 的未被 orm 操作的原始结果集
+//   */
+//  public static ResultSet executeBySessionPool(ClassModel cm, MethodModel mm, String gql,
+//      Map<String, Object> params, Map<String, Object> paramsForTemplate) {
+//
+//    ResultSet result = null;
+//    String proxyClass = null;
+//    String proxyMethod = null;
+//    String currentSpace = null;
+//
+//    try {
+//      if (log.isDebugEnabled()) {
+//        proxyClass = cm.getNamespace().getName();
+//        proxyMethod = mm.getId();
+//      }
+//
+//      currentSpace = SpaceRouter.getSpace(cm, mm, paramsForTemplate);
+//      SessionPool sessionPool = ENV.getSessionPool(currentSpace);
+//      if (sessionPool == null) {
+//        throw new QueryException(currentSpace + " sessionPool is null");
+//      }
+//      result = sessionPool.execute(gql, params);
+//      if (result.isSucceeded()) {
+//        return result;
+//      } else {
+//        throw new QueryException(
+//          " ResultSet error: " + result.getErrorMessage(),
+//          result.getErrorCode()
+//        );
+//      }
+//    } catch (Exception e) {
+//      throw new QueryException("execute failed: " + e.getMessage(), e);
+//    } finally {
+//      if (log.isDebugEnabled()) {
+//        log.debug("\n\t- proxyMethod: {}#{}"
+//                + "\n\t- session space: {}"
+//                + "\n\t- nGql：{}"
+//                + "\n\t- params: {}"
+//                + "\n\t- result：{}",
+//            proxyClass, proxyMethod, currentSpace, gql, paramsForTemplate, result);
+//      }
+//    }
+//  }
 
-    ResultSet result = null;
-    String proxyClass = null;
-    String proxyMethod = null;
-    String currentSpace = null;
+//  /**
+//   * 获取当前语句所执行的目标space。
+//   * @param cm 当前接口的类模型
+//   * @param mm 当前接口方法的方法模型
+//   * @return 目标space
+//   */
+//  @Deprecated
+//  public static String getSpace(ClassModel cm, MethodModel mm) {
+//    return SpaceRouter.getSpace(cm, mm);
+//  }
 
-    try {
-      if (log.isDebugEnabled()) {
-        proxyClass = cm.getNamespace().getName();
-        proxyMethod = mm.getId();
-      }
-
-      currentSpace = getSpace(cm, mm, paramsForTemplate);
-      SessionPool sessionPool = ENV.getSessionPool(currentSpace);
-      if (sessionPool == null) {
-        throw new QueryException(currentSpace + " sessionPool is null");
-      }
-      result = sessionPool.execute(gql, params);
-      if (result.isSucceeded()) {
-        return result;
-      } else {
-        throw new QueryException(
-          " ResultSet error: " + result.getErrorMessage(),
-          result.getErrorCode()
-        );
-      }
-    } catch (Exception e) {
-      throw new QueryException("execute failed: " + e.getMessage(), e);
-    } finally {
-      if (log.isDebugEnabled()) {
-        log.debug("\n\t- proxyMethod: {}#{}"
-                + "\n\t- session space: {}"
-                + "\n\t- nGql：{}"
-                + "\n\t- params: {}"
-                + "\n\t- result：{}",
-            proxyClass, proxyMethod, currentSpace, gql, paramsForTemplate, result);
-      }
-    }
-  }
-
-  /**
-   * 获取当前语句所执行的目标space。
-   * @param cm 当前接口的类模型
-   * @param mm 当前接口方法的方法模型
-   * @return 目标space
-   */
-  public static String getSpace(ClassModel cm, MethodModel mm) {
-    String methodSpace;
-    return (mm != null && (methodSpace = mm.getSpace()) != null) 
-      ? (
-        "null".equals(methodSpace.trim()) ? null : methodSpace
-      )
-      : cm != null && cm.getSpace() != null ? cm.getSpace()
-        : ENV.getSpace();
-  }
-
-  /**
-   * 支持space从参数中获取
-   * @param cm 当前接口的类模型
-   * @param mm 当前接口方法的方法模型
-   * @param paramsForTemplate 从模板参数中获取空间名
-   * @return 目标space
-   */
-  public static String getSpace(
-    ClassModel cm, MethodModel mm, Map<String, Object> paramsForTemplate
-  ) {
-    boolean spaceFromParam = mm.isSpaceFromParam();
-    String space = getSpace(cm, mm);
-    if (spaceFromParam && space != null) {
-      return ENV.getTextResolver().resolve(space, paramsForTemplate);
-    }
-    return space;
-  }
+//  /**
+//   * 支持space从参数中获取
+//   * @param cm 当前接口的类模型
+//   * @param mm 当前接口方法的方法模型
+//   * @param paramsForTemplate 从模板参数中获取空间名
+//   * @return 目标space
+//   */
+//  @Deprecated
+//  public static String getSpace(
+//    ClassModel cm, MethodModel mm, Map<String, Object> paramsForTemplate
+//  ) {
+//    return SpaceRouter.getSpace(cm, mm, paramsForTemplate);
+//  }
 
   public static Logger getLog() {
     return log;

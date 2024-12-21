@@ -347,13 +347,12 @@ public class PersonServiceImpl {
 
 - 继承`GraphBaseVertex`类标识是点实体
 - `@Tag`的name属性注明点实体的Tag
-- `@GraphId`的type属性注明点实体id的类型（可选）
 
 ```java
 @Tag(name = "player")
 public class Player extends GraphBaseVertex {
 
-  @GraphId(type = IdType.STRING)
+  @Id
   private String id;
 
   private String name;

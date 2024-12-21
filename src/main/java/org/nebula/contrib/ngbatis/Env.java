@@ -4,16 +4,11 @@ package org.nebula.contrib.ngbatis;
 //
 // This source code is licensed under Apache 2.0 License.
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.nebula.contrib.ngbatis.proxy.MapperProxy.ENV;
-import static org.nebula.contrib.ngbatis.utils.ReflectUtil.spaceFromEntity;
-
 import com.alibaba.fastjson.parser.ParserConfig;
 import com.vesoft.nebula.client.graph.SessionPool;
 import com.vesoft.nebula.client.graph.net.Session;
 import org.nebula.contrib.ngbatis.base.GraphBaseExt;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
-import org.nebula.contrib.ngbatis.exception.ResourceLoadException;
 import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.nebula.contrib.ngbatis.proxy.MapperProxy;
 import org.slf4j.Logger;
@@ -125,56 +120,6 @@ public class Env {
     } catch (Throwable e) {
       throw new RuntimeException(e);
     }
-  }
-
-  /**
-   * 通过实体类获取对应的space。
-   * 支持占位符，并从配置信息中读取。
-   * 
-   * @param entityType 实体类
-   * @return space
-   */
-  public static String spaceFromConfig(Class<?> entityType) {
-    return spaceFromConfig(entityType, ENV.getContext());
-  }
-
-  public static String spaceFromConfig(Class<?> entityType, ApplicationContext context) {
-    String space = spaceFromEntity(entityType);
-    if (isBlank(space)) return null;
-    space = tryResolvePlaceholder(space, context);
-    return space;
-  }
-  
-  /**
-   * 利用Spring Environment 解析注解的值，用于 @Space 的 name 属性解析
-   * @author <a href="https://github.com/charle004">Charle004</a>
-   * @param value 需要解析的值，可能是带占位符的 ${xx.xx} ，也可以是固定的字符串
-   * @return resolveResult 解析结果
-   * @throws IllegalArgumentException 当配置了 ${xx.xx} 占位符，且spring配置文件中未指定该配置时抛出
-   */
-  public static String tryResolvePlaceholder(String value) {
-    return tryResolvePlaceholder(value, ENV.getContext());
-  }
-
-  /**
-   * 利用Spring Environment 解析注解的值，用于 @Space 的 name 属性解析
-   * @author <a href="https://github.com/charle004">Charle004</a>
-   * @param configKey 需要解析的值，可能是带占位符的 ${xx.xx} ，也可以是固定的字符串
-   * @return resolveResult 解析结果
-   * @throws IllegalArgumentException 当配置了 ${xx.xx} 占位符，且spring配置文件中未指定该配置时抛出
-   */
-  public static String tryResolvePlaceholder(String configKey, ApplicationContext context) {
-    String resolveResult = configKey;
-    if (null != context) {
-      try {
-        resolveResult = context.getEnvironment().resolveRequiredPlaceholders(configKey);
-      } catch (IllegalArgumentException e) {
-        throw new ResourceLoadException(
-          "name ( " + configKey + " ) of @Space missing configurable value"
-        );
-      }
-    }
-    return resolveResult;
   }
 
   public String getUsername() {

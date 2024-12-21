@@ -25,7 +25,6 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import org.nebula.contrib.ngbatis.annotations.Space;
 import org.nebula.contrib.ngbatis.annotations.base.EdgeType;
 import org.nebula.contrib.ngbatis.annotations.base.Tag;
 import org.nebula.contrib.ngbatis.exception.ParseException;
@@ -552,17 +551,29 @@ public abstract class ReflectUtil {
     Assert.isTrue(o != null, "instance can not be null");
     Class<?> insClass = o.getClass();
     if (parent.isInterface()) {
-      Type[] interfaces = insClass.getGenericInterfaces();
-      for (Type anInterface : interfaces) {
-        boolean isType = anInterface instanceof ParameterizedType;
-        if (isType) {
-          ParameterizedType paramTypeInterface = (ParameterizedType) anInterface;
-          boolean found = paramTypeInterface.getRawType() == parent;
-          if (found) {
-            Type[] actualTypeArguments = paramTypeInterface.getActualTypeArguments();
-            boolean noOut = actualTypeArguments.length > i;
-            return noOut ? (Class<?>)actualTypeArguments[i] : null;
-          }
+      return typeArg(insClass, parent, i);
+    }
+    return null;
+  }
+
+  /**
+   * 从类型中，获取父类或接口中的泛型参数。
+   * @param clazz 类型
+   * @param parent 所继承的父类或实现的接口
+   * @param i 泛型参数所处下标
+   * @return 泛型
+   */
+  public static Class<?> typeArg(Class<?> clazz, Class<?> parent, int i) {
+    Type[] interfaces = clazz.getGenericInterfaces();
+    for (Type anInterface : interfaces) {
+      boolean isType = anInterface instanceof ParameterizedType;
+      if (isType) {
+        ParameterizedType paramTypeInterface = (ParameterizedType) anInterface;
+        boolean found = paramTypeInterface.getRawType() == parent;
+        if (found) {
+          Type[] actualTypeArguments = paramTypeInterface.getActualTypeArguments();
+          boolean noOut = actualTypeArguments.length > i;
+          return noOut ? (Class<?>)actualTypeArguments[i] : null;
         }
       }
     }
@@ -619,26 +630,6 @@ public abstract class ReflectUtil {
       }
     }
     return false;
-  }
-
-  /**
-   * 从实体类获取 space，并解析占位符
-    */
-  public static String spaceFromEntity(Class<?> entityType) {
-    boolean hasSpace = entityType.isAnnotationPresent(Space.class);
-    String space = null;
-    if (hasSpace) {
-      Space spaceAnnotation = entityType.getAnnotation(Space.class);
-      space = spaceAnnotation.name();
-    }
-    
-    boolean hasTable = entityType.isAnnotationPresent(Table.class);
-    if (hasTable) {
-      Table tableAnnotation = entityType.getAnnotation(Table.class);
-      space = tableAnnotation.schema();
-    }
-    
-    return space;
   }
   
 }

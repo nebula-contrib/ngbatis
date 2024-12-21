@@ -12,6 +12,7 @@ nebula:
     # space name needs to be informed through annotations(@Space) or xml(space="test")
     # default false(false: Session pool map will not be initialized)
     use-session-pool: true
+    test-space-placeholder: cmqa
   hosts: 139.9.187.207:9669
   username: root
   password: U3RhclNoYWRvd18wOTE5

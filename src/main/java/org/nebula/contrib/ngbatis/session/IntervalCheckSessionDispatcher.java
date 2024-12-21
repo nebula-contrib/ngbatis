@@ -6,6 +6,7 @@ package org.nebula.contrib.ngbatis.session;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.nebula.contrib.ngbatis.proxy.MapperProxy.ENV;
+import static org.springframework.util.ObjectUtils.nullSafeEquals;
 
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.SessionPool;
@@ -166,6 +167,7 @@ public class IntervalCheckSessionDispatcher implements Runnable, SessionDispatch
    * @author gin soul [create] 
    * @author CorvusYe [refac]
    */
+  @Override
   public void setNebulaSessionPool(MapperContext context) {
     NgbatisConfig ngbatisConfig = nebulaJdbcProperties.getNgbatis();
     if (ngbatisConfig.getUseSessionPool() == null || !ngbatisConfig.getUseSessionPool()) {
@@ -190,7 +192,6 @@ public class IntervalCheckSessionDispatcher implements Runnable, SessionDispatch
    * @param spaceName nebula
   space name
    * @author gin soul [create]
-   * @author CorvusYe [refac]
    * @return inited SessionPool
    */
   @Override
@@ -269,12 +270,15 @@ public class IntervalCheckSessionDispatcher implements Runnable, SessionDispatch
         String autoSwitch = qlAndSpace[0] == null ? "" : qlAndSpace[0];
         session = localSession.getSession();
         result = session.executeWithParameter(gql, params);
-        extraReturn.put("autoSwitch", autoSwitch);
+
         localSession.setCurrentSpace(getSpace(result));
         handleSession(localSession, result);
         if (log.isDebugEnabled()) {
-          extraReturn.put("localSessionSpace", localSession.getCurrentSpace());
-          extraReturn.put("autoSwitch", autoSwitch);
+          extraReturn.put("localSessionSpace", space);
+          String currentSpace = localSession.getCurrentSpace();
+          if (nullSafeEquals(currentSpace, autoSwitch)) {
+            extraReturn.put("autoSwitch", autoSwitch);
+          }
         }
         return result;
       }
