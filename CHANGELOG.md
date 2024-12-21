@@ -28,6 +28,52 @@ This source code is licensed under Apache 2.0 License.
 
 # NEXT
 
+# 2.0.0-beta
+
+## Bugfix
+
+- fix: [#329](https://github.com/nebula-contrib/ngbatis/issues/329) correct the return value type and clear the interface generic.[#335](https://github.com/nebula-contrib/ngbatis/pull/335)
+- fix: remove JDK8's internal API: ParameterizedTypeImpl
+
+## Feature
+
+- feat: Entity Direct Search. ([#319](https://github.com/nebula-contrib/ngbatis/pull/319), via: [@xYLiuuuuuu](https://github.com/n3A87))
+  - Entities can extend `GraphBaseVertex` or `GraphBaseEdge` to support direct search.
+    - GraphBaseVertex:
+
+    API | Usage instructions
+    --|--
+    queryIdsByProperties()                              | Query a collection of vertex ids for a particular Tag or attribute
+    queryVertexById()                                   | Query a single vertex for a specific vertex Id
+    queryVertexByTag()                                  | Query a collection of vertices  for a specific Tag
+    queryVertexByProperties()                           | Query a collection of vertexes for a specific property
+    queryAllAdjacentVertex(Class<?>... edgeClass)       | Query a collection of all neighboring vertexes of a particular vertex, specifying one or more edge types that connect the two vertexes
+    queryIncomingAdjacentVertex(Class<?>... edgeClass)  | Query the set of adjacent vertexes in the direction of the incoming edge of a particular vertex, specifying one or more edge types that connect two vertexes
+    queryOutgoingAdjacentVertex(Class<?>... edgeClass)  | Query the set of adjacent vertexes in the direction of the edge of a particular vertex, specifying one or more edge types that connect two vertexes
+    queryNeighborIdsWithHopById(int m, int n, Class<?>... edgeClass) | Query a collection of vertex ids within a specified number of hops for a particular vertex, specifying one or more edge types that connect two vertexes
+    queryConnectedEdgesById(Direction direction)        | Query the set of all edges associated with a particular vertex, specifying the direction and type of the edge
+    queryPathFromVertex(Direction direction)            | Query the collection of all paths associated with a particular vertex, specifying the direction of the edge
+    queryFixedLengthPathFromVertex(Integer maxHop, Direction direction, Class<?>... edgeClass) | Query a set of fixed-length paths from a specific vertex, specifying the maximum number of steps, the direction of the edge, and the type of the edge
+    queryVariableLengthPathFromVertex(Integer minHop, Integer maxHop,   Direction direction, Class<?>... edgeClass) | Query a set of variable-length paths from a specific vertex, specifying the minimum number of steps, the maximum number of steps, the direction of the edge, and the type of the edge
+    queryShortestPathFromSrcAndDst(Integer maxHop,   Direction direction, T v2) | Query any shortest path from a specific vertex, specifying the number of steps, the direction of the edge, and the end vertex entity
+    queryAllShortestPathsFromSrcAndDst(Integer maxHop,   Direction direction, T v2) | Query the set of all shortest paths from this vertex, specifying the number of steps, the direction of the edge, and the end vertex entity
+    queryVertexCountByTag()                             | Query the number of vertexes for a specific Tag
+
+    - GraphBaseEdge:
+
+    API | Usage instructions
+    --|--
+    queryEdgeByType(Direction direction)                       | Query a set of edges of a specific type and direction
+    queryEdgeWithSrcAndDstByProperties(T srcVertex, Direction direction, T dstVertex) | Query a set of edges for a particular property
+    queryEdgePropertiesBySrcAndDstId()                         | Query a set of edges for a specific always vertex id
+    queryEdgeCountByType()                                     | Query the number of edges for a specific Type
+
+- feat: fix [#324](https://github.com/nebulagraph/ngbatis/issues/324) add insertForce(v) insertSelectiveForce(v) into NebulaDaoBasic.[#335](https://github.com/nebula-contrib/ngbatis/pull/335)
+- feat: `@Space` annotation and space config in mapper xml supports dynamic configuration. ([#318](https://github.com/nebula-contrib/ngbatis/pull/318), via: [@charle004](https://github.com/charle004))
+  > `@Space` 注解的 name 属性值和 xml 文件中 Mapper 标签指定的 Space 可通过 spring 配置文件自定义配置。
+- feat: support multiple mapper-locations in yml. ([#318](https://github.com/nebula-contrib/ngbatis/pull/318), via: [@charle004](https://github.com/charle004))
+- feat: SessionPool support `spaceFromParam`.
+
 # 1.3.0
 
 ## Dependencies upgrade
@@ -78,9 +124,9 @@ This source code is licensed under Apache 2.0 License.
           Route-Tag: abc
     ```
 
-- feat: @Space annotation and space config in mapper xml supports dynamic configuration.
-  > @Space 注解的 name 属性值和 xml 文件中 Mapper 标签指定的 Space 可通过 spring 配置文件自定义配置。
-  - @Space example:
+- feat: `@Space` annotation supports dynamic configuration.
+  > `@Space` 注解的 name 属性值可通过 spring 配置文件自定义配置。
+  - example:
 
     ```yaml
     app:

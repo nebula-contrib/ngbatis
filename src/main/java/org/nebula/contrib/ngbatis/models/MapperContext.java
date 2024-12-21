@@ -4,6 +4,8 @@ package org.nebula.contrib.ngbatis.models;
 //
 // This source code is licensed under Apache 2.0 License.
 
+import static org.nebula.contrib.ngbatis.utils.ReflectUtil.typeArg;
+
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.SessionPool;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
@@ -13,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.nebula.contrib.ngbatis.config.NgbatisConfig;
+import org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic;
 
 /**
  * xml 中标签所声明的信息（方法）
@@ -30,6 +33,10 @@ public class MapperContext {
   final Map<String, Class<?>> tagTypeMapping = new HashMap<>();
   /**
    * 当前应用中，在 xml 中 namespace 所声明的所有 XXXDao 及其 类模型
+   * <ul>
+   *   <li>key: bean名称，自定义DAO接口名+{@link ClassModel.PROXY_SUFFIX}</li>
+   *   <li>value: 类模型</li>
+   * </ul>
    */
   Map<String, ClassModel> interfaces;
   /**
@@ -59,6 +66,11 @@ public class MapperContext {
   private NgbatisConfig ngbatisConfig;
   boolean resourceRefresh = false;
 
+  /**
+   * 实体类名与类模型的映射
+   */
+  private Map<Class<?>, ClassModel> entityClassModelMap = null;
+  
   private MapperContext() {
   }
 
@@ -141,4 +153,16 @@ public class MapperContext {
     return tagTypeMapping;
   }
 
+  public Map<Class<?>, ClassModel> computeEntityClassModelMap() {
+    if (entityClassModelMap == null) {
+      entityClassModelMap = new HashMap<>();
+      for (ClassModel classModel : interfaces.values()) {
+        Class<?> entityType = typeArg(classModel.getNamespace(), NebulaDaoBasic.class, 0);
+        if (entityType != null) {
+          entityClassModelMap.put(entityType, classModel);
+        }
+      }
+    }
+    return entityClassModelMap;
+  }
 }

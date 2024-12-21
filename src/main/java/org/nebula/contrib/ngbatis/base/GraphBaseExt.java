@@ -1,6 +1,5 @@
 package org.nebula.contrib.ngbatis.base;
 
-import static org.nebula.contrib.ngbatis.Env.spaceFromConfig;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getNameByColumn;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getValue;
 
@@ -15,6 +14,7 @@ import org.nebula.contrib.ngbatis.ResultResolver;
 import org.nebula.contrib.ngbatis.SessionDispatcher;
 import org.nebula.contrib.ngbatis.annotations.base.EdgeType;
 import org.nebula.contrib.ngbatis.annotations.base.Tag;
+import org.nebula.contrib.ngbatis.session.SpaceRouter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +34,7 @@ public class GraphBaseExt {
     //从env中获取本地会话调度器
     SessionDispatcher dispatcher = ENV.getDispatcher();
     //从env中获取space
-    String currentSpace = getSpace(m1);
+    String currentSpace = SpaceRouter.getSpace(m1);
 
     ArgsResolver argsResolver = ENV.getArgsResolver();
 
@@ -57,38 +57,6 @@ public class GraphBaseExt {
     return result;
   }
   
-  /**
-   * 获取当前space，支持 @Space 跟 @Table 注解
-   *     如果均未指定，则返回默认space
-   *     
-   * @return 当前space
-   */
-  public static String getSpace(Map<String, Object> m1) {
-    Object edgeType = m1.get("edgeType");
-    Object tag = m1.get("tag");
-    String entityTypeName = edgeType != null ? edgeType.toString()
-            : tag != null ? tag.toString()
-              : null;
-    
-    String defaultSpace = ENV.getSpace();
-    if (entityTypeName == null) {
-      return defaultSpace;
-    }
-
-    Map<String, Class<?>> entityTypeMapping = ENV.getMapperContext().getTagTypeMapping();
-    Class<?> entityType = entityTypeMapping.get(entityTypeName);
-    boolean isGraphBase = GraphBase.class.isAssignableFrom(entityType);
-    if (!isGraphBase) {
-      return defaultSpace;
-    }
-
-    String space = spaceFromConfig(entityType);
-    if (space != null) {
-      return space;
-    }
-    return ENV.getSpace();
-  }
-
   /**
    * 处理查询结果
    * @param resultSet 结果集ResultSet

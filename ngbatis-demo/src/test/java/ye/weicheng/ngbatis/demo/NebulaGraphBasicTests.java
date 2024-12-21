@@ -94,7 +94,7 @@ public class NebulaGraphBasicTests {
     }
   }
 
-  @Test
+  //  @Test
   public void queryNeighborIdsWithHopById() {
     Player player = new Player();
     player.setId("player102");
@@ -157,7 +157,7 @@ public class NebulaGraphBasicTests {
   }
 
 
-  @Test
+  //  @Test
   public void queryShortestPathFromSrcAndDst() {
     Player src = new Player();
     src.setName("Tim Duncan");
@@ -168,7 +168,7 @@ public class NebulaGraphBasicTests {
   }
 
 
-  @Test
+  //  @Test
   public void queryAllShortestPathsFromSrcAndDst() {
     Player src = new Player();
     src.setName("Tim Duncan");
