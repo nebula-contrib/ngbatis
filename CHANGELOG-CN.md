@@ -5,6 +5,12 @@ Copyright (c) 2024 All project authors and nebula-contrib. All rights reserved.
 This source code is licensed under Apache 2.0 License.
 -->
 
+# 2.0.0-beta.1
+
+## Bugfix
+
+- fix: 修复 `ng.valueFmt( value )` 中 value 为 null 时，无法输出 null 进行占位的问题。
+
 # 2.0.0-beta
 
 ## Bug修复

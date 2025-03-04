@@ -171,6 +171,14 @@
             toSet( collect( $-.destination ) ) AS relationships
     </select>
     
+    <select id="selectPath" resultType="org.nebula.contrib.ngbatis.models.data.NgPath">
+        MATCH p = (n)-[r*1..2]->(n2)
+        RETURN p
+    </select>
+  
+    <select id="testValueFmtWhenNull">
+        RETURN ${ ng.valueFmt(value) }
+    </select>
 
 </mapper>
 

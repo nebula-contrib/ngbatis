@@ -603,4 +603,16 @@ public class NebulaBasicDaoTests {
     List<String> spaces = repository.showSpaces();
     System.out.println(spaces);
   }
+  
+  @Test
+  public void selectPath() {
+    List<NgPath<String>> paths = repository.selectPath();
+    System.out.println(JSON.toJSONString(paths));
+  }
+  
+  @Test
+  public void testValueFmtWhenNull() {
+    String nullValue = repository.testValueFmtWhenNull(null);
+    Assert.isTrue(nullValue == null);
+  }
 }
