@@ -28,6 +28,12 @@ This source code is licensed under Apache 2.0 License.
 
 # NEXT
 
+# 2.0.0-beta.1
+
+## Bugfix
+
+- fix: `ng.valueFmt( value )` cannot output null as a placeholder when value is null.
+
 # 2.0.0-beta
 
 ## Bugfix

@@ -13,7 +13,6 @@ import static org.nebula.contrib.ngbatis.utils.ReflectUtil.typeArg;
 import java.util.Map;
 import javax.persistence.Table;
 import org.nebula.contrib.ngbatis.annotations.Space;
-import org.nebula.contrib.ngbatis.base.GraphBase;
 import org.nebula.contrib.ngbatis.exception.ResourceLoadException;
 import org.nebula.contrib.ngbatis.models.ClassModel;
 import org.nebula.contrib.ngbatis.models.MethodModel;
@@ -50,7 +49,6 @@ public class SpaceRouter {
     if (hasTable) {
       Table tableAnnotation = entityType.getAnnotation(Table.class);
       String space = tableAnnotation.schema();
-      System.out.println("table space: " + space);
       if (isNotBlank(space)) {
         return space;
       }
@@ -62,7 +60,6 @@ public class SpaceRouter {
       Space spaceAnnotation = entityType.getAnnotation(Space.class);
       String space = spaceAnnotation.name();
       if (isNotBlank(space)) {
-        System.out.println("space: " + space);
         return space;
       }
     }

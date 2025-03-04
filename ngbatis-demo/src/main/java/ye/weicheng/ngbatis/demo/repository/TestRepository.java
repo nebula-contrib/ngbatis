@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.persistence.Id;
 import org.nebula.contrib.ngbatis.models.data.NgEdge;
+import org.nebula.contrib.ngbatis.models.data.NgPath;
 import org.nebula.contrib.ngbatis.models.data.NgSubgraph;
 import org.nebula.contrib.ngbatis.models.data.NgVertex;
 import org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic;
@@ -85,6 +86,11 @@ public interface TestRepository extends NebulaDaoBasic<Person, String> {
   List<Person> dynamicSpaceWithPage(Page<Person> page, @Param("space") String space);
 
   NgSubgraph<String> resultContainingSet();
+
+  List<NgPath<String>> selectPath();
+  
+  String testValueFmtWhenNull(@Param("value") String nullValue);
+  
 
   class DynamicNode {
     @Id
