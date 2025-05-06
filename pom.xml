@@ -14,7 +14,7 @@
     <groupId>org.nebula-contrib</groupId>
     <artifactId>ngbatis</artifactId>
     <version>2.0.0-beta.1</version>
-    
+
     <description>
         NgBatis is a database ORM framework base NebulaGraph + spring-boot,
         which takes advantage of the mybatis’ fashion development,
@@ -23,7 +23,7 @@
         NgBatis 是一款针对 NebulaGraph + Springboot 的数据库 ORM 框架。
         借鉴于 MyBatis 的使用习惯进行开发。
     </description>
-    
+
     <url>https://github.com/nebula-contrib/ngbatis</url>
 
     <developers>
@@ -54,6 +54,10 @@
         <developer>
             <name>charle004</name>
             <email>937002632@qq.com</email>
+        </developer>
+        <developer>
+            <name>moroyimk</name>
+            <email>928335734@qq.com</email>
         </developer>
     </developers>
 
