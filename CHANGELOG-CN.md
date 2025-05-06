@@ -5,6 +5,25 @@ Copyright (c) 2024 All project authors and nebula-contrib. All rights reserved.
 This source code is licensed under Apache 2.0 License.
 -->
 
+# NEXT
+
+## Bugfix
+
+- fix [#63](https://github.com/nebula-contrib/ngbatis/pull/63): 在 ASM 生成代理类时，自动计算方法的最大栈深及局部变量表个数。 来自: [@moroyimk](https://github.com/moroyimk)
+- fix: 修复自定义 xml 中， `Duration` 作为属性类型不被支持的问题
+- revert: 回退关于 2.0.0-beta.1 的修改。
+  > 为兼容 `${ ng.valueFmt( value ) }`, 当 value 为 null 时，依然可以输出占位符，可使用以下方式
+  >
+    > ```beetl
+    > ${ ng.valueFmt( value ) ! "null" }
+    > ```
+  >
+- fix: 修复字段属性为 Byte 时，不能正常解析到实体对象的问题。
+
+## Upgrade
+
+- upgrade: 升级 fastjson 版本至 2.0.57.
+
 # 2.0.0-beta.1
 
 ## Bugfix

@@ -41,7 +41,7 @@ public class ValueFmtFn extends AbstractFunction<Object, Boolean, Boolean, Void,
     ifStringLike = ifStringLike != null && ifStringLike;
     escape = escape != null ? escape : ValueFmtFn.escape;
     if (value == null) {
-      return "null";
+      return null;
     }
     if (value instanceof String) {
       value = (escape ? StringEscapeUtils.escapeJava((String) value) : value);

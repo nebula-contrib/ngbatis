@@ -25,11 +25,6 @@ public class Env {
 
   public static ClassLoader classLoader;
 
-  // 使用 fastjson 安全模式，规避任意代码执行风险
-  static {
-    ParserConfig.getGlobalInstance().setSafeMode(true);
-  }
-
   private Logger log = LoggerFactory.getLogger(Env.class);
 
   //  private SessionFactory sessionFactory;

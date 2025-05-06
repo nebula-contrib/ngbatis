@@ -28,6 +28,23 @@ This source code is licensed under Apache 2.0 License.
 
 # NEXT
 
+## Bugfix
+
+- fix ([#63](https://github.com/nebula-contrib/ngbatis/pull/63): automatically calculating stack and local variables in asm. via: [@moroyimk](https://github.com/moroyimk)
+- fix: fix the issue of `Duration` type in custom xml
+- revert: revert the change of 2.0.0-beta.1
+  > To be compatible with `${ ng.valueFmt( value ) }`, when value is null, it can still output a placeholder. You can use the following method:
+  >
+    > ```beetl
+    > ${ ng.valueFmt( value ) ! "null" }
+    > ```
+  >
+- fix: fix the issue of field type is Byte, cannot be parsed to entity object.
+
+## Upgrade
+
+- upgrade: upgrade fastjson version to 2.0.57.
+
 # 2.0.0-beta.1
 
 ## Bugfix
