@@ -177,7 +177,7 @@
     </select>
   
     <select id="testValueFmtWhenNull">
-        RETURN ${ ng.valueFmt(value) }
+        RETURN ${ ng.valueFmt(value) ! "null" }
     </select>
 
 </mapper>

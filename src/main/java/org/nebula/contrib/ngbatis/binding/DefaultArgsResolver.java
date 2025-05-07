@@ -69,8 +69,8 @@ public class DefaultArgsResolver implements ArgsResolver {
       put(Integer.class, (Setter<Integer>) Value::iVal);
       put(short.class, (Setter<Short>) Value::iVal);
       put(Short.class, (Setter<Short>) Value::iVal);
-      put(byte.class, (Setter<Short>) Value::iVal);
-      put(Byte.class, (Setter<Short>) Value::iVal);
+      put(byte.class, (Setter<Byte>) Value::iVal);
+      put(Byte.class, (Setter<Byte>) Value::iVal);
       put(long.class, (Setter<Long>) Value::iVal);
       put(Long.class, (Setter<Long>) Value::iVal);
       put(float.class, (Setter<Float>) Value::fVal);
