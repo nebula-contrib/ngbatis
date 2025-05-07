@@ -15,4 +15,6 @@ import ye.weicheng.ngbatis.demo.pojo.ColumnAlias;
  */
 public interface ColumnAliasDao extends NebulaDaoBasic<ColumnAlias, String> {
 
+  ColumnAlias propsToObj();
+
 }

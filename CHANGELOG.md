@@ -41,6 +41,31 @@ This source code is licensed under Apache 2.0 License.
   >
 - fix: fix the issue of field type is Byte, cannot be parsed to entity object.
 
+## Feature
+
+- Supporting props can be directly mapped to entity objects.
+
+  ```java
+  @Table(name = "column_alias")
+  public class ColumnAlias {
+    @Id @Column(name = "id_no") private String idNo;
+    @Column(name = "first_name") private String firstName;
+    @Column(name = "last_name") private String lastName;
+    @Transient private String ignoreMe;
+  }
+  ```
+
+  ```xml
+  <select id="propsToObj">
+    MATCH (n :column_alias)
+    WHERE n.column_alias.first_name is not null
+    RETURN
+      properties(n),
+      "ignoreMe" as ignoreMe
+    LIMIT 1
+  </select>
+  ```
+
 ## Upgrade
 
 - upgrade: upgrade fastjson version to 2.0.57.
