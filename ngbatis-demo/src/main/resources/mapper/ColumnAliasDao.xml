@@ -5,4 +5,13 @@
 -->
 <mapper namespace="ye.weicheng.ngbatis.demo.repository.ColumnAliasDao" space="test">
   
+  <select id="propsToObj">
+    MATCH (n :column_alias)
+    WHERE n.column_alias.first_name is not null
+    RETURN
+      properties(n),
+      "ignoreMe" as ignoreMe
+    LIMIT 1
+  </select>
+  
 </mapper>

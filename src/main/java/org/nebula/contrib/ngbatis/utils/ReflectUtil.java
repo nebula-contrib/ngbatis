@@ -25,6 +25,8 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.nebula.contrib.ngbatis.annotations.DstId;
+import org.nebula.contrib.ngbatis.annotations.SrcId;
 import org.nebula.contrib.ngbatis.annotations.base.EdgeType;
 import org.nebula.contrib.ngbatis.annotations.base.Tag;
 import org.nebula.contrib.ngbatis.exception.ParseException;
@@ -445,6 +447,24 @@ public abstract class ReflectUtil {
       clazz = clazz.getSuperclass();
     } while (clazz != null);
     return fields.toArray(new Field[0]);
+  }
+
+  /**
+   * 获取当前类的所有属性
+   * @param clazz
+   * @param forValueSetting
+   * @return
+   */
+  public static Field[] getColumnFields(Class<?> clazz, boolean forValueSetting) {
+    Field[] allColumnFields = getAllColumnFields(clazz, forValueSetting);
+    return Arrays.stream(allColumnFields)
+      .filter(el -> el.isAnnotationPresent(Column.class) 
+        && !el.isAnnotationPresent(Id.class)
+        && !el.isAnnotationPresent(DstId.class) 
+        && !el.isAnnotationPresent(SrcId.class)
+        && (!el.isAnnotationPresent(Transient.class) || forValueSetting)
+      )
+      .toArray(Field[]::new);
   }
 
 

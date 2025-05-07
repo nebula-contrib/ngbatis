@@ -165,6 +165,9 @@ public class NgbatisContextInitializer implements ApplicationContextInitializer 
             )
             .setUseSessionPool(
               environment.getProperty("nebula.ngbatis.use-session-pool", Boolean.class)
+            )
+            .setEnablePropMapping(
+              environment.getProperty("nebula.ngbatis.enable-prop-mapping", Boolean.class)
             );
   }
 
