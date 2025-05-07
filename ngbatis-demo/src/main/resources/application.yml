@@ -13,6 +13,13 @@ nebula:
     # default false(false: Session pool map will not be initialized)
     use-session-pool: true
     test-space-placeholder: cmqa
+    # 是否启用 props 作为栏位时，直接映射到实体对象的属性。
+    # 会改变原有的映射方式。请检查是否影响原有业务逻辑。
+    # 如果对原有业务产生影响，请设置为 false
+    # Whether to enable props as fields directly mapped to entity objects. 
+    # It will change the original mapping method. Please check whether it affects the original business logic.
+    # If it affects the original business, please set it to false
+    enable-prop-mapping: true
   hosts: 139.9.187.207:9669
   username: root
   password: U3RhclNoYWRvd18wOTE5

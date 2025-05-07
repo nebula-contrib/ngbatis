@@ -26,6 +26,11 @@ public class NgbatisConfig {
    */
   public Boolean useSessionPool;
 
+  /**
+   * Whether enable direct mapping of props to object
+   * @return true/false
+   */
+  public Boolean enablePropMapping;
 
   public Long getSessionLifeLength() {
     return sessionLifeLength;
@@ -77,6 +82,23 @@ public class NgbatisConfig {
     }
     this.useSessionPool = useSessionPool;
     return this;
+  }
 
+  public Boolean getEnablePropMapping() {
+    return enablePropMapping;
+  }
+
+  /**
+   * 默认 false
+   * @param enablePropMapping 是否启用 props 作为栏位时，直接映射到实体对象的属性
+   * @return true/false
+   */
+  public NgbatisConfig setEnablePropMapping(Boolean enablePropMapping) {
+    if (enablePropMapping == null) {
+      this.enablePropMapping = true;
+      return this;
+    }
+    this.enablePropMapping = enablePropMapping;
+    return this;
   }
 }

@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.nebula.contrib.ngbatis.config.NgbatisConfig;
+import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.nebula.contrib.ngbatis.utils.ReflectUtil;
 import org.nebula.contrib.ngbatis.utils.ResultSetUtil;
 import org.springframework.stereotype.Component;
@@ -115,6 +117,8 @@ public class ObjectResultHandler extends AbstractResultHandler<Object, Object> {
   }
   
   private boolean valIsProps(Object v, Class<?> resultType) {
+    NgbatisConfig ngbatisConfig = MapperContext.newInstance().getNgbatisConfig();
+    if (!ngbatisConfig.getEnablePropMapping()) return false;
     // 从属性获取的一个前提是，栏位值本身是一个map
     if (v instanceof Map) {
       Map<?, ?> m = (Map<?, ?>) v;
