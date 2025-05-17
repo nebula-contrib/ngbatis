@@ -20,6 +20,31 @@ This source code is licensed under Apache 2.0 License.
   >
 - fix: 修复字段属性为 Byte 时，不能正常解析到实体对象的问题。
 
+## 新特性
+
+- 支持节点的属性对象字段可以与实体对象直接映射
+
+  ```java
+  @Table(name = "column_alias")
+  public class ColumnAlias {
+    @Id @Column(name = "id_no") private String idNo;
+    @Column(name = "first_name") private String firstName;
+    @Column(name = "last_name") private String lastName;
+    @Transient private String ignoreMe;
+  }
+  ```
+
+  ```xml
+  <select id="propsToObj">
+    MATCH (n :column_alias)
+    WHERE n.column_alias.first_name is not null
+    RETURN
+      properties(n),
+      "ignoreMe" as ignoreMe
+    LIMIT 1
+  </select>
+  ```
+
 ## Upgrade
 
 - upgrade: 升级 fastjson 版本至 2.0.57.
