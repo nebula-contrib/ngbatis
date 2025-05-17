@@ -22,6 +22,15 @@ This source code is licensed under Apache 2.0 License.
 
 ## 新特性
 
+- 支持Geo类型
+
+  字段类型 | 属性类型
+  ---|---
+  geo(point) | org.springframework.data.geo.Box
+  geo(linestring) | org.springframework.data.geo.Point
+  geo(polygon) | org.springframework.data.geo.Polygon
+  geo | Object
+
 - 支持节点的属性对象字段可以与实体对象直接映射
 
   ```java

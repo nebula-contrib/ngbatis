@@ -13,10 +13,13 @@ import static org.nebula.contrib.ngbatis.utils.ReflectUtil.schemaByEntityType;
 import com.vesoft.nebula.DateTime;
 import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.Time;
+import com.vesoft.nebula.client.graph.data.CoordinateWrapper;
 import com.vesoft.nebula.client.graph.data.DateTimeWrapper;
 import com.vesoft.nebula.client.graph.data.DateWrapper;
 import com.vesoft.nebula.client.graph.data.DurationWrapper;
+import com.vesoft.nebula.client.graph.data.GeographyWrapper;
 import com.vesoft.nebula.client.graph.data.Node;
+import com.vesoft.nebula.client.graph.data.PointWrapper;
 import com.vesoft.nebula.client.graph.data.Relationship;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.data.TimeWrapper;
@@ -39,6 +42,9 @@ import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.nebula.contrib.ngbatis.proxy.MapperProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.geo.Box;
+import org.springframework.data.geo.Point;
+import org.springframework.data.geo.Polygon;
 
 /**
  * 结果集基础类型处理的工具类
@@ -96,7 +102,8 @@ public class ResultSetUtil {
                             : value.isSet() ? transformSet(value.asSet())
                               : value.isMap() ? transformMap(value.asMap())
                                 : value.isDuration() ? transformDuration(value.asDuration())
-                                  : null;
+                                  : value.isGeography() ? transformGeo(value.asGeography())
+                                    : null;
       if (o instanceof Number) {
         o = castNumber((Number) o, resultType);
       }
@@ -146,6 +153,41 @@ public class ResultSetUtil {
 
   private static Object transformDuration(DurationWrapper du) {
     return java.time.Duration.ofNanos(du.getSeconds() * 1000000000);
+  }
+  
+  private static Object transformGeo(GeographyWrapper geo) {
+    String geoStr = String.valueOf(geo);
+    boolean isPoint = geoStr.startsWith("POINT");
+    boolean isLineString = geoStr.startsWith("LINESTRING");
+    boolean isPolygon = geoStr.startsWith("POLYGON");
+        
+    if (isPoint) {
+      CoordinateWrapper coordinate = geo.getPointWrapper().getCoordinate();
+      return coordToPoint(coordinate);
+    } else if (isLineString) {
+      List<CoordinateWrapper> coordinateList = geo.getLineStringWrapper().getCoordinateList();
+      Point first = coordToPoint(coordinateList.get(0));
+      Point second = coordToPoint(coordinateList.get(1));
+      return new Box(first, second);
+    } else if (isPolygon) {
+      List<List<CoordinateWrapper>> coordListList = geo.getPolygonWrapper().getCoordListList();
+      List<Point> points = new ArrayList<>();
+      List<CoordinateWrapper> coordList = coordListList.get(0);
+      int size = coordList.size();
+      for (int i = 0; i < size; i++) {
+        if (i == size - 1) {
+          break;
+        }
+        CoordinateWrapper coordinate = coordList.get(i);
+        points.add(coordToPoint(coordinate));
+      }
+      return new Polygon(points);
+    }
+    return null;
+  }
+  
+  private static Point coordToPoint(CoordinateWrapper coordinate) {
+    return new Point(coordinate.getX(), coordinate.getY());
   }
 
   private static Object transformNode(Node node, Class<?> resultType) {
