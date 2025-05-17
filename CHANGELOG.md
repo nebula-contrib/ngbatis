@@ -18,8 +18,8 @@ This source code is licensed under Apache 2.0 License.
     - [ ] show metas
     - [ ] create | alter tag & edge type
     - [ ] index
-- [ ] ResultSetUtil more column types support
-  - [ ] Geography
+- [x] ResultSetUtil more column types support
+  - [x] Geography
   - [x] Duration
 
 ## Dependencies upgrade
@@ -42,6 +42,15 @@ This source code is licensed under Apache 2.0 License.
 - fix: fix the issue of field type is Byte, cannot be parsed to entity object.
 
 ## Feature
+
+- Supporting geometry types.
+
+  db type | java type
+  ---|---
+  geo(point) | org.springframework.data.geo.Box
+  geo(linestring) | org.springframework.data.geo.Point
+  geo(polygon) | org.springframework.data.geo.Polygon
+  geo | Object
 
 - Supporting props can be directly mapped to entity objects.
 
