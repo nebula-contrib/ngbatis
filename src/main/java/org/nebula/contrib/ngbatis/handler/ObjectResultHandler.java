@@ -37,10 +37,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class ObjectResultHandler extends AbstractResultHandler<Object, Object> {
 
-  final private Map<Class<?>, Field[]> classDeclaredFieldsMap = new HashMap<>();
-  final private Map<Class<?>, Field[]> classAllDeclaredFieldsMap = new HashMap<>();
-  final private Map<Class<?>, Set<?>> classColumnNamesMap = new HashMap<>();
-  final private Map<Class<?>, Set<?>> classAllColumnNamesMap = new HashMap<>();
+  private final Map<Class<?>, Field[]> classDeclaredFieldsMap = new HashMap<>();
+  private final Map<Class<?>, Field[]> classAllDeclaredFieldsMap = new HashMap<>();
+  private final Map<Class<?>, Set<?>> classColumnNamesMap = new HashMap<>();
+  private final Map<Class<?>, Set<?>> classAllColumnNamesMap = new HashMap<>();
   
   @Override
   public Object handle(Object newResult, ResultSet result, Class resultType)
@@ -118,7 +118,9 @@ public class ObjectResultHandler extends AbstractResultHandler<Object, Object> {
   
   private boolean valIsProps(Object v, Class<?> resultType) {
     NgbatisConfig ngbatisConfig = MapperContext.newInstance().getNgbatisConfig();
-    if (!ngbatisConfig.getEnablePropMapping()) return false;
+    if (!ngbatisConfig.getEnablePropMapping()) {
+      return false;
+    }
     // 从属性获取的一个前提是，栏位值本身是一个map
     if (v instanceof Map) {
       Map<?, ?> m = (Map<?, ?>) v;

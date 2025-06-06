@@ -451,9 +451,9 @@ public abstract class ReflectUtil {
 
   /**
    * 获取当前类的所有属性
-   * @param clazz
-   * @param forValueSetting
-   * @return
+   * @param clazz 实体类
+   * @param forValueSetting 用于设值时为 true，读取全属性
+   * @return 当前类的所有属性，排除 {@link Id}、{@link DstId}、{@link SrcId} 注解的属性
    */
   public static Field[] getColumnFields(Class<?> clazz, boolean forValueSetting) {
     Field[] allColumnFields = getAllColumnFields(clazz, forValueSetting);
