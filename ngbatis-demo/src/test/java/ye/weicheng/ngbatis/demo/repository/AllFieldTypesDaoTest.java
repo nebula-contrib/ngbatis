@@ -23,25 +23,25 @@ import ye.weicheng.ngbatis.demo.pojo.AllFieldTypes;
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
 class AllFieldTypesDaoTest {
-  
+
   @Autowired private AllFieldTypesDao dao;
 
   @Test
   void testValueFmt() {
     AllFieldTypes allFieldTypes = new AllFieldTypes();
-    allFieldTypes.setaLong(1L);
-    allFieldTypes.setaBoolean(true);
-    allFieldTypes.setaString("aString");
-    allFieldTypes.setaDouble(1.0);
-    allFieldTypes.setAnInt(1);
-    allFieldTypes.setaShort((short) 1);
-    allFieldTypes.setaByte((byte) 1);
-    allFieldTypes.setaFloat(1.0f);
-    allFieldTypes.setaDate(new java.sql.Date(System.currentTimeMillis()));
-    allFieldTypes.setaTime(new java.sql.Time(System.currentTimeMillis()));
-    allFieldTypes.setaDateTime(new java.util.Date(System.currentTimeMillis()));
-    allFieldTypes.setaTimestamp(new java.sql.Timestamp(System.currentTimeMillis()));
-    allFieldTypes.setaDuration(java.time.Duration.ofSeconds(1));
+    allFieldTypes.setLongData(1L);
+    allFieldTypes.setBooleanData(true);
+    allFieldTypes.setStringData("aString");
+    allFieldTypes.setDoubleData(1.0);
+    allFieldTypes.setIntData(1);
+    allFieldTypes.setShortData((short) 1);
+    allFieldTypes.setByteData((byte) 1);
+    allFieldTypes.setFloatData(1.0f);
+    allFieldTypes.setDateData(new java.sql.Date(System.currentTimeMillis()));
+    allFieldTypes.setTimeData(new java.sql.Time(System.currentTimeMillis()));
+    allFieldTypes.setDateTimeData(new java.util.Date(System.currentTimeMillis()));
+    allFieldTypes.setTimestampData(new java.sql.Timestamp(System.currentTimeMillis()));
+    allFieldTypes.setDurationData(java.time.Duration.ofSeconds(1));
 
     AllFieldTypes allFieldTypesFromDb = dao.testValueFmt(allFieldTypes);
     System.out.println(JSON.toJSONString(allFieldTypes));
@@ -55,6 +55,7 @@ class AllFieldTypesDaoTest {
     AllFieldTypes allFieldTypesFromDb = dao.testValueFmt(allFieldTypes);
     System.out.println(JSON.toJSONString(allFieldTypesFromDb));
     System.out.println(JSON.toJSONString(allFieldTypesFromDb));
-    Assert.isTrue(nullSafeEquals(allFieldTypesFromDb, allFieldTypes), "two var should be equal!"); // 断言两个对象相等
+    // 断言两个对象相等
+    Assert.isTrue(nullSafeEquals(allFieldTypesFromDb, allFieldTypes), "two var should be equal!");
   }
 }

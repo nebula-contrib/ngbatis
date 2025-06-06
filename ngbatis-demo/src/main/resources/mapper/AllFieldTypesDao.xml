@@ -21,19 +21,19 @@
 -->
   <select id="testValueFmt" resultType="ye.weicheng.ngbatis.demo.pojo.AllFieldTypes">
     RETURN 
-      ${ ng.valueFmt(aLong)!"null" } as aLong,
-      ${ ng.valueFmt(aBoolean)!"null" } as aBoolean,
-      ${ ng.valueFmt(aString)!"null" } as aString,
-      ${ ng.valueFmt(aDouble)!"null" } as aDouble,
-      ${ ng.valueFmt(anInt)!"null" } as anInt,
-      ${ ng.valueFmt(aShort)!"null" } as aShort,
-      ${ ng.valueFmt(aByte)!"null" } as aByte,
-      ${ ng.valueFmt(aFloat)!"null" } as aFloat,
-      ${ ng.valueFmt(aDate)!"null" } as aDate,
-      ${ ng.valueFmt(aTime)!"null" } as aTime,
-      ${ ng.valueFmt(aDateTime)!"null" } as aDateTime,
-      ${ ng.valueFmt(aTimestamp)!"null" } as aTimestamp,
-      ${ ng.valueFmt(aDuration)!"null" } as aDuration;
+      ${ ng.valueFmt(longData)!"null" } as aLong,
+      ${ ng.valueFmt(booleanData)!"null" } as aBoolean,
+      ${ ng.valueFmt(stringData)!"null" } as aString,
+      ${ ng.valueFmt(doubleData)!"null" } as aDouble,
+      ${ ng.valueFmt(intData)!"null" } as anInt,
+      ${ ng.valueFmt(shortData)!"null" } as aShort,
+      ${ ng.valueFmt(byteData)!"null" } as aByte,
+      ${ ng.valueFmt(floatData)!"null" } as aFloat,
+      ${ ng.valueFmt(dateData)!"null" } as aDate,
+      ${ ng.valueFmt(timeData)!"null" } as aTime,
+      ${ ng.valueFmt(dateTimeData)!"null" } as aDateTime,
+      ${ ng.valueFmt(timestampData)!"null" } as aTimestamp,
+      ${ ng.valueFmt(durationData)!"null" } as aDuration;
   </select>
   
 </mapper>

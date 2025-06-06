@@ -8,7 +8,9 @@ import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getAllColumnFields;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.isCurrentTypeOrParentType;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.typeArg;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONWriter;
+import com.alibaba.fastjson2.JSONWriter.Feature;
 import com.vesoft.nebula.DataSet;
 import com.vesoft.nebula.DateTime;
 import com.vesoft.nebula.Duration;
@@ -243,7 +245,7 @@ public class DefaultArgsResolver implements ArgsResolver {
 
 
   private Object serialize(boolean forTemplate, Object o) {
-    return forTemplate ? JSON.toJSON(o) : toNebulaValueType(o);
+    return forTemplate ? JSON.toJSON(o, Feature.WriteNulls) : toNebulaValueType(o);
   }
 
   private boolean isBaseType(Class<?> clazz) {
