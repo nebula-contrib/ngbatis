@@ -34,7 +34,8 @@ See [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
 
   NgBatis | nebula-java | JDK | Springboot | Beetl
   ---|-------------|---|------------|---
-  2.0.0-beta.1 | 3.8.3       | 8 | 2.7.0 | 3.15.10.RELEASE
+  2.0.1 | 3.8.3       | 8 | 2.7.0 | 3.15.10.RELEASE
+  2.0.0-beta | 3.8.3       | 8 | 2.7.0 | 3.15.10.RELEASE
   1.3.0 | 3.8.3       | 8 | 2.7.0 | 3.15.10.RELEASE
   1.3.0-jdk17 | 3.8.3       | 17 | 3.0.7 | 3.15.10.RELEASE
   1.2.2 | 3.6.0       | 8 | 2.7.0 | 3.15.10.RELEASE
@@ -65,14 +66,14 @@ See [EXECUTION-PROCESS.md](./EXECUTION-PROCESS.md)
         <dependency>
           <groupId>org.nebula-contrib</groupId>
           <artifactId>ngbatis</artifactId>
-          <version>2.0.0-beta.1</version>
+          <version>2.01</version>
         </dependency>
     ```
 
   - Gradle
 
     ```groovy
-    implementation 'org.nebula-contrib:ngbatis:2.0.0-beta.1'
+    implementation 'org.nebula-contrib:ngbatis:2.0.1'
     ```
 
 - Referring to [ngbatis-demo](./ngbatis-demo), which was smoothly integrated with spring-boot. The API examples could be found under the test of it for all features of ngbatis.
