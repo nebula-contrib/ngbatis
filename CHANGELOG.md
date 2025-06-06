@@ -26,7 +26,7 @@ This source code is licensed under Apache 2.0 License.
 
 - [x] Springboot 3.x support. (lastest-jdk17)
 
-# NEXT
+# 2.0.1
 
 ## Bugfix
 

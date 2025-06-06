@@ -9,6 +9,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.util.Objects;
+import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,20 +24,33 @@ public class AllFieldTypes {
   
   @Id
   private String id;
-  private Long aLong;
-  private Boolean aBoolean;
-  private String aString;
-  private Double aDouble;
-  private Integer anInt;
-  private Short aShort;
-  private Byte aByte;
-  private Float aFloat;
-  private java.sql.Date aDate;
-  private java.sql.Time aTime;
-  @DateTimeFormat( pattern = "yyyy-MM-dd'T'HH:mm:ss" )
-  private java.util.Date aDateTime;
-  private java.sql.Timestamp aTimestamp;
-  private Duration aDuration;
+  @Column(name = "aLong")
+  private Long longData;
+  @Column(name = "aBoolean")
+  private Boolean booleanData;
+  @Column(name = "aString")
+  private String stringData;
+  @Column(name = "aDouble")
+  private Double doubleData;
+  @Column(name = "anInt")
+  private Integer intData;
+  @Column(name = "aShort")
+  private Short shortData;
+  @Column(name = "aByte")
+  private Byte byteData;
+  @Column(name = "aFloat")
+  private Float floatData;
+  @Column(name = "aDate")
+  private java.sql.Date dateData;
+  @Column(name = "aTime")
+  private java.sql.Time timeData;
+  @Column(name = "aDateTime")
+  @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+  private java.util.Date dateTimeData;
+  @Column(name = "aTimestamp")
+  private java.sql.Timestamp timestampData;
+  @Column(name = "aDuration")
+  private Duration durationData;
 
   @Override
   public boolean equals(Object o) {
@@ -52,61 +66,61 @@ public class AllFieldTypes {
     if (!Objects.equals(id, that.id)) {
       return false;
     }
-    if (!Objects.equals(aLong, that.aLong)) {
+    if (!Objects.equals(longData, that.longData)) {
       return false;
     }
-    if (!Objects.equals(aBoolean, that.aBoolean)) {
+    if (!Objects.equals(booleanData, that.booleanData)) {
       return false;
     }
-    if (!Objects.equals(aString, that.aString)) {
+    if (!Objects.equals(stringData, that.stringData)) {
       return false;
     }
-    if (!Objects.equals(aDouble, that.aDouble)) {
+    if (!Objects.equals(doubleData, that.doubleData)) {
       return false;
     }
-    if (!Objects.equals(anInt, that.anInt)) {
+    if (!Objects.equals(intData, that.intData)) {
       return false;
     }
-    if (!Objects.equals(aShort, that.aShort)) {
+    if (!Objects.equals(shortData, that.shortData)) {
       return false;
     }
-    if (!Objects.equals(aByte, that.aByte)) {
+    if (!Objects.equals(byteData, that.byteData)) {
       return false;
     }
-    if (!Objects.equals(aFloat, that.aFloat)) {
+    if (!Objects.equals(floatData, that.floatData)) {
       return false;
     }
-    if (!Objects.equals(aDate, that.aDate)) {
+    if (!Objects.equals(dateData, that.dateData)) {
       return false;
     }
-    if (!Objects.equals(aTime, that.aTime)) {
+    if (!Objects.equals(timeData, that.timeData)) {
       return false;
     }
-    if (!Objects.equals(aDateTime, that.aDateTime)) {
+    if (!Objects.equals(dateTimeData, that.dateTimeData)) {
       return false;
     }
-    if (!Objects.equals(aTimestamp, that.aTimestamp)) {
+    if (!Objects.equals(timestampData, that.timestampData)) {
       return false;
     }
-    return Objects.equals(aDuration, that.aDuration);
+    return Objects.equals(durationData, that.durationData);
   }
 
   @Override
   public int hashCode() {
     int result = id != null ? id.hashCode() : 0;
-    result = 31 * result + (aLong != null ? aLong.hashCode() : 0);
-    result = 31 * result + (aBoolean != null ? aBoolean.hashCode() : 0);
-    result = 31 * result + (aString != null ? aString.hashCode() : 0);
-    result = 31 * result + (aDouble != null ? aDouble.hashCode() : 0);
-    result = 31 * result + (anInt != null ? anInt.hashCode() : 0);
-    result = 31 * result + (aShort != null ? aShort.hashCode() : 0);
-    result = 31 * result + (aByte != null ? aByte.hashCode() : 0);
-    result = 31 * result + (aFloat != null ? aFloat.hashCode() : 0);
-    result = 31 * result + (aDate != null ? aDate.hashCode() : 0);
-    result = 31 * result + (aTime != null ? aTime.hashCode() : 0);
-    result = 31 * result + (aDateTime != null ? aDateTime.hashCode() : 0);
-    result = 31 * result + (aTimestamp != null ? aTimestamp.hashCode() : 0);
-    result = 31 * result + (aDuration != null ? aDuration.hashCode() : 0);
+    result = 31 * result + (longData != null ? longData.hashCode() : 0);
+    result = 31 * result + (booleanData != null ? booleanData.hashCode() : 0);
+    result = 31 * result + (stringData != null ? stringData.hashCode() : 0);
+    result = 31 * result + (doubleData != null ? doubleData.hashCode() : 0);
+    result = 31 * result + (intData != null ? intData.hashCode() : 0);
+    result = 31 * result + (shortData != null ? shortData.hashCode() : 0);
+    result = 31 * result + (byteData != null ? byteData.hashCode() : 0);
+    result = 31 * result + (floatData != null ? floatData.hashCode() : 0);
+    result = 31 * result + (dateData != null ? dateData.hashCode() : 0);
+    result = 31 * result + (timeData != null ? timeData.hashCode() : 0);
+    result = 31 * result + (dateTimeData != null ? dateTimeData.hashCode() : 0);
+    result = 31 * result + (timestampData != null ? timestampData.hashCode() : 0);
+    result = 31 * result + (durationData != null ? durationData.hashCode() : 0);
     return result;
   }
 
@@ -118,107 +132,107 @@ public class AllFieldTypes {
     this.id = id;
   }
 
-  public Long getaLong() {
-    return aLong;
+  public Long getLongData() {
+    return longData;
   }
 
-  public void setaLong(Long aLong) {
-    this.aLong = aLong;
+  public void setLongData(Long longData) {
+    this.longData = longData;
   }
 
-  public Boolean getaBoolean() {
-    return aBoolean;
+  public Boolean getBooleanData() {
+    return booleanData;
   }
 
-  public void setaBoolean(Boolean aBoolean) {
-    this.aBoolean = aBoolean;
+  public void setBooleanData(Boolean booleanData) {
+    this.booleanData = booleanData;
   }
 
-  public String getaString() {
-    return aString;
+  public String getStringData() {
+    return stringData;
   }
 
-  public void setaString(String aString) {
-    this.aString = aString;
+  public void setStringData(String stringData) {
+    this.stringData = stringData;
   }
 
-  public Double getaDouble() {
-    return aDouble;
+  public Double getDoubleData() {
+    return doubleData;
   }
 
-  public void setaDouble(Double aDouble) {
-    this.aDouble = aDouble;
+  public void setDoubleData(Double doubleData) {
+    this.doubleData = doubleData;
   }
 
-  public Integer getAnInt() {
-    return anInt;
+  public Integer getIntData() {
+    return intData;
   }
 
-  public void setAnInt(Integer anInt) {
-    this.anInt = anInt;
+  public void setIntData(Integer intData) {
+    this.intData = intData;
   }
 
-  public Short getaShort() {
-    return aShort;
+  public Short getShortData() {
+    return shortData;
   }
 
-  public void setaShort(Short aShort) {
-    this.aShort = aShort;
+  public void setShortData(Short shortData) {
+    this.shortData = shortData;
   }
 
-  public Byte getaByte() {
-    return aByte;
+  public Byte getByteData() {
+    return byteData;
   }
 
-  public void setaByte(Byte aByte) {
-    this.aByte = aByte;
+  public void setByteData(Byte byteData) {
+    this.byteData = byteData;
   }
 
-  public Float getaFloat() {
-    return aFloat;
+  public Float getFloatData() {
+    return floatData;
   }
 
-  public void setaFloat(Float aFloat) {
-    this.aFloat = aFloat;
+  public void setFloatData(Float floatData) {
+    this.floatData = floatData;
   }
 
-  public Date getaDate() {
-    return aDate;
+  public Date getDateData() {
+    return dateData;
   }
 
-  public void setaDate(Date aDate) {
-    this.aDate = aDate;
+  public void setDateData(Date dateData) {
+    this.dateData = dateData;
   }
 
-  public Time getaTime() {
-    return aTime;
+  public Time getTimeData() {
+    return timeData;
   }
 
-  public void setaTime(Time aTime) {
-    this.aTime = aTime;
+  public void setTimeData(Time timeData) {
+    this.timeData = timeData;
   }
 
-  public java.util.Date getaDateTime() {
-    return aDateTime;
+  public java.util.Date getDateTimeData() {
+    return dateTimeData;
   }
 
-  public void setaDateTime(java.util.Date aDateTime) {
-    this.aDateTime = aDateTime;
+  public void setDateTimeData(java.util.Date dateTimeData) {
+    this.dateTimeData = dateTimeData;
   }
 
-  public Timestamp getaTimestamp() {
-    return aTimestamp;
+  public Timestamp getTimestampData() {
+    return timestampData;
   }
 
-  public void setaTimestamp(Timestamp aTimestamp) {
-    this.aTimestamp = aTimestamp;
+  public void setTimestampData(Timestamp timestampData) {
+    this.timestampData = timestampData;
   }
 
-  public Duration getaDuration() {
-    return aDuration;
+  public Duration getDurationData() {
+    return durationData;
   }
 
-  public void setaDuration(Duration aDuration) {
-    this.aDuration = aDuration;
+  public void setDurationData(Duration durationData) {
+    this.durationData = durationData;
   }
 }
