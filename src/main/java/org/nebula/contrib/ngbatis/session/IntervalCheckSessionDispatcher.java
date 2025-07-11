@@ -30,6 +30,8 @@ import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.nebula.contrib.ngbatis.utils.ResultSetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
@@ -69,6 +71,12 @@ public class IntervalCheckSessionDispatcher implements Runnable, SessionDispatch
     }
 
     setNebulaSessionPool(MapperContext.newInstance());
+//    wakeUp();
+  }
+
+  @EventListener(ContextRefreshedEvent.class)
+  public void onAppReady() {
+    // 整个容器已就绪
     wakeUp();
   }
 
