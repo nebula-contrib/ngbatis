@@ -415,6 +415,26 @@
         @}
         @}
     </insert>
+  
+    <update id="updateEdgeByIdBatchSelective">
+      @for ( row in ng_args[0] ) {
+        @var kv = ng.kv( row,  '', true, false );
+        @if ( isNotEmpty( @kv.columns ) ) {
+          @var rank = ng.id( row );
+          @var srcId = ng.srcId( row );
+          @var dstId = ng.dstId( row );
+          @var edgeName = ng.tagName( row );
+          UPDATE  EDGE ON `${ edgeName }` ${ srcId }-> ${ dstId } ${ isNotEmpty( rank ) ? ('@' + rank) : ''  }
+          SET
+          @for (col in @kv.columns ) {
+          @var vIdx = @kv.columns.indexOf( col );
+          @var val = @kv.values.get(@vIdx);
+            `${ col }` = ${ val } ${ colLP.last ? '' : ',' }
+          @}
+          ;
+        @}
+      @}
+    </update>
 
     <select id="existsEdge">
         MATCH (n)-[r: ${ p1 }]-(n2)
