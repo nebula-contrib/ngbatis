@@ -4,6 +4,7 @@ package org.nebula.contrib.ngbatis.handler;
 //
 // This source code is licensed under Apache 2.0 License.
 
+import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getCollectionE;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.isCurrentTypeOrParentType;
 import static org.nebula.contrib.ngbatis.utils.ResultSetUtil.nodeToResultType;
 import static org.nebula.contrib.ngbatis.utils.ResultSetUtil.relationshipToResultType;
@@ -12,8 +13,11 @@ import com.vesoft.nebula.client.graph.data.Node;
 import com.vesoft.nebula.client.graph.data.Relationship;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -22,8 +26,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.nebula.contrib.ngbatis.config.NgbatisConfig;
 import org.nebula.contrib.ngbatis.models.MapperContext;
+import org.nebula.contrib.ngbatis.models.data.NgEdge;
+import org.nebula.contrib.ngbatis.models.data.NgVertex;
 import org.nebula.contrib.ngbatis.utils.ReflectUtil;
 import org.nebula.contrib.ngbatis.utils.ResultSetUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 /**
@@ -41,6 +49,10 @@ public class ObjectResultHandler extends AbstractResultHandler<Object, Object> {
   private final Map<Class<?>, Field[]> classAllDeclaredFieldsMap = new HashMap<>();
   private final Map<Class<?>, Set<?>> classColumnNamesMap = new HashMap<>();
   private final Map<Class<?>, Set<?>> classAllColumnNamesMap = new HashMap<>();
+  
+  @Autowired private NgEdgeResultHandler edgeResultHandler;
+  @Autowired private NgVertexResultHandler vertexResultHandler;
+  @Lazy @Autowired private CollectionObjectResultHandler collectionObjectResultHandler;
   
   @Override
   public Object handle(Object newResult, ResultSet result, Class resultType)
@@ -110,6 +122,11 @@ public class ObjectResultHandler extends AbstractResultHandler<Object, Object> {
         Object prop = props.get(k);
         ReflectUtil.setValue(newResult, k, prop);
       }
+    } else if (v instanceof Collection) {
+      Class<?> genericType = getCollectionE(newResult, columnName);
+      Collection<?> innerCollectionResult = 
+        collectionObjectResultHandler.handle((Collection) v, genericType);
+      ReflectUtil.setValue(newResult, columnName, innerCollectionResult);
     } else {
       ReflectUtil.setValue(newResult, columnName, v);
     }
@@ -168,9 +185,24 @@ public class ObjectResultHandler extends AbstractResultHandler<Object, Object> {
     if (columnNames.size() == 1) {
       newResult = nodeToResultType(node, resultType);
     } else {
-      nodeToResultType(newResult, columnName, node);
+      nodeToNgResultType(node, newResult, columnName);
     }
     return newResult;
+  }
+
+  private void nodeToNgResultType(Node node, Object newResult, String columnName) {
+    Class<?> fieldType = ReflectUtil.fieldType(newResult, columnName);
+    if (fieldType == NgVertex.class) {
+      try {
+        NgVertex<?> ngVertex = toVertex(node);
+        ReflectUtil.setValue(newResult, columnName, ngVertex);
+      } catch (Exception e) {
+        // 在前置判断中，已经规避了异常发生的可能性
+        throw new RuntimeException(e);
+      }
+    } else {
+      nodeToResultType(newResult, columnName, node);
+    }
   }
 
   private Object fillResultByRelationship(
@@ -180,8 +212,37 @@ public class ObjectResultHandler extends AbstractResultHandler<Object, Object> {
     if (columnNames.size() == 1) {
       newResult = relationshipToResultType(relationship, resultType);
     } else {
-      relationshipToResultType(newResult, columnName, relationship);
+      relationshipToNgResultType(relationship, newResult, columnName);
     }
     return newResult;
+  }
+
+  private void relationshipToNgResultType(
+      Relationship relationship, Object newResult, String columnName) {
+
+    Class<?> fieldType = ReflectUtil.fieldType(newResult, columnName);
+    if (fieldType == NgEdge.class) {
+      try {
+        NgEdge<?> ngEdge = toEdge(relationship);
+        ReflectUtil.setValue(newResult, columnName, ngEdge);
+      } catch (Exception e) {
+        // 在前置判断中，已经规避了异常发生的可能性
+        throw new RuntimeException(e);
+      }
+    } else {
+      relationshipToResultType(newResult, columnName, relationship);
+    }
+  }
+
+  public NgVertex<?> toVertex(Node node) {
+    NgVertex<?> ngVertex = new NgVertex<>();
+    vertexResultHandler.handle(ngVertex, node);
+    return ngVertex;
+  }
+
+  public NgEdge<?> toEdge(Relationship relationship) throws UnsupportedEncodingException {
+    NgEdge<?> ngEdge = new NgEdge<>();
+    edgeResultHandler.handle(ngEdge, relationship);
+    return ngEdge;
   }
 }

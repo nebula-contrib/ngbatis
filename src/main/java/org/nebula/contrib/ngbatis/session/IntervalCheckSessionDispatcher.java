@@ -277,12 +277,13 @@ public class IntervalCheckSessionDispatcher implements Runnable, SessionDispatch
         gql = qlAndSpace[1];
         String autoSwitch = qlAndSpace[0] == null ? "" : qlAndSpace[0];
         session = localSession.getSession();
+        String oldSessionSpace = localSession.getCurrentSpace();
         result = session.executeWithParameter(gql, params);
 
         localSession.setCurrentSpace(getSpace(result));
         handleSession(localSession, result);
         if (log.isDebugEnabled()) {
-          extraReturn.put("localSessionSpace", space);
+          extraReturn.put("localSessionSpace", oldSessionSpace);
           String currentSpace = localSession.getCurrentSpace();
           if (nullSafeEquals(currentSpace, autoSwitch)) {
             extraReturn.put("autoSwitch", autoSwitch);

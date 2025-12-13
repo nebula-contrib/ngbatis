@@ -4,9 +4,17 @@ package org.nebula.contrib.ngbatis.handler;
 //
 // This source code is licensed under Apache 2.0 License.
 
+import com.vesoft.nebula.client.graph.data.Node;
+import com.vesoft.nebula.client.graph.data.Relationship;
 import com.vesoft.nebula.client.graph.data.ResultSet;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.nebula.contrib.ngbatis.models.data.NgEdge;
+import org.nebula.contrib.ngbatis.models.data.NgVertex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +43,39 @@ public class CollectionObjectResultHandler extends AbstractResultHandler<Collect
       newResult.add(o);
     }
     return newResult;
+  }
+
+
+  List<Class<?>> collectionInnerType = Arrays.asList(NgEdge.class, NgVertex.class);
+  
+  boolean isCollectionInnerType(Class<?> resultType) {
+    for (Class<?> innerType : collectionInnerType) {
+      boolean assignableFrom = innerType.isAssignableFrom(resultType);
+      if (assignableFrom) return true;
+    }
+    return false;
+  }
+  
+  public Collection<Object> handle(Collection<Object> nestedCollection, Class<?> resultType) {
+    if (isCollectionInnerType(resultType)) {
+      try {
+        Collection<Object> nestedCollect = defaultInstance(nestedCollection.getClass());
+        for (Object o : nestedCollection) {
+          if (NgEdge.class.isAssignableFrom(resultType) && o instanceof Relationship) {
+            o = objectResultHandler.toEdge((Relationship) o);
+          }
+          if (NgVertex.class.isAssignableFrom(resultType) && o instanceof Node) {
+            o = objectResultHandler.toVertex((Node) o);
+          }
+          nestedCollect.add(o);
+        }
+        return nestedCollect;
+      } catch (UnsupportedEncodingException e) {
+        // 在前置判断中，已经规避了异常发生的可能性
+        throw new RuntimeException(e);
+      }
+    }
+    return nestedCollection;
   }
 
 }

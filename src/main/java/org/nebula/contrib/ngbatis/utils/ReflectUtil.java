@@ -31,6 +31,8 @@ import org.nebula.contrib.ngbatis.annotations.base.EdgeType;
 import org.nebula.contrib.ngbatis.annotations.base.Tag;
 import org.nebula.contrib.ngbatis.exception.ParseException;
 import org.nebula.contrib.ngbatis.models.MethodModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 /**
@@ -40,6 +42,8 @@ import org.springframework.util.Assert;
  * <br>Now is history!
  */
 public abstract class ReflectUtil {
+
+  private static Logger log = LoggerFactory.getLogger(ReflectUtil.class);
 
   public static final Set<Class<?>> NEED_SEALING_TYPES = new HashSet<Class<?>>() {{
       add(short.class);
@@ -77,14 +81,7 @@ public abstract class ReflectUtil {
 
   public static void setValue(Object o, String prop, Object value)
       throws NoSuchFieldException, IllegalAccessException {
-    Field[] allColumnFields = getAllColumnFields(o.getClass(), true);
-    Field declaredField = null;
-    for (Field columnField : allColumnFields) {
-      if (getNameByColumn(columnField).equals(prop)) {
-        declaredField = columnField;
-        break;
-      }
-    }
+    Field declaredField = getFieldByColumnName(o, prop);
     if (declaredField == null) {
       throw new NoSuchFieldException(prop);
     }
@@ -94,6 +91,22 @@ public abstract class ReflectUtil {
       //Field declaredField = o.getClass().getDeclaredField(prop);
       setValue(o, declaredField, value);
     }
+  }
+
+  /**
+   * 从列名中获取对应属性
+   * @author Gin
+   */
+  public static Field getFieldByColumnName(Object o, String columnName) {
+    Field[] allColumnFields = getAllColumnFields(o.getClass(), true);
+    Field declaredField = null;
+    for (Field columnField : allColumnFields) {
+      if (getNameByColumn(columnField).equals(columnName)) {
+        declaredField = columnField;
+        break;
+      }
+    }
+    return  declaredField;
   }
 
   /**
@@ -650,6 +663,40 @@ public abstract class ReflectUtil {
       }
     }
     return false;
+  }
+
+  /**
+   * 获取相应属性的集合范型
+   * 
+   * @param o 数据对象
+   * @param columnName 数据对象需要被填充数据的列名
+   * @return 如果列对应的是集合，则返回集合的范型，否则返回空
+   */
+  public static Class<?> getCollectionE(Object o, String columnName) {
+    Field columnField = getFieldByColumnName(o, columnName);
+    return getCollectionE(columnField);
+  }
+
+  /**
+   * 如果属性是集合，则返回集合范型
+   * 
+   * @param field 集合属性
+   * @return 如果属性是集合，则返回集合的范型，否则返回空
+   */
+  public static Class<?> getCollectionE(Field field) {
+    Type genericType = field.getGenericType();
+    if (genericType instanceof ParameterizedType) {
+      Type[] types = ((ParameterizedType) field.getGenericType()).getActualTypeArguments();
+      if (types.length == 1) {
+        try {
+          return typeToClass(types[0]);
+        } catch (ClassNotFoundException e) {
+          // ignore
+          log.error(e.getMessage());
+        }
+      }
+    }
+    return null;
   }
   
 }

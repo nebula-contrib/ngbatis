@@ -179,6 +179,12 @@
     <select id="testValueFmtWhenNull">
         RETURN ${ ng.valueFmt(value) ! "null" }
     </select>
+  
+  <select id="selectTripletStep" resultType="ye.weicheng.ngbatis.demo.pojo.TripletStep">
+    MATCH (n)-[r*..2]->(n2)
+    RETURN n as `src`, r as `edges`, n2 as `dst`
+    LIMIT 10
+  </select>
 
 </mapper>
 
