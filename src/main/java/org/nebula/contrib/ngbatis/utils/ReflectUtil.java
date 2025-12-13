@@ -94,22 +94,6 @@ public abstract class ReflectUtil {
   }
 
   /**
-   * 从列名中获取对应属性
-   * @author Gin
-   */
-  public static Field getFieldByColumnName(Object o, String columnName) {
-    Field[] allColumnFields = getAllColumnFields(o.getClass(), true);
-    Field declaredField = null;
-    for (Field columnField : allColumnFields) {
-      if (getNameByColumn(columnField).equals(columnName)) {
-        declaredField = columnField;
-        break;
-      }
-    }
-    return  declaredField;
-  }
-
-  /**
    * <p>反射设值。将value设置到o的field属性中。</p>
    * @param o 待设值对象
    * @param field 待设值属性
@@ -128,6 +112,22 @@ public abstract class ReflectUtil {
       field.set(o, value);
       field.setAccessible(false);
     }
+  }
+
+  /**
+   * 从列名中获取对应属性
+   * @author Gin
+   */
+  public static Field getFieldByColumnName(Object o, String columnName) {
+    Field[] allColumnFields = getAllColumnFields(o.getClass(), true);
+    Field declaredField = null;
+    for (Field columnField : allColumnFields) {
+      if (getNameByColumn(columnField).equals(columnName)) {
+        declaredField = columnField;
+        break;
+      }
+    }
+    return  declaredField;
   }
 
   /**

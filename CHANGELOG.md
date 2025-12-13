@@ -26,6 +26,26 @@ This source code is licensed under Apache 2.0 License.
 
 - [x] Springboot 3.x support. (lastest-jdk17)
 
+# 2.1.0-beta
+
+## Features
+
+- Support for composite object property types as NgEdge, NgVertex (including collections), no longer need to define ResultHandler separately
+
+- NebulaDaoBasic extends updateEdgeByIdBatchSelective interface, supporting batch updates of edges (you need to control the quantity of each batch)
+
+- Extended template methods: ng.srcId, ng.dstId, which read the property values of @SrcId and @DstId respectively
+
+  > If you override the original beetl.properties in your project, you need to add the new function configuration:
+  > ```diff
+  > + FN.ng.srcId =org.nebula.contrib.ngbatis.binding.beetl.functions.GetSrcIdFn
+  > + FN.ng.dstId =org.nebula.contrib.ngbatis.binding.beetl.functions.GetDstIdFn
+  > ```
+
+## Bugfix
+
+- Fixed connection leak issue when an error occurs during execution.
+
 # 2.0.1
 
 ## Bugfix

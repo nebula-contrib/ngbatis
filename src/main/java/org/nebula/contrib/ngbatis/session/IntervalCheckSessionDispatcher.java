@@ -71,7 +71,7 @@ public class IntervalCheckSessionDispatcher implements Runnable, SessionDispatch
     }
 
     setNebulaSessionPool(MapperContext.newInstance());
-//    wakeUp();
+    // wakeUp();
   }
 
   @EventListener(ContextRefreshedEvent.class)
