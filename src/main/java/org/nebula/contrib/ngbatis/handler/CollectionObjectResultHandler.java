@@ -31,6 +31,18 @@ public class CollectionObjectResultHandler extends AbstractResultHandler<Collect
   @Autowired
   private ObjectResultHandler objectResultHandler;
 
+  private List<Class<?>> collectionInnerType = Arrays.asList(NgEdge.class, NgVertex.class);
+
+  private boolean isCollectionInnerType(Class<?> resultType) {
+    for (Class<?> innerType : collectionInnerType) {
+      boolean assignableFrom = innerType.isAssignableFrom(resultType);
+      if (assignableFrom) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @Override
   public Collection handle(Collection newResult, ResultSet result, Class resultType)
       throws NoSuchFieldException, IllegalAccessException, InstantiationException {
@@ -45,17 +57,6 @@ public class CollectionObjectResultHandler extends AbstractResultHandler<Collect
     return newResult;
   }
 
-
-  List<Class<?>> collectionInnerType = Arrays.asList(NgEdge.class, NgVertex.class);
-  
-  boolean isCollectionInnerType(Class<?> resultType) {
-    for (Class<?> innerType : collectionInnerType) {
-      boolean assignableFrom = innerType.isAssignableFrom(resultType);
-      if (assignableFrom) return true;
-    }
-    return false;
-  }
-  
   public Collection<Object> handle(Collection<Object> nestedCollection, Class<?> resultType) {
     if (isCollectionInnerType(resultType)) {
       try {

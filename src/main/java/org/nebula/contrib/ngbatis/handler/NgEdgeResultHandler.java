@@ -48,7 +48,7 @@ public class NgEdgeResultHandler extends AbstractResultHandler<NgEdge<?>, NgEdge
   }
 
   public NgEdge<?> handle(NgEdge<?> newResult, Relationship relationship)
-    throws UnsupportedEncodingException {
+      throws UnsupportedEncodingException {
     newResult.setEdgeName(relationship.edgeName());
 
     long ranking = relationship.ranking();

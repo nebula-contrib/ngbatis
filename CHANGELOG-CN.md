@@ -5,9 +5,27 @@ Copyright (c) 2024 All project authors and nebula-contrib. All rights reserved.
 This source code is licensed under Apache 2.0 License.
 -->
 
-# NEXT
+# 2.1.0-beta
 
-## Bugfix
+## 新特性
+
+- 支持复合对象属性类型为 NgEdge、NgVertex（含集合），不再需要另外定义 ResultHandler
+- NebulaDaoBasic 拓展 updateEdgeByIdBatchSelective 接口，支持批量更新边（需自行控制单批数量）
+- 拓展模板方法：ng.srcId、ng.dstId，分别读取 `@SrcId`  `@DstId` 的属性值
+
+  > 如果项目中覆盖原来 beetl.properties，需追加新函数配置：
+  > ```diff
+  > + FN.ng.srcId =org.nebula.contrib.ngbatis.binding.beetl.functions.GetSrcIdFn
+  > + FN.ng.dstId =org.nebula.contrib.ngbatis.binding.beetl.functions.GetDstIdFn
+  > ```
+
+## Bug修复
+
+- 修复执行报错时产生连接未回收的泄漏问题
+
+# 2.0.1
+
+## Bug修复
 
 - fix [#63](https://github.com/nebula-contrib/ngbatis/pull/63): 在 ASM 生成代理类时，自动计算方法的最大栈深及局部变量表个数。 来自: [@moroyimk](https://github.com/moroyimk)
 - fix: 修复自定义 xml 中， `Duration` 作为属性类型不被支持的问题
