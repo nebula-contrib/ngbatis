@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractResultHandler<T, Z> implements ResultHandler<T, Z> {
 
-  private Logger log = LoggerFactory.getLogger(AbstractResultHandler.class);
+  private Logger log = LoggerFactory.getLogger(getClass());
 
   /**
    * 不同数据类型的结果处理类创建时，需要将自身所处理的类型注册到全局变量中。
@@ -134,10 +134,10 @@ public abstract class AbstractResultHandler<T, Z> implements ResultHandler<T, Z>
    * @return 返回接口类型默认使用的实现
    */
   protected T defaultInstance(Class<?> returnType) {
-    Object o = returnType == List.class ? new ArrayList<>()
-        : returnType == Set.class ? new HashSet<>()
-        : returnType == Queue.class ? new ConcurrentLinkedQueue<>()
-            : returnType == Map.class ? new LinkedHashMap<>()
+    Object o = List.class.isAssignableFrom(returnType) ? new ArrayList<>()
+        : Set.class.isAssignableFrom(returnType) ? new HashSet<>()
+        : Queue.class.isAssignableFrom(returnType) ? new ConcurrentLinkedQueue<>()
+            : Map.class.isAssignableFrom(returnType) ? new LinkedHashMap<>()
             : null;
     return (T) o;
   }

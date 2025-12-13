@@ -40,20 +40,25 @@ public class NgEdgeResultHandler extends AbstractResultHandler<NgEdge<?>, NgEdge
   public NgEdge<?> handle(NgEdge<?> newResult, ValueWrapper relationshipValueWrapper) {
     try {
       Relationship relationship = relationshipValueWrapper.asRelationship();
-      
-      newResult.setEdgeName(relationship.edgeName());
-  
-      long ranking = relationship.ranking();
-      newResult.setRank(ranking);
-  
-      newResult.setSrcID(getValue(relationship.srcId()));
-      newResult.setDstID(getValue(relationship.dstId()));
-  
-      newResult.setProperties(edgePropsToMap(relationship));
-      return newResult;
+      return handle(newResult, relationship);
     } catch (UnsupportedEncodingException e) {
       throw new ResultHandleException(
           String.format("%s : %s", e.getClass().toString(), e.getMessage()));
     }
   }
+
+  public NgEdge<?> handle(NgEdge<?> newResult, Relationship relationship)
+    throws UnsupportedEncodingException {
+    newResult.setEdgeName(relationship.edgeName());
+
+    long ranking = relationship.ranking();
+    newResult.setRank(ranking);
+
+    newResult.setSrcID(getValue(relationship.srcId()));
+    newResult.setDstID(getValue(relationship.dstId()));
+
+    newResult.setProperties(edgePropsToMap(relationship));
+    return newResult;
+  }
+
 }

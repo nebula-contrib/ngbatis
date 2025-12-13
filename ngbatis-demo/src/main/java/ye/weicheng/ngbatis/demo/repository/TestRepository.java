@@ -18,6 +18,7 @@ import org.nebula.contrib.ngbatis.utils.Page;
 import org.springframework.data.repository.query.Param;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 import ye.weicheng.ngbatis.demo.pojo.PersonLikePerson;
+import ye.weicheng.ngbatis.demo.pojo.TripletStep;
 
 /**
  * 数据访问层 样例。
@@ -90,6 +91,8 @@ public interface TestRepository extends NebulaDaoBasic<Person, String> {
   List<NgPath<String>> selectPath();
   
   String testValueFmtWhenNull(@Param("value") String nullValue);
+  
+  List<TripletStep> selectTripletStep();
   
 
   class DynamicNode {
