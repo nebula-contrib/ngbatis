@@ -444,6 +444,12 @@ public interface NebulaDaoBasic<T, I extends Serializable> {
     ClassModel classModel = getClassModel(this.getClass());
     MapperProxy.invoke(classModel, methodModel, src, edge, dst);
   }
+  
+  default void updateEdgeByIdBatchSelective(List<?> edgeList) {
+    MethodModel methodModel = getMethodModel();
+    ClassModel classModel = getClassModel(this.getClass());
+    MapperProxy.invoke(classModel, methodModel, edgeList);
+  }
 
   /**
    * 提供开始节点的id、结束节点的id 与 关系名，判断是否已经建立关系
