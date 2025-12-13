@@ -120,7 +120,7 @@ public class IntervalCheckSessionDispatcher implements Runnable, SessionDispatch
       return localSession;
     }
     try {
-      localSession = sessionQueue.poll(nebulaPoolConfig.getWaitTime(), TimeUnit.MILLISECONDS);
+      localSession = sessionQueue.poll(0, TimeUnit.MILLISECONDS);
       localSession = localSession == null ? newLocalSession() : localSession;
       localSession.useCount++;
       return localSession;
@@ -281,7 +281,6 @@ public class IntervalCheckSessionDispatcher implements Runnable, SessionDispatch
         result = session.executeWithParameter(gql, params);
 
         localSession.setCurrentSpace(getSpace(result));
-        handleSession(localSession, result);
         if (log.isDebugEnabled()) {
           extraReturn.put("localSessionSpace", oldSessionSpace);
           String currentSpace = localSession.getCurrentSpace();
@@ -293,6 +292,8 @@ public class IntervalCheckSessionDispatcher implements Runnable, SessionDispatch
       }
     } catch (Exception e) {
       throw new QueryException("execute failed: " + e.getMessage(), e);
+    } finally {
+      handleSession(localSession, result);
     }
   }
 
