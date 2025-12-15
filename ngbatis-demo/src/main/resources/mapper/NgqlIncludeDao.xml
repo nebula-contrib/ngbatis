@@ -25,4 +25,18 @@
         RETURN @ng.include('include-test-value',{'myInt':age});
     </nGQL>
 
+
+  <nGQL id="filterStart">
+    MATCH (n: person)-[r]->(n2: person)
+    @if ( isNotEmpty( person.name ) ) {
+       WHERE id(n) == '${person.name}'
+    @}
+  </nGQL>
+  
+  <select id="selectByFilter" resultType="java.util.Map">
+    @ng.include('filterStart');
+    RETURN n as startNode, r as `edge`, n2 as endNode
+    LIMIT 10
+  </select>
+
 </mapper>

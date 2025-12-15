@@ -8,6 +8,8 @@ public class NgTriplet<I> {
   private Object edge;
   private Object endNode;
 
+  public NgTriplet() {}
+
   public NgTriplet(Object startNode, Object edge, Object endNode) {
     this.startNode = startNode;
     this.edge = edge;

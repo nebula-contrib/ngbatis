@@ -22,6 +22,7 @@ This source code is licensed under Apache 2.0 License.
 ## Bug修复
 
 - 修复执行报错时产生连接未回收的泄漏问题
+- 修复 ng.include 在多行的情况下，模板无法正常使用的问题
 
 # 2.0.1
 

@@ -45,6 +45,7 @@ This source code is licensed under Apache 2.0 License.
 ## Bugfix
 
 - Fixed connection leak issue when an error occurs during execution.
+- Fix the issue where the template fails to function properly when using `ng.include` across multiple lines.
 
 # 2.0.1
 

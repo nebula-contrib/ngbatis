@@ -197,7 +197,7 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
    * @return
    */
   protected NgqlModel parseNgqlModel(Element ngqlEl) {
-    return  new NgqlModel(ngqlEl.id(),ngqlEl.text());
+    return  new NgqlModel(ngqlEl.id(),ngqlEl.wholeText());
   }
 
   /**
