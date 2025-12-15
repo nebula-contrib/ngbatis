@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
-import org.nebula.contrib.ngbatis.models.data.NgTriplet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ye.weicheng.ngbatis.demo.pojo.Person;

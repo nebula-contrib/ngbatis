@@ -2,7 +2,6 @@ package ye.weicheng.ngbatis.demo.repository;
 
 import java.util.List;
 import java.util.Map;
-import org.nebula.contrib.ngbatis.models.data.NgTriplet;
 import org.springframework.data.repository.query.Param;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 
