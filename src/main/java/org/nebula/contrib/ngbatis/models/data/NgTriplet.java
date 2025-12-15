@@ -1,5 +1,8 @@
 package org.nebula.contrib.ngbatis.models.data;
 
+// Copyright (c) 2025 All project authors. All rights reserved.
+//
+// This source code is licensed under Apache 2.0 License.
 
 public class NgTriplet<I> {
   private I srcId;
@@ -8,7 +11,8 @@ public class NgTriplet<I> {
   private Object edge;
   private Object endNode;
 
-  public NgTriplet() {}
+  public NgTriplet() {
+  }
 
   public NgTriplet(Object startNode, Object edge, Object endNode) {
     this.startNode = startNode;
