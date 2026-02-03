@@ -18,15 +18,139 @@ This source code is licensed under Apache 2.0 License.
     - [ ] show metas
     - [ ] create | alter tag & edge type
     - [ ] index
-- [ ] ResultSetUtil more column types support
-  - [ ] Geography
+- [x] ResultSetUtil more column types support
+  - [x] Geography
   - [x] Duration
 
 ## Dependencies upgrade
 
 - [x] Springboot 3.x support. (lastest-jdk17)
 
-# NEXT
+# 2.1.0-beta
+
+## Features
+
+- Support for composite object property types as NgEdge, NgVertex (including collections), no longer need to define ResultHandler separately
+
+- NebulaDaoBasic extends updateEdgeByIdBatchSelective interface, supporting batch updates of edges (you need to control the quantity of each batch)
+
+- Extended template methods: ng.srcId, ng.dstId, which read the property values of @SrcId and @DstId respectively
+
+  > If you override the original beetl.properties in your project, you need to add the new function configuration:
+  > ```diff
+  > + FN.ng.srcId =org.nebula.contrib.ngbatis.binding.beetl.functions.GetSrcIdFn
+  > + FN.ng.dstId =org.nebula.contrib.ngbatis.binding.beetl.functions.GetDstIdFn
+  > ```
+
+## Bugfix
+
+- Fixed connection leak issue when an error occurs during execution.
+- Fix the issue where the template fails to function properly when using `ng.include` across multiple lines.
+
+# 2.0.1
+
+## Bugfix
+
+- fix ([#63](https://github.com/nebula-contrib/ngbatis/pull/63): automatically calculating stack and local variables in asm. via: [@moroyimk](https://github.com/moroyimk)
+- fix: fix the issue of `Duration` type in custom xml
+- revert: revert the change of 2.0.0-beta.1
+  > To be compatible with `${ ng.valueFmt( value ) }`, when value is null, it can still output a placeholder. You can use the following method:
+  >
+    > ```beetl
+    > ${ ng.valueFmt( value ) ! "null" }
+    > ```
+  >
+- fix: fix the issue of field type is Byte, cannot be parsed to entity object.
+
+## Feature
+
+- Supporting geometry types.
+
+  db type | java type
+  ---|---
+  geo(point) | org.springframework.data.geo.Box
+  geo(linestring) | org.springframework.data.geo.Point
+  geo(polygon) | org.springframework.data.geo.Polygon
+  geo | Object
+
+- Supporting props can be directly mapped to entity objects.
+
+  ```java
+  @Table(name = "column_alias")
+  public class ColumnAlias {
+    @Id @Column(name = "id_no") private String idNo;
+    @Column(name = "first_name") private String firstName;
+    @Column(name = "last_name") private String lastName;
+    @Transient private String ignoreMe;
+  }
+  ```
+
+  ```xml
+  <select id="propsToObj">
+    MATCH (n :column_alias)
+    WHERE n.column_alias.first_name is not null
+    RETURN
+      properties(n),
+      "ignoreMe" as ignoreMe
+    LIMIT 1
+  </select>
+  ```
+
+## Upgrade
+
+- upgrade: upgrade fastjson version to 2.0.57.
+
+# 2.0.0-beta.1
+
+## Bugfix
+
+- fix: `ng.valueFmt( value )` cannot output null as a placeholder when value is null.
+
+# 2.0.0-beta
+
+## Bugfix
+
+- fix: [#329](https://github.com/nebula-contrib/ngbatis/issues/329) correct the return value type and clear the interface generic.[#335](https://github.com/nebula-contrib/ngbatis/pull/335)
+- fix: remove JDK8's internal API: ParameterizedTypeImpl
+
+## Feature
+
+- feat: Entity Direct Search. ([#319](https://github.com/nebula-contrib/ngbatis/pull/319), via: [@xYLiuuuuuu](https://github.com/n3A87))
+  - Entities can extend `GraphBaseVertex` or `GraphBaseEdge` to support direct search.
+    - GraphBaseVertex:
+
+    API | Usage instructions
+    --|--
+    queryIdsByProperties()                              | Query a collection of vertex ids for a particular Tag or attribute
+    queryVertexById()                                   | Query a single vertex for a specific vertex Id
+    queryVertexByTag()                                  | Query a collection of vertices  for a specific Tag
+    queryVertexByProperties()                           | Query a collection of vertexes for a specific property
+    queryAllAdjacentVertex(Class<?>... edgeClass)       | Query a collection of all neighboring vertexes of a particular vertex, specifying one or more edge types that connect the two vertexes
+    queryIncomingAdjacentVertex(Class<?>... edgeClass)  | Query the set of adjacent vertexes in the direction of the incoming edge of a particular vertex, specifying one or more edge types that connect two vertexes
+    queryOutgoingAdjacentVertex(Class<?>... edgeClass)  | Query the set of adjacent vertexes in the direction of the edge of a particular vertex, specifying one or more edge types that connect two vertexes
+    queryNeighborIdsWithHopById(int m, int n, Class<?>... edgeClass) | Query a collection of vertex ids within a specified number of hops for a particular vertex, specifying one or more edge types that connect two vertexes
+    queryConnectedEdgesById(Direction direction)        | Query the set of all edges associated with a particular vertex, specifying the direction and type of the edge
+    queryPathFromVertex(Direction direction)            | Query the collection of all paths associated with a particular vertex, specifying the direction of the edge
+    queryFixedLengthPathFromVertex(Integer maxHop, Direction direction, Class<?>... edgeClass) | Query a set of fixed-length paths from a specific vertex, specifying the maximum number of steps, the direction of the edge, and the type of the edge
+    queryVariableLengthPathFromVertex(Integer minHop, Integer maxHop,   Direction direction, Class<?>... edgeClass) | Query a set of variable-length paths from a specific vertex, specifying the minimum number of steps, the maximum number of steps, the direction of the edge, and the type of the edge
+    queryShortestPathFromSrcAndDst(Integer maxHop,   Direction direction, T v2) | Query any shortest path from a specific vertex, specifying the number of steps, the direction of the edge, and the end vertex entity
+    queryAllShortestPathsFromSrcAndDst(Integer maxHop,   Direction direction, T v2) | Query the set of all shortest paths from this vertex, specifying the number of steps, the direction of the edge, and the end vertex entity
+    queryVertexCountByTag()                             | Query the number of vertexes for a specific Tag
+
+    - GraphBaseEdge:
+
+    API | Usage instructions
+    --|--
+    queryEdgeByType(Direction direction)                       | Query a set of edges of a specific type and direction
+    queryEdgeWithSrcAndDstByProperties(T srcVertex, Direction direction, T dstVertex) | Query a set of edges for a particular property
+    queryEdgePropertiesBySrcAndDstId()                         | Query a set of edges for a specific always vertex id
+    queryEdgeCountByType()                                     | Query the number of edges for a specific Type
+
+- feat: fix [#324](https://github.com/nebulagraph/ngbatis/issues/324) add insertForce(v) insertSelectiveForce(v) into NebulaDaoBasic.[#335](https://github.com/nebula-contrib/ngbatis/pull/335)
+- feat: `@Space` annotation and space config in mapper xml supports dynamic configuration. ([#318](https://github.com/nebula-contrib/ngbatis/pull/318), via: [@charle004](https://github.com/charle004))
+  > `@Space` 注解的 name 属性值和 xml 文件中 Mapper 标签指定的 Space 可通过 spring 配置文件自定义配置。
+- feat: support multiple mapper-locations in yml. ([#318](https://github.com/nebula-contrib/ngbatis/pull/318), via: [@charle004](https://github.com/charle004))
+- feat: SessionPool support `spaceFromParam`.
 
 # 1.3.0
 
@@ -87,9 +211,9 @@ This source code is licensed under Apache 2.0 License.
       person:
         space: PERSON_SPACE
     ```
-  
+
     ```java
-    @Space(name = "${nebula.space}")
+    @Space(name = "${app.person.space}")
     @Table(name = "person")
     public class Person {
         @Id
@@ -112,6 +236,14 @@ This source code is licensed under Apache 2.0 License.
             this.name = name;
         }
     }
+    ```
+
+  - XML example:
+
+    ```xml
+    <mapper namespace="com.xxx.TestSpaceMapper" space="${app.person.space}">
+
+    </mapper>
     ```
 
 # 1.2.2

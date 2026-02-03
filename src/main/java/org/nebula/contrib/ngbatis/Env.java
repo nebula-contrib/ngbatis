@@ -7,6 +7,7 @@ package org.nebula.contrib.ngbatis;
 import com.alibaba.fastjson.parser.ParserConfig;
 import com.vesoft.nebula.client.graph.SessionPool;
 import com.vesoft.nebula.client.graph.net.Session;
+import org.nebula.contrib.ngbatis.base.GraphBaseExt;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
 import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.nebula.contrib.ngbatis.proxy.MapperProxy;
@@ -23,11 +24,6 @@ import org.springframework.context.ApplicationContext;
 public class Env {
 
   public static ClassLoader classLoader;
-
-  // 使用 fastjson 安全模式，规避任意代码执行风险
-  static {
-    ParserConfig.getGlobalInstance().setSafeMode(true);
-  }
 
   private Logger log = LoggerFactory.getLogger(Env.class);
 
@@ -87,6 +83,7 @@ public class Env {
     this.pkGenerator = pkGenerator;
     this.mapperContext = MapperContext.newInstance();
     MapperProxy.ENV = this;
+    GraphBaseExt.ENV = this;
     this.dispatcher = dispatcher;
     log.debug(" Env constructor ");
   }
@@ -100,7 +97,12 @@ public class Env {
    * @return SessionPool
    */
   public SessionPool getSessionPool(String spaceName) {
-    return mapperContext.getNebulaSessionPoolMap().get(spaceName);
+    SessionPool sessionPool = mapperContext.getNebulaSessionPoolMap().get(spaceName);
+    if (sessionPool == null) {
+      sessionPool = dispatcher.initSessionPool(spaceName);
+      mapperContext.getNebulaSessionPoolMap().put(spaceName, sessionPool);
+    }
+    return sessionPool;
   }
 
   /**
@@ -114,7 +116,6 @@ public class Env {
       throw new RuntimeException(e);
     }
   }
-
 
   public String getUsername() {
     return username;

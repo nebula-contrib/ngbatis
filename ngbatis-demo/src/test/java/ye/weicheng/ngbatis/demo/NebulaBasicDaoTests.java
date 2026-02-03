@@ -25,6 +25,8 @@ import ye.weicheng.ngbatis.demo.pojo.Employee;
 import ye.weicheng.ngbatis.demo.pojo.Like;
 import ye.weicheng.ngbatis.demo.pojo.LikeWithRank;
 import ye.weicheng.ngbatis.demo.pojo.Person;
+import ye.weicheng.ngbatis.demo.pojo.edge.Follow;
+import ye.weicheng.ngbatis.demo.pojo.vertex.Player;
 import ye.weicheng.ngbatis.demo.repository.TestRepository;
 
 /**
@@ -539,6 +541,37 @@ public class NebulaBasicDaoTests {
 
     repository.upsertEdgeSelective(person1, likeWithRank, person2);
   }
+  
+  @Test
+  public void updateEdgeByIdBatchSelective() {
+    Person p1 = new Person();
+    Person p2 = new Person();
+    
+    repository.insert(p1);
+    repository.insert(p2);
+
+    Follow p1FollowP2 = new Follow();
+    Follow p2FollowP1 = new Follow();
+    
+    repository.insertEdge(p1, p1FollowP2, p2);
+    repository.insertEdge(p2, p2FollowP1, p1);
+    
+    p1FollowP2.setSrcId(p1.getName());
+    p1FollowP2.setDstId(p2.getName());
+    
+    p2FollowP1.setSrcId(p2.getName());
+    p2FollowP1.setDstId(p1.getName());
+
+    List<Follow> follows = new ArrayList<>();
+    follows.add(p1FollowP2);
+    follows.add(p2FollowP1);
+    follows.forEach((l) -> l.setDegree(3));
+    
+    repository.updateEdgeByIdBatchSelective(follows);
+    
+    repository.deleteWithEdgeById(p1.getName());
+    repository.deleteWithEdgeById(p2.getName());
+  }
 
 
   @Test
@@ -555,8 +588,14 @@ public class NebulaBasicDaoTests {
 
   @Test
   public void listEndNodes() {
-    List<Person> personList = repository.listEndNodes("易小海", Like.class);
+    List<Person> personList = repository.listEndNodes("叶小南", Like.class);
     System.out.println(JSON.toJSONString(personList));
+  }
+
+  @Test
+  public void listEndNodesPlayer() {
+    List<Player> playerList = repository.listEndNodes("叶小南", Like.class, Player.class);
+    System.out.println(JSON.toJSONString(playerList));
   }
 
   @Test
@@ -595,5 +634,17 @@ public class NebulaBasicDaoTests {
   public void showSpacesTest() {
     List<String> spaces = repository.showSpaces();
     System.out.println(spaces);
+  }
+  
+  @Test
+  public void selectPath() {
+    List<NgPath<String>> paths = repository.selectPath();
+    System.out.println(JSON.toJSONString(paths));
+  }
+  
+  @Test
+  public void testValueFmtWhenNull() {
+    String nullValue = repository.testValueFmtWhenNull(null);
+    Assert.isTrue(nullValue == null);
   }
 }

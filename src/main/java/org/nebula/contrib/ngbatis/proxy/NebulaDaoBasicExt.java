@@ -117,13 +117,13 @@ public class NebulaDaoBasicExt {
    * java.lang.Object...) MapperProxy.proxy}
    *
    * @param currentType 被动态代理的 dao，NebulaDaoBasic 子类
-   * @param returnType  返回值类型
+   * @param resultType  返回值类型
    * @param gql     查询脚本（可带占位符的模板）
    * @param argTypes  接口参数值类型
    * @param args    接口参数
    * @return 对结果集进行处理后的 java对象
    */
-  public static Object proxy(Class<?> currentType, Class<?> returnType, String gql,
+  public static Object proxy(Class<?> currentType, Class<?> resultType, String gql,
       Class<?>[] argTypes, Object... args) {
     Method method = null;
     try {
@@ -135,7 +135,7 @@ public class NebulaDaoBasicExt {
 
     MethodModel methodModel = new MethodModel();
     methodModel.setMethod(method);
-    methodModel.setResultType(returnType);
+    methodModel.setResultType(resultType);
     methodModel.setText(gql);
     ClassModel classModel = getClassModel(currentType);
     return MapperProxy.invoke(classModel, methodModel, args);

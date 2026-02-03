@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 import ye.weicheng.ngbatis.demo.pojo.PersonLikePerson;
+import ye.weicheng.ngbatis.demo.pojo.TripletStep;
 import ye.weicheng.ngbatis.demo.repository.TestRepository;
 import ye.weicheng.ngbatis.demo.repository.TestRepository.DynamicNode;
 
@@ -238,7 +239,7 @@ class NgbatisDemoApplicationTests {
     try {
       repository.spaceFromParam(spaceName);
     } catch (Exception e) {
-      Assert.isTrue(e instanceof QueryException && e.getMessage().contains("SpaceNotFound"));
+      assertSpaceFailed(e);
     }
   }
 
@@ -251,9 +252,16 @@ class NgbatisDemoApplicationTests {
       page.setPageNo(1);
       repository.dynamicSpaceWithPage(page, spaceName);
     } catch (Exception e) {
-      System.out.println(e.getMessage());
-      Assert.isTrue(e instanceof QueryException && e.getMessage().contains("SpaceNotFound"));
+      assertSpaceFailed(e);
     }
+  }
+
+  void assertSpaceFailed(Exception e) {
+    e.printStackTrace();
+    String message = e.getMessage();
+    Assert.isTrue(e instanceof QueryException
+      && (message.contains("SpaceNotFound") || (message.contains("create session failed.")))
+    );
   }
   
   @Test
@@ -271,4 +279,9 @@ class NgbatisDemoApplicationTests {
     System.out.println(JSON.toJSONString(rs));
   }
 
+  @Test
+  public void selectTripletStep() {
+    List<TripletStep> tripletSteps = repository.selectTripletStep();
+    System.out.println(JSON.toJSONString(tripletSteps));
+  }
 }

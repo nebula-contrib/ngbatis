@@ -5,35 +5,27 @@ package org.nebula.contrib.ngbatis.proxy;
 // This source code is licensed under Apache 2.0 License.
 
 import static org.apache.commons.lang3.ObjectUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.nebula.contrib.ngbatis.models.ClassModel.PROXY_SUFFIX;
 
-import com.vesoft.nebula.client.graph.SessionPool;
 import com.vesoft.nebula.client.graph.data.ResultSet;
-import com.vesoft.nebula.client.graph.exception.BindSpaceFailedException;
-import com.vesoft.nebula.client.graph.exception.IOErrorException;
-import com.vesoft.nebula.client.graph.net.Session;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import org.nebula.contrib.ngbatis.ArgsResolver;
 import org.nebula.contrib.ngbatis.Env;
 import org.nebula.contrib.ngbatis.ResultResolver;
 import org.nebula.contrib.ngbatis.SessionDispatcher;
-import org.nebula.contrib.ngbatis.config.NgbatisConfig;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
 import org.nebula.contrib.ngbatis.exception.QueryException;
 import org.nebula.contrib.ngbatis.models.ClassModel;
 import org.nebula.contrib.ngbatis.models.MapperContext;
 import org.nebula.contrib.ngbatis.models.MethodModel;
-import org.nebula.contrib.ngbatis.session.LocalSession;
+import org.nebula.contrib.ngbatis.session.SpaceRouter;
 import org.nebula.contrib.ngbatis.utils.Page;
 import org.nebula.contrib.ngbatis.utils.ReflectUtil;
-import org.nebula.contrib.ngbatis.utils.ResultSetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,12 +118,8 @@ public class MapperProxy {
 
     Map<String,Object> parasForDb = argsResolver.resolve(methodModel, args);
     final long step1 = System.currentTimeMillis();
-    NgbatisConfig ngbatisConfig = MapperContext.newInstance().getNgbatisConfig();
-    if (ngbatisConfig == null || !ngbatisConfig.getUseSessionPool()) {
-      query = executeWithParameter(classModel, methodModel, gql, parasForDb, argMap);
-    } else {
-      query = executeBySessionPool(classModel, methodModel, gql, parasForDb, argMap);
-    }
+
+    query = executeWithParameter(classModel, methodModel, gql, parasForDb, argMap);
 
     final long step2 = System.currentTimeMillis();
     if (!query.isSucceeded()) {
@@ -206,31 +194,29 @@ public class MapperProxy {
    * @param params 待执行脚本的参数所需的参数
    * @return nebula-graph 的未被 orm 操作的原始结果集
    */
-  public static ResultSet executeWithParameter(ClassModel cm, MethodModel mm, String gql,
-      Map<String, Object> params, Map<String, Object> paramsForTemplate) {
-    LocalSession localSession = null;
-    Session session = null;
+  public static ResultSet executeWithParameter(
+      ClassModel cm, MethodModel mm, String gql,
+      Map<String, Object> params, 
+      Map<String, Object> paramsForTemplate) {
+
     ResultSet result = null;
     String proxyClass = null;
     String proxyMethod = null;
-    String localSessionSpace = null;
-    String autoSwitch = null;
+    
     SessionDispatcher dispatcher = ENV.getDispatcher();
+    Map<String, Object> extraReturn = new HashMap<>();
+    
     try {
-      localSession = dispatcher.poll();
       if (log.isDebugEnabled()) {
         proxyClass = cm.getNamespace().getName();
         proxyMethod = mm.getId();
-        localSessionSpace = localSession.getCurrentSpace();
       }
 
-      String currentSpace = getSpace(cm, mm, paramsForTemplate);
-      String[] qlAndSpace = qlWithSpace(localSession, gql, currentSpace);
-      gql = qlAndSpace[1];
-      autoSwitch = qlAndSpace[0] == null ? "" : qlAndSpace[0];
-      session = localSession.getSession();
-      result = session.executeWithParameter(gql, params);
-      localSession.setCurrentSpace(getSpace(result));
+      String currentSpace = SpaceRouter.getSpace(cm, mm, paramsForTemplate);
+      result = dispatcher.executeWithParameter(
+        gql, params, currentSpace, extraReturn
+      );
+      
       if (result.isSucceeded()) {
         return result;
       } else {
@@ -243,141 +229,19 @@ public class MapperProxy {
       throw new QueryException("数据查询失败：" + e.getMessage(), e);
     } finally {
       if (log.isDebugEnabled()) {
+        Object autoSwitch = extraReturn.get("autoSwitch");
+        Object localSessionSpace = extraReturn.get("localSessionSpace");
+        boolean noNeedSwitch = isEmpty(autoSwitch);
+        autoSwitch = (isEmpty(autoSwitch) ? "" : autoSwitch);
         log.debug("\n\t- proxyMethod: {}#{}"
                 + "\n\t- session space: {}"
-                + (isEmpty(autoSwitch) ? "\n\t- {}" : "\n\t- auto switch to: {}")
+                + (noNeedSwitch ? "\n\t- {}" : "\n\t- auto switch to: {}")
                 + "\n\t- nGql：{}"
                 + "\n\t- params: {}"
                 + "\n\t- result：{}",
             proxyClass, proxyMethod, localSessionSpace, autoSwitch, gql, paramsForTemplate, result);
       }
-      handleSession(dispatcher, localSession, result);
     }
-  }
-
-  /**
-   * 通过 nebula-graph 客户端执行数据库访问。被 invoke 所调用，间接为动态代理类服务。
-   *
-   * @param gql  待执行的查询脚本（模板）
-   * @param params 待执行脚本的参数所需的参数
-   * @return nebula-graph 的未被 orm 操作的原始结果集
-   */
-  public static ResultSet executeBySessionPool(ClassModel cm, MethodModel mm, String gql,
-      Map<String, Object> params, Map<String, Object> paramsForTemplate) {
-
-    ResultSet result = null;
-    String proxyClass = null;
-    String proxyMethod = null;
-    String currentSpace = null;
-
-    try {
-      if (log.isDebugEnabled()) {
-        proxyClass = cm.getNamespace().getName();
-        proxyMethod = mm.getId();
-      }
-
-      currentSpace = getSpace(cm, mm, paramsForTemplate);
-      SessionPool sessionPool = ENV.getSessionPool(currentSpace);
-      if (sessionPool == null) {
-        throw new QueryException(currentSpace + " sessionPool is null");
-      }
-      result = sessionPool.execute(gql, params);
-      if (result.isSucceeded()) {
-        return result;
-      } else {
-        throw new QueryException(
-          " ResultSet error: " + result.getErrorMessage(),
-          result.getErrorCode()
-        );
-      }
-    } catch (Exception e) {
-      throw new QueryException("execute failed: " + e.getMessage(), e);
-    } finally {
-      if (log.isDebugEnabled()) {
-        log.debug("\n\t- proxyMethod: {}#{}"
-                + "\n\t- session space: {}"
-                + "\n\t- nGql：{}"
-                + "\n\t- params: {}"
-                + "\n\t- result：{}",
-            proxyClass, proxyMethod, currentSpace, gql, paramsForTemplate, result);
-      }
-    }
-  }
-
-  private static void handleSession(SessionDispatcher dispatcher,
-      LocalSession localSession, ResultSet result) {
-    if (localSession != null) {
-      boolean sessionError = ResultSetUtil.isSessionError(result);
-      if (sessionError || dispatcher.timeToRelease(localSession)) {
-        dispatcher.release(localSession);
-      } else {
-        dispatcher.offer(localSession);
-      }
-    }
-  }
-
-  private static String[] qlWithSpace(LocalSession localSession, String gql, String currentSpace)
-      throws IOErrorException, BindSpaceFailedException {
-    String[] qlAndSpace = new String[2];
-    gql = gql.trim();
-    String sessionSpace = localSession.getCurrentSpace();
-    boolean sameSpace = Objects.equals(sessionSpace, currentSpace);
-    if (!sameSpace && currentSpace !=  null) {
-      qlAndSpace[0] = currentSpace;
-      Session session = localSession.getSession();
-      ResultSet execute = session.execute(String.format("USE `%s`", currentSpace));
-      if (!execute.isSucceeded()) {
-        throw new BindSpaceFailedException(
-          String.format(" %s \"%s\"", execute.getErrorMessage(), currentSpace)
-        );
-      }
-    }
-    qlAndSpace[1] = String.format("\n\t\t%s", gql);
-    return qlAndSpace;
-  }
-
-  /**
-   * 获取当前语句所执行的目标space。
-   * @param cm 当前接口的类模型
-   * @param mm 当前接口方法的方法模型
-   * @return 目标space
-   */
-  public static String getSpace(ClassModel cm, MethodModel mm) {
-    String methodSpace;
-    return (mm != null && (methodSpace = mm.getSpace()) != null) 
-      ? (
-        "null".equals(methodSpace.trim()) ? null : methodSpace
-      )
-      : cm != null && cm.getSpace() != null ? cm.getSpace()
-        : ENV.getSpace();
-  }
-
-  /**
-   * 支持space从参数中获取
-   * @param cm 当前接口的类模型
-   * @param mm 当前接口方法的方法模型
-   * @param paramsForTemplate 从模板参数中获取空间名
-   * @return 目标space
-   */
-  public static String getSpace(
-    ClassModel cm, MethodModel mm, Map<String, Object> paramsForTemplate
-  ) {
-    boolean spaceFromParam = mm.isSpaceFromParam();
-    String space = getSpace(cm, mm);
-    if (spaceFromParam && space != null) {
-      return ENV.getTextResolver().resolve(space, paramsForTemplate);
-    }
-    return space;
-  }
-
-  /**
-   * 从结果集中获取当前的 space
-   * @param result 脚本执行之后的结果集
-   * @return 结果集所对应的 space
-   */
-  private static String getSpace(ResultSet result) {
-    String spaceName = result.getSpaceName();
-    return isBlank(spaceName) ? null : spaceName;
   }
 
   public static Logger getLog() {

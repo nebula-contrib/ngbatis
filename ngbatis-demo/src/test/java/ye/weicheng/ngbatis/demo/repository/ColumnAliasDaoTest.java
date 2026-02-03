@@ -4,6 +4,7 @@ package ye.weicheng.ngbatis.demo.repository;
 //
 // This source code is licensed under Apache 2.0 License.
 
+import com.alibaba.fastjson.JSON;
 import java.util.List;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -98,6 +99,14 @@ public class ColumnAliasDaoTest {
     colAliasPojo.setFirstName(query);
     List<String> idsInDb = dao.selectIdBySelectiveStringLike(colAliasPojo);
     Assert.isTrue(idsInDb.contains(idNo));
+  }
+  
+  @Test
+  @Order(8)
+  public void testPropsToObj() {
+    ColumnAlias alias = dao.propsToObj();
+    System.out.println(JSON.toJSONString(alias));
+    Assert.isTrue(alias == null || alias.getFirstName() != null);
   }
   
   @Test

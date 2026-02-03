@@ -6,7 +6,6 @@ package org.nebula.contrib.ngbatis.io;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.nebula.contrib.ngbatis.SessionDispatcher.addSpaceToSessionPool;
 import static org.nebula.contrib.ngbatis.models.ClassModel.PROXY_SUFFIX;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.NEED_SEALING_TYPES;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getNameUniqueMethod;
@@ -16,8 +15,6 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +28,6 @@ import org.jsoup.nodes.Entities;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
-import org.nebula.contrib.ngbatis.annotations.Space;
 import org.nebula.contrib.ngbatis.annotations.TimeLog;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
 import org.nebula.contrib.ngbatis.exception.ParseException;
@@ -39,6 +35,7 @@ import org.nebula.contrib.ngbatis.exception.ResourceLoadException;
 import org.nebula.contrib.ngbatis.models.ClassModel;
 import org.nebula.contrib.ngbatis.models.MethodModel;
 import org.nebula.contrib.ngbatis.models.NgqlModel;
+import org.nebula.contrib.ngbatis.session.SpaceRouter;
 import org.nebula.contrib.ngbatis.utils.Page;
 import org.nebula.contrib.ngbatis.utils.ReflectUtil;
 import org.slf4j.Logger;
@@ -87,11 +84,13 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
   @TimeLog(name = "xml-load", explain = "mappers xml load completed : {} ms")
   public Map<String, ClassModel> load() {
     Map<String, ClassModel> resultClassModel = new HashMap<>();
-    String mapperLocations = parseConfig.getMapperLocations();
+    String[] mapperLocations = parseConfig.getMapperLocations();
     try {
-      Resource[] resources = getResources(mapperLocations);
-      for (Resource resource : resources) {
-        resultClassModel.putAll(parseClassModel(resource));
+      for (String mapperLocation : mapperLocations) {
+        Resource[] resources = getResources(mapperLocation);
+        for (Resource resource : resources) {
+          resultClassModel.putAll(parseClassModel(resource));
+        }
       }
     } catch (FileNotFoundException ffe) {
       log.warn("No mapper files were found in path pattern '{}', please add", mapperLocations);
@@ -123,10 +122,7 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
       match(cm, element, "space", parseConfig.getSpace());
 
       // 从注解获取 space
-      if (null == cm.getSpace()) {
-        setClassModelBySpaceAnnotation(cm);
-      }
-      addSpaceToSessionPool(cm.getSpace());
+      SpaceRouter.setClassSpace(cm, applicationContext);
 
       // 获取 子节点
       List<Node> nodes = element.childNodes();
@@ -136,54 +132,6 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
       result.put(cm.getNamespace().getName() + PROXY_SUFFIX, cm);
     }
     return result;
-  }
-
-  /**
-   * 设置 space
-   * @param cm ClassModel
-   */
-  private void setClassModelBySpaceAnnotation(ClassModel cm) {
-    try {
-      Type[] genericInterfaces = cm.getNamespace().getGenericInterfaces();
-      if (genericInterfaces.length == 0) {
-        return;
-      }
-      ParameterizedType nebulaDaoBasicType = (ParameterizedType) genericInterfaces[0];
-      Type[] genericTypes = nebulaDaoBasicType.getActualTypeArguments();
-      if (genericTypes.length == 0) {
-        return;
-      }
-      String spaceClassName = genericTypes[0].getTypeName();
-      Space annotation = Class.forName(spaceClassName).getAnnotation(Space.class);
-      if (null != annotation) {
-        String spaceName = tryResolvePlaceholder(annotation.name());
-        if (!spaceName.equals("")) {
-          cm.setSpace(spaceName);
-        }
-      }
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    }
-  }
-
-  /**
-   * 利用Spring Environment 解析注解的值，用于 @Space 的 name 属性解析
-   * @param value 需要解析的值，可能是带占位符的 ${xx.xx} ，也可以是固定的字符串
-   * @return resolveResult 解析结果
-   * @throws IllegalArgumentException 当配置了 ${xx.xx} 占位符，且spring配置文件中未指定该配置时抛出
-   */
-  private String tryResolvePlaceholder(String value) {
-    String resolveResult = value;
-    if (null != applicationContext) {
-      try {
-        resolveResult = applicationContext.getEnvironment().resolveRequiredPlaceholders(value);
-      } catch (IllegalArgumentException e) {
-        throw new ResourceLoadException(
-          "name ( " + value + " ) of @Space missing configurable value"
-        );
-      }
-    }
-    return resolveResult;
   }
 
   /**
@@ -209,9 +157,7 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
           cm.getNgqls().put(ngqlModel.getId(),ngqlModel);
         } else {
           MethodModel methodModel = parseMethodModel(methodNode);
-          if (!methodModel.isSpaceFromParam()) {
-            addSpaceToSessionPool(methodModel.getSpace());
-          }
+          SpaceRouter.setMethodSpace(methodModel, applicationContext);
           Method method = getNameUniqueMethod(namespace, methodModel.getId());
           methodModel.setMethod(method);
           Assert.notNull(method,
@@ -251,7 +197,7 @@ public class MapperResourceLoader extends PathMatchingResourcePatternResolver {
    * @return
    */
   protected NgqlModel parseNgqlModel(Element ngqlEl) {
-    return  new NgqlModel(ngqlEl.id(),ngqlEl.text());
+    return  new NgqlModel(ngqlEl.id(),ngqlEl.wholeText());
   }
 
   /**

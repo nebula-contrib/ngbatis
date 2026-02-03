@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.nebula.contrib.ngbatis.models.data.NgEdge;
+import org.nebula.contrib.ngbatis.models.data.NgPath;
 import org.nebula.contrib.ngbatis.models.data.NgSubgraph;
 import org.nebula.contrib.ngbatis.models.data.NgVertex;
 import org.nebula.contrib.ngbatis.proxy.NebulaDaoBasic;
@@ -17,6 +18,7 @@ import org.nebula.contrib.ngbatis.utils.Page;
 import org.springframework.data.repository.query.Param;
 import ye.weicheng.ngbatis.demo.pojo.Person;
 import ye.weicheng.ngbatis.demo.pojo.PersonLikePerson;
+import ye.weicheng.ngbatis.demo.pojo.TripletStep;
 
 /**
  * 数据访问层 样例。
@@ -85,6 +87,13 @@ public interface TestRepository extends NebulaDaoBasic<Person, String> {
   List<Person> dynamicSpaceWithPage(Page<Person> page, @Param("space") String space);
 
   NgSubgraph<String> resultContainingSet();
+
+  List<NgPath<String>> selectPath();
+  
+  String testValueFmtWhenNull(@Param("value") String nullValue);
+  
+  List<TripletStep> selectTripletStep();
+  
 
   class DynamicNode {
     @Id

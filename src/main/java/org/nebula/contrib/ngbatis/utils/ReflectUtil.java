@@ -25,8 +25,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.nebula.contrib.ngbatis.annotations.DstId;
+import org.nebula.contrib.ngbatis.annotations.SrcId;
+import org.nebula.contrib.ngbatis.annotations.base.EdgeType;
+import org.nebula.contrib.ngbatis.annotations.base.Tag;
 import org.nebula.contrib.ngbatis.exception.ParseException;
 import org.nebula.contrib.ngbatis.models.MethodModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 /**
@@ -36,6 +42,8 @@ import org.springframework.util.Assert;
  * <br>Now is history!
  */
 public abstract class ReflectUtil {
+
+  private static Logger log = LoggerFactory.getLogger(ReflectUtil.class);
 
   public static final Set<Class<?>> NEED_SEALING_TYPES = new HashSet<Class<?>>() {{
       add(short.class);
@@ -73,14 +81,7 @@ public abstract class ReflectUtil {
 
   public static void setValue(Object o, String prop, Object value)
       throws NoSuchFieldException, IllegalAccessException {
-    Field[] allColumnFields = getAllColumnFields(o.getClass(), true);
-    Field declaredField = null;
-    for (Field columnField : allColumnFields) {
-      if (getNameByColumn(columnField).equals(prop)) {
-        declaredField = columnField;
-        break;
-      }
-    }
+    Field declaredField = getFieldByColumnName(o, prop);
     if (declaredField == null) {
       throw new NoSuchFieldException(prop);
     }
@@ -111,6 +112,22 @@ public abstract class ReflectUtil {
       field.set(o, value);
       field.setAccessible(false);
     }
+  }
+
+  /**
+   * 从列名中获取对应属性
+   * @author Gin
+   */
+  public static Field getFieldByColumnName(Object o, String columnName) {
+    Field[] allColumnFields = getAllColumnFields(o.getClass(), true);
+    Field declaredField = null;
+    for (Field columnField : allColumnFields) {
+      if (getNameByColumn(columnField).equals(columnName)) {
+        declaredField = columnField;
+        break;
+      }
+    }
+    return  declaredField;
   }
 
   /**
@@ -445,6 +462,24 @@ public abstract class ReflectUtil {
     return fields.toArray(new Field[0]);
   }
 
+  /**
+   * 获取当前类的所有属性
+   * @param clazz 实体类
+   * @param forValueSetting 用于设值时为 true，读取全属性
+   * @return 当前类的所有属性，排除 {@link Id}、{@link DstId}、{@link SrcId} 注解的属性
+   */
+  public static Field[] getColumnFields(Class<?> clazz, boolean forValueSetting) {
+    Field[] allColumnFields = getAllColumnFields(clazz, forValueSetting);
+    return Arrays.stream(allColumnFields)
+      .filter(el -> el.isAnnotationPresent(Column.class) 
+        && !el.isAnnotationPresent(Id.class)
+        && !el.isAnnotationPresent(DstId.class) 
+        && !el.isAnnotationPresent(SrcId.class)
+        && (!el.isAnnotationPresent(Transient.class) || forValueSetting)
+      )
+      .toArray(Field[]::new);
+  }
+
 
   /**
    * <p>通过实体类类型获取 tagName</p>
@@ -549,17 +584,29 @@ public abstract class ReflectUtil {
     Assert.isTrue(o != null, "instance can not be null");
     Class<?> insClass = o.getClass();
     if (parent.isInterface()) {
-      Type[] interfaces = insClass.getGenericInterfaces();
-      for (Type anInterface : interfaces) {
-        boolean isType = anInterface instanceof ParameterizedType;
-        if (isType) {
-          ParameterizedType paramTypeInterface = (ParameterizedType) anInterface;
-          boolean found = paramTypeInterface.getRawType() == parent;
-          if (found) {
-            Type[] actualTypeArguments = paramTypeInterface.getActualTypeArguments();
-            boolean noOut = actualTypeArguments.length > i;
-            return noOut ? (Class<?>)actualTypeArguments[i] : null;
-          }
+      return typeArg(insClass, parent, i);
+    }
+    return null;
+  }
+
+  /**
+   * 从类型中，获取父类或接口中的泛型参数。
+   * @param clazz 类型
+   * @param parent 所继承的父类或实现的接口
+   * @param i 泛型参数所处下标
+   * @return 泛型
+   */
+  public static Class<?> typeArg(Class<?> clazz, Class<?> parent, int i) {
+    Type[] interfaces = clazz.getGenericInterfaces();
+    for (Type anInterface : interfaces) {
+      boolean isType = anInterface instanceof ParameterizedType;
+      if (isType) {
+        ParameterizedType paramTypeInterface = (ParameterizedType) anInterface;
+        boolean found = paramTypeInterface.getRawType() == parent;
+        if (found) {
+          Type[] actualTypeArguments = paramTypeInterface.getActualTypeArguments();
+          boolean noOut = actualTypeArguments.length > i;
+          return noOut ? (Class<?>)actualTypeArguments[i] : null;
         }
       }
     }
@@ -575,10 +622,11 @@ public abstract class ReflectUtil {
    *    when type is not ParameterizedTypeImpl and the type name can not get class object in jvm.
    */
   public static Class<?> typeToClass(Type type) throws ClassNotFoundException {
+    String typeName = type.getTypeName();
     if (type instanceof ParameterizedType) {
-      return (Class<?>)((ParameterizedType) type).getRawType();
+      typeName = ((ParameterizedType) type).getRawType().getTypeName();
     }
-    return Class.forName(type.getTypeName());
+    return Class.forName(typeName);
   }
 
   /**
@@ -588,9 +636,67 @@ public abstract class ReflectUtil {
    */
   public static String schemaByEntityType(Class<?> entityType) {
     Table tableAnno = entityType.getAnnotation(Table.class);
-    return tableAnno != null
-        ? tableAnno.name()
-        : StringUtil.camelToUnderline(entityType.getSimpleName());
+    Tag tagAnno = entityType.getAnnotation(Tag.class);
+    EdgeType edgeTypeAnno = entityType.getAnnotation(EdgeType.class);
+    if (tableAnno != null) {
+      return tableAnno.name();
+    }
+    if (tagAnno != null) {
+      return tagAnno.name();
+    }
+    if (edgeTypeAnno != null) {
+      return edgeTypeAnno.name();
+    }
+    return StringUtil.camelToUnderline(entityType.getSimpleName());
   }
 
+  /**
+   * 判断传入的属性是否带有@GraphId注解
+   * @param field 属性
+   * @return 判断结果
+   */
+  public static boolean isGraphId(Field field) {
+    Annotation[] annotations = field.getAnnotations();
+    for (Annotation annotation : annotations) {
+      if (annotation instanceof Id) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * 获取相应属性的集合范型
+   * 
+   * @param o 数据对象
+   * @param columnName 数据对象需要被填充数据的列名
+   * @return 如果列对应的是集合，则返回集合的范型，否则返回空
+   */
+  public static Class<?> getCollectionE(Object o, String columnName) {
+    Field columnField = getFieldByColumnName(o, columnName);
+    return getCollectionE(columnField);
+  }
+
+  /**
+   * 如果属性是集合，则返回集合范型
+   * 
+   * @param field 集合属性
+   * @return 如果属性是集合，则返回集合的范型，否则返回空
+   */
+  public static Class<?> getCollectionE(Field field) {
+    Type genericType = field.getGenericType();
+    if (genericType instanceof ParameterizedType) {
+      Type[] types = ((ParameterizedType) field.getGenericType()).getActualTypeArguments();
+      if (types.length == 1) {
+        try {
+          return typeToClass(types[0]);
+        } catch (ClassNotFoundException e) {
+          // ignore
+          log.error(e.getMessage());
+        }
+      }
+    }
+    return null;
+  }
+  
 }

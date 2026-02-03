@@ -14,8 +14,9 @@ import org.nebula.contrib.ngbatis.models.MethodModel;
  */
 public interface ArgsResolver {
 
+  Map<String, Object> resolve(Map<String, Object> argMap);
+
   Map<String, Object> resolve(MethodModel methodModel, Object... args);
   
   Map<String, Object> resolveForTemplate(MethodModel methodModel, Object... args);
-
 }

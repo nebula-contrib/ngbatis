@@ -2,19 +2,17 @@ package org.nebula.contrib.ngbatis;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.nebula.contrib.ngbatis.models.ClassModel.PROXY_SUFFIX;
+import static org.nebula.contrib.ngbatis.proxy.MapperProxy.ENV;
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.entityTypeAndIdType;
 import static org.nebula.contrib.ngbatis.proxy.NebulaDaoBasicExt.vertexName;
 
-import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.SessionPool;
-import com.vesoft.nebula.client.graph.SessionPoolConfig;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
 import jakarta.annotation.Resource;
 import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.Map;
 import org.nebula.contrib.ngbatis.config.NebulaJdbcProperties;
-import org.nebula.contrib.ngbatis.config.NgbatisConfig;
 import org.nebula.contrib.ngbatis.config.ParseCfgProps;
 import org.nebula.contrib.ngbatis.io.DaoResourceLoader;
 import org.nebula.contrib.ngbatis.models.ClassModel;
@@ -85,8 +83,6 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
     context.setInterfaces(interfaces);
     context.setNebulaPoolConfig(nebulaJdbcProperties.getPoolConfig());
     figureTagTypeMapping(interfaces.values(), context.getTagTypeMapping());
-
-    setNebulaSessionPool(context);
 
     registerBean(context);
     return context;
@@ -200,64 +196,22 @@ class NgbatisBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Order
 
   /**
    * create and init Nebula SessionPool
+   * please use IntervalCheckSessionDispatcher.setNebulaSessionPool() instead.
    */
+  @Deprecated
   public void setNebulaSessionPool(MapperContext context) {
-    NgbatisConfig ngbatisConfig = nebulaJdbcProperties.getNgbatis();
-    if (ngbatisConfig.getUseSessionPool() == null || !ngbatisConfig.getUseSessionPool()) {
-      return;
-    }
-
-    context.getSpaceNameSet().add(nebulaJdbcProperties.getSpace());
-    Map<String, SessionPool> nebulaSessionPoolMap = context.getNebulaSessionPoolMap();
-    for (String spaceName : context.getSpaceNameSet()) {
-      SessionPool sessionPool = initSessionPool(spaceName);
-      if (sessionPool == null) {
-        log.error("{} session pool init failed.", spaceName);
-        continue;
-      }
-      nebulaSessionPoolMap.put(spaceName, sessionPool);
-    }
+    ENV.getDispatcher().setNebulaSessionPool(context);
   }
 
   /**
    * session pool create and init
+   * please use IntervalCheckSessionDispatcher.initSessionPool() instead.
    * @param spaceName nebula space name
    * @return inited SessionPool
    */
+  @Deprecated
   public SessionPool initSessionPool(String spaceName) {
-    final NgbatisConfig ngbatisConfig = nebulaJdbcProperties.getNgbatis();
-    NebulaPoolConfig poolConfig = nebulaJdbcProperties.getPoolConfig();
-
-    SessionPoolConfig sessionPoolConfig = new SessionPoolConfig(
-            nebulaJdbcProperties.getHostAddresses(),
-            spaceName,
-            nebulaJdbcProperties.getUsername(),
-            nebulaJdbcProperties.getPassword()
-    ).setUseHttp2(poolConfig.isUseHttp2())
-      .setEnableSsl(poolConfig.isEnableSsl())
-      .setSslParam(poolConfig.getSslParam())
-      .setCustomHeaders(poolConfig.getCustomHeaders())
-      .setWaitTime(poolConfig.getWaitTime())
-      .setTimeout(poolConfig.getTimeout());
-
-    if (poolConfig.getMinConnSize() <= 0) {
-      sessionPoolConfig.setMinSessionSize(1);
-    } else {
-      sessionPoolConfig.setMinSessionSize(poolConfig.getMinConnSize());
-    }
-    sessionPoolConfig.setMaxSessionSize(poolConfig.getMaxConnSize());
-    sessionPoolConfig.setTimeout(poolConfig.getTimeout());
-    sessionPoolConfig.setWaitTime(poolConfig.getWaitTime());
-    if (null != ngbatisConfig.getSessionLifeLength()) {
-      int cleanTime = (int) (ngbatisConfig.getSessionLifeLength() / 1000);
-      sessionPoolConfig.setCleanTime(cleanTime);
-    }
-    if (null != ngbatisConfig.getCheckFixedRate()) {
-      int healthCheckTime = (int) (ngbatisConfig.getCheckFixedRate() / 1000);
-      sessionPoolConfig.setHealthCheckTime(healthCheckTime);
-    }
-
-    return new SessionPool(sessionPoolConfig);
+    return ENV.getDispatcher().initSessionPool(spaceName);
   }
 
   @Override

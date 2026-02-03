@@ -13,7 +13,7 @@
     <name>ngbatis</name>
     <groupId>org.nebula-contrib</groupId>
     <artifactId>ngbatis</artifactId>
-    <version>1.3.0-jdk17</version>
+    <version>2.1.0-beta-jdk17</version>
     
     <description>
         NgBatis is a database ORM framework base NebulaGraph + spring-boot,
@@ -23,7 +23,7 @@
         NgBatis 是一款针对 NebulaGraph + Springboot 的数据库 ORM 框架。
         借鉴于 MyBatis 的使用习惯进行开发。
     </description>
-    
+
     <url>https://github.com/nebula-contrib/ngbatis</url>
 
     <developers>
@@ -54,6 +54,14 @@
         <developer>
             <name>charle004</name>
             <email>937002632@qq.com</email>
+        </developer>
+        <developer>
+            <name>moroyimk</name>
+            <email>928335734@qq.com</email>
+        </developer>
+        <developer>
+            <name>lakersUP</name>
+            <email>chenyw9799@163.com</email>
         </developer>
     </developers>
 
@@ -101,7 +109,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.83</version>
+            <version>2.0.57</version>
         </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>
@@ -181,6 +189,39 @@
                     <nexusUrl>https://s01.oss.sonatype.org</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
+            </plugin>
+
+            <!-- Maven Shade Plugin - 重命名 fastjson2 包名 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.alibaba.fastjson2</pattern>
+                                    <shadedPattern>org.nebula.contrib.ngbatis.internal.fastjson2</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- compiler -->
@@ -421,4 +462,6 @@
             <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
+
+
 </project>

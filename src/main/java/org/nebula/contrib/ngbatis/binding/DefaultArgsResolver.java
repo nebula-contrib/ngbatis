@@ -8,7 +8,9 @@ import static org.nebula.contrib.ngbatis.utils.ReflectUtil.getAllColumnFields;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.isCurrentTypeOrParentType;
 import static org.nebula.contrib.ngbatis.utils.ReflectUtil.typeArg;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONWriter;
+import com.alibaba.fastjson2.JSONWriter.Feature;
 import com.vesoft.nebula.DataSet;
 import com.vesoft.nebula.DateTime;
 import com.vesoft.nebula.Duration;
@@ -69,8 +71,8 @@ public class DefaultArgsResolver implements ArgsResolver {
       put(Integer.class, (Setter<Integer>) Value::iVal);
       put(short.class, (Setter<Short>) Value::iVal);
       put(Short.class, (Setter<Short>) Value::iVal);
-      put(byte.class, (Setter<Short>) Value::iVal);
-      put(Byte.class, (Setter<Short>) Value::iVal);
+      put(byte.class, (Setter<Byte>) Value::iVal);
+      put(Byte.class, (Setter<Byte>) Value::iVal);
       put(long.class, (Setter<Long>) Value::iVal);
       put(Long.class, (Setter<Long>) Value::iVal);
       put(float.class, (Setter<Float>) Value::fVal);
@@ -187,6 +189,16 @@ public class DefaultArgsResolver implements ArgsResolver {
     return resolve(true, methodModel, args);
   }
 
+  @Override
+  public Map<String, Object> resolve(Map<String, Object> argMap) {
+    Map<String, Object> result = new LinkedHashMap<>();
+    for (Map.Entry<String, Object> entry : argMap.entrySet()) {
+      String key = entry.getKey();
+      result.put(key, serialize(false, entry.getValue()));
+    }
+    return result;
+  }
+
   @SuppressWarnings("unchecked")
   @Override
   public Map<String, Object> resolve(MethodModel methodModel, Object... args) {
@@ -230,9 +242,10 @@ public class DefaultArgsResolver implements ArgsResolver {
     }
     return result;
   }
-  
+
+
   private Object serialize(boolean forTemplate, Object o) {
-    return forTemplate ? JSON.toJSON(o) : toNebulaValueType(o);
+    return forTemplate ? JSON.toJSON(o, Feature.WriteNulls) : toNebulaValueType(o);
   }
 
   private boolean isBaseType(Class<?> clazz) {

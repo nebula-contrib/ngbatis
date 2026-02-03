@@ -10,6 +10,9 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Date;
 import org.apache.commons.text.StringEscapeUtils;
+import org.springframework.data.geo.Box;
+import org.springframework.data.geo.Point;
+import org.springframework.data.geo.Polygon;
 
 /**
  * 对传递给数据库的值进行不同类型的格式化
@@ -81,6 +84,47 @@ public class ValueFmtFn extends AbstractFunction<Object, Boolean, Boolean, Void,
             : fn;
       return String.format("%s('%s')", fn, sdf.format(value));
     }
+    
+    //    ST_Point(longitude, latitude)
+    if (value instanceof Point) {
+      Point point = (Point) value;
+      return String.format(
+        "ST_Point(%s, %s)",
+        point.getX(),
+        point.getY()
+      );
+    }
+    
+    //    ST_GeogFromText("LINESTRING(3 8, 4.7 73.23)")
+    if (value instanceof Box) {
+      Box box = (Box) value;
+      Point first = box.getFirst();
+      Point second = box.getSecond();
+      return String.format(
+        "ST_GeogFromText(\"LINESTRING(%s %s, %s %s)\")",
+        first.getX(),
+        first.getY(),
+        second.getX(),
+        second.getY()
+      );
+    }
+    
+    if (value instanceof Polygon) {
+      Polygon polygon = (Polygon) value;
+      StringBuilder sb = new StringBuilder("ST_GeogFromText(\"POLYGON((");
+      for (Point point : polygon.getPoints()) {
+        sb.append(String.format("%s %s,", point.getX(), point.getY()));
+      }
+      
+      // 追加起始点，形成闭环      
+      Point point = polygon.getPoints().get(0);
+      sb.append(String.format("%s %s,", point.getX(), point.getY()));
+      
+      sb.deleteCharAt(sb.length() - 1);
+      sb.append("))\")");
+      return sb.toString();
+    }
+    
     return value;
   }
 }

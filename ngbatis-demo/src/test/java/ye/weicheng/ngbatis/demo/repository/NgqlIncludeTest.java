@@ -1,5 +1,8 @@
 package ye.weicheng.ngbatis.demo.repository;
 
+import com.alibaba.fastjson.JSON;
+import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,6 +28,16 @@ public class NgqlIncludeTest {
     System.out.println("nGQL引用额外参数测试:" + ngqlIncludeDao.returnAge(person));
     System.out.println("nGQL跨mapper引用测试:" + ngqlInclude4diffMapperDao.testInclude(1));
 
+  }
+  
+  @Test
+  public void testFilter() {
+    Person person = new Person();
+    List<Map> ngTriplet = ngqlIncludeDao.selectByFilter(person);
+    System.out.println(JSON.toJSONString(ngTriplet));
+    person.setName("赵小洋");
+    ngTriplet = ngqlIncludeDao.selectByFilter(person);
+    System.out.println(JSON.toJSONString(ngTriplet));
   }
 
 }

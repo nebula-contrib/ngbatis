@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * <br>Now is history!
  */
 public class MapperProxyClassGenerator implements Opcodes {
-  
+
   private final Logger log = LoggerFactory.getLogger(MapperProxyClassGenerator.class);
 
   /**
@@ -59,7 +59,7 @@ public class MapperProxyClassGenerator implements Opcodes {
   public byte[] setClassCode(ClassModel cm) {
     String fullNameType = getFullNameType(cm);
 
-    ClassWriter cw = new ClassWriter(0);
+    ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
     // public class XXX extends Object implement XXX
     cw.visit(
         V1_8,
@@ -139,7 +139,7 @@ public class MapperProxyClassGenerator implements Opcodes {
 
     // *2，每多一个方法参数，需要多定义 2 个局部变量，下标变量
     //  +3： 3 个固定参数位，namespace、methodName、args
-    mapper.visitMaxs(Integer.MAX_VALUE, Integer.MAX_VALUE);
+    mapper.visitMaxs(0,0);
 
     // 检查类型转换
     Class<?> returnType = mm.getReturnType();

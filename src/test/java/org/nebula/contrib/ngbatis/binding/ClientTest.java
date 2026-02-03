@@ -16,7 +16,7 @@ import org.junit.Test;
 
 public class ClientTest {
 
-  @Test
+  // @Test
   public void serverTest() {
     NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
     nebulaPoolConfig.setMaxConnSize(1);

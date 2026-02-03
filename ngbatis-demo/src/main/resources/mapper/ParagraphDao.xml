@@ -1,0 +1,20 @@
+<!--
+    Copyright (c) 2024 All project authors. All rights reserved.
+    
+    This source code is licensed under Apache 2.0 License.
+-->
+<mapper namespace="ye.weicheng.ngbatis.demo.repository.ParagraphDao">
+
+    <select id="testSpaceFromYml" space="${nebula.space}">
+        RETURN 1
+    </select>
+    
+    <select id="testSpaceFromParam" spaceFromParam="true" space="${spaceParam}">
+        RETURN "${spaceParam}"
+    </select>
+    
+    <select id="testSpaceAnno">
+        RETURN 1
+    </select>
+
+</mapper>

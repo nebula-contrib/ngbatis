@@ -1,0 +1,39 @@
+<!--
+    Copyright (c) 2025 All project authors. All rights reserved.
+    
+    This source code is licensed under Apache 2.0 License.
+-->
+<mapper namespace="ye.weicheng.ngbatis.demo.repository.AllFieldTypesDao" space="test">
+<!--
+  private Long aLong;
+  private Boolean aBoolean;
+  private String aString;
+  private String aDouble;
+  private Integer anInt;
+  private Short aShort;
+  private Byte aByte;
+  private Float aFloat;
+  private java.sql.Date aDate;
+  private java.sql.Time aTime;
+  private java.util.Date aDateTime;
+  private java.sql.Timestamp aTimestamp;
+  private Duration aDuration;
+-->
+  <select id="testValueFmt" resultType="ye.weicheng.ngbatis.demo.pojo.AllFieldTypes">
+    RETURN 
+      ${ ng.valueFmt(longData)!"null" } as aLong,
+      ${ ng.valueFmt(booleanData)!"null" } as aBoolean,
+      ${ ng.valueFmt(stringData)!"null" } as aString,
+      ${ ng.valueFmt(doubleData)!"null" } as aDouble,
+      ${ ng.valueFmt(intData)!"null" } as anInt,
+      ${ ng.valueFmt(shortData)!"null" } as aShort,
+      ${ ng.valueFmt(byteData)!"null" } as aByte,
+      ${ ng.valueFmt(floatData)!"null" } as aFloat,
+      ${ ng.valueFmt(dateData)!"null" } as aDate,
+      ${ ng.valueFmt(timeData)!"null" } as aTime,
+      ${ ng.valueFmt(dateTimeData)!"null" } as aDateTime,
+      ${ ng.valueFmt(timestampData)!"null" } as aTimestamp,
+      ${ ng.valueFmt(durationData)!"null" } as aDuration;
+  </select>
+  
+</mapper>
